@@ -2,7 +2,9 @@
 
 namespace App;
 
+use Illuminate\Support\Carbon;
 use App\Exceptions\NonIntegerAmount;
+use App\Exceptions\CashGameInProgress;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -105,5 +107,53 @@ class User extends Authenticatable
     public function bankrollTransactions()
     {
         return $this->hasMany('App\BankrollTransaction');
+    }
+
+
+    /**
+    * Returns a collection of the user's CashGames
+    * 
+    * @return hasMany
+    */
+    public function cashGames()
+    {
+        return $this->hasMany('App\CashGame');
+    }
+
+    /**
+    * Start a Cash Game with the current time as start_time
+    * This first checks if we have a Cash Game in progress by checking the count of CashGame where end_time is null
+    *
+    * @return \App\CashGame
+    */
+    public function startCashGame(Carbon $start_time = null) : CashGame
+    {
+        $count = $this->cashGames()
+                        ->where('end_time', null)
+                        ->orderByDesc('start_time')
+                        ->count();
+
+        if ($count > 0) {
+            throw new CashGameInProgress;
+        }
+
+        return $this->cashGames()->create([
+            'start_time' => $start_time ?? now()
+        ]);
+    }
+
+    /**
+    * Return the latest Cash Game without an end_time.
+    * NOTE: We should only ever have one live session so need to check.
+    * This check is performed in startCashGame
+    * 
+    * @return \App\CashGame
+    */
+    public function currentLiveCashGame() : ?CashGame
+    {
+        return $this->cashGames()
+                    ->where('end_time', null)
+                    ->orderByDesc('start_time')
+                    ->first();
     }
 }

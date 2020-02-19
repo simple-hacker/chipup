@@ -16,6 +16,9 @@ class CreateCashGamesTable extends Migration
         Schema::create('cash_games', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
+            $table->timestamp('start_time')->useCurrent();
+            $table->timestamp('end_time')->nullable();
+            $table->bigInteger('profit')->default(0);
             $table->timestamps();
         });
     }
