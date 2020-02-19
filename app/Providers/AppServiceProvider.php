@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\BankrollTransaction;
 use Illuminate\Support\ServiceProvider;
+use App\Observers\BankrollTransactionObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        BankrollTransaction::observe(BankrollTransactionObserver::class);
     }
 }
