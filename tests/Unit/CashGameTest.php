@@ -87,9 +87,9 @@ class CashGameTest extends TestCase
 
         $user = factory('App\User')->create();
 
-        $cash_game = $user->startCashGame();
-        // Error should be thrown when starting cash_game_2
-        $cash_game_2 = $user->startCashGame();
+        $user->startCashGame();
+        // Error should be thrown when starting another
+        $user->startCashGame();
     }
 
     public function testCheckingStartingMultipleCashGamesAsLongAsPreviousOnesHaveFinished()
@@ -105,7 +105,7 @@ class CashGameTest extends TestCase
         // Start a cash game.
         $cash_game_2 = $user->startCashGame();
 
-        // User's currentLiveCashGame should be cash_game_2.
-        $this->assertEquals($user->currentLiveCashGame()->id, $cash_game_2->id);
+        // User's liveCashGame should be cash_game_2.
+        $this->assertEquals($user->liveCashGame()->id, $cash_game_2->id);
     }
 }

@@ -4,7 +4,7 @@ namespace App;
 
 use App\Abstracts\Game;
 
-class CashGame extends Game
+class Tournament extends Game
 {
     protected $guarded = [];
 }

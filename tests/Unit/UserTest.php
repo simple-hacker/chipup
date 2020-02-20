@@ -41,19 +41,35 @@ class UserTest extends TestCase
         $user->updateBankroll(50.99);
     }
 
-    public function testGetTheCurrentLiveCashGameForAUser()
+    public function testGetTheLiveCashGameForAUser()
     {
         $user = factory('App\User')->create();
 
         // Start a Cash Game session.
         $cash_game = $user->startCashGame();
 
-        $this->assertEquals($user->currentLiveCashGame()->id, $cash_game->id);
+        $this->assertEquals($user->liveCashGame()->id, $cash_game->id);
         
         // End the Cash Game session.
         $cash_game->end();
         
-        // currentLiveCashGame should now be an empty Collection.
-        $this->assertEmpty($user->currentLiveCashGame());
+        // liveCashGame should now be an empty Collection.
+        $this->assertEmpty($user->liveCashGame());
+    }
+
+    public function testGetTheLiveTournamentForAUser()
+    {
+        $user = factory('App\User')->create();
+
+        // Start a Cash Game session.
+        $tournament = $user->startTournament();
+
+        $this->assertEquals($user->liveTournament()->id, $tournament->id);
+        
+        // End the Cash Game session.
+        $tournament->end();
+        
+        // liveCashGame should now be an empty Collection.
+        $this->assertEmpty($user->liveCashGame());
     }
 }

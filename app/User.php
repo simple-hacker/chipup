@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Support\Carbon;
 use App\Exceptions\NonIntegerAmount;
 use App\Exceptions\CashGameInProgress;
+use App\Exceptions\TournamentInProgress;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -149,9 +150,56 @@ class User extends Authenticatable
     * 
     * @return \App\CashGame
     */
-    public function currentLiveCashGame() : ?CashGame
+    public function liveCashGame() : ?CashGame
     {
         return $this->cashGames()
+                    ->where('end_time', null)
+                    ->orderByDesc('start_time')
+                    ->first();
+    }
+
+    /**
+    * Returns a collection of the user's Tournaments
+    * 
+    * @return hasMany
+    */
+    public function tournaments()
+    {
+        return $this->hasMany('App\Tournament');
+    }
+
+    /**
+    * Start a Tournament with the current time as start_time
+    * This first checks if we have a Tournament in progress by checking the count of Tournament where end_time is null
+    *
+    * @return \App\Tournament
+    */
+    public function startTournament(Carbon $start_time = null) : Tournament
+    {
+        $count = $this->tournaments()
+                        ->where('end_time', null)
+                        ->orderByDesc('start_time')
+                        ->count();
+
+        if ($count > 0) {
+            throw new TournamentInProgress;
+        }
+
+        return $this->tournaments()->create([
+            'start_time' => $start_time ?? now()
+        ]);
+    }
+
+    /**
+    * Return the latest Tournament without an end_time.
+    * NOTE: We should only ever have one live tournament so need to check.
+    * This check is performed in startTournament
+    * 
+    * @return \App\Tournament
+    */
+    public function liveTournament() : ?Tournament
+    {
+        return $this->tournaments()
                     ->where('end_time', null)
                     ->orderByDesc('start_time')
                     ->first();
