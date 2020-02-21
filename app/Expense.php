@@ -9,12 +9,12 @@ class Expense extends Model
     protected $guarded = [];
 
     /**
-    * Returns the Expense's CashGame 
+    * Returns the Expense's game type model. 
     *
-    * @return belongsTo
+    * @return morphTo
     */
-    public function cashGame()
+    public function game()
     {
-        return $this->belongsTo('App\CashGame');
+        return $this->morphTo();
     }
 }

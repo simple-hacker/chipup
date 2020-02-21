@@ -14,7 +14,7 @@ class BuyInObserver
      */
     public function created(BuyIn $buyIn)
     {
-        tap($buyIn->cashGame)->decrement('profit', $buyIn->amount);
+        tap($buyIn->game)->decrement('profit', $buyIn->amount);
     }
 
     /**

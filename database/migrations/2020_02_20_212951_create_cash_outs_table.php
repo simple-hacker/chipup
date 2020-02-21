@@ -15,9 +15,11 @@ class CreateCashOutsTable extends Migration
     {
         Schema::create('cash_outs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('cash_game_id')->unique();
+            $table->morphs('game');
             $table->bigInteger('amount')->default(0);
             $table->timestamps();
+
+            $table->unique(['game_id', 'game_type']);
         });
     }
 

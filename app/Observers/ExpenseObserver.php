@@ -14,7 +14,7 @@ class ExpenseObserver
      */
     public function created(Expense $expense)
     {
-        tap($expense->cashGame)->decrement('profit', $expense->amount);
+        tap($expense->game)->decrement('profit', $expense->amount);
     }
 
     /**

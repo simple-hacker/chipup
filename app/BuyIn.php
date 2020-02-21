@@ -9,12 +9,12 @@ class BuyIn extends Model
     protected $guarded = [];
 
     /**
-    * Returns the BuyIn's CashGame 
+    * Returns the BuyIn's game type model. 
     *
-    * @return belongsTo
+    * @return morphTo
     */
-    public function cashGame()
+    public function game()
     {
-        return $this->belongsTo('App\CashGame');
+        return $this->morphTo();
     }
 }

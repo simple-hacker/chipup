@@ -9,12 +9,12 @@ class CashOut extends Model
     protected $guarded = [];
 
     /**
-    * Returns the CashOut's CashGame
+    * Returns the CashOut's game type model
     * 
-    * @return belongsTo
+    * @return morphTo
     */
-    public function cashGame()
+    public function game()
     {
-        return $this->belongsTo('App\CashGame');
+        return $this->morphTo();
     }
 }

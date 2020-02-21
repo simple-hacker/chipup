@@ -37,4 +37,78 @@ abstract class Game extends Model
             'end_time' => $end_time
         ]);
     }
+
+    /**
+    * Add a BuyIn for the game type.
+    * This updates the game type's profit by subtracting the BuyIn amount.
+    * 
+    * @param integer amount
+    * @return BuyIn
+    */
+    public function addBuyIn(int $amount)
+    {
+        return $this->buyIns()->create([
+            'amount' => $amount
+        ]);
+    }
+
+    /**
+    * Add an Expense for the game type.
+    * This updates the game type's profit by subtracting the Expense amount
+    * 
+    * @param integer amount
+    * @return Expense
+    */
+    public function addExpense(int $amount)
+    {
+        return $this->expenses()->create([
+            'amount' => $amount
+        ]);
+    }
+
+    /**
+    * Add an Expense for the game type.
+    * This updates the game type's profit by subtracting the Expense amount
+    * 
+    * @param integer amount
+    * @return CashOut
+    */
+    public function cashOut(int $amount, Carbon $end_time = null)
+    {
+        $this->end($end_time);
+
+        return $this->cashOutModel()->create([
+            'amount' => $amount
+        ]);
+    }
+
+    /**
+    * Returns the game type's BuyIns
+    * 
+    * @return morphMany
+    */
+    public function buyIns()
+    {
+        return $this->morphMany('App\BuyIn', 'game');
+    }
+
+    /**
+    * Returns the game type's Expenses
+    * 
+    * @return morphMany
+    */
+    public function expenses()
+    {
+        return $this->morphMany('App\Expense', 'game');
+    }
+
+    /**
+    * Returns the game type's CashOut model
+    * 
+    * @return morphOne
+    */
+    public function cashOutModel()
+    {
+        return $this->morphOne('App\CashOut', 'game');
+    }
 }

@@ -14,7 +14,7 @@ class CashOutObserver
      */
     public function created(CashOut $cashOut)
     {
-        tap($cashOut->cashGame)->increment('profit', $cashOut->amount);
+        tap($cashOut->game)->increment('profit', $cashOut->amount);
     }
 
     /**

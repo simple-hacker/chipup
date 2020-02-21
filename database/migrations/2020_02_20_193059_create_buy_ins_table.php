@@ -15,7 +15,7 @@ class CreateBuyInsTable extends Migration
     {
         Schema::create('buy_ins', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('cash_game_id');  // Will need to change to Polymorphism for Tournaments.  Need gameable_id and gameable_type columns instead.
+            $table->morphs('game');
             $table->bigInteger('amount')->default(0);
             $table->timestamps();
         });
