@@ -14,7 +14,7 @@ class BuyInObserver
      */
     public function created(BuyIn $buyIn)
     {
-        tap($buyIn->game)->decrement('profit', $buyIn->amount);
+        $buyIn->game->decrement('profit', $buyIn->amount);
     }
 
     /**
@@ -25,7 +25,10 @@ class BuyInObserver
      */
     public function updated(BuyIn $buyIn)
     {
-        //
+        // Find the difference needed for profit to be accurate.
+        $amount = $buyIn->amount - $buyIn->getOriginal('amount');
+
+        $buyIn->game->decrement('profit', $amount);
     }
 
     /**
@@ -36,7 +39,9 @@ class BuyInObserver
      */
     public function deleted(BuyIn $buyIn)
     {
-        //
+        // This is increment because a BuyIn is a decrement normally, so when it's 
+        // deleted we add the amount back on.
+        $buyIn->game->increment('profit', $buyIn->amount);
     }
 
     /**

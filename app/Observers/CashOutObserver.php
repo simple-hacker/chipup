@@ -14,7 +14,7 @@ class CashOutObserver
      */
     public function created(CashOut $cashOut)
     {
-        tap($cashOut->game)->increment('profit', $cashOut->amount);
+        $cashOut->game->increment('profit', $cashOut->amount);
     }
 
     /**
@@ -25,7 +25,10 @@ class CashOutObserver
      */
     public function updated(CashOut $cashOut)
     {
-        //
+        // Find the difference needed for profit to be accurate.
+        $amount = $cashOut->amount - $cashOut->getOriginal('amount');
+
+        $cashOut->game->increment('profit', $amount);
     }
 
     /**
@@ -36,7 +39,9 @@ class CashOutObserver
      */
     public function deleted(CashOut $cashOut)
     {
-        //
+        // This is decrement because a CashOut is a increment normally, so when it's 
+        // deleted we subtract the amount we put on.
+        $cashOut->game->decrement('profit', $cashOut->amount);
     }
 
     /**

@@ -14,7 +14,7 @@ class ExpenseObserver
      */
     public function created(Expense $expense)
     {
-        tap($expense->game)->decrement('profit', $expense->amount);
+        $expense->game->decrement('profit', $expense->amount);
     }
 
     /**
@@ -25,7 +25,10 @@ class ExpenseObserver
      */
     public function updated(Expense $expense)
     {
-        //
+        // Find the difference needed for profit to be accurate.
+        $amount = $expense->amount - $expense->getOriginal('amount');
+
+        $expense->game->decrement('profit', $amount);
     }
 
     /**
@@ -36,7 +39,9 @@ class ExpenseObserver
      */
     public function deleted(Expense $expense)
     {
-        //
+        // This is increment because a Expense is a decrement normally, so when it's 
+        // deleted we add the amount back on.
+        $expense->game->increment('profit', $expense->amount);
     }
 
     /**

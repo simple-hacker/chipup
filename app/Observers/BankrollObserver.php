@@ -29,7 +29,6 @@ class BankrollObserver
         $amount = $bankroll->amount - $bankroll->getOriginal('amount');
 
         $bankroll->user->updateBankroll($amount);
-
     }
 
     /**

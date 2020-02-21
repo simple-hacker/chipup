@@ -136,16 +136,6 @@ class TournamentTest extends TestCase
         }        
     }
 
-    public function testAddingBuyInUpdatesTournamentProfit()
-    {
-        $user = factory('App\User')->create();
-
-        $tournament = $user->startTournament();
-        $this->assertEquals(0, $tournament->profit);
-        $tournament->addBuyIn(500);
-        $this->assertEquals(-500, $tournament->fresh()->profit);
-    }
-
     public function testTournamentCanHaveMultipleExpenses()
     {
         $user = factory('App\User')->create();
@@ -156,19 +146,6 @@ class TournamentTest extends TestCase
         $tournament->addExpense(300);
 
         $this->assertCount(3, $tournament->expenses);
-    }
-
-    public function testAddingExpensesUpdatesTournamentProfit()
-    {
-        $user = factory('App\User')->create();
-
-        $tournament = $user->startTournament();
-        $this->assertEquals(0, $tournament->profit);
-        $tournament->addExpense(50);
-        $this->assertEquals(-50, $tournament->fresh()->profit);
-        // Add another expense of 100.  Profit should now equal -150
-        $tournament->addExpense(100);
-        $this->assertEquals(-150, $tournament->fresh()->profit);
     }
 
     public function testATournamentCanBeCashedOut()
@@ -217,5 +194,42 @@ class TournamentTest extends TestCase
             $this->assertCount(1, $tournament->cashOutModel()->get());
             $this->assertInstanceOf(CashOut::class, $tournament->cashOutModel);
         }
+    }
+
+    public function testTournamentProfitFlow()
+    {
+        $user = factory('App\User')->create();
+        $tournament = $user->startTournament();
+        $tournament->addBuyIn(1000);
+        $tournament->addExpense(50);
+        $tournament->addExpense(200);
+        $tournament->cashOut(1000);
+
+        //Tournament profit should be -1000 -50 -200 + 1000 = -250
+        $this->assertEquals(-250, $tournament->fresh()->profit);
+
+        $this->assertCount(1, $tournament->buyIns);
+        $this->assertCount(2, $tournament->expenses);
+        $this->assertCount(1, $tournament->cashOutModel()->get());
+
+        // Change the first Expense to 500 instead of 50
+        tap($tournament->expenses->first())->update([
+            'amount' => 500
+        ]);
+
+        // Delete the second expense (2000);
+        tap($tournament->expenses->last())->delete();
+
+        // Update the cashOut value to 4000.
+        $tournament->cashOutModel->update([
+            'amount' => 4000
+        ]);
+
+        $tournament->refresh();
+
+        $this->assertCount(1, $tournament->expenses);
+        
+        //Tournament profit should now be -1000 -500 + 4000 = 2500
+        $this->assertEquals(2500, $tournament->profit);
     }
 }

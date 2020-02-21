@@ -132,19 +132,6 @@ class CashGameTest extends TestCase
         $this->assertCount(3, $cash_game->buyIns);
     }
 
-    public function testAddingBuyInsUpdatesCashGameProfit()
-    {
-        $user = factory('App\User')->create();
-
-        $cash_game = $user->startCashGame();
-        $this->assertEquals(0, $cash_game->profit);
-        $cash_game->addBuyIn(500);
-        $this->assertEquals(-500, $cash_game->fresh()->profit);
-        // Add another buy in of 1000.  Profit should now equal -1500
-        $cash_game->addBuyIn(1000);
-        $this->assertEquals(-1500, $cash_game->fresh()->profit);
-    }
-
     public function testCashGameCanHaveMultipleExpenses()
     {
         $user = factory('App\User')->create();
@@ -155,19 +142,6 @@ class CashGameTest extends TestCase
         $cash_game->addExpense(300);
 
         $this->assertCount(3, $cash_game->expenses);
-    }
-
-    public function testAddingExpensesUpdatesCashGameProfit()
-    {
-        $user = factory('App\User')->create();
-
-        $cash_game = $user->startCashGame();
-        $this->assertEquals(0, $cash_game->profit);
-        $cash_game->addExpense(50);
-        $this->assertEquals(-50, $cash_game->fresh()->profit);
-        // Add another expense of 100.  Profit should now equal -150
-        $cash_game->addExpense(100);
-        $this->assertEquals(-150, $cash_game->fresh()->profit);
     }
 
     public function testACashGameCanBeCashedOut()
@@ -216,5 +190,43 @@ class CashGameTest extends TestCase
             $this->assertCount(1, $cash_game->cashOutModel()->get());
             $this->assertInstanceOf(CashOut::class, $cash_game->cashOutModel);
         }
+    }
+
+    public function testCashGameProfitFlow()
+    {
+        $user = factory('App\User')->create();
+        $cash_game = $user->startCashGame();
+        $cash_game->addBuyIn(1000);
+        $cash_game->addExpense(50);
+        $cash_game->addExpense(200);
+        $cash_game->addBuyIn(2000);
+        $cash_game->cashOut(1000);
+
+        //CashGame profit should be -1000 -50 -200 -2000 + 1000 = -2250
+        $this->assertEquals(-2250, $cash_game->fresh()->profit);
+
+        $this->assertCount(2, $cash_game->buyIns);
+        $this->assertCount(2, $cash_game->expenses);
+        $this->assertCount(1, $cash_game->cashOutModel()->get());
+
+        // Change the first Expense to 500 instead of 50
+        tap($cash_game->expenses()->first())->update([
+            'amount' => 500
+        ]);
+
+        // Delete the second buyIn (2000);
+        tap($cash_game->buyIns->last())->delete();
+
+        // Update the cashOut value to 4000.
+        $cash_game->cashOutModel->update([
+            'amount' => 4000
+        ]);
+
+        $cash_game->refresh();
+
+        $this->assertCount(1, $cash_game->buyIns);
+
+        //CashGame profit should now be -1000 -500 -200 + 4000 = 2300
+        $this->assertEquals(2300, $cash_game->profit);
     }
 }
