@@ -2,9 +2,9 @@
 
 namespace App\Transactions;
 
-use App\Abstracts\GameTransaction;
+use App\Abstracts\NegativeGameTransaction;
 
-class Rebuy extends GameTransaction
+class Rebuy extends NegativeGameTransaction
 {
     protected $guarded = [];
 }

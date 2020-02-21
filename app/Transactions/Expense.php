@@ -2,9 +2,9 @@
 
 namespace App\Transactions;
 
-use App\Abstracts\GameTransaction;
+use App\Abstracts\NegativeGameTransaction;
 
-class Expense extends GameTransaction
+class Expense extends NegativeGameTransaction
 {
     protected $guarded = [];
 }

@@ -2,9 +2,9 @@
 
 namespace App\Transactions;
 
-use App\Abstracts\GameTransaction;
+use App\Abstracts\PositiveGameTransaction;
 
-class CashOut extends GameTransaction
+class CashOut extends PositiveGameTransaction
 {
     protected $guarded = [];
 }
