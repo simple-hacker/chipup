@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\User;
+use App\CashOut;
 use App\CashGame;
 use Tests\TestCase;
 use Illuminate\Support\Carbon;
@@ -107,5 +108,113 @@ class CashGameTest extends TestCase
 
         // User's liveCashGame should be cash_game_2.
         $this->assertEquals($user->liveCashGame()->id, $cash_game_2->id);
+    }
+
+    public function testCashGameCanHaveABuyIn()
+    {
+        $user = factory('App\User')->create();
+
+        $cash_game = $user->startCashGame();
+        $cash_game->addBuyIn(500);
+
+        $this->assertCount(1, $cash_game->buyIns);
+    }
+
+    public function testCashGameCanHaveMultipleBuyIns()
+    {
+        $user = factory('App\User')->create();
+
+        $cash_game = $user->startCashGame();
+        $cash_game->addBuyIn(500);
+        $cash_game->addBuyIn(500);
+        $cash_game->addBuyIn(500);
+
+        $this->assertCount(3, $cash_game->buyIns);
+    }
+
+    public function testAddingBuyInsUpdatesCashGameProfit()
+    {
+        $user = factory('App\User')->create();
+
+        $cash_game = $user->startCashGame();
+        $this->assertEquals(0, $cash_game->profit);
+        $cash_game->addBuyIn(500);
+        $this->assertEquals(-500, $cash_game->fresh()->profit);
+        // Add another buy in of 1000.  Profit should now equal -1500
+        $cash_game->addBuyIn(1000);
+        $this->assertEquals(-1500, $cash_game->fresh()->profit);
+    }
+
+    public function testCashGameCanHaveMultipleExpenses()
+    {
+        $user = factory('App\User')->create();
+
+        $cash_game = $user->startCashGame();
+        $cash_game->addExpense(500);
+        $cash_game->addExpense(1000);
+        $cash_game->addExpense(300);
+
+        $this->assertCount(3, $cash_game->expenses);
+    }
+
+    public function testAddingExpensesUpdatesCashGameProfit()
+    {
+        $user = factory('App\User')->create();
+
+        $cash_game = $user->startCashGame();
+        $this->assertEquals(0, $cash_game->profit);
+        $cash_game->addExpense(50);
+        $this->assertEquals(-50, $cash_game->fresh()->profit);
+        // Add another expense of 100.  Profit should now equal -150
+        $cash_game->addExpense(100);
+        $this->assertEquals(-150, $cash_game->fresh()->profit);
+    }
+
+    public function testACashGameCanBeCashedOut()
+    {
+        // Cashing Out ends the session as well as updates the CashGame's profit.
+
+        $user = factory('App\User')->create();
+        $cash_game = $user->startCashGame();
+        $cash_game->addBuyIn(10000);
+        $this->assertNull($cash_game->fresh()->end_time);
+
+        $end_time = Carbon::now()->toDateTimeString();
+
+        $cash_game->cashOut(30000);
+        
+        $cash_game->refresh();
+        
+        $this->assertEquals($end_time, $cash_game->end_time);
+        $this->assertEquals(20000, $cash_game->profit);
+    }
+
+    public function testACashGameCanBeCashedOutAtASuppliedTime()
+    {
+        $user = factory('App\User')->create();
+        $cash_game = $user->startCashGame();
+
+        $end_time = Carbon::create('+3 hours');
+
+        $cash_game->cashOut(30000, $end_time);
+                
+        $this->assertEquals($end_time->toDateTimeString(), $cash_game->fresh()->end_time);
+    }
+
+    public function testACashGameCanOnlyBeCashOutOnce()
+    {
+        // This error is thrown because the cash_game_id is unique in the CashOut migration
+        $this->expectException(\Illuminate\Database\QueryException::class);
+
+        try{
+            $user = factory('App\User')->create();
+            $cash_game = $user->startCashGame();
+
+            $cash_game->cashOut(10000);
+            $cash_game->cashOut(10000);
+        } finally {
+            $this->assertCount(1, $cash_game->cashOutModel()->get());
+            $this->assertInstanceOf(CashOut::class, $cash_game->cashOutModel);
+        }
     }
 }
