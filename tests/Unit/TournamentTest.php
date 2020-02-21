@@ -148,6 +148,30 @@ class TournamentTest extends TestCase
         $this->assertCount(3, $tournament->expenses);
     }
 
+    public function testTournamentCanHaveMultipleRebuys()
+    {
+        $user = factory('App\User')->create();
+
+        $tournament = $user->startTournament();
+        $tournament->addRebuy(1000);
+        $tournament->addRebuy(1000);
+        $tournament->addRebuy(1000);
+
+        $this->assertCount(3, $tournament->rebuys);
+    }
+
+    public function testTournamentCanHaveMultipleAddOns()
+    {
+        $user = factory('App\User')->create();
+
+        $tournament = $user->startTournament();
+        $tournament->addAddOn(500);
+        $tournament->addAddOn(500);
+        $tournament->addAddOn(500);
+
+        $this->assertCount(3, $tournament->addOns);
+    }
+
     public function testATournamentCanBeCashedOut()
     {
         // Cashing Out ends the tournament as well as updates the Tournament's profit.
@@ -203,13 +227,18 @@ class TournamentTest extends TestCase
         $tournament->addBuyIn(1000);
         $tournament->addExpense(50);
         $tournament->addExpense(200);
+        $tournament->addRebuy(1000);
+        $tournament->addRebuy(1000);
+        $tournament->addAddOn(5000);
         $tournament->cashOut(1000);
 
-        //Tournament profit should be -1000 -50 -200 + 1000 = -250
-        $this->assertEquals(-250, $tournament->fresh()->profit);
+        //Tournament profit should be -1000 -50 -200 -1000 -1000 + 1000 -5000 = -7250
+        $this->assertEquals(-7250, $tournament->fresh()->profit);
 
         $this->assertCount(1, $tournament->buyIns);
         $this->assertCount(2, $tournament->expenses);
+        $this->assertCount(2, $tournament->rebuys);
+        $this->assertCount(1, $tournament->addOns);
         $this->assertCount(1, $tournament->cashOutModel()->get());
 
         // Change the first Expense to 500 instead of 50
@@ -217,8 +246,16 @@ class TournamentTest extends TestCase
             'amount' => 500
         ]);
 
-        // Delete the second expense (2000);
+        // Delete the second expense (200);
         tap($tournament->expenses->last())->delete();
+
+        // Change the 2nd rebuy to 2000 instead of 1000
+        tap($tournament->rebuys->last())->update([
+            'amount' => 2000
+        ]);
+
+        // Delete the only add on (5000);
+        tap($tournament->addOns->first())->delete();
 
         // Update the cashOut value to 4000.
         $tournament->cashOutModel->update([
@@ -228,8 +265,8 @@ class TournamentTest extends TestCase
         $tournament->refresh();
 
         $this->assertCount(1, $tournament->expenses);
-        
-        //Tournament profit should now be -1000 -500 + 4000 = 2500
-        $this->assertEquals(2500, $tournament->profit);
+         
+        //Tournament profit should now be -7250 - (500-50) + 200 - (2000-1000) + 5000 + (4000-1000) = -500
+        $this->assertEquals(-500, $tournament->profit);
     }
 }

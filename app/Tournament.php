@@ -30,6 +30,34 @@ class Tournament extends Game
     }
 
     /**
+    * Add a Rebuy for the tournament.
+    * This updates the Tournament's profit by subtracting the Rebuy amount.
+    *
+    * @param integer amount
+    * @return Rebuy
+    */
+    public function addRebuy(int $amount)
+    {
+        return $this->rebuys()->create([
+            'amount' => $amount
+        ]);
+    }
+
+    /**
+    * Add a AddOn for the tournament.
+    * This updates the Tournament's profit by subtracting the Rebuy amount.
+    *
+    * @param integer amount
+    * @return AddOn
+    */
+    public function addAddOn(int $amount)
+    {
+        return $this->addOns()->create([
+            'amount' => $amount
+        ]);
+    }
+
+    /**
     * Returns the Tournament's BuyIn
     * 
     * @return morphMany
@@ -37,5 +65,25 @@ class Tournament extends Game
     public function buyIn()
     {
         return $this->morphOne('App\Transactions\BuyIn', 'game');
+    }
+
+    /**
+    * Returns the Tournament's Rebuys
+    * 
+    * @return morphMany
+    */
+    public function rebuys()
+    {
+        return $this->morphMany('App\Transactions\Rebuy', 'game');
+    }
+
+    /**
+    * Returns the Tournament's Rebuys
+    * 
+    * @return morphMany
+    */
+    public function addOns()
+    {
+        return $this->morphMany('App\Transactions\AddOn', 'game');
     }
 }
