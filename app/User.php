@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Transactions\Bankroll;
 use Illuminate\Support\Carbon;
 use App\Exceptions\NonIntegerAmount;
 use App\Exceptions\CashGameInProgress;
@@ -60,8 +61,8 @@ class User extends Authenticatable
 
     /**
     * Add amount to bankroll.
-    * This updates the user's bankroll and creates and BankrollTransaction.
-    * The bankroll is updated with a BankrollTransaction model observer in the created method.
+    * This updates the user's bankroll and creates and Bankroll.
+    * The bankroll is updated with a Bankroll model observer in the created method.
     * 
     * @param integer amount
     * @return void
@@ -72,7 +73,7 @@ class User extends Authenticatable
             throw new NonIntegerAmount;
         }
 
-        BankrollTransaction::create([
+        Bankroll::create([
             'user_id' => $this->id,
             'amount' => $amount
         ]);
@@ -81,8 +82,8 @@ class User extends Authenticatable
 
     /**
     * Withdraw amount from bankroll.
-    * This updates the user's bankroll and creates and BankrollTransaction.
-    * The bankroll is updated with a BankrollTransaction model observer in the created method.
+    * This updates the user's bankroll and creates and Bankroll.
+    * The bankroll is updated with a Bankroll model observer in the created method.
     * 
     * @param integer amount
     * @return void
@@ -93,7 +94,7 @@ class User extends Authenticatable
             throw new NonIntegerAmount;
         }
 
-        BankrollTransaction::create([
+        Bankroll::create([
             'user_id' => $this->id,
             'amount' => $amount * -1
         ]);
@@ -107,13 +108,13 @@ class User extends Authenticatable
     */
     public function bankrollTransactions()
     {
-        return $this->hasMany('App\BankrollTransaction');
+        return $this->hasMany('App\Transactions\Bankroll');
     }
 
 
     /**
     * Returns a collection of the user's CashGames
-    * 
+    * Unable to prepare route [api/user] for serialization. Uses Closure.Unable to prepare route [api/user] for serialization. Uses Closure.
     * @return hasMany
     */
     public function cashGames()

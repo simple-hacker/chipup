@@ -1,15 +1,17 @@
 <?php
 
-namespace App;
+namespace App\Transactions;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BankrollTransaction extends Model
+class Bankroll extends Model
 {
     protected $guarded = [];
 
+    protected $table = 'bankroll_transactions';
+
     /**
-    * Returns the user the BankrollTransaction belongs to
+    * Returns the user the Bankroll belongs to
     *
     * @return belongsTo
     */

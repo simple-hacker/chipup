@@ -36,6 +36,6 @@ class Tournament extends Game
     */
     public function buyIn()
     {
-        return $this->morphOne('App\BuyIn', 'game');
+        return $this->morphOne('App\Transactions\BuyIn', 'game');
     }
 }

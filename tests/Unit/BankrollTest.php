@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class BankrollTransactionTest extends TestCase
+class BankrollTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,10 +18,10 @@ class BankrollTransactionTest extends TestCase
         // Add 500 (£5) to user's bankroll.
         $user->addToBankroll(500);
 
-        // A user should have one BankrollTransaction
+        // A user should have one Bankroll
         $this->assertCount(1, $user->bankrollTransactions);
 
-        // User's bankroll is updated through BankrollTransaction model observer
+        // User's bankroll is updated through Bankroll model observer
         $this->assertEquals($user->fresh()->bankroll, 10500);
     }
 
@@ -33,15 +33,15 @@ class BankrollTransactionTest extends TestCase
 
         // Withdraw 500 (£5) to user's bankroll.
         $user->withdrawFromBankroll(500);
-
-        // A user should have one BankrollTransaction
+        
+        // A user should have one Bankroll
         $this->assertCount(1, $user->bankrollTransactions);
 
-        // User's bankroll is updated through BankrollTransaction model observer
+        // User's bankroll is updated through Bankroll model observer
         $this->assertEquals($user->fresh()->bankroll, 9500);
     }
 
-    public function testAUsersBankrollIsCorrectedWhenUpdatingABankrollTransaction()
+    public function testAUsersBankrollIsCorrectedWhenUpdatingABankroll()
     {
         // Default to 10000 bankroll.
         $user = factory('App\User')->create();
@@ -51,21 +51,21 @@ class BankrollTransactionTest extends TestCase
         // Assert bankroll is incremented with this addition.
         $this->assertEquals($user->fresh()->bankroll, 10500);
 
-        // Get the user's BankrollTransaction
-        $bankrollTransaction = $user->bankrollTransactions()->first();
+        // Get the user's Bankroll
+        $bankroll = $user->bankrollTransactions()->first();
 
         // Update the addToBankroll amount to 1000 instead of 500. i.e. greater than original
-        $bankrollTransaction->update([
+        $bankroll->update([
             'amount' => 1000
         ]);
 
-        // Assert bankroll is updated to reflect this change to BankrollTransaction.
+        // Assert bankroll is updated to reflect this change to Bankroll.
         // New amount should equal 11000 instead, an extra 500 (New Amount - Original Amount = 1000 - 500 = 500, so 10500 + 500 = 11000)
         $this->assertEquals($user->fresh()->bankroll, 11000);
 
 
         // Now check when new amount is less than original (which is now 1000 as above). -1500 < 1000.
-        $bankrollTransaction->fresh()->update([
+        $bankroll->fresh()->update([
             'amount' => -1500
         ]);
 

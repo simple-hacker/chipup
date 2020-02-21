@@ -2,14 +2,14 @@
 
 namespace App\Observers;
 
-use App\BuyIn;
+use App\Transactions\BuyIn;
 
 class BuyInObserver
 {
     /**
      * Handle the buy in "created" event.
      *
-     * @param  \App\BuyIn  $buyIn
+     * @param  \App\Transactions\BuyIn  $buyIn
      * @return void
      */
     public function created(BuyIn $buyIn)
@@ -20,7 +20,7 @@ class BuyInObserver
     /**
      * Handle the buy in "updated" event.
      *
-     * @param  \App\BuyIn  $buyIn
+     * @param  \App\Transactions\BuyIn  $buyIn
      * @return void
      */
     public function updated(BuyIn $buyIn)
@@ -31,7 +31,7 @@ class BuyInObserver
     /**
      * Handle the buy in "deleted" event.
      *
-     * @param  \App\BuyIn  $buyIn
+     * @param  \App\Transactions\BuyIn  $buyIn
      * @return void
      */
     public function deleted(BuyIn $buyIn)
@@ -42,7 +42,7 @@ class BuyInObserver
     /**
      * Handle the buy in "restored" event.
      *
-     * @param  \App\BuyIn  $buyIn
+     * @param  \App\Transactions\BuyIn  $buyIn
      * @return void
      */
     public function restored(BuyIn $buyIn)
@@ -53,7 +53,7 @@ class BuyInObserver
     /**
      * Handle the buy in "force deleted" event.
      *
-     * @param  \App\BuyIn  $buyIn
+     * @param  \App\Transactions\BuyIn  $buyIn
      * @return void
      */
     public function forceDeleted(BuyIn $buyIn)

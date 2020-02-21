@@ -89,7 +89,7 @@ abstract class Game extends Model
     */
     public function buyIns()
     {
-        return $this->morphMany('App\BuyIn', 'game');
+        return $this->morphMany('App\Transactions\BuyIn', 'game');
     }
 
     /**
@@ -99,7 +99,7 @@ abstract class Game extends Model
     */
     public function expenses()
     {
-        return $this->morphMany('App\Expense', 'game');
+        return $this->morphMany('App\Transactions\Expense', 'game');
     }
 
     /**
@@ -109,6 +109,6 @@ abstract class Game extends Model
     */
     public function cashOutModel()
     {
-        return $this->morphOne('App\CashOut', 'game');
+        return $this->morphOne('App\Transactions\CashOut', 'game');
     }
 }

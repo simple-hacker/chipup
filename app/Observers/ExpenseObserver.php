@@ -2,14 +2,14 @@
 
 namespace App\Observers;
 
-use App\Expense;
+use App\Transactions\Expense;
 
 class ExpenseObserver
 {
     /**
      * Handle the expense "created" event.
      *
-     * @param  \App\Expense  $expense
+     * @param  \App\Transactions\Expense  $expense
      * @return void
      */
     public function created(Expense $expense)
@@ -20,7 +20,7 @@ class ExpenseObserver
     /**
      * Handle the expense "updated" event.
      *
-     * @param  \App\Expense  $expense
+     * @param  \App\Transactions\Expense  $expense
      * @return void
      */
     public function updated(Expense $expense)
@@ -31,7 +31,7 @@ class ExpenseObserver
     /**
      * Handle the expense "deleted" event.
      *
-     * @param  \App\Expense  $expense
+     * @param  \App\Transactions\Expense  $expense
      * @return void
      */
     public function deleted(Expense $expense)
@@ -42,7 +42,7 @@ class ExpenseObserver
     /**
      * Handle the expense "restored" event.
      *
-     * @param  \App\Expense  $expense
+     * @param  \App\Transactions\Expense  $expense
      * @return void
      */
     public function restored(Expense $expense)
@@ -53,7 +53,7 @@ class ExpenseObserver
     /**
      * Handle the expense "force deleted" event.
      *
-     * @param  \App\Expense  $expense
+     * @param  \App\Transactions\Expense  $expense
      * @return void
      */
     public function forceDeleted(Expense $expense)

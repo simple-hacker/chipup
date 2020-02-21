@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "mperks/poker",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "Manage your poker bankroll in real time",
     "keywords": [
         "framework",
         "laravel"

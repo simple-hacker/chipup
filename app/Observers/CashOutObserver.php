@@ -2,14 +2,14 @@
 
 namespace App\Observers;
 
-use App\CashOut;
+use App\Transactions\CashOut;
 
 class CashOutObserver
 {
     /**
      * Handle the cash out "created" event.
      *
-     * @param  \App\CashOut  $cashOut
+     * @param  \App\Transactions\CashOut  $cashOut
      * @return void
      */
     public function created(CashOut $cashOut)
@@ -20,7 +20,7 @@ class CashOutObserver
     /**
      * Handle the cash out "updated" event.
      *
-     * @param  \App\CashOut  $cashOut
+     * @param  \App\Transactions\CashOut  $cashOut
      * @return void
      */
     public function updated(CashOut $cashOut)
@@ -31,7 +31,7 @@ class CashOutObserver
     /**
      * Handle the cash out "deleted" event.
      *
-     * @param  \App\CashOut  $cashOut
+     * @param  \App\Transactions\CashOut  $cashOut
      * @return void
      */
     public function deleted(CashOut $cashOut)
@@ -42,7 +42,7 @@ class CashOutObserver
     /**
      * Handle the cash out "restored" event.
      *
-     * @param  \App\CashOut  $cashOut
+     * @param  \App\Transactions\CashOut  $cashOut
      * @return void
      */
     public function restored(CashOut $cashOut)
@@ -53,7 +53,7 @@ class CashOutObserver
     /**
      * Handle the cash out "force deleted" event.
      *
-     * @param  \App\CashOut  $cashOut
+     * @param  \App\Transactions\CashOut  $cashOut
      * @return void
      */
     public function forceDeleted(CashOut $cashOut)

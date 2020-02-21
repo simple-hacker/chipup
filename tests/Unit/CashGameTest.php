@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\User;
-use App\CashOut;
+use App\Transactions\CashOut;
 use App\CashGame;
 use Tests\TestCase;
 use Illuminate\Support\Carbon;

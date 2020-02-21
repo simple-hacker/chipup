@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\User;
-use App\CashOut;
+use App\Transactions\CashOut;
 use App\Tournament;
 use Tests\TestCase;
 use Illuminate\Support\Carbon;
@@ -118,7 +118,7 @@ class TournamentTest extends TestCase
         $tournament->addBuyIn(500);
 
         $this->assertCount(1, $tournament->buyIn()->get());
-        $this->assertInstanceOf(\App\BuyIn::class, $tournament->buyIn);
+        $this->assertInstanceOf(\App\Transactions\BuyIn::class, $tournament->buyIn);
     }
 
     public function testTournamentCannotHaveMultipleBuyIns()
