@@ -2,19 +2,9 @@
 
 namespace App\Transactions;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Abstracts\GameTransaction;
 
-class CashOut extends Model
+class CashOut extends GameTransaction
 {
     protected $guarded = [];
-
-    /**
-    * Returns the CashOut's game type model
-    * 
-    * @return morphTo
-    */
-    public function game()
-    {
-        return $this->morphTo();
-    }
 }

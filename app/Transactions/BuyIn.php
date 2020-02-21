@@ -2,19 +2,9 @@
 
 namespace App\Transactions;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Abstracts\GameTransaction;
 
-class BuyIn extends Model
+class BuyIn extends GameTransaction
 {
     protected $guarded = [];
-
-    /**
-    * Returns the BuyIn's game type model. 
-    *
-    * @return morphTo
-    */
-    public function game()
-    {
-        return $this->morphTo();
-    }
 }
