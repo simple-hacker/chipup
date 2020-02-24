@@ -10,6 +10,10 @@ class Bankroll extends Model
 
     protected $table = 'bankroll_transactions';
 
+    protected $casts = [
+        'user_id' => 'integer',
+    ];
+
     /**
     * Returns the user the Bankroll belongs to
     *

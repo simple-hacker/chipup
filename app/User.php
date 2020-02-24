@@ -56,6 +56,8 @@ class User extends Authenticatable
         } else {
             $this->decrement('bankroll', $amount * -1);
         }
+
+        return $this->bankroll;
     }
 
 
@@ -73,7 +75,7 @@ class User extends Authenticatable
             throw new NonIntegerAmount;
         }
 
-        Bankroll::create([
+        return Bankroll::create([
             'user_id' => $this->id,
             'amount' => $amount
         ]);
@@ -94,7 +96,7 @@ class User extends Authenticatable
             throw new NonIntegerAmount;
         }
 
-        Bankroll::create([
+        return Bankroll::create([
             'user_id' => $this->id,
             'amount' => $amount * -1
         ]);

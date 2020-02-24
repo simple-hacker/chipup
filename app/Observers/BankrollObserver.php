@@ -9,46 +9,49 @@ class BankrollObserver
     /**
      * Handle the bankroll transaction "created" event.
      *
-     * @param  \App\Transactions\Bankroll  $bankroll
+     * @param  \App\Transactions\Bankroll  $bankrollTransaction
      * @return void
      */
-    public function created(Bankroll $bankroll)
+    public function created(Bankroll $bankrollTransaction)
     {
-        $bankroll->user->updateBankroll($bankroll->amount);
+        $bankrollTransaction->user->updateBankroll($bankrollTransaction->amount);
     }
 
     /**
      * Handle the bankroll transaction "updated" event.
      *
-     * @param  \App\Transactions\Bankroll  $bankroll
+     * @param  \App\Transactions\Bankroll  $bankrollTransaction
      * @return void
      */
-    public function updated(Bankroll $bankroll)
+    public function updated(Bankroll $bankrollTransaction)
     {
         // Find the difference needed for bankroll to be accurate.
-        $amount = $bankroll->amount - $bankroll->getOriginal('amount');
+        $amount = $bankrollTransaction->amount - $bankrollTransaction->getOriginal('amount');
 
-        $bankroll->user->updateBankroll($amount);
+        $bankrollTransaction->user->updateBankroll($amount);
     }
 
     /**
      * Handle the bankroll transaction "deleted" event.
      *
-     * @param  \App\Transactions\Bankroll  $bankroll
+     * @param  \App\Transactions\Bankroll  $bankrollTransaction
      * @return void
      */
-    public function deleted(Bankroll $bankroll)
+    public function deleted(Bankroll $bankrollTransaction)
     {
-        //
+        // We update the User's bankroll by the opposite amount (multiply by -1)
+        // So if we originally added 10000, we decrement by -10000 and vice versa
+        
+        $bankrollTransaction->user->updateBankroll($bankrollTransaction->amount * -1);
     }
 
     /**
      * Handle the bankroll transaction "restored" event.
      *
-     * @param  \App\Transactions\Bankroll  $bankroll
+     * @param  \App\Transactions\Bankroll  $bankrollTransaction
      * @return void
      */
-    public function restored(Bankroll $bankroll)
+    public function restored(Bankroll $bankrollTransaction)
     {
         //
     }
@@ -56,10 +59,10 @@ class BankrollObserver
     /**
      * Handle the bankroll transaction "force deleted" event.
      *
-     * @param  \App\Transactions\Bankroll  $bankroll
+     * @param  \App\Transactions\Bankroll  $bankrollTransaction
      * @return void
      */
-    public function forceDeleted(Bankroll $bankroll)
+    public function forceDeleted(Bankroll $bankrollTransaction)
     {
         //
     }
