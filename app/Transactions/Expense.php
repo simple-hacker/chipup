@@ -6,5 +6,5 @@ use App\Abstracts\NegativeGameTransaction;
 
 class Expense extends NegativeGameTransaction
 {
-    protected $guarded = [];
+
 }

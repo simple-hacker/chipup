@@ -6,5 +6,5 @@ use App\Abstracts\NegativeGameTransaction;
 
 class Rebuy extends NegativeGameTransaction
 {
-    protected $guarded = [];
+
 }

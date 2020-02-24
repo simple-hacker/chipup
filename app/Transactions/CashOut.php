@@ -6,5 +6,5 @@ use App\Abstracts\PositiveGameTransaction;
 
 class CashOut extends PositiveGameTransaction
 {
-    protected $guarded = [];
+
 }

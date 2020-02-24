@@ -6,5 +6,5 @@ use App\Abstracts\NegativeGameTransaction;
 
 class AddOn extends NegativeGameTransaction
 {
-    protected $guarded = [];
+
 }

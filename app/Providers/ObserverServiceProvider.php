@@ -29,8 +29,8 @@ class ObserverServiceProvider extends ServiceProvider
         \App\Transactions\Bankroll::observe(BankrollObserver::class);
         \App\Transactions\BuyIn::observe(NegativeGameTransactionObserver::class);
         \App\Transactions\Expense::observe(NegativeGameTransactionObserver::class);
-        \App\Transactions\CashOut::observe(PositiveGameTransactionObserver::class);
         \App\Transactions\Rebuy::observe(NegativeGameTransactionObserver::class);
         \App\Transactions\AddOn::observe(NegativeGameTransactionObserver::class);
+        \App\Transactions\CashOut::observe(PositiveGameTransactionObserver::class);
     }
 }

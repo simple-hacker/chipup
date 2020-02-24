@@ -2,7 +2,7 @@
 
 namespace App\Abstracts;
 
-class PositiveGameTransaction extends GameTransaction
+abstract class PositiveGameTransaction extends GameTransaction
 {
 
 }
