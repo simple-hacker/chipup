@@ -2,12 +2,17 @@
 
 namespace App\Abstracts;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use App\Exceptions\InvalidDate;
+use Illuminate\Database\Eloquent\Model;
+use ShiftOneLabs\LaravelCascadeDeletes\CascadesDeletes;
 
 abstract class Game extends Model
 {
+    protected $casts = [
+        'profit' => 'integer'
+    ];
+
     /**
     * A Game belongs to a user 
     *

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Observers\GameObserver;
 use App\Observers\BankrollObserver;
 use App\Observers\NegativeGameTransactionObserver;
 use App\Observers\PositiveGameTransactionObserver;
@@ -26,6 +27,8 @@ class ObserverServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        \App\CashGame::observe(GameObserver::class);
+        \App\Tournament::observe(GameObserver::class);
         \App\Transactions\Bankroll::observe(BankrollObserver::class);
         \App\Transactions\BuyIn::observe(NegativeGameTransactionObserver::class);
         \App\Transactions\Expense::observe(NegativeGameTransactionObserver::class);

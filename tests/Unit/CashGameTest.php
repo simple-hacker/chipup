@@ -3,10 +3,15 @@
 namespace Tests\Unit;
 
 use App\User;
-use App\Transactions\CashOut;
 use App\CashGame;
 use Tests\TestCase;
+use App\Transactions\BuyIn;
+use App\Transactions\CashOut;
+use App\Transactions\Expense;
 use Illuminate\Support\Carbon;
+use App\Exceptions\InvalidDate;
+use App\Exceptions\CashGameInProgress;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CashGameTest extends TestCase
@@ -243,24 +248,93 @@ class CashGameTest extends TestCase
         $cash_game = $user->startCashGame();
         $cash_game->addBuyIn(1000);
 
-        $this->assertEquals(6000, $user->fresh()->bankroll);
+        // Original bankroll is 5000, but we take off 1000 as we buy in.
+        // User's bankroll should be 4000
+        $this->assertEquals(4000, $user->fresh()->bankroll);
 
         // This should also work if we update the BuyIn.
         $buy_in = $cash_game->buyIns()->first();
         $buy_in->update([
             'amount' => 500
         ]);
-        // Bankroll should be 5500 (original 5000 and updated 500)
-        // $this->assertEquals(5500, $user->fresh()->bankroll);
+        // Bankroll should be 4500 (original 5000 and updated -500)
+        $this->assertEquals(4500, $user->fresh()->bankroll);
 
         // This should also work if we update the BuyIn.
         $buy_in->delete();
         // Bankroll should be 5000 (original 5000)
-        // $this->assertEquals(5500, $user->fresh()->bankroll);
+        $this->assertEquals(5000, $user->fresh()->bankroll);
+        
+        
+        // Testing Positive transaction as well.
+        $cash_game->cashOut(2000);
+        // We're back to the original 5000, but we cashed out for 2000.  Bankroll = 7000
+        $this->assertEquals(7000, $user->fresh()->bankroll);
+        
     }
 
     public function testTheUsersBankrollIsUpdatedWhenACashGameIsDeleted()
     {
+        $user = factory('App\User')->create([
+            'bankroll' => 10000
+        ]);
+        $cash_game = $user->startCashGame();
+        $cash_game->addBuyIn(1000);
+        $cash_game->addExpense(50);
+        $cash_game->addExpense(200);
+        $cash_game->addBuyIn(2000);
+        $cash_game->cashOut(1000);
+
+        // Check that users bankroll is 7750 (10000-1000-50-200-2000+1000)
+        $this->assertEquals(7750, $user->fresh()->bankroll);
+        // CashGame profit is -2250 (-1000-50-200-2000+1000)
+        $this->assertEquals(-2250, $cash_game->fresh()->profit);
+
+        // Now if we delete the cash_game the user's bankroll should revert back to the orignal
+        // 10000, calculated by the user's current bankroll (7750) minus the cash_games profit (-2250)
+        // If the cash_game profit is negative, it adds back on, if positive it should subtract it.
+        $cash_game->fresh()->delete();
+        $this->assertEquals(10000, $user->fresh()->bankroll);
         
+        // Test again with positive profit
+        $cash_game2 = $user->startCashGame();
+        $cash_game2->cashOut(10000);
+        // Orignal bankroll 10000 + cashOut 10000 = 20000
+        $this->assertEquals(20000, $user->fresh()->bankroll);
+
+        $cash_game2->fresh()->delete();
+        $this->assertEquals(10000, $user->fresh()->bankroll);
+    }
+
+    public function testWhenACashGameIsDeletedItDeletesAllOfItsGameTransactions()
+    {
+        $user = factory('App\User')->create();
+        $cash_game = $user->startCashGame();
+        $cash_game->addBuyIn(1000);
+        $cash_game->addExpense(50);
+        $cash_game->addExpense(200);
+        $cash_game->addBuyIn(2000);
+        $cash_game->cashOut(1000);
+        $cash_game->refresh();
+        // Make sure counts and bankroll are correct.
+        $this->assertCount(2, $cash_game->buyIns);
+        $this->assertCount(2, $cash_game->expenses);
+        $this->assertCount(1, $cash_game->cashOutModel()->get());
+        $this->assertEquals(-2250, $cash_game->profit);
+        $this->assertEquals(7750, $user->fresh()->bankroll);
+        $this->assertCount(1, $user->cashGames);
+        
+        // When deleting a CashGame it shoudl delete all it's GameTransactions
+        // This is handled in Game model Observer delete method.
+        // Can't use cascade down migrations because of polymorphic relationship
+        $cash_game->delete();
+
+        $user->refresh();
+        
+        $this->assertCount(0, $user->cashGames);
+        $this->assertEquals(10000, $user->bankroll);
+        $this->assertCount(0, BuyIn::all());
+        $this->assertCount(0, Expense::all());
+        $this->assertCount(0, CashOut::all());
     }
 }
