@@ -9,18 +9,19 @@ class NegativeGameTransactionObserver
     /**
      * Handle the negative game transaction "created" event.
      *
-     * @param  \App\NegativeGameTransaction  $negativeGameTransaction
+     * @param  \App\Abstracts\NegativeGameTransaction  $negativeGameTransaction
      * @return void
      */
     public function created(NegativeGameTransaction $negativeGameTransaction)
     {
-        $negativeGameTransaction->game->decrement('profit', $negativeGameTransaction->amount);
+        $negativeGameTransaction->game->profit -= $negativeGameTransaction->amount;
+        $negativeGameTransaction->game->save();
     }
 
     /**
      * Handle the negative game transaction "updated" event.
      *
-     * @param  \App\NegativeGameTransaction  $negativeGameTransaction
+     * @param  \App\Abstracts\NegativeGameTransaction  $negativeGameTransaction
      * @return void
      */
     public function updated(NegativeGameTransaction $negativeGameTransaction)
@@ -28,26 +29,28 @@ class NegativeGameTransactionObserver
         // Find the difference needed for profit to be accurate.
         $amount = $negativeGameTransaction->amount - $negativeGameTransaction->getOriginal('amount');
 
-        $negativeGameTransaction->game->decrement('profit', $amount);
+        $negativeGameTransaction->game->profit -= $amount;
+        $negativeGameTransaction->game->save();
     }
 
     /**
      * Handle the negative game transaction "deleted" event.
      *
-     * @param  \App\NegativeGameTransaction  $negativeGameTransaction
+     * @param  \App\Abstracts\NegativeGameTransaction  $negativeGameTransaction
      * @return void
      */
     public function deleted(NegativeGameTransaction $negativeGameTransaction)
     {
         // This is increment because a negativeGameTransaction is a decrement normally, so when it's 
         // deleted we add the amount back on.
-        $negativeGameTransaction->game->increment('profit', $negativeGameTransaction->amount);
+        $negativeGameTransaction->game->profit += $negativeGameTransaction->amount;
+        $negativeGameTransaction->game->save();
     }
 
     /**
      * Handle the negative game transaction "restored" event.
      *
-     * @param  \App\NegativeGameTransaction  $negativeGameTransaction
+     * @param  \App\Abstracts\NegativeGameTransaction  $negativeGameTransaction
      * @return void
      */
     public function restored(NegativeGameTransaction $negativeGameTransaction)
@@ -58,7 +61,7 @@ class NegativeGameTransactionObserver
     /**
      * Handle the negative game transaction "force deleted" event.
      *
-     * @param  \App\NegativeGameTransaction  $negativeGameTransaction
+     * @param  \App\Abstracts\NegativeGameTransaction  $negativeGameTransaction
      * @return void
      */
     public function forceDeleted(NegativeGameTransaction $negativeGameTransaction)

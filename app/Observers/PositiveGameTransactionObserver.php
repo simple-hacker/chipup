@@ -9,12 +9,13 @@ class PositiveGameTransactionObserver
     /**
      * Handle the positive game transaction "created" event.
      *
-     * @param  \App\Abstract\Abstract\PositiveGameTransaction  $positiveGameTransaction
+     * @param  \App\Abstract\PositiveGameTransaction  $positiveGameTransaction
      * @return void
      */
     public function created(PositiveGameTransaction $positiveGameTransaction)
     {
-        $positiveGameTransaction->game->increment('profit', $positiveGameTransaction->amount);
+        $positiveGameTransaction->game->profit += $positiveGameTransaction->amount;
+        $positiveGameTransaction->game->save();
     }
 
     /**
@@ -28,7 +29,8 @@ class PositiveGameTransactionObserver
         // Find the difference needed for profit to be accurate.
         $amount = $positiveGameTransaction->amount - $positiveGameTransaction->getOriginal('amount');
 
-        $positiveGameTransaction->game->increment('profit', $amount);
+        $positiveGameTransaction->game->profit += $amount;
+        $positiveGameTransaction->game->save();
     }
 
     /**
@@ -41,7 +43,8 @@ class PositiveGameTransactionObserver
     {
         // This is decrement because a PositiveGameTransaction is a increment normally, so when it's 
         // deleted we subtract the amount we put on.
-        $positiveGameTransaction->game->decrement('profit', $positiveGameTransaction->amount);
+        $positiveGameTransaction->game->profit -= $positiveGameTransaction->amount;
+        $positiveGameTransaction->game->save();
     }
 
     /**
