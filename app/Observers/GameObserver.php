@@ -45,9 +45,7 @@ class GameObserver
         $game->user->updateBankroll($game->profit * -1);
 
         // Delete all GameTransactions to.
-        $game->buyIns()->delete();
-        $game->expenses()->delete();
-        $game->cashOutModel()->delete();
+        $game->deleteGameTransactions();
     }
 
     /**

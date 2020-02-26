@@ -86,4 +86,20 @@ class Tournament extends Game
     {
         return $this->morphMany('App\Transactions\AddOn', 'game');
     }
+
+
+    /**
+    * Extends parent's deleteGameTransactions to include Tournament relationships.
+    * 
+    * @return void
+    */
+    public function deleteGameTransactions()
+    {
+        // TODO:
+        // $this->buyIn()->delete();
+        // $this->rebuys()->delete();
+        // $this->addOns()->delete();
+
+        parent::deleteGameTransactions();
+    }
 }
