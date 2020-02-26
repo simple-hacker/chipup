@@ -138,7 +138,7 @@ class User extends Authenticatable
                         ->count();
 
         if ($count > 0) {
-            throw new CashGameInProgress;
+            throw new CashGameInProgress('A Cash Game is already in progress.');
         }
 
         return $this->cashGames()->create([

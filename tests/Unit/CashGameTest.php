@@ -229,4 +229,38 @@ class CashGameTest extends TestCase
         //CashGame profit should now be -1000 -500 -200 + 4000 = 2300
         $this->assertEquals(2300, $cash_game->profit);
     }
+
+    public function testTheUsersBankrollIsUpdatedWhenUpdatingTheCashGamesProfit()
+    {
+        // There is a Observer on the abstract Game so when the Game (CashGame) profit is updated (i.e. adding buyIn, expenses etc)
+        // then the User's bankroll is also updated.
+        // Only testing the BuyIn of the GameTransactions as they all work the same because of Positive/NegativeGameTransactionObserver
+        // which updates the CashGame's profit.
+
+        $user = factory('App\User')->create([
+            'bankroll' => 5000
+        ]);
+        $cash_game = $user->startCashGame();
+        $cash_game->addBuyIn(1000);
+
+        $this->assertEquals(6000, $user->fresh()->bankroll);
+
+        // This should also work if we update the BuyIn.
+        $buy_in = $cash_game->buyIns()->first();
+        $buy_in->update([
+            'amount' => 500
+        ]);
+        // Bankroll should be 5500 (original 5000 and updated 500)
+        // $this->assertEquals(5500, $user->fresh()->bankroll);
+
+        // This should also work if we update the BuyIn.
+        $buy_in->delete();
+        // Bankroll should be 5000 (original 5000)
+        // $this->assertEquals(5500, $user->fresh()->bankroll);
+    }
+
+    public function testTheUsersBankrollIsUpdatedWhenACashGameIsDeleted()
+    {
+        
+    }
 }

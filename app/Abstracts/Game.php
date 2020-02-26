@@ -21,7 +21,7 @@ abstract class Game extends Model
     /**
     * End the Game by updating the end_time to the current time or given time.
     * 
-    * @param 
+    * @param Carbon end_time
     * @return mixed
     */
     public function end(Carbon $end_time = null)
@@ -30,7 +30,7 @@ abstract class Game extends Model
 
         // The end_time cannot be before the start_time
         if ($end_time < $this->start_time) {
-            throw new InvalidDate;
+            throw new InvalidDate('Cannot set the end time before the start time');
         }
 
         return $this->update([

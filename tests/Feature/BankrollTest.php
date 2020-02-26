@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Transactions\Bankroll;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class BankrollTest extends TestCase
@@ -18,6 +18,22 @@ class BankrollTest extends TestCase
             'amount' => 30000
         ])
         ->assertRedirect('login');
+
+        $this->post(route('bankroll.withdraw'), [
+            'amount' => 10000
+        ])
+        ->assertRedirect('login');
+
+        // Create a BankrollTransaction to update
+        $bankrollTransaction = Bankroll::create([
+            'user_id' => $user->id,
+            'amount' => 1000,
+        ]);
+        
+        $this->patch(route('bankroll.update', ['bankrollTransaction', $bankrollTransaction]), [
+            'amount' => 30000
+        ])
+        ->assertRedirect('login');
     }
     
     public function testAUserCanAddToTheirBankroll()
@@ -28,14 +44,13 @@ class BankrollTest extends TestCase
 
         $this->actingAs($user);
 
-        $response = $this->post(route('bankroll.add'), [
-            'amount' => 30000
-        ]);
-
-        $response->assertStatus(200)
-                 ->assertJson([
-                    'success' => true
-                ]);
+        $this->postJson(route('bankroll.add'), [
+                'amount' => 30000
+            ])
+            ->assertStatus(200)
+            ->assertJson([
+                'success' => true
+            ]);
 
         $user->refresh();
 
@@ -51,14 +66,13 @@ class BankrollTest extends TestCase
 
         $this->actingAs($user);
 
-        $response = $this->post(route('bankroll.withdraw'), [
-            'amount' => 10000
-        ]);
-
-        $response->assertStatus(200)
-                 ->assertJson([
-                    'success' => true
-                ]);
+        $this->postJson(route('bankroll.withdraw'), [
+                'amount' => 10000
+            ])
+            ->assertStatus(200)
+            ->assertJson([
+                'success' => true
+            ]);
 
         $user->refresh();
 
@@ -68,21 +82,19 @@ class BankrollTest extends TestCase
 
     public function testAUserCanUpdateTheirBankrollTransaction()
     {
-        $this->withoutExceptionHandling();
-
         $user = factory('App\User')->create([
             'bankroll' => 0,
         ]);
 
         $this->actingAs($user);
 
-        $this->post(route('bankroll.add'), [
+        $this->postJson(route('bankroll.add'), [
             'amount' => 30000
         ]);
 
         $bankrollTransaction = $user->bankrollTransactions->first();
 
-        $this->patch(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
+        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
             'amount' => 20000
         ]);
 
@@ -91,8 +103,6 @@ class BankrollTest extends TestCase
 
     public function testAUserCanDeleteTheirBankrollTransaction()
     {
-        $this->withoutExceptionHandling();
-
         $user = factory('App\User')->create([
             'bankroll' => 50000,
         ]);
@@ -100,7 +110,7 @@ class BankrollTest extends TestCase
         $this->actingAs($user);
 
         // Withdraw 10000
-        $this->post(route('bankroll.withdraw'), [
+        $this->postJson(route('bankroll.withdraw'), [
             'amount' => 10000
         ]);
 
@@ -110,7 +120,7 @@ class BankrollTest extends TestCase
         
         // Get the user's Withdraw Transaction and delete it.
         $bankrollTransaction = $user->bankrollTransactions->first();
-        $this->delete(route('bankroll.delete', ['bankrollTransaction' => $bankrollTransaction]));
+        $this->deleteJson(route('bankroll.delete', ['bankrollTransaction' => $bankrollTransaction]));
 
         // The user shouldn't have any Transactions and their bankroll should be the original 50000
         $user->refresh();
@@ -125,7 +135,7 @@ class BankrollTest extends TestCase
 
         $this->actingAs($user1);
         // Add 30000 to user1's bankroll.
-        $this->post(route('bankroll.add'), [
+        $this->postJson(route('bankroll.add'), [
             'amount' => 30000
         ]);
 
@@ -134,13 +144,13 @@ class BankrollTest extends TestCase
 
         // Now acting as user2, should be Unauthorized to update user1's transaction.
         $this->actingAs($user2);
-        $this->patch(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
+        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
                     'amount' => 20000
                 ])
                 ->assertForbidden();
         
         // Should be Unauthorized to delete user1's transaction too.
-        $this->delete(route('bankroll.delete', ['bankrollTransaction' => $bankrollTransaction]))
+        $this->deleteJson(route('bankroll.delete', ['bankrollTransaction' => $bankrollTransaction]))
                 ->assertForbidden();
     }
 
@@ -155,45 +165,45 @@ class BankrollTest extends TestCase
         $this->actingAs($user);
 
         // Check negative numbers for addition
-        $this->post(route('bankroll.add'), [
+        $this->postJson(route('bankroll.add'), [
                 'amount' => -1000
             ])
-            ->assertSessionHasErrors(['amount']);
+            ->assertStatus(422);
 
         // Check float numbers for addition
-        $this->post(route('bankroll.add'), [
+        $this->postJson(route('bankroll.add'), [
                 'amount' => 50.82
             ])
-            ->assertSessionHasErrors(['amount']);
+            ->assertStatus(422);
 
         // Check negative numbers for withdrawals
-        $this->post(route('bankroll.withdraw'), [
+        $this->postJson(route('bankroll.withdraw'), [
                 'amount' => -1000
             ])
-            ->assertSessionHasErrors(['amount']);
+            ->assertStatus(422);
 
         // Check float numbers for withdrawals
-        $this->post(route('bankroll.withdraw'), [
+        $this->postJson(route('bankroll.withdraw'), [
                 'amount' => 50.82
             ])
-            ->assertSessionHasErrors(['amount']);
+            ->assertStatus(422);
 
         // Create a BankrollTransaction and get it from user.
-        $this->post(route('bankroll.add'), [
+        $this->postJson(route('bankroll.add'), [
                 'amount' => 500
             ]);
         $bankrollTransaction = $user->bankrollTransactions->first();
 
         // Check negative numbers for updates.
-        $this->patch(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
+        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
                 'amount' => -1000
             ])
-            ->assertSessionHasErrors(['amount']);
+            ->assertStatus(422);
 
         // Check float numbers for updates
-        $this->patch(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
+        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
                 'amount' => 50.82
             ])
-            ->assertSessionHasErrors(['amount']);
+            ->assertStatus(422);
     }
 }
