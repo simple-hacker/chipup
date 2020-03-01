@@ -233,9 +233,8 @@ class CashGameTest extends TestCase
         $buy_in = $cash_game->buyIns()->first();
         $this->assertEquals(5000, $buy_in->amount);
 
-        // TODO::  CHECK IF BANKROLL IS UPDATED TOO
-        //Check user's bankroll.  It should be 15,000 as factory default is 10,000
-        // $this->assertEquals(15000, $user->fresh()->bankroll);
+        //Check user's bankroll.  It should be 5000 as orignal bankroll is 10000, but we subtract 5000 as it's a buyIn (negative transaction)
+        $this->assertEquals(5000, $user->fresh()->bankroll);
     }
 
     public function testTheBuyInAmountMustBeValidWhenStartingACashGame()
@@ -283,9 +282,8 @@ class CashGameTest extends TestCase
         $this->assertInstanceOf(CashOut::class, $cash_out);
         $this->assertEquals(5000, $cash_out->amount);
 
-        // TODO::  CHECK IF BANKROLL IS UPDATED TOO
         //Check user's bankroll.  It should be 15,000 as factory default is 10,000
-        // $this->assertEquals(15000, $user->fresh()->bankroll);
+        $this->assertEquals(15000, $user->fresh()->bankroll);
     }
 
     public function testTheCashOutAmountMustBeValidWhenEndingACashGame()

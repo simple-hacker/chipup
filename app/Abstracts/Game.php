@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 abstract class Game extends Model
 {
     protected $casts = [
+        'user_id' => 'integer',
         'profit' => 'integer'
     ];
 
@@ -17,6 +18,7 @@ abstract class Game extends Model
     *
     * @return belongsTo
     */
+
     public function user()
     {
         return $this->belongsTo('App\User');
