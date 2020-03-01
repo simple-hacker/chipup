@@ -38,9 +38,17 @@ Route::post('/cash/end', 'CashGameController@end')->name('cash.end')->middleware
 
 // BuyIn Routes
 Route::post('/cash/{cash_game}/buyin/add', 'BuyInController@add')->name('buyin.add')->middleware('auth');
-Route::get('/cash/{cash_game}/buyin/{buy_in}', 'BuyInController@view')->name('buyin.view')->middleware('auth');
-Route::patch('/cash/{cash_game}/buyin/{buy_in}', 'BuyInController@update')->name('buyin.update')->middleware('auth');
-Route::delete('/cash/{cash_game}/buyin/{buy_in}', 'BuyInController@destroy')->name('buyin.delete')->middleware('auth');
+Route::post('/tournament/{tournament}/buyin/add', 'BuyInController@add')->name('buyin.add')->middleware('auth');
+Route::get('/buyin/{buy_in}', 'BuyInController@view')->name('buyin.view')->middleware('auth');
+Route::patch('/buyin/{buy_in}', 'BuyInController@update')->name('buyin.update')->middleware('auth');
+Route::delete('/buyin/{buy_in}', 'BuyInController@destroy')->name('buyin.delete')->middleware('auth');
+
+// Expenses Routes
+Route::post('/cash/{cash_game}/expense/add', 'ExpenseController@add')->name('expense.add')->middleware('auth');
+Route::post('/tournament/{tournament}/expense/add', 'ExpenseController@add')->name('expense.add')->middleware('auth');
+Route::get('/expense/{expense}', 'ExpenseController@view')->name('expense.view')->middleware('auth');
+Route::patch('/expense/{expense}', 'ExpenseController@update')->name('expense.update')->middleware('auth');
+Route::delete('/expense/{expense}', 'ExpenseController@destroy')->name('expense.delete')->middleware('auth');
 
 /*
     /cash/{cash_game}/buyin/add

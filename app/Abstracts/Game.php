@@ -45,6 +45,25 @@ abstract class Game extends Model
     }
 
     /**
+    * Method for calling any adding GameTransaction with a valid string
+    * 
+    * @param string $transaction_type
+    * @param integer amount
+    * @return mixed
+    */
+    public function addTransaction(string $transaction_type, int $amount)
+    {
+        switch($transaction_type) {
+            case 'buyIn':
+                return $this->addBuyIn($amount);
+            case 'expense':
+                return $this->addExpense($amount);
+            case 'cashOut':
+                return $this->addCashOut($amount);
+        }
+    }
+
+    /**
     * Add a BuyIn for the game type.
     * This updates the game type's profit by subtracting the BuyIn amount.
     * 

@@ -21,4 +21,15 @@ abstract class GameTransaction extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+    * Return the User from belongsToThrough
+    * 
+    * @param 
+    * @return morphTo
+    */
+    public function user()
+    {
+        return $this->game->user;
+    }
 }

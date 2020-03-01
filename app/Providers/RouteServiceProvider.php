@@ -36,6 +36,9 @@ class RouteServiceProvider extends ServiceProvider
         // Map `{tournament}` to the \App\Tournament model
         $this->app->router->model('tournament', \App\Tournament::class);
 
+        $this->app->router->model('buy_in', \App\Transactions\BuyIn::class);
+        $this->app->router->model('expense', \App\Transactions\Expense::class);
+
         parent::boot();
     }
 

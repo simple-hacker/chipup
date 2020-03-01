@@ -16,11 +16,11 @@ class CashGameTest extends TestCase
     {
         factory('App\User')->create();
 
-        $this->post(route('cash.start'))
-                ->assertRedirect('login');
+        $this->postJson(route('cash.start'))
+                ->assertUnauthorized();
 
-        $this->get(route('cash.current'))
-                ->assertRedirect('login');
+        $this->getJson(route('cash.current'))
+        ->assertUnauthorized();
     }
 
     public function testAUserCanStartALiveCashGame()

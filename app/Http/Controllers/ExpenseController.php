@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-class BuyInController extends GameTransactionController
-{ 
+class ExpenseController extends GameTransactionController
+{
     /**
     * Set variables for parent abstract controller
     * 
     */
     public function __construct()
     {
-        $this->transaction_type = 'buyIn';
-        $this->transaction_relationship = 'buyIns';
+        $this->transaction_type = 'expense';
+        $this->transaction_relationship = 'expenses';
     }
 }
