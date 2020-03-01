@@ -8,47 +8,8 @@ use App\Transactions\BuyIn;
 
 class BuyInController extends Controller
 {
-
-
-
-
-
-
-
-
-
-
-    // NOTE: Need to validate that BuyIn belongs to GameType
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
-    * Add a buy in to the CashGame NOTE:  This needs to change to be polymorphic with both GameType and GameTransactionType
+    * Add a buy in to the CashGame
     * 
     * @param GameTransactionRequest $request
     * @return json

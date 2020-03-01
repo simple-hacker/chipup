@@ -25,8 +25,6 @@ class BuyInTest extends TestCase
 
     public function testABuyInCanBeAddedToACashGame()
     {
-        $this->withoutExceptionHandling();
-
         $user = factory('App\User')->create();
         $this->actingAs($user);
         $cash_game = $user->startCashGame();
