@@ -54,27 +54,23 @@ Route::get('/cashout/{cash_out}', 'CashOutController@view')->name('cashout.view'
 Route::patch('/cashout/{cash_out}', 'CashOutController@update')->name('cashout.update')->middleware('auth');
 Route::delete('/cashout/{cash_out}', 'CashOutController@destroy')->name('cashout.delete')->middleware('auth');
 
+// Rebuy Routes
+Route::post('/tournament/{tournament}/rebuy/add', 'RebuyController@add')->name('rebuy.add')->middleware('auth');
+Route::get('/rebuy/{rebuy}', 'RebuyController@view')->name('rebuy.view')->middleware('auth');
+Route::patch('/rebuy/{rebuy}', 'RebuyController@update')->name('rebuy.update')->middleware('auth');
+Route::delete('/rebuy/{rebuy}', 'RebuyController@destroy')->name('rebuy.delete')->middleware('auth');
+
+// AddOn Routes
+Route::post('/tournament/{tournament}/addon/add', 'AddOnController@add')->name('addon.add')->middleware('auth');
+Route::get('/addon/{add_on}', 'AddOnController@view')->name('addon.view')->middleware('auth');
+Route::patch('/addon/{add_on}', 'AddOnController@update')->name('addon.update')->middleware('auth');
+Route::delete('/addon/{add_on}', 'AddOnController@destroy')->name('addon.delete')->middleware('auth');
+
 /*
-    /cash/{cash_game}/buyin/add
-    /cash/{cash_game}/buyin/{buyin}/    GET BUYIN TRANSACTION 
-    /cash/{cash_game}/buyin/{buyin}/update
-    /cash/{cash_game}/buyin/{buyin}/delete
-    Middleware/Policy to check if BuyIn belongs to CashGame and that CashGame belongs to auth User
 
     /tournament/start
     /tournament/current
     /tournament/{tournament}/end
-
-    
-
-
-
-
-
-
-
-
-
 
 
 */
