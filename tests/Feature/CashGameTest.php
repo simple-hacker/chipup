@@ -25,8 +25,7 @@ class CashGameTest extends TestCase
 
     public function testAUserCanStartALiveCashGame()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $user = $this->signIn();
 
         $this->postJson(route('cash.start'))
                 ->assertOk()
@@ -41,8 +40,7 @@ class CashGameTest extends TestCase
 
     public function testAUserCanStartACashGameAtASpecifiedTime()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $user = $this->signIn();
 
         // We'll be passing a Y-m-d H:i:s string from the front end.
         $start_time = Carbon::create('-2 hours')->toDateTimeString();
@@ -57,8 +55,7 @@ class CashGameTest extends TestCase
 
     public function testAUserCannotStartACashGameInTheFuture()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $user = $this->signIn();
 
         // We'll be passing a Y-m-d H:i:s string from the front end.
         $start_time = Carbon::create('+1 hours')->toDateTimeString();
@@ -71,8 +68,8 @@ class CashGameTest extends TestCase
 
     public function testAUserCanGetTheirCurrentLiveCashGame()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $user = $this->signIn();
+        // Start CashGame
         $this->post(route('cash.start'));
 
         $response = $this->getJson(route('cash.current'))
@@ -89,23 +86,21 @@ class CashGameTest extends TestCase
 
     public function testGettingAUsersLiveCashGameWhenNotStartedResultsInNull()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $user = $user = $this->signIn();
         // Don't start CashGame
 
-        $response = $this->getJson(route('cash.current'))
-                            ->assertJsonStructure(['success', 'message'])
-                            ->assertJson([
-                                'success' => false
-                            ]);
+        $this->getJson(route('cash.current'))
+                ->assertJsonStructure(['success', 'message'])
+                ->assertJson([
+                    'success' => false
+                ]);
                             
         $this->assertEmpty($user->liveCashGame());
     }
 
     public function testAUserCannotStartACashGameWhenThereIsOneInProgress()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $this->signIn();
 
         // Start one cash game
         $this->postJson(route('cash.start'));
@@ -121,14 +116,13 @@ class CashGameTest extends TestCase
 
     public function testAUserCanEndACashGame()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $user = $this->signIn();
 
         // Start one cash game
         $this->postJson(route('cash.start'));
 
         //  End the cash game
-        $response = $this->postJson(route('cash.end'))
+        $this->postJson(route('cash.end'))
                 ->assertOk();
 
         $cash_game = $user->cashGames()->first();
@@ -138,8 +132,7 @@ class CashGameTest extends TestCase
 
     public function testAUserCanEndACashGameAtASuppliedTime()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $user = $this->signIn();
 
         // Start one cash game
         $this->postJson(route('cash.start'));
@@ -158,8 +151,7 @@ class CashGameTest extends TestCase
 
     public function testAUserCannotEndACashGameAtAInvalidTime()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $this->signIn();
 
         // Start one cash game
         $this->postJson(route('cash.start'));
@@ -178,10 +170,7 @@ class CashGameTest extends TestCase
 
     public function testAUserCannotEndACashGameWhichDoesntExist()
     {
-        $this->withoutExceptionHandling();
-
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $user = $this->signIn();
 
         // Don't Start Cash Game
 
@@ -199,8 +188,7 @@ class CashGameTest extends TestCase
         $start_time = Carbon::create('-1 hour')->toDateTimeString();
         $end_time = Carbon::create('-2 hour')->toDateTimeString();
 
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $this->signIn();
 
         // Start one cash game at $start_time
         $this->postJson(route('cash.start'), ['start_time' => $start_time]);
@@ -216,8 +204,7 @@ class CashGameTest extends TestCase
 
     public function testABuyInCanBeSuppliedWhenStartingACashGame()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $user = $this->signIn();
 
         // Start one cash game
         $this->postJson(route('cash.start'), [
@@ -239,8 +226,7 @@ class CashGameTest extends TestCase
 
     public function testTheBuyInAmountMustBeValidWhenStartingACashGame()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $this->signIn();
 
         // Should fail when starting with a negative number
         $this->postJson(route('cash.start'), [
@@ -263,8 +249,7 @@ class CashGameTest extends TestCase
 
     public function testAUserCanSupplyACashOutWhenEndingTheirSession()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $user = $this->signIn();
 
         // Start one cash game
         $this->postJson(route('cash.start'));
@@ -288,8 +273,7 @@ class CashGameTest extends TestCase
 
     public function testTheCashOutAmountMustBeValidWhenEndingACashGame()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $user = $this->signIn();
 
         // Start one cash game
         $this->postJson(route('cash.start'));

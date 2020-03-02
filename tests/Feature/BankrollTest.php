@@ -14,15 +14,15 @@ class BankrollTest extends TestCase
     {
         $user = factory('App\User')->create();
 
-        $this->post(route('bankroll.add'), [
-            'amount' => 30000
-        ])
-        ->assertRedirect('login');
+        $this->postJson(route('bankroll.add'), [
+                'amount' => 30000
+            ])
+            ->assertUnauthorized();
 
-        $this->post(route('bankroll.withdraw'), [
-            'amount' => 10000
-        ])
-        ->assertRedirect('login');
+        $this->postJson(route('bankroll.withdraw'), [
+                'amount' => 10000
+            ])
+            ->assertUnauthorized();
 
         // Create a BankrollTransaction to update
         $bankrollTransaction = Bankroll::create([
@@ -30,10 +30,13 @@ class BankrollTest extends TestCase
             'amount' => 1000,
         ]);
         
-        $this->patch(route('bankroll.update', ['bankrollTransaction', $bankrollTransaction]), [
-            'amount' => 30000
-        ])
-        ->assertRedirect('login');
+        $this->patchJson(route('bankroll.update', ['bankrollTransaction', $bankrollTransaction]), [
+                'amount' => 30000
+            ])
+            ->assertUnauthorized();
+
+        $this->deleteJson(route('bankroll.delete', ['bankrollTransaction', $bankrollTransaction]))
+            ->assertUnauthorized();
     }
     
     public function testAUserCanAddToTheirBankroll()
@@ -130,10 +133,8 @@ class BankrollTest extends TestCase
 
     public function testOnlyTheOwnerCanManageTheirBankrollTransactions()
     {
-        $user1 = factory('App\User')->create();
-        $user2 = factory('App\User')->create();
+        $user1 = $this->signIn();
 
-        $this->actingAs($user1);
         // Add 30000 to user1's bankroll.
         $this->postJson(route('bankroll.add'), [
             'amount' => 30000
@@ -142,14 +143,15 @@ class BankrollTest extends TestCase
         // Get the bankrollTransaction for user1
         $bankrollTransaction = $user1->bankrollTransactions->first();
 
-        // Now acting as user2, should be Unauthorized to update user1's transaction.
-        $this->actingAs($user2);
+        // Now acting as user2, should be Forbidden to update user1's transaction.
+        $user2 = $this->signIn();
+
         $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
                     'amount' => 20000
                 ])
                 ->assertForbidden();
         
-        // Should be Unauthorized to delete user1's transaction too.
+        // Should be Forbidden to delete user1's transaction too.
         $this->deleteJson(route('bankroll.delete', ['bankrollTransaction' => $bankrollTransaction]))
                 ->assertForbidden();
     }

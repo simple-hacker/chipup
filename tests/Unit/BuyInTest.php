@@ -11,9 +11,8 @@ class BuyInTest extends TestCase
     
     public function testAddingBuyInsUpdatesCashGameProfit()
     {
-        $user = factory('App\User')->create();
+        $cash_game = $this->createCashGame();
 
-        $cash_game = $user->startCashGame();
         $this->assertEquals(0, $cash_game->profit);
         $cash_game->addBuyIn(500);
         $this->assertEquals(-500, $cash_game->fresh()->profit);
@@ -24,9 +23,8 @@ class BuyInTest extends TestCase
 
     public function testAddingBuyInUpdatesTournamentProfit()
     {
-        $user = factory('App\User')->create();
-
-        $tournament = $user->startTournament();
+        $tournament = $this->createTournament();
+        
         $this->assertEquals(0, $tournament->profit);
         $tournament->addBuyIn(500);
         $this->assertEquals(-500, $tournament->fresh()->profit);
@@ -35,9 +33,8 @@ class BuyInTest extends TestCase
     public function testUpdatingABuyInUpdatesTheGameTypesProfit()
     {
         // Only testing CashGame which is a type of Game
-        $user = factory('App\User')->create();
+        $cash_game = $this->createCashGame();
 
-        $cash_game = $user->startCashGame();
         $buy_in = $cash_game->addBuyIn(500);
         $this->assertEquals(-500, $cash_game->fresh()->profit);
 
@@ -52,9 +49,8 @@ class BuyInTest extends TestCase
     public function testDeletingABuyInUpdatesTheGameTypesProfit()
     {
         // Only testing CashGame which is a type of Game
-        $user = factory('App\User')->create();
+        $cash_game = $this->createCashGame();
 
-        $cash_game = $user->startCashGame();
         $buy_in = $cash_game->addBuyIn(500);
         $this->assertEquals(-500, $cash_game->fresh()->profit);
 

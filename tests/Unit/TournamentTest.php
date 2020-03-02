@@ -43,9 +43,7 @@ class TournamentTest extends TestCase
 
     public function testATournamentCanBeEnded()
     {
-        $user = factory('App\User')->create();
-
-        $tournament = $user->startTournament();
+        $tournament = $this->createTournament();
 
         // Assert Tournament doesn't have an end time.
         $this->assertNull($tournament->end_time);
@@ -60,9 +58,7 @@ class TournamentTest extends TestCase
 
     public function testATimeCanBeSuppliedWhenEndingATournament()
     {
-        $user = factory('App\User')->create();
-
-        $tournament = $user->startTournament();
+        $tournament = $this->createTournament();
 
         $time = Carbon::create('+3 hours');
 
@@ -75,9 +71,7 @@ class TournamentTest extends TestCase
     {
         $this->expectException(\App\Exceptions\InvalidDate::class);
 
-        $user = factory('App\User')->create();
-
-        $tournament = $user->startTournament();
+        $tournament = $this->createTournament();
 
         $tournament->end(Carbon::create('-3 hours'));
     }
@@ -112,9 +106,8 @@ class TournamentTest extends TestCase
 
     public function testTournamentCanHaveABuyIn()
     {
-        $user = factory('App\User')->create();
+        $tournament = $this->createTournament();
 
-        $tournament = $user->startTournament();
         $tournament->addBuyIn(500);
 
         $this->assertCount(1, $tournament->buyIn()->get());
@@ -124,10 +117,10 @@ class TournamentTest extends TestCase
     public function testTournamentCannotHaveMultipleBuyIns()
     {
         $this->expectException(\App\Exceptions\MultipleBuyInsNotAllowed::class);
-        try {
-            $user = factory('App\User')->create();
 
-            $tournament = $user->startTournament();
+        try {
+            $tournament = $this->createTournament();
+
             $buy_in_1 = $tournament->addBuyIn(500);
             $tournament->addBuyIn(500);
         } finally {
@@ -138,9 +131,8 @@ class TournamentTest extends TestCase
 
     public function testTournamentCanHaveMultipleExpenses()
     {
-        $user = factory('App\User')->create();
+        $tournament = $this->createTournament();
 
-        $tournament = $user->startTournament();
         $tournament->addExpense(500);
         $tournament->addExpense(1000);
         $tournament->addExpense(300);
@@ -150,9 +142,8 @@ class TournamentTest extends TestCase
 
     public function testTournamentCanHaveMultipleRebuys()
     {
-        $user = factory('App\User')->create();
+        $tournament = $this->createTournament();
 
-        $tournament = $user->startTournament();
         $tournament->addRebuy(1000);
         $tournament->addRebuy(1000);
         $tournament->addRebuy(1000);
@@ -162,9 +153,8 @@ class TournamentTest extends TestCase
 
     public function testTournamentCanHaveMultipleAddOns()
     {
-        $user = factory('App\User')->create();
+        $tournament = $this->createTournament();
 
-        $tournament = $user->startTournament();
         $tournament->addAddOn(500);
         $tournament->addAddOn(500);
         $tournament->addAddOn(500);
@@ -176,8 +166,8 @@ class TournamentTest extends TestCase
     {
         // Cashing Out ends the tournament as well as updates the Tournament's profit.
 
-        $user = factory('App\User')->create();
-        $tournament = $user->startTournament();
+        $tournament = $this->createTournament();
+
         $tournament->addBuyIn(10000);
         $this->assertNull($tournament->fresh()->end_time);
 
@@ -193,8 +183,7 @@ class TournamentTest extends TestCase
 
     public function testATournamentCanBeCashedOutAtASuppliedTime()
     {
-        $user = factory('App\User')->create();
-        $tournament = $user->startTournament();
+        $tournament = $this->createTournament();
 
         $end_time = Carbon::create('+3 hours');
 
@@ -209,8 +198,7 @@ class TournamentTest extends TestCase
         $this->expectException(\Illuminate\Database\QueryException::class);
 
         try{
-            $user = factory('App\User')->create();
-            $tournament = $user->startTournament();
+            $tournament = $this->createTournament();
 
             $tournament->cashOut(10000);
             $tournament->cashOut(10000);
@@ -222,8 +210,8 @@ class TournamentTest extends TestCase
 
     public function testTournamentProfitFlow()
     {
-        $user = factory('App\User')->create();
-        $tournament = $user->startTournament();
+        $tournament = $this->createTournament();
+        
         $tournament->addBuyIn(1000);
         $tournament->addExpense(50);
         $tournament->addExpense(200);

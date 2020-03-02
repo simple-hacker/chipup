@@ -9,9 +9,6 @@ use App\Transactions\BuyIn;
 use App\Transactions\CashOut;
 use App\Transactions\Expense;
 use Illuminate\Support\Carbon;
-use App\Exceptions\InvalidDate;
-use App\Exceptions\CashGameInProgress;
-use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CashGameTest extends TestCase
@@ -28,7 +25,6 @@ class CashGameTest extends TestCase
     public function testAUserCanStartACashGameSession()
     {
         $user = factory('App\User')->create();
-
         $user->startCashGame();
 
         $this->assertCount(1, $user->cashGames);
@@ -48,9 +44,7 @@ class CashGameTest extends TestCase
     
     public function testACashGameCanBeEnded()
     {
-        $user = factory('App\User')->create();
-
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->createCashGame();
 
         // Assert CashGame doesn't have an end time.
         $this->assertNull($cash_game->end_time);
@@ -65,9 +59,7 @@ class CashGameTest extends TestCase
 
     public function testATimeCanBeSuppliedWhenEndingACashGame()
     {
-        $user = factory('App\User')->create();
-
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->createCashGame();
 
         $time = Carbon::create('+3 hours');
 
@@ -80,9 +72,7 @@ class CashGameTest extends TestCase
     {
         $this->expectException(\App\Exceptions\InvalidDate::class);
 
-        $user = factory('App\User')->create();
-
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->createCashGame();
 
         $cash_game->end(Carbon::create('-3 hours'));
     }
@@ -117,9 +107,8 @@ class CashGameTest extends TestCase
 
     public function testCashGameCanHaveABuyIn()
     {
-        $user = factory('App\User')->create();
+        $cash_game = $this->createCashGame();
 
-        $cash_game = $user->startCashGame();
         $cash_game->addBuyIn(500);
 
         $this->assertCount(1, $cash_game->buyIns);
@@ -127,9 +116,8 @@ class CashGameTest extends TestCase
 
     public function testCashGameCanHaveMultipleBuyIns()
     {
-        $user = factory('App\User')->create();
+        $cash_game = $this->createCashGame();
 
-        $cash_game = $user->startCashGame();
         $cash_game->addBuyIn(500);
         $cash_game->addBuyIn(500);
         $cash_game->addBuyIn(500);
@@ -139,9 +127,8 @@ class CashGameTest extends TestCase
 
     public function testCashGameCanHaveMultipleExpenses()
     {
-        $user = factory('App\User')->create();
+        $cash_game = $this->createCashGame();
 
-        $cash_game = $user->startCashGame();
         $cash_game->addExpense(500);
         $cash_game->addExpense(1000);
         $cash_game->addExpense(300);
@@ -152,9 +139,8 @@ class CashGameTest extends TestCase
     public function testACashGameCanBeCashedOut()
     {
         // Cashing Out ends the session as well as updates the CashGame's profit.
+        $cash_game = $this->createCashGame();
 
-        $user = factory('App\User')->create();
-        $cash_game = $user->startCashGame();
         $cash_game->addBuyIn(10000);
         $this->assertNull($cash_game->fresh()->end_time);
 
@@ -170,8 +156,7 @@ class CashGameTest extends TestCase
 
     public function testACashGameCanBeCashedOutAtASuppliedTime()
     {
-        $user = factory('App\User')->create();
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->createCashGame();
 
         $end_time = Carbon::create('+3 hours');
 
@@ -186,8 +171,7 @@ class CashGameTest extends TestCase
         $this->expectException(\Illuminate\Database\QueryException::class);
 
         try{
-            $user = factory('App\User')->create();
-            $cash_game = $user->startCashGame();
+            $cash_game = $this->createCashGame();
 
             $cash_game->cashOut(10000);
             $cash_game->cashOut(10000);
@@ -199,8 +183,8 @@ class CashGameTest extends TestCase
 
     public function testCashGameProfitFlow()
     {
-        $user = factory('App\User')->create();
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->createCashGame();
+
         $cash_game->addBuyIn(1000);
         $cash_game->addExpense(50);
         $cash_game->addExpense(200);

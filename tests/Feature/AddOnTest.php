@@ -21,11 +21,9 @@ class AddOnTest extends TestCase
                 ->assertUnauthorized();
     }
 
-    public function testAAddOnCanBeAddedToATournament()
+    public function testAnAddOnCanBeAddedToATournament()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $tournament = $user->startTournament();
+        $tournament = $this->signIn()->startTournament();
 
         $this->postJson(route('addon.add', ['tournament' => $tournament]), [
                     'amount' => 500
@@ -37,10 +35,9 @@ class AddOnTest extends TestCase
         $this->assertEquals(500, $tournament->addOns()->first()->amount);
     }
 
-    public function testAAddOnCannotBeAddedToATournamentThatDoesNotExist()
+    public function testAnAddOnCannotBeAddedToATournamentThatDoesNotExist()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $this->signIn();
 
         // ID 500 does not exist, assert 404
         $this->postJson(route('addon.add', ['tournament' => 500]), [
@@ -53,9 +50,7 @@ class AddOnTest extends TestCase
 
     public function testUserCanAddMultipleAddOnsToTournament()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $tournament = $user->startTournament();
+        $tournament = $this->signIn()->startTournament();
 
         $this->postJson(route('addon.add', ['tournament' => $tournament]), [
             'amount' => 500
@@ -70,9 +65,7 @@ class AddOnTest extends TestCase
 
     public function testViewingAddOnReturnsJsonOfAddOnTransaction()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $tournament = $user->startTournament();
+        $tournament = $this->signIn()->startTournament();
 
         $this->postJson(route('addon.add', ['tournament' => $tournament]), [
             'amount' => 500
@@ -89,9 +82,7 @@ class AddOnTest extends TestCase
 
     public function testAUserCanUpdateTheAddOn()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $tournament = $user->startTournament();
+        $tournament = $this->signIn()->startTournament();
 
         $this->postJson(route('addon.add', ['tournament' => $tournament]), [
             'amount' => 500
@@ -112,9 +103,7 @@ class AddOnTest extends TestCase
 
     public function testAUserCanDeleteTheAddOn()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $tournament = $user->startTournament();
+        $tournament = $this->signIn()->startTournament();
 
         $this->postJson(route('addon.add', ['tournament' => $tournament]), [
             'amount' => 500
@@ -123,7 +112,7 @@ class AddOnTest extends TestCase
         $add_on = $tournament->addOns()->first();
         
         // Change amount from 500 to 1000
-        $response = $this->deleteJson(route('addon.update', ['add_on' => $add_on]))
+        $this->deleteJson(route('addon.update', ['add_on' => $add_on]))
                             ->assertOk()
                             ->assertJsonStructure(['success'])
                             ->assertJson([
@@ -135,9 +124,7 @@ class AddOnTest extends TestCase
 
     public function testAddOnAmountIsValidForAdd()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $tournament = $user->startTournament();
+        $tournament = $this->signIn()->startTournament();
 
         // Test not sending amount
         $this->postJson(route('addon.add', ['tournament' => $tournament]), [
@@ -165,16 +152,14 @@ class AddOnTest extends TestCase
 
         // Zero should be okay
         $this->postJson(route('addon.add', ['tournament' => $tournament]), [
-                'amount' => 0
-            ])
-            ->assertOk();
+                    'amount' => 0
+                ])
+                ->assertOk();
     }
 
     public function testAddOnAmountIsValidForUpdate()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $tournament = $user->startTournament();
+        $tournament = $this->signIn()->startTournament();
 
         $this->postJson(route('addon.add', ['tournament' => $tournament]), [
             'amount' => 500
@@ -207,23 +192,21 @@ class AddOnTest extends TestCase
 
         // Zero should be okay
         $this->patchJson(route('addon.update', ['add_on' => $add_on]), [
-                'amount' => 0
-            ])
-            ->assertOk();
+                    'amount' => 0
+                ])
+                ->assertOk();
     }
 
     public function testTheAddOnMustBelongToTheAuthenticatedUser()
     {
         // User1 creates a Tournament and adds a AddOn
-        $user1 = factory('App\User')->create();
-        $this->actingAs($user1);
+        $user1 = $this->signIn();
         $tournament = $user1->startTournament();
         $this->postJson(route('addon.add', ['tournament' => $tournament]), ['amount' => 500]);
         $add_on = $tournament->addOns()->first();
 
-        // Create the second user
-        $user2 = factory('App\User')->create();
-        $this->actingAs($user2);
+        // Create and sign in the second user
+        $user2 = $this->signIn();
 
         // User2 tries to Add AddOn to User1's Tournament
         $this->postJson(route('addon.add', ['tournament' => $tournament]), ['amount' => 1000])

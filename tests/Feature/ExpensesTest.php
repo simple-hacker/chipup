@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Transactions\Expense;
-use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ExpensesTest extends TestCase
@@ -24,9 +23,7 @@ class ExpensesTest extends TestCase
 
     public function testAExpenseCanBeAddedToACashGame()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('expense.add', ['cash_game' => $cash_game]), [
                     'amount' => 500
@@ -40,8 +37,7 @@ class ExpensesTest extends TestCase
 
     public function testAExpenseCannotBeAddedToACashGameThatDoesNotExist()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $this->signIn();
 
         // ID 500 does not exist, assert 404
         $this->postJson(route('expense.add', ['cash_game' => 500]), [
@@ -54,9 +50,7 @@ class ExpensesTest extends TestCase
 
     public function testUserCanAddMultipleExpensesToCashGame()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('expense.add', ['cash_game' => $cash_game]), [
             'amount' => 500
@@ -71,9 +65,7 @@ class ExpensesTest extends TestCase
 
     public function testViewingExpenseReturnsJsonOfExpenseTransaction()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('expense.add', ['cash_game' => $cash_game]), [
             'amount' => 500
@@ -81,19 +73,17 @@ class ExpensesTest extends TestCase
 
         $expense = $cash_game->expenses()->first();
         
-        $response = $this->getJson(route('expense.view', [
-                                'cash_game' => $cash_game,
-                                'expense' => $expense
-                            ]))
-                            ->assertOk()
-                            ->assertJsonStructure(['success', 'transaction']);
+        $this->getJson(route('expense.view', [
+                    'cash_game' => $cash_game,
+                    'expense' => $expense
+                ]))
+                ->assertOk()
+                ->assertJsonStructure(['success', 'transaction']);
     }
 
     public function testAUserCanUpdateTheExpense()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('expense.add', ['cash_game' => $cash_game]), [
             'amount' => 500
@@ -114,9 +104,7 @@ class ExpensesTest extends TestCase
 
     public function testAUserCanDeleteTheExpense()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('expense.add', ['cash_game' => $cash_game]), [
             'amount' => 500
@@ -125,21 +113,19 @@ class ExpensesTest extends TestCase
         $expense = $cash_game->expenses()->first();
         
         // Change amount from 500 to 1000
-        $response = $this->deleteJson(route('expense.update', ['cash_game' => $cash_game, 'expense' => $expense]))
-                            ->assertOk()
-                            ->assertJsonStructure(['success'])
-                            ->assertJson([
-                                'success' => true
-                            ]);;
+        $this->deleteJson(route('expense.update', ['cash_game' => $cash_game, 'expense' => $expense]))
+                ->assertOk()
+                ->assertJsonStructure(['success'])
+                ->assertJson([
+                    'success' => true
+                ]);
 
         $this->assertCount(0, $cash_game->fresh()->expenses);
     }
 
     public function testBuyAmountIsValidForAdd()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->signIn()->startCashGame();
 
         // Test not sending amount
         $this->postJson(route('expense.add', ['cash_game' => $cash_game]), [
@@ -167,16 +153,14 @@ class ExpensesTest extends TestCase
 
         // Zero should be okay
         $this->postJson(route('expense.add', ['cash_game' => $cash_game]), [
-                'amount' => 0
-            ])
-            ->assertOk();
+                    'amount' => 0
+                ])
+                ->assertOk();
     }
 
     public function testBuyAmountIsValidForUpdate()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('expense.add', ['cash_game' => $cash_game]), [
             'amount' => 500
@@ -209,23 +193,21 @@ class ExpensesTest extends TestCase
 
         // Zero should be okay
         $this->patchJson(route('expense.update', ['cash_game' => $cash_game, 'expense' => $expense]), [
-                'amount' => 0
-            ])
-            ->assertOk();
+                    'amount' => 0
+                ])
+                ->assertOk();
     }
 
     public function testTheExpenseMustBelongToTheAuthenticatedUser()
     {
         // User1 creates a CashGame and adds a Expense
-        $user1 = factory('App\User')->create();
-        $this->actingAs($user1);
+        $user1 = $this->signIn();
         $cash_game1 = $user1->startCashGame();
         $this->postJson(route('expense.add', ['cash_game' => $cash_game1]), ['amount' => 500]);
         $expense = $cash_game1->expenses()->first();
 
-        // Create the second user
-        $user2 = factory('App\User')->create();
-        $this->actingAs($user2);
+        // Create and sign in the second user
+        $user2 = $this->signIn();
 
         // User2 tries to Add Expense to User1's CashGame
         $this->postJson(route('expense.add', ['cash_game' => $cash_game1]), ['amount' => 1000])

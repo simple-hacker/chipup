@@ -11,9 +11,8 @@ class RebuyTest extends TestCase
 
     public function testAddingRebuysUpdatesTournamentProfit()
     {
-        $user = factory('App\User')->create();
+        $tournament = $this->createTournament();
 
-        $tournament = $user->startTournament();
         $this->assertEquals(0, $tournament->profit);
         $tournament->addRebuy(100);
         $this->assertEquals(-100, $tournament->fresh()->profit);
@@ -24,9 +23,8 @@ class RebuyTest extends TestCase
 
     public function testUpdatingARebuyUpdatesTheTournamentsProfit()
     {
-        $user = factory('App\User')->create();
+        $tournament = $this->createTournament();
 
-        $tournament = $user->startTournament();
         $rebuy = $tournament->addRebuy(500);
         $this->assertEquals(-500, $tournament->fresh()->profit);
 
@@ -40,9 +38,8 @@ class RebuyTest extends TestCase
 
     public function testDeletingARebuyUpdatesTheTournamentsProfit()
     {
-        $user = factory('App\User')->create();
-
-        $tournament = $user->startTournament();
+        $tournament = $this->createTournament();
+        
         $rebuy = $tournament->addRebuy(500);
         $this->assertEquals(-500, $tournament->fresh()->profit);
 

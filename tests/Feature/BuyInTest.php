@@ -23,9 +23,7 @@ class BuyInTest extends TestCase
 
     public function testABuyInCanBeAddedToACashGame()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('buyin.add', ['cash_game' => $cash_game]), [
                     'amount' => 500
@@ -39,8 +37,7 @@ class BuyInTest extends TestCase
 
     public function testABuyInCannotBeAddedToACashGameThatDoesNotExist()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
+        $this->signIn();
 
         // ID 500 does not exist, assert 404
         $this->postJson(route('buyin.add', ['cash_game' => 500]), [
@@ -53,9 +50,7 @@ class BuyInTest extends TestCase
 
     public function testUserCanAddMultipleBuyInsToCashGame()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('buyin.add', ['cash_game' => $cash_game]), [
             'amount' => 500
@@ -70,11 +65,7 @@ class BuyInTest extends TestCase
 
     public function testViewingBuyInReturnsJsonOfBuyInTransaction()
     {
-        $this->withoutExceptionHandling();
-
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('buyin.add', ['cash_game' => $cash_game]), [
             'amount' => 500
@@ -82,18 +73,16 @@ class BuyInTest extends TestCase
 
         $buy_in = $cash_game->buyIns()->first();
         
-        $response = $this->getJson(route('buyin.view', [
-                                'buy_in' => $buy_in
-                            ]))
-                            ->assertOk()
-                            ->assertJsonStructure(['success', 'transaction']);
+        $this->getJson(route('buyin.view', [
+                'buy_in' => $buy_in
+            ]))
+            ->assertOk()
+            ->assertJsonStructure(['success', 'transaction']);
     }
 
     public function testAUserCanUpdateTheBuyIn()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('buyin.add', ['cash_game' => $cash_game]), [
             'amount' => 500
@@ -114,9 +103,7 @@ class BuyInTest extends TestCase
 
     public function testAUserCanDeleteTheBuyIn()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('buyin.add', ['cash_game' => $cash_game]), [
             'amount' => 500
@@ -125,21 +112,19 @@ class BuyInTest extends TestCase
         $buy_in = $cash_game->buyIns()->first();
         
         // Change amount from 500 to 1000
-        $response = $this->deleteJson(route('buyin.update', ['buy_in' => $buy_in]))
-                            ->assertOk()
-                            ->assertJsonStructure(['success'])
-                            ->assertJson([
-                                'success' => true
-                            ]);;
+        $this->deleteJson(route('buyin.update', ['buy_in' => $buy_in]))
+            ->assertOk()
+            ->assertJsonStructure(['success'])
+            ->assertJson([
+                'success' => true
+            ]);;
 
         $this->assertCount(0, $cash_game->fresh()->buyIns);
     }
 
     public function testBuyInAmountIsValidForAdd()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->signIn()->startCashGame();
 
         // Test not sending amount
         $this->postJson(route('buyin.add', ['cash_game' => $cash_game]), [
@@ -167,16 +152,14 @@ class BuyInTest extends TestCase
 
         // Zero should be okay
         $this->postJson(route('buyin.add', ['cash_game' => $cash_game]), [
-                'amount' => 0
-            ])
-            ->assertOk();
+                    'amount' => 0
+                ])
+                ->assertOk();
     }
 
     public function testBuyInAmountIsValidForUpdate()
     {
-        $user = factory('App\User')->create();
-        $this->actingAs($user);
-        $cash_game = $user->startCashGame();
+        $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('buyin.add', ['cash_game' => $cash_game]), [
             'amount' => 500
@@ -209,23 +192,21 @@ class BuyInTest extends TestCase
 
         // Zero should be okay
         $this->patchJson(route('buyin.update', ['buy_in' => $buy_in]), [
-                'amount' => 0
-            ])
-            ->assertOk();
+                    'amount' => 0
+                ])
+                ->assertOk();
     }
 
     public function testTheBuyInMustBelongToTheAuthenticatedUser()
     {
         // User1 creates a CashGame and adds a BuyIn
-        $user1 = factory('App\User')->create();
-        $this->actingAs($user1);
+        $user1 = $this->signIn();
         $cash_game = $user1->startCashGame();
         $this->postJson(route('buyin.add', ['cash_game' => $cash_game]), ['amount' => 500]);
         $buy_in = $cash_game->buyIns()->first();
 
-        // Create the second user
-        $user2 = factory('App\User')->create();
-        $this->actingAs($user2);
+        // Create and sign in the second user
+        $user2 = $this->signIn();
 
         // User2 tries to Add BuyIn to User1's CashGame
         $this->postJson(route('buyin.add', ['cash_game' => $cash_game]), ['amount' => 1000])
