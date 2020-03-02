@@ -37,31 +37,31 @@ Route::post('/cash/end', 'CashGameController@end')->name('cash.end')->middleware
 */
 
 // BuyIn Routes
-Route::post('/cash/{cash_game}/buyin/add', 'BuyInController@add')->name('buyin.add')->middleware('auth');
+Route::post('/buyin/add', 'BuyInController@add')->name('buyin.add')->middleware('auth');
 Route::get('/buyin/{buy_in}', 'BuyInController@view')->name('buyin.view')->middleware('auth');
 Route::patch('/buyin/{buy_in}', 'BuyInController@update')->name('buyin.update')->middleware('auth');
 Route::delete('/buyin/{buy_in}', 'BuyInController@destroy')->name('buyin.delete')->middleware('auth');
 
 // Expenses Routes
-Route::post('/cash/{cash_game}/expense/add', 'ExpenseController@add')->name('expense.add')->middleware('auth');
+Route::post('/expense/add', 'ExpenseController@add')->name('expense.add')->middleware('auth');
 Route::get('/expense/{expense}', 'ExpenseController@view')->name('expense.view')->middleware('auth');
 Route::patch('/expense/{expense}', 'ExpenseController@update')->name('expense.update')->middleware('auth');
 Route::delete('/expense/{expense}', 'ExpenseController@destroy')->name('expense.delete')->middleware('auth');
 
 // CashOut Routes
-Route::post('/cash/{cash_game}/cashout/add', 'CashOutController@add')->name('cashout.add')->middleware('auth');
+Route::post('/cashout/add', 'CashOutController@add')->name('cashout.add')->middleware('auth');
 Route::get('/cashout/{cash_out}', 'CashOutController@view')->name('cashout.view')->middleware('auth');
 Route::patch('/cashout/{cash_out}', 'CashOutController@update')->name('cashout.update')->middleware('auth');
 Route::delete('/cashout/{cash_out}', 'CashOutController@destroy')->name('cashout.delete')->middleware('auth');
 
 // Rebuy Routes
-Route::post('/tournament/{tournament}/rebuy/add', 'RebuyController@add')->name('rebuy.add')->middleware('auth');
+Route::post('/rebuy/add', 'RebuyController@add')->name('rebuy.add')->middleware('auth');
 Route::get('/rebuy/{rebuy}', 'RebuyController@view')->name('rebuy.view')->middleware('auth');
 Route::patch('/rebuy/{rebuy}', 'RebuyController@update')->name('rebuy.update')->middleware('auth');
 Route::delete('/rebuy/{rebuy}', 'RebuyController@destroy')->name('rebuy.delete')->middleware('auth');
 
 // AddOn Routes
-Route::post('/tournament/{tournament}/addon/add', 'AddOnController@add')->name('addon.add')->middleware('auth');
+Route::post('/addon/add', 'AddOnController@add')->name('addon.add')->middleware('auth');
 Route::get('/addon/{add_on}', 'AddOnController@view')->name('addon.view')->middleware('auth');
 Route::patch('/addon/{add_on}', 'AddOnController@update')->name('addon.update')->middleware('auth');
 Route::delete('/addon/{add_on}', 'AddOnController@destroy')->name('addon.delete')->middleware('auth');

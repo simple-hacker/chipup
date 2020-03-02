@@ -15,7 +15,9 @@ class RebuyTest extends TestCase
         $user = factory('App\User')->create();
         $tournament = $user->startTournament();
 
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), [
+        $this->postJson(route('rebuy.add'), [
+                    'id' => $tournament->id,
+                    'game_type' => $tournament->game_type,
                     'amount' => 500
                 ])
                 ->assertUnauthorized();
@@ -25,7 +27,9 @@ class RebuyTest extends TestCase
     {
         $tournament = $this->signIn()->startTournament();
 
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), [
+        $this->postJson(route('rebuy.add'), [
+                    'id' => $tournament->id,
+                    'game_type' => $tournament->game_type,
                     'amount' => 500
                 ])
                 ->assertOk()
@@ -40,7 +44,9 @@ class RebuyTest extends TestCase
         $user = $this->signIn();
 
         // ID 500 does not exist, assert 404
-        $this->postJson(route('rebuy.add', ['tournament' => 500]), [
+        $this->postJson(route('rebuy.add'), [
+                    'id' => 99,
+                    'game_type' => 'tournament',
                     'amount' => 500
                 ])
                 ->assertNotFound();
@@ -52,10 +58,14 @@ class RebuyTest extends TestCase
     {
         $tournament = $this->signIn()->startTournament();
 
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), [
+        $this->postJson(route('rebuy.add'), [
+            'id' => $tournament->id,
+            'game_type' => $tournament->game_type,
             'amount' => 500
         ]);
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), [
+        $this->postJson(route('rebuy.add'), [
+            'id' => $tournament->id,
+            'game_type' => $tournament->game_type,
             'amount' => 1000
         ]);
 
@@ -67,7 +77,9 @@ class RebuyTest extends TestCase
     {
         $tournament = $this->signIn()->startTournament();
 
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), [
+        $this->postJson(route('rebuy.add'), [
+            'id' => $tournament->id,
+            'game_type' => $tournament->game_type,
             'amount' => 500
         ]);
 
@@ -84,7 +96,9 @@ class RebuyTest extends TestCase
     {
         $tournament = $this->signIn()->startTournament();
 
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), [
+        $this->postJson(route('rebuy.add'), [
+            'id' => $tournament->id,
+            'game_type' => $tournament->game_type,
             'amount' => 500
         ]);
 
@@ -105,7 +119,9 @@ class RebuyTest extends TestCase
     {
         $tournament = $this->signIn()->startTournament();
 
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), [
+        $this->postJson(route('rebuy.add'), [
+            'id' => $tournament->id,
+            'game_type' => $tournament->game_type,
             'amount' => 500
         ]);
 
@@ -127,31 +143,40 @@ class RebuyTest extends TestCase
         $tournament = $this->signIn()->startTournament();
 
         // Test not sending amount
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), [
-
+        $this->postJson(route('rebuy.add'), [
+                    'id' => $tournament->id,
+                    'game_type' => $tournament->game_type,
                 ])
                 ->assertStatus(422);
 
         // Test float numbers
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), [
+        $this->postJson(route('rebuy.add'), [
+                    'id' => $tournament->id,
+                    'game_type' => $tournament->game_type,
                     'amount' => 55.52
                 ])
                 ->assertStatus(422);
                 
         // Test negative numbers
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), [
+        $this->postJson(route('rebuy.add'), [
+                    'id' => $tournament->id,
+                    'game_type' => $tournament->game_type,
                     'amount' => -10
                 ])
                 ->assertStatus(422);
 
         // Test string
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), [
+        $this->postJson(route('rebuy.add'), [
+                    'id' => $tournament->id,
+                    'game_type' => $tournament->game_type,
                     'amount' => 'Invalid'
                 ])
                 ->assertStatus(422);
 
         // Zero should be okay
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), [
+        $this->postJson(route('rebuy.add'), [
+                    'id' => $tournament->id,
+                    'game_type' => $tournament->game_type,
                     'amount' => 0
                 ])
                 ->assertOk();
@@ -161,7 +186,9 @@ class RebuyTest extends TestCase
     {
         $tournament = $this->signIn()->startTournament();
 
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), [
+        $this->postJson(route('rebuy.add'), [
+            'id' => $tournament->id,
+            'game_type' => $tournament->game_type,
             'amount' => 500
         ]);
         $rebuy = $tournament->rebuys()->first();
@@ -202,14 +229,22 @@ class RebuyTest extends TestCase
         // User1 creates a Tournament and adds a Rebuy
         $user1 = $this->signIn();
         $tournament = $user1->startTournament();
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), ['amount' => 500]);
+        $this->postJson(route('rebuy.add'), [
+                    'id' => $tournament->id,
+                    'game_type' => $tournament->game_type,
+                    'amount' => 500
+                ]);
         $rebuy = $tournament->rebuys()->first();
 
         // Create and sign in the second user
         $user2 = $this->signIn();
 
         // User2 tries to Add Rebuy to User1's Tournament
-        $this->postJson(route('rebuy.add', ['tournament' => $tournament]), ['amount' => 1000])
+        $this->postJson(route('rebuy.add'), [
+                    'id' => $tournament->id,
+                    'game_type' => $tournament->game_type,
+                    'amount' => 1000
+                ])
                 ->assertForbidden();
 
         // User2 tries to view User1's Rebuy

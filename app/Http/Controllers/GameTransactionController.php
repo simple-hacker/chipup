@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Abstracts\Game;
+use App\CashGame;
+use App\Tournament;
 use App\Abstracts\GameTransaction;
 use App\Http\Requests\AddGameTransactionRequest;
 use App\Http\Requests\UpdateGameTransactionRequest;
@@ -18,14 +19,28 @@ abstract class GameTransactionController extends Controller
     * @param AddGameTransactionRequest $request
     * @return json
     */
-    public function add(Game $game_type, AddGameTransactionRequest $request)
+    public function add(AddGameTransactionRequest $request)
     {
+        switch ($request->game_type) {
+            case 'cashgame':
+                $game_type = CashGame::findOrFail($request->id);
+                break;
+            case 'tournament':
+                $game_type = Tournament::findOrFail($request->id);
+                break;
+            default:
+                abort(422);
+        }
+
         $this->authorize('manage', $game_type);
 
         try {
             $game_transaction = $game_type->addTransaction($this->transaction_type, $request->amount);
 
-            $game_transaction->update($request->validated());
+            // Add Comments
+            if ($request->comments) {
+                $game_transaction->update(['comments' => $request->comments]);
+            }
 
             return response()->json([
                 'success' => true,

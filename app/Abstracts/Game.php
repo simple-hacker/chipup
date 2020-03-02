@@ -156,4 +156,15 @@ abstract class Game extends Model
         $this->expenses()->delete();
         $this->cashOutModel()->delete();
     }
+
+    /**
+    * Return the GameType as a string.
+    * This is needed when adding transactions to different GameTypes
+    *
+    * @return string
+    */
+    public function getGameTypeAttribute()
+    {
+        return strtolower(class_basename($this));
+    }
 }
