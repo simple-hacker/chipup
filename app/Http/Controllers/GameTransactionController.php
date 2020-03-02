@@ -21,6 +21,7 @@ abstract class GameTransactionController extends Controller
     */
     public function add(AddGameTransactionRequest $request)
     {
+        // Get the model for the correct GameType
         switch ($request->game_type) {
             case 'cashgame':
                 $game_type = CashGame::findOrFail($request->id);
@@ -29,9 +30,10 @@ abstract class GameTransactionController extends Controller
                 $game_type = Tournament::findOrFail($request->id);
                 break;
             default:
-                abort(422);
+                abort(422, 'Invalid GameType was supplied');
         }
 
+        // Authorize that the user can manage the game_type
         $this->authorize('manage', $game_type);
 
         try {
@@ -81,9 +83,6 @@ abstract class GameTransactionController extends Controller
     public function update(GameTransaction $game_transaction, UpdateGameTransactionRequest $request)
     {
         $this->authorize('manage', $game_transaction);
-        
-        // dd($request->validated());
-
 
         // Only updated the validated request data.
         // This is because amount and comments are sometimes present.
