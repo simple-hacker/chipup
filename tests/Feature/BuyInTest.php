@@ -166,11 +166,11 @@ class BuyInTest extends TestCase
         ]);
         $buy_in = $cash_game->buyIns()->first();
 
-        // Test not sending amount
+        // Empty POST data is OK because it doesn't change anything.
         $this->patchJson(route('buyin.update', ['buy_in' => $buy_in]), [
 
                 ])
-                ->assertStatus(422);
+                ->assertOk();
 
         // Test float numbers
         $this->patchJson(route('buyin.update', ['buy_in' => $buy_in]), [

@@ -172,11 +172,11 @@ class CashOutTest extends TestCase
         ]);
         $cash_out = $cash_game->cashOutModel()->first();
 
-        // Test not sending amount
+        // Empty POST data is OK because it doesn't change anything.
         $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), [
 
                 ])
-                ->assertStatus(422);
+                ->assertOk();
 
         // Test float numbers
         $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), [

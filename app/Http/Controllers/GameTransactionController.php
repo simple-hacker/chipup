@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Abstracts\Game;
 use App\Abstracts\GameTransaction;
-use App\Http\Requests\GameTransactionRequest;
+use App\Http\Requests\AddGameTransactionRequest;
+use App\Http\Requests\UpdateGameTransactionRequest;
 
 abstract class GameTransactionController extends Controller
 {
@@ -14,16 +15,18 @@ abstract class GameTransactionController extends Controller
     /**
     * Add a buy in to the CashGame
     * 
-    * @param GameTransactionRequest $request
+    * @param AddGameTransactionRequest $request
     * @return json
     */
-    public function add(Game $game_type, GameTransactionRequest $request)
+    public function add(Game $game_type, AddGameTransactionRequest $request)
     {
         $this->authorize('manage', $game_type);
 
         try {
             $game_transaction = $game_type->addTransaction($this->transaction_type, $request->amount);
-        
+
+            $game_transaction->update($request->validated());
+
             return response()->json([
                 'success' => true,
                 'transaction' => $game_transaction
@@ -40,7 +43,6 @@ abstract class GameTransactionController extends Controller
     * Retrieve the Buy In
     * Make sure it belongs to the correct cash_game
     * 
-    * @param Game $game_type
     * @param GameTransaction $game_transaction
     * @return json
     */
@@ -57,22 +59,20 @@ abstract class GameTransactionController extends Controller
     /**
     * Update the GameTransaction with the GameTransactionRequest amount
     * 
-    * @param Game $game_type
     * @param GameTransaction $game_transaction
-    * @param GameTransactionRequest $request
+    * @param UpdateGameTransactionRequest $request
     * @return json
     */
-    public function update(GameTransaction $game_transaction, GameTransactionRequest $request)
+    public function update(GameTransaction $game_transaction, UpdateGameTransactionRequest $request)
     {
         $this->authorize('manage', $game_transaction);
         
-        $game_transaction->amount = $request->amount;
+        // dd($request->validated());
 
-        if ($request->comments) {
-            $game_transaction->comments = $request->comments;
-        }
 
-        $game_transaction->save();
+        // Only updated the validated request data.
+        // This is because amount and comments are sometimes present.
+        $game_transaction->update($request->validated());
 
         return response()->json([
             'success' => true,
@@ -83,7 +83,6 @@ abstract class GameTransactionController extends Controller
     /**
     * Destroy the Buy In
     * 
-    * @param Game $game_type
     * @param GameTransaction $game_transaction
     * @return json
     */

@@ -166,11 +166,11 @@ class RebuyTest extends TestCase
         ]);
         $rebuy = $tournament->rebuys()->first();
 
-        // Test not sending amount
+        // Empty POST data is OK because it doesn't change anything.
         $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), [
 
                 ])
-                ->assertStatus(422);
+                ->assertOk();
 
         // Test float numbers
         $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), [

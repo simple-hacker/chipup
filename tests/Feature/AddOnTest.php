@@ -166,11 +166,11 @@ class AddOnTest extends TestCase
         ]);
         $add_on = $tournament->addOns()->first();
 
-        // Test not sending amount
+        // Empty POST data is OK because it doesn't change anything.
         $this->patchJson(route('addon.update', ['add_on' => $add_on]), [
 
                 ])
-                ->assertStatus(422);
+                ->assertOk();
 
         // Test float numbers
         $this->patchJson(route('addon.update', ['add_on' => $add_on]), [

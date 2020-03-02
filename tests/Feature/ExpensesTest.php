@@ -92,7 +92,7 @@ class ExpensesTest extends TestCase
         $expense = $cash_game->expenses()->first();
         
         // Change amount from 500 to 1000
-        $response = $this->patchJson(route('expense.update', ['cash_game' => $cash_game, 'expense' => $expense]), [
+        $response = $this->patchJson(route('expense.update', ['expense' => $expense]), [
                                 'amount' => 1000
                             ])
                             ->assertOk()
@@ -113,7 +113,7 @@ class ExpensesTest extends TestCase
         $expense = $cash_game->expenses()->first();
         
         // Change amount from 500 to 1000
-        $this->deleteJson(route('expense.update', ['cash_game' => $cash_game, 'expense' => $expense]))
+        $this->deleteJson(route('expense.update', ['expense' => $expense]))
                 ->assertOk()
                 ->assertJsonStructure(['success'])
                 ->assertJson([
@@ -123,7 +123,7 @@ class ExpensesTest extends TestCase
         $this->assertCount(0, $cash_game->fresh()->expenses);
     }
 
-    public function testBuyAmountIsValidForAdd()
+    public function testExpenseAmountIsValidForAdd()
     {
         $cash_game = $this->signIn()->startCashGame();
 
@@ -158,7 +158,7 @@ class ExpensesTest extends TestCase
                 ->assertOk();
     }
 
-    public function testBuyAmountIsValidForUpdate()
+    public function testExpenseAmountIsValidForUpdate()
     {
         $cash_game = $this->signIn()->startCashGame();
 
@@ -167,32 +167,32 @@ class ExpensesTest extends TestCase
         ]);
         $expense = $cash_game->expenses()->first();
 
-        // Test not sending amount
-        $this->patchJson(route('expense.update', ['cash_game' => $cash_game, 'expense' => $expense]), [
+        // Empty POST data is OK because it doesn't change anything.
+        $this->patchJson(route('expense.update', ['expense' => $expense]), [
 
                 ])
-                ->assertStatus(422);
+                ->assertOk();
 
         // Test float numbers
-        $this->patchJson(route('expense.update', ['cash_game' => $cash_game, 'expense' => $expense]), [
+        $this->patchJson(route('expense.update', ['expense' => $expense]), [
                     'amount' => 55.52
                 ])
                 ->assertStatus(422);
                 
         // Test negative numbers
-        $this->patchJson(route('expense.update', ['cash_game' => $cash_game, 'expense' => $expense]), [
+        $this->patchJson(route('expense.update', ['expense' => $expense]), [
                     'amount' => -10
                 ])
                 ->assertStatus(422);
 
         // Test string
-        $this->patchJson(route('expense.update', ['cash_game' => $cash_game, 'expense' => $expense]), [
+        $this->patchJson(route('expense.update', ['expense' => $expense]), [
                     'amount' => 'Invalid'
                 ])
                 ->assertStatus(422);
 
         // Zero should be okay
-        $this->patchJson(route('expense.update', ['cash_game' => $cash_game, 'expense' => $expense]), [
+        $this->patchJson(route('expense.update', ['expense' => $expense]), [
                     'amount' => 0
                 ])
                 ->assertOk();
@@ -214,15 +214,39 @@ class ExpensesTest extends TestCase
                 ->assertForbidden();
 
         // User2 tries to view User1's Expense
-        $this->getJson(route('expense.view', ['cash_game' => $cash_game1, 'expense' => $expense]))
+        $this->getJson(route('expense.view', ['expense' => $expense]))
                 ->assertForbidden();
 
         // User2 tries to update User1's Expense
-        $this->patchJson(route('expense.update', ['cash_game' => $cash_game1, 'expense' => $expense]), ['amount' => 1000])
+        $this->patchJson(route('expense.update', ['expense' => $expense]), ['amount' => 1000])
                 ->assertForbidden();
 
         // User2 tries to delete User1's Expense
-        $this->deleteJson(route('expense.delete', ['cash_game' => $cash_game1, 'expense' => $expense]))
+        $this->deleteJson(route('expense.delete', ['expense' => $expense]))
                 ->assertForbidden();
+    }
+
+    public function testAnExpenseCanHaveComments()
+    {
+        $this->withoutExceptionHandling();
+
+        $cash_game = $this->signIn()->startCashGame();
+
+        // You can add a comment when adding an expense.
+        $this->postJson(route('expense.add', ['cash_game' => $cash_game]), [
+            'amount' => 500,
+            'comments' => 'Comment'
+        ]);
+
+        $expense = $cash_game->expenses()->first();
+
+        $this->assertEquals('Comment', $expense->comments);
+
+        // You can also update the comments without sending amount
+        $this->patchJson(route('expense.update', ['expense' => $expense]), [
+            'comments' => 'Updated Comment'
+        ]);
+
+        $this->assertEquals('Updated Comment', $expense->fresh()->comments);
     }
 }
