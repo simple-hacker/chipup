@@ -135,7 +135,7 @@ class BuyInTest extends TestCase
         $this->assertCount(0, $cash_game->fresh()->buyIns);
     }
 
-    public function testBuyAmountIsValidForAdd()
+    public function testBuyInAmountIsValidForAdd()
     {
         $user = factory('App\User')->create();
         $this->actingAs($user);
@@ -172,7 +172,7 @@ class BuyInTest extends TestCase
             ->assertOk();
     }
 
-    public function testBuyAmountIsValidForUpdate()
+    public function testBuyInAmountIsValidForUpdate()
     {
         $user = factory('App\User')->create();
         $this->actingAs($user);

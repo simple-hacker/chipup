@@ -21,12 +21,19 @@ abstract class GameTransactionController extends Controller
     {
         $this->authorize('manage', $game_type);
 
-        $game_transaction = $game_type->addTransaction($this->transaction_type, $request->amount);
-    
-        return response()->json([
-            'success' => true,
-            'transaction' => $game_transaction
-        ]);
+        try {
+            $game_transaction = $game_type->addTransaction($this->transaction_type, $request->amount);
+        
+            return response()->json([
+                'success' => true,
+                'transaction' => $game_transaction
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 422);
+        }
     }
 
     /**

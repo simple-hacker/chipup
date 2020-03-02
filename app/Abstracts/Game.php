@@ -59,7 +59,7 @@ abstract class Game extends Model
             case 'expense':
                 return $this->addExpense($amount);
             case 'cashOut':
-                return $this->addCashOut($amount);
+                return $this->cashOut($amount);
         }
     }
 

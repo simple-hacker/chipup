@@ -38,6 +38,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->app->router->model('buy_in', \App\Transactions\BuyIn::class);
         $this->app->router->model('expense', \App\Transactions\Expense::class);
+        $this->app->router->model('cash_out', \App\Transactions\CashOut::class);
 
         parent::boot();
     }
