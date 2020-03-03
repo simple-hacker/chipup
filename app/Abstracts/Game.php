@@ -159,7 +159,7 @@ abstract class Game extends Model
 
     /**
     * Return the GameType as a string.
-    * This is needed when adding transactions to different GameTypes
+    * This is needed when adding transactions to different GameTypes in the GameTransactionController
     *
     * @return string
     */

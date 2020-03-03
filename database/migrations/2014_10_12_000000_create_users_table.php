@@ -22,6 +22,11 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->string('currency');
             $table->bigInteger('bankroll')->default(0);
+            $table->unsignedBigInteger('default_stake_id')->nullable();
+            $table->unsignedBigInteger('default_limit_id')->nullable();
+            $table->unsignedBigInteger('default_variant_id')->nullable();
+            $table->unsignedBigInteger('default_table_size_id')->nullable();
+            $table->string('default_location')->nullable();
             $table->timestamps();
         });
     }

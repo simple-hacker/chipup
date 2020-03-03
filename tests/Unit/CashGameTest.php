@@ -35,9 +35,11 @@ class CashGameTest extends TestCase
     {
         $user = factory('App\User')->create();
 
-        $time = Carbon::create(2020, 02, 15, 18, 30, 00);
+        $time = Carbon::create(2020, 02, 15, 18, 30, 00)->toDateTimeString();
 
-        $cash_game = $user->startCashGame($time);
+        $cash_game = $user->startCashGame([
+                'start_time' => $time,
+            ]);
 
         $this->assertEquals('2020-02-15 18:30:00', $cash_game->fresh()->start_time);
     }

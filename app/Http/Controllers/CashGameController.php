@@ -4,26 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Http\Requests\AddCashGameRequest;
 
 class CashGameController extends Controller
 {
     /**
     * POST method for starting a Cash Game for the authenticated user
     * 
-    * @param Request $request
+    * @param AddCashGameRequest $request
     * @return json 
     */
-    public function start(Request $request)
+    public function start(AddCashGameRequest $request)
     {
-        // TODO: Validate, start_time cannot be during another session that exists.
-
-        $request->validate([
-            'start_time' => 'nullable|date|before:now',
-            'amount' => 'sometimes|integer|min:0'
-        ]);
-
         try {
-            $cash_game = auth()->user()->startCashGame(Carbon::create($request->start_time));
+            $cash_game = auth()->user()->startCashGame($request->validated());
 
             if ($request->amount) {
                 $cash_game->addBuyIn($request->amount);

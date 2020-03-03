@@ -16,7 +16,6 @@ class CreateVariantsTable extends Migration
         Schema::create('variants', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('variant');
-            $table->timestamps();
         });
     }
 

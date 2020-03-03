@@ -95,10 +95,9 @@ class Tournament extends Game
     */
     public function deleteGameTransactions()
     {
-        // TODO:
-        // $this->buyIn()->delete();
-        // $this->rebuys()->delete();
-        // $this->addOns()->delete();
+        $this->buyIn()->delete();
+        $this->rebuys()->delete();
+        $this->addOns()->delete();
 
         parent::deleteGameTransactions();
     }

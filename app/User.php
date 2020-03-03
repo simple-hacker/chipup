@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Attributes\Stake;
 use App\Transactions\Bankroll;
 use Illuminate\Support\Carbon;
 use App\Exceptions\NonIntegerAmount;
@@ -128,16 +129,27 @@ class User extends Authenticatable
     * Start a Cash Game with the current time as start_time
     * This first checks if we have a Cash Game in progress by checking the count of CashGame where end_time is null
     *
+    * @param array $attributes
     * @return \App\CashGame
     */
-    public function startCashGame(Carbon $start_time = null) : CashGame
+    public function startCashGame(Array $attributes = []) : CashGame
     {
+        // The $attributes array will have been validated in the CashGameController
+
         if ($this->liveCashGame()) {
             throw new CashGameInProgress('A Cash Game is already in progress.');
         }
 
+        // TODO:  Maybe don't use default attributes??
+
         return $this->cashGames()->create([
-            'start_time' => $start_time ?? now()
+            'start_time' => (isset($attributes['start_time'])) ? Carbon::create($attributes['start_time']) : now(),
+            'stake_id' => $attributes['stake_id'] ?? $this->default_stake,
+            'variant_id' => $attributes['variant_id'] ?? $this->default_variant,
+            'limit_id' => $attributes['limit_id'] ?? $this->default_limit,
+            'table_size_id' => $attributes['table_size_id'] ?? $this->default_table_size,
+            'location' => $attributes['location'] ?? $this->default_location,
+            'comments' => $attributes['comments'] ?? null,
         ]);
     }
 
@@ -196,5 +208,45 @@ class User extends Authenticatable
                     ->where('end_time', null)
                     ->orderByDesc('start_time')
                     ->first();
+    }
+
+    /**
+    * Return the user's default stake model
+    * 
+    * @return hasOne
+    */
+    public function default_stake()
+    {
+        return $this->hasOne('App\Attributes\Stake', 'id', 'default_stake_id');
+    }
+
+    /**
+    * Return the user's default variant model
+    * 
+    * @return hasOne
+    */
+    public function default_variant()
+    {
+        return $this->hasOne('App\Attributes\Variant', 'id', 'default_variant_id');
+    }
+
+    /**
+    * Return the user's default limit model
+    * 
+    * @return hasOne
+    */
+    public function default_limit()
+    {
+        return $this->hasOne('App\Attributes\Limit', 'id', 'default_limit_id');
+    }
+
+    /**
+    * Return the user's default table size model
+    * 
+    * @return hasOne
+    */
+    public function default_table_size()
+    {
+        return $this->hasOne('App\Attributes\TableSize', 'id', 'default_table_size_id');
     }
 }

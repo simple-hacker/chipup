@@ -18,7 +18,6 @@ class CreateStakesTable extends Migration
             $table->string('stake');
             $table->integer('small_blind');
             $table->integer('big_blind');
-            $table->timestamps();
         });
     }
 

@@ -3,9 +3,13 @@
 namespace Tests\Unit;
 
 use App\User;
-use App\Transactions\CashOut;
 use App\Tournament;
 use Tests\TestCase;
+use App\Transactions\AddOn;
+use App\Transactions\BuyIn;
+use App\Transactions\Rebuy;
+use App\Transactions\CashOut;
+use App\Transactions\Expense;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -256,5 +260,116 @@ class TournamentTest extends TestCase
          
         //Tournament profit should now be -7250 - (500-50) + 200 - (2000-1000) + 5000 + (4000-1000) = -500
         $this->assertEquals(-500, $tournament->profit);
+    }
+
+    public function testTheUsersBankrollIsUpdatedWhenUpdatingTheTournamentsProfit()
+    {
+        // There is a Observer on the abstract Game so when the Game (Tournament) profit is updated (i.e. adding buyIn, expenses etc)
+        // then the User's bankroll is also updated.
+        // Only testing the BuyIn of the GameTransactions as they all work the same because of Positive/NegativeGameTransactionObserver
+        // which updates the Tournament's profit.
+
+        $user = factory('App\User')->create([
+            'bankroll' => 5000
+        ]);
+        $tournament = $user->startTournament();
+        $tournament->addBuyIn(1000);
+
+        // Original bankroll is 5000, but we take off 1000 as we buy in.
+        // User's bankroll should be 4000
+        $this->assertEquals(4000, $user->fresh()->bankroll);
+
+        // This should also work if we update the BuyIn.
+        $buy_in = $tournament->buyIns()->first();
+        $buy_in->update([
+            'amount' => 500
+        ]);
+        // Bankroll should be 4500 (original 5000 and updated -500)
+        $this->assertEquals(4500, $user->fresh()->bankroll);
+
+        // This should also work if we update the BuyIn.
+        $buy_in->delete();
+        // Bankroll should be 5000 (original 5000)
+        $this->assertEquals(5000, $user->fresh()->bankroll);
+        
+        
+        // Testing Positive transaction as well.
+        $tournament->cashOut(2000);
+        // We're back to the original 5000, but we cashed out for 2000.  Bankroll = 7000
+        $this->assertEquals(7000, $user->fresh()->bankroll);
+        
+    }
+
+    public function testTheUsersBankrollIsUpdatedWhenATournamentIsDeleted()
+    {
+        $user = factory('App\User')->create([
+            'bankroll' => 10000
+        ]);
+        $tournament = $user->startTournament();
+        $tournament->addBuyIn(1000);
+        $tournament->addExpense(50);
+        $tournament->addExpense(200);
+        $tournament->addRebuy(1000);
+        $tournament->addAddOn(500);
+        $tournament->cashOut(1000);
+
+        // Check that users bankroll is 7750 (10000-1000-50--1000-500+1000)
+        $this->assertEquals(8250, $user->fresh()->bankroll);
+        // Tournament profit is -1750 (-1000-50-1000-500+1000)
+        $this->assertEquals(-1750, $tournament->fresh()->profit);
+
+        // Now if we delete the tournament the user's bankroll should revert back to the orignal
+        // 10000, calculated by the user's current bankroll (9750) minus the tournaments profit (-250)
+        // If the tournament profit is negative, it adds back on, if positive it should subtract it.
+        $tournament->fresh()->delete();
+        $this->assertEquals(10000, $user->fresh()->bankroll);
+        
+        // Test again with positive profit
+        $tournament2 = $user->startTournament();
+        $tournament2->cashOut(10000);
+        // Orignal bankroll 10000 + cashOut 10000 = 20000
+        $this->assertEquals(20000, $user->fresh()->bankroll);
+
+        $tournament2->fresh()->delete();
+        $this->assertEquals(10000, $user->fresh()->bankroll);
+    }
+
+    public function testWhenATournamentIsDeletedItDeletesAllOfItsGameTransactions()
+    {
+        $user = factory('App\User')->create();
+        $tournament = $user->startTournament();
+        $tournament->addBuyIn(1000);
+        $tournament->addExpense(50);
+        $tournament->addExpense(200);
+        $tournament->addRebuy(1000);
+        $tournament->addRebuy(1000);
+        $tournament->addAddOn(500);
+        $tournament->addAddOn(500);
+        $tournament->cashOut(1000);
+        $tournament->refresh();
+        // Make sure counts and bankroll are correct.
+        $this->assertCount(1, $tournament->buyIns);
+        $this->assertCount(2, $tournament->expenses);
+        $this->assertCount(1, $tournament->cashOutModel()->get());
+        $this->assertCount(2, $tournament->rebuys);
+        $this->assertCount(2, $tournament->addOns);
+        $this->assertEquals(-3250, $tournament->profit);
+        $this->assertEquals(6750, $user->fresh()->bankroll);
+        $this->assertCount(1, $user->tournaments);
+        
+        // When deleting a Tournament it shoudl delete all it's GameTransactions
+        // This is handled in Game model Observer delete method.
+        // Can't use cascade down migrations because of polymorphic relationship
+        $tournament->delete();
+
+        $user->refresh();
+        
+        $this->assertCount(0, $user->tournaments);
+        $this->assertEquals(10000, $user->bankroll);
+        $this->assertCount(0, BuyIn::all());
+        $this->assertCount(0, Expense::all());
+        $this->assertCount(0, CashOut::all());
+        $this->assertCount(0, Rebuy::all());
+        $this->assertCount(0, AddOn::all());
     }
 }

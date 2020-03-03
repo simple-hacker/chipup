@@ -16,7 +16,6 @@ class CreateLimitsTable extends Migration
         Schema::create('limits', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('limit');
-            $table->timestamps();
         });
     }
 
