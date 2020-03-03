@@ -19,17 +19,13 @@ abstract class TestCase extends BaseTestCase
         return $user;
     }
 
-    protected function createCashGame()
+    protected function createCashGame($user = null)
     {
-        $user = factory('App\User')->create();
-
-        return $user->startCashGame();
+        return $this->signIn($user)->startCashGame();
     }
 
-    protected function createTournament()
+    protected function createTournament($user = null)
     {
-        $user = factory('App\User')->create();
-
-        return $user->startTournament();
+        return $this->signIn($user)->startTournament();
     }
 }

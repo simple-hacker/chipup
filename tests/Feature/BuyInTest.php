@@ -25,7 +25,7 @@ class BuyInTest extends TestCase
 
     public function testABuyInCanBeAddedToACashGame()
     {
-        $cash_game = $this->signIn()->startCashGame();
+        $cash_game = $this->createCashGame();
 
         $this->postJson(route('buyin.add'), [
                     'id' => $cash_game->id,
@@ -56,7 +56,7 @@ class BuyInTest extends TestCase
 
     public function testUserCanAddMultipleBuyInsToCashGame()
     {
-        $cash_game = $this->signIn()->startCashGame();
+        $cash_game = $this->createCashGame();
 
         $this->postJson(route('buyin.add'), [
             'id' => $cash_game->id,
@@ -75,7 +75,7 @@ class BuyInTest extends TestCase
 
     public function testViewingBuyInReturnsJsonOfBuyInTransaction()
     {
-        $cash_game = $this->signIn()->startCashGame();
+        $cash_game = $this->createCashGame();
 
         $this->postJson(route('buyin.add'), [
             'id' => $cash_game->id,
@@ -94,7 +94,7 @@ class BuyInTest extends TestCase
 
     public function testAUserCanUpdateTheBuyIn()
     {
-        $cash_game = $this->signIn()->startCashGame();
+        $cash_game = $this->createCashGame();
 
         $this->postJson(route('buyin.add'), [
             'id' => $cash_game->id,
@@ -117,7 +117,7 @@ class BuyInTest extends TestCase
 
     public function testAUserCanDeleteTheBuyIn()
     {
-        $cash_game = $this->signIn()->startCashGame();
+        $cash_game = $this->createCashGame();
 
         $this->postJson(route('buyin.add'), [
             'id' => $cash_game->id,
@@ -140,7 +140,7 @@ class BuyInTest extends TestCase
 
     public function testBuyInAmountIsValidForAdd()
     {
-        $cash_game = $this->signIn()->startCashGame();
+        $cash_game = $this->createCashGame();
 
         // Test not sending amount
         $this->postJson(route('buyin.add'), [
@@ -184,7 +184,7 @@ class BuyInTest extends TestCase
 
     public function testBuyInAmountIsValidForUpdate()
     {
-        $cash_game = $this->signIn()->startCashGame();
+        $cash_game = $this->createCashGame();
 
         $this->postJson(route('buyin.add'), [
             'id' => $cash_game->id,

@@ -132,12 +132,7 @@ class User extends Authenticatable
     */
     public function startCashGame(Carbon $start_time = null) : CashGame
     {
-        $count = $this->cashGames()
-                        ->where('end_time', null)
-                        ->orderByDesc('start_time')
-                        ->count();
-
-        if ($count > 0) {
+        if ($this->liveCashGame()) {
             throw new CashGameInProgress('A Cash Game is already in progress.');
         }
 
@@ -179,12 +174,7 @@ class User extends Authenticatable
     */
     public function startTournament(Carbon $start_time = null) : Tournament
     {
-        $count = $this->tournaments()
-                        ->where('end_time', null)
-                        ->orderByDesc('start_time')
-                        ->count();
-
-        if ($count > 0) {
+        if ($this->liveTournament()) {
             throw new TournamentInProgress;
         }
 
