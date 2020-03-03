@@ -38,8 +38,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function getCashGameAttributes($amount = 1000, $start_time = null) {
 
-        return [
-            'start_time' => $start_time ?? Carbon::now()->toDateTimeString(),
+        $attributes = [
             'amount' => $amount,
             'stake_id' => Stake::inRandomOrder()->first()->id,
             'variant_id' => Variant::inRandomOrder()->first()->id,
@@ -47,5 +46,12 @@ abstract class TestCase extends BaseTestCase
             'table_size_id' => TableSize::inRandomOrder()->first()->id,
             'location' => 'Casino MK',
         ];
+
+        // Onnly add start time to the request if needed.
+        if ($start_time) {
+            $attributes['start_time'] = $start_time;
+        }
+        
+        return $attributes;
     }
 }
