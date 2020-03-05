@@ -144,10 +144,10 @@ class User extends Authenticatable
 
         return $this->cashGames()->create([
             'start_time' => (isset($attributes['start_time'])) ? Carbon::create($attributes['start_time']) : now(),
-            'stake_id' => $attributes['stake_id'] ?? $this->default_stake,
-            'variant_id' => $attributes['variant_id'] ?? $this->default_variant,
-            'limit_id' => $attributes['limit_id'] ?? $this->default_limit,
-            'table_size_id' => $attributes['table_size_id'] ?? $this->default_table_size,
+            'stake_id' => $attributes['stake_id'] ?? $this->default_stake_id,
+            'variant_id' => $attributes['variant_id'] ?? $this->default_variant_id,
+            'limit_id' => $attributes['limit_id'] ?? $this->default_limit_id,
+            'table_size_id' => $attributes['table_size_id'] ?? $this->default_table_size_id,
             'location' => $attributes['location'] ?? $this->default_location,
             'comments' => $attributes['comments'] ?? null,
         ]);

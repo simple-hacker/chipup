@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\CashGame;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Requests\AddCashGameRequest;
+use App\Http\Requests\UpdateCashGameRequest;
 
 class CashGameController extends Controller
 {
@@ -95,5 +97,70 @@ class CashGameController extends Controller
                 'message' => 'You currently don\'t have a Cash Game in progress'
             ], 422);
         }
+    }
+
+    /**
+    * GET method to retrieve auth user's cash games
+    *
+    * @return json
+    */
+    public function index()
+    {
+        return response()->json([
+            'success' => true,
+            'cash_games' => auth()->user()->cashGames()->get()
+        ]);
+    }
+
+    /**
+    * GET method to retrieve specific cash game
+    *
+    * @param CashGame $cash_game
+    * @return json
+    */
+    public function view(CashGame $cash_game)
+    {
+        $this->authorize('manage', $cash_game);
+
+        return response()->json([
+            'success' => true,
+            'cash_game' => $cash_game
+        ]);
+    }
+
+    /**
+    * PATCH method to retrieve specific cash game
+    *
+    * @param CashGame $cash_game
+    * @param UpdateCashGameRequest $request
+    * @return json
+    */
+    public function update(CashGame $cash_game, UpdateCashGameRequest $request)
+    {
+        $this->authorize('manage', $cash_game);
+
+        $cash_game->update($request->validated());
+        
+        return response()->json([
+            'success' => true,
+            'cash_game' => $cash_game
+        ]);
+    }
+
+    /**
+    * PATCH method to retrieve specific cash game
+    *
+    * @param CashGame $cash_game
+    * @return json
+    */
+    public function destroy(CashGame $cash_game)
+    {
+        $this->authorize('manage', $cash_game);
+
+        $cash_game->delete();
+        
+        return response()->json([
+            'success' => true,
+        ]);
     }
 }

@@ -47,7 +47,7 @@ abstract class TestCase extends BaseTestCase
             'location' => 'Casino MK',
         ];
 
-        // Onnly add start time to the request if needed.
+        // Only add start time to the request if needed.
         if ($start_time) {
             $attributes['start_time'] = $start_time;
         }

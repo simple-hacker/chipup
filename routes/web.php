@@ -26,15 +26,12 @@ Route::delete('/bankroll/{bankrollTransaction}/delete', 'BankrollController@dele
 // CashGame Routes
 Route::post('/cash/start', 'CashGameController@start')->name('cash.start')->middleware('auth');
 Route::get('/cash/current', 'CashGameController@current')->name('cash.current')->middleware('auth');
-Route::post('/cash/end', 'CashGameController@end')->name('cash.end')->middleware('auth');
-/*
-    GET /cash/  View all cash games
-    GET /cash/{cash_game}/  View Cash Game
-    POST /cash/{cash_game}/  - Create Cash Game?  Not needed because of cash.start we just post data when starting.
-    PATCH /cash/{cash_game} - Update details of cash game such as location, SB/BB etc
-    DELETE /cash/{cash_game} - Destroy the Cash Game.  Need model observer to update Bankroll
-    NOTE:: Need to validate that cash_game belongs to USER
-*/
+Route::post('/cash/end', 'CashGameController@end')->name('cash.end')->middleware('auth');  
+Route::get('/cash', 'CashGameController@index')->name('cash.index')->middleware('auth');
+Route::get('/cash/{cash_game}', 'CashGameController@view')->name('cash.view')->middleware('auth');
+Route::patch('/cash/{cash_game}', 'CashGameController@update')->name('cash.update')->middleware('auth');
+Route::delete('/cash/{cash_game}', 'CashGameController@destroy')->name('cash.delete')->middleware('auth');
+// Potentially POST /cash to @create.
 
 // BuyIn Routes
 Route::post('/buyin/add', 'BuyInController@add')->name('buyin.add')->middleware('auth');

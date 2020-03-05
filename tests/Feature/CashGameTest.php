@@ -28,7 +28,7 @@ class CashGameTest extends TestCase
     }
 
     public function testAUserCanStartALiveCashGame()
-    {       
+    {     
         $user = $this->signIn();
 
         $this->postJson(route('cash.start'), $this->getCashGameAttributes())
@@ -402,4 +402,182 @@ class CashGameTest extends TestCase
                 ->assertStatus(422);
     }
 
+    public function testAUserCanGetAllTheirCashGamesAsJson()
+    {   
+        $user = $this->signIn();
+
+        // Assert response cash games is empty if no cash games exist
+        $response = $this->getJson(route('cash.index'))
+                ->assertOk()
+                ->assertJsonStructure(['success', 'cash_games']);
+
+        $this->assertEmpty($response['cash_games']);
+
+        // Create two cash games
+        $this->postJson(route('cash.start'), $this->getCashGameAttributes());
+        $user->cashGames()->first()->end();
+        $this->postJson(route('cash.start'), $this->getCashGameAttributes());
+        $user->cashGames()->get()->last()->end(); 
+
+        // Assert response cash_games returns two cash games
+        $response = $this->getJson(route('cash.index'))
+                            ->assertOk()
+                            ->assertJsonStructure(['success', 'cash_games']);
+
+        $this->assertCount(2, $response['cash_games']);
+    }
+
+    public function testAssertNotFoundIfViewingInvalidCashGame()
+    {
+        $this->signIn();
+
+        // Assert Not Found if supply incorrect cash_game id
+        $this->getJson(route('cash.view', ['cash_game' => 99]))
+                ->assertNotFound();
+    }
+
+    public function testAUserCanViewAValidCashGame()
+    {
+        $cash_game = $this->createCashGame();
+
+        // Assert Not Found if supply incorrect cash_game id
+        $this->getJson(route('cash.view', ['cash_game' => $cash_game->id]))
+                ->assertOk()
+                ->assertJsonStructure(['success', 'cash_game']);
+    }
+
+    public function testAUserCannotViewAnotherUsersCashGame()
+    {
+        // Sign in User and create cash game
+        $cash_game = $this->createCashGame();
+
+        //Sign in another user
+        $this->signIn();
+
+        // Assert Forbidden if cash game does not belong to user
+        $this->getJson(route('cash.view', ['cash_game' => $cash_game->id]))
+                ->assertForbidden();
+    }
+
+    public function testAUserCanUpdateTheCashGameDetails()
+    {
+        $cash_game = $this->createCashGame();
+
+        $start_time = Carbon::create('-1 hour')->toDateTimeString();
+
+        $attributes = [
+            'start_time' => $start_time,
+            'stake_id' => "2",
+            'limit_id' => "2",
+            'variant_id' => "2",
+            'table_size_id' => "2",
+            'location' => 'Las Vegas',
+        ];
+
+        $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), $attributes)
+                ->assertOk()
+                ->assertJsonStructure(['success', 'cash_game'])
+                ->assertJson([
+                    'success' => true
+                ]);
+
+        $this->assertDatabaseHas('cash_games', $attributes);
+    }
+
+    public function testAUserCannnotUpdateAnotherUsersCashGame()
+    {
+        $cash_game = $this->createCashGame();
+        
+        // Sign in as another user
+        $this->signIn();
+
+        $attributes = [
+            'start_time' => '2020-02-02 18:00:00',
+            'stake_id' => "2",
+            'limit_id' => "2",
+            'variant_id' => "2",
+            'table_size_id' => "2",
+            'location' => 'Las Vegas',
+        ];
+
+        $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), $attributes)
+                ->assertForbidden();
+
+        $this->assertDatabaseMissing('cash_games', $attributes);
+    }
+
+    public function testDataMustBeValidWhenUpdatingACashGame()
+    {     
+        $cash_game = $this->signIn()->startCashGame(['start_time' => Carbon::create('-5 hours')->toDateTimeString()]);
+        $cash_game->end();
+
+        // Empty data is valid
+        $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), [])->assertOk();
+
+        // Stake Id must exist in stakes table
+        $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), [
+            'stake_id' => 999
+        ])->assertStatus(422);
+
+        // Limit Id must exist in limits table
+        $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), [
+            'limit_id' => 999
+        ])->assertStatus(422);
+
+        // Variant Id must exist in variants table
+        $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), [
+            'variant_id' => 999
+        ])->assertStatus(422);
+
+        // Table_size Id must exist in table_sizes table
+        $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), [
+            'table_size_id' => 999
+        ])->assertStatus(422);
+
+        // Start_time cannot be in the future
+        $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), [
+            'start_time' => Carbon::create('+1 second')->toDateTimeString()
+        ])->assertStatus(422);
+
+        // end_time cannot be in the future
+        $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), [
+            'end_time' => Carbon::create('+1 second')->toDateTimeString()
+        ])->assertStatus(422);
+
+        // Start_time cannot be after end_time
+        $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), [
+            'start_time' => Carbon::create('-10 minutes')->toDateTimeString(),
+            'end_time' => Carbon::create('-20 minutes')->toDateTimeString(),
+        ])->assertStatus(422);
+
+        // Start_time and end_time cannot be the same
+        $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), [
+            'start_time' => Carbon::create('-10 minutes')->toDateTimeString(),
+            'end_time' => Carbon::create('-10 minutes')->toDateTimeString(),
+        ])->assertStatus(422);
+    }
+
+    public function testAUserCanDeleteTheirCashGame()
+    {
+        $user = $this->signIn();
+        $cash_game = $user->startCashGame();
+
+        $this->deleteJson(route('cash.delete', ['cash_game' => $cash_game->id]))
+                ->assertOk();
+
+        $this->assertEmpty($user->cashGames);
+    }
+
+    public function testAUserCannotDeleteAnotherUsersCashGame()
+    {
+        // Sign in new user and create cash game
+        $cash_game = $this->createCashGame();
+
+        //Sign in as another new user
+        $this->signIn();
+
+        // User 2 is Forbidden to delete user 1s cash game.
+        $this->deleteJson(route('cash.delete', ['cash_game' => $cash_game->id]))
+                ->assertForbidden();
+    }
 }
