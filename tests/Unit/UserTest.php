@@ -62,7 +62,7 @@ class UserTest extends TestCase
         $user = factory('App\User')->create();
 
         // Start a Cash Game session.
-        $tournament = $user->startTournament();
+        $tournament = $user->startTournament($this->getTournamentAttributes());
 
         $this->assertEquals($user->liveTournament()->id, $tournament->id);
         

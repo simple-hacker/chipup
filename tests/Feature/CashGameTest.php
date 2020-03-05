@@ -24,7 +24,7 @@ class CashGameTest extends TestCase
                 ->assertUnauthorized();
 
         $this->getJson(route('cash.current'))
-        ->assertUnauthorized();
+                ->assertUnauthorized();
     }
 
     public function testAUserCanStartALiveCashGame()
@@ -33,6 +33,7 @@ class CashGameTest extends TestCase
 
         $this->postJson(route('cash.start'), $this->getCashGameAttributes())
                 ->assertOk()
+                ->assertJsonStructure(['success', 'cash_game'])
                 ->assertJson([
                     'success' => true
                 ]);
@@ -86,7 +87,7 @@ class CashGameTest extends TestCase
 
     public function testGettingAUsersLiveCashGameWhenNotStartedResultsInNull()
     {
-        $user = $user = $this->signIn();
+        $user = $this->signIn();
         // Don't start CashGame
 
         $this->getJson(route('cash.current'))
@@ -255,6 +256,7 @@ class CashGameTest extends TestCase
             ])
             ->assertOk();
 
+        // CashGame profit should be 4000. (-1000 buyIn + 5000 cashOut)
         $cash_game = $user->cashGames()->first();
         $this->assertEquals(4000, $cash_game->profit);
 
@@ -262,7 +264,7 @@ class CashGameTest extends TestCase
         $this->assertInstanceOf(CashOut::class, $cash_out);
         $this->assertEquals(5000, $cash_out->amount);
 
-        //Check user's bankroll.  It should be 15,000 as factory default is 10,000
+        //Check user's bankroll.  It should be 14,000 as factory default is 10,000. (Bankroll + CashGame profit)
         $this->assertEquals(14000, $user->fresh()->bankroll);
     }
 
@@ -467,10 +469,11 @@ class CashGameTest extends TestCase
 
         $attributes = [
             'start_time' => $start_time,
-            'stake_id' => "2",
-            'limit_id' => "2",
-            'variant_id' => "2",
-            'table_size_id' => "2",
+            'stake_id' => 2,
+            'limit_id' => 2,
+            'variant_id' => 2,
+            'table_size_id' => 2,
+            'comments' => 'New comments',
             'location' => 'Las Vegas',
         ];
 
@@ -493,10 +496,10 @@ class CashGameTest extends TestCase
 
         $attributes = [
             'start_time' => '2020-02-02 18:00:00',
-            'stake_id' => "2",
-            'limit_id' => "2",
-            'variant_id' => "2",
-            'table_size_id' => "2",
+            'stake_id' => 2,
+            'limit_id' => 2,
+            'variant_id' => 2,
+            'table_size_id' => 2,
             'location' => 'Las Vegas',
         ];
 
@@ -508,7 +511,7 @@ class CashGameTest extends TestCase
 
     public function testDataMustBeValidWhenUpdatingACashGame()
     {     
-        $cash_game = $this->signIn()->startCashGame(['start_time' => Carbon::create('-5 hours')->toDateTimeString()]);
+        $cash_game = $this->signIn()->startCashGame($this->getCashGameAttributes());
         $cash_game->end();
 
         // Empty data is valid

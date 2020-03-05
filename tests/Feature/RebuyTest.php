@@ -13,7 +13,7 @@ class RebuyTest extends TestCase
     public function testOnlyAuthenticatedUsersCanAddRebuy()
     {
         $user = factory('App\User')->create();
-        $tournament = $user->startTournament();
+        $tournament = $user->startTournament($this->getTournamentAttributes());
 
         $this->postJson(route('rebuy.add'), [
                     'id' => $tournament->id,
@@ -25,7 +25,7 @@ class RebuyTest extends TestCase
 
     public function testARebuyCanBeAddedToATournament()
     {
-        $tournament = $this->signIn()->startTournament();
+        $tournament = $this->createTournament();
 
         $this->postJson(route('rebuy.add'), [
                     'id' => $tournament->id,
@@ -56,7 +56,7 @@ class RebuyTest extends TestCase
 
     public function testUserCanAddMultipleRebuysToTournament()
     {
-        $tournament = $this->signIn()->startTournament();
+        $tournament = $this->createTournament();
 
         $this->postJson(route('rebuy.add'), [
             'id' => $tournament->id,
@@ -75,7 +75,7 @@ class RebuyTest extends TestCase
 
     public function testViewingRebuyReturnsJsonOfRebuyTransaction()
     {
-        $tournament = $this->signIn()->startTournament();
+        $tournament = $this->createTournament();
 
         $this->postJson(route('rebuy.add'), [
             'id' => $tournament->id,
@@ -94,7 +94,7 @@ class RebuyTest extends TestCase
 
     public function testAUserCanUpdateTheRebuy()
     {
-        $tournament = $this->signIn()->startTournament();
+        $tournament = $this->createTournament();
 
         $this->postJson(route('rebuy.add'), [
             'id' => $tournament->id,
@@ -117,7 +117,7 @@ class RebuyTest extends TestCase
 
     public function testAUserCanDeleteTheRebuy()
     {
-        $tournament = $this->signIn()->startTournament();
+        $tournament = $this->createTournament();
 
         $this->postJson(route('rebuy.add'), [
             'id' => $tournament->id,
@@ -140,7 +140,7 @@ class RebuyTest extends TestCase
 
     public function testRebuyAmountIsValidForAdd()
     {
-        $tournament = $this->signIn()->startTournament();
+        $tournament = $this->createTournament();
 
         // Test not sending amount
         $this->postJson(route('rebuy.add'), [
@@ -184,7 +184,7 @@ class RebuyTest extends TestCase
 
     public function testRebuyAmountIsValidForUpdate()
     {
-        $tournament = $this->signIn()->startTournament();
+        $tournament = $this->createTournament();
 
         $this->postJson(route('rebuy.add'), [
             'id' => $tournament->id,
@@ -228,7 +228,7 @@ class RebuyTest extends TestCase
     {
         // User1 creates a Tournament and adds a Rebuy
         $user1 = $this->signIn();
-        $tournament = $user1->startTournament();
+        $tournament = $user1->startTournament($this->getTournamentAttributes());
         $this->postJson(route('rebuy.add'), [
                     'id' => $tournament->id,
                     'game_type' => $tournament->game_type,

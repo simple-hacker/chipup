@@ -19,7 +19,7 @@ class TournamentTest extends TestCase
 
     public function testATournamentBelongsToAUser()
     {
-        $tournament = factory('App\Tournament')->create();
+        $tournament = factory('App\Tournament')->create(['buy_in' => 1000]);
 
         $this->assertInstanceOf(User::class, $tournament->user);
     }
@@ -28,7 +28,7 @@ class TournamentTest extends TestCase
     {
         $user = factory('App\User')->create();
 
-        $user->startTournament();
+        $user->startTournament($this->getTournamentAttributes());
 
         $this->assertCount(1, $user->tournaments);
         $this->assertInstanceOf(Tournament::class, $user->tournaments()->first());
@@ -38,9 +38,9 @@ class TournamentTest extends TestCase
     {
         $user = factory('App\User')->create();
 
-        $time = Carbon::create(2020, 02, 15, 18, 30, 00);
+        $time = Carbon::create(2020, 02, 15, 18, 30, 00)->toDateTimeString();
 
-        $tournament = $user->startTournament($time);
+        $tournament = $user->startTournament($this->getTournamentAttributes(1000, $time));
 
         $this->assertEquals('2020-02-15 18:30:00', $tournament->fresh()->start_time);
     }
@@ -86,9 +86,9 @@ class TournamentTest extends TestCase
 
         $user = factory('App\User')->create();
 
-        $user->startTournament();
+        $user->startTournament($this->getTournamentAttributes());
         // Error should be thrown when starting another
-        $user->startTournament();
+        $user->startTournament($this->getTournamentAttributes());
     }
 
     public function testCheckingStartingMultipleTournamentsAsLongAsPreviousOnesHaveFinished()
@@ -96,13 +96,13 @@ class TournamentTest extends TestCase
         $user = factory('App\User')->create();
 
         // Start and finish a tournament.
-        $tournament = $user->startTournament();
+        $tournament = $user->startTournament($this->getTournamentAttributes());
         $tournament->end(Carbon::create('+1 hour'));
 
         Carbon::setTestNow('+ 3 hours');
 
         // Start a tournament.
-        $tournament_2 = $user->startTournament();
+        $tournament_2 = $user->startTournament($this->getTournamentAttributes());
 
         // User's liveTournament should be tournament_2.
         $this->assertEquals($user->liveTournament()->id, $tournament_2->id);
@@ -272,7 +272,7 @@ class TournamentTest extends TestCase
         $user = factory('App\User')->create([
             'bankroll' => 5000
         ]);
-        $tournament = $user->startTournament();
+        $tournament = $user->startTournament($this->getTournamentAttributes());
         $tournament->addBuyIn(1000);
 
         // Original bankroll is 5000, but we take off 1000 as we buy in.
@@ -305,7 +305,7 @@ class TournamentTest extends TestCase
         $user = factory('App\User')->create([
             'bankroll' => 10000
         ]);
-        $tournament = $user->startTournament();
+        $tournament = $user->startTournament($this->getTournamentAttributes());
         $tournament->addBuyIn(1000);
         $tournament->addExpense(50);
         $tournament->addExpense(200);
@@ -325,7 +325,7 @@ class TournamentTest extends TestCase
         $this->assertEquals(10000, $user->fresh()->bankroll);
         
         // Test again with positive profit
-        $tournament2 = $user->startTournament();
+        $tournament2 = $user->startTournament($this->getTournamentAttributes());
         $tournament2->cashOut(10000);
         // Orignal bankroll 10000 + cashOut 10000 = 20000
         $this->assertEquals(20000, $user->fresh()->bankroll);
@@ -337,7 +337,7 @@ class TournamentTest extends TestCase
     public function testWhenATournamentIsDeletedItDeletesAllOfItsGameTransactions()
     {
         $user = factory('App\User')->create();
-        $tournament = $user->startTournament();
+        $tournament = $user->startTournament($this->getTournamentAttributes());
         $tournament->addBuyIn(1000);
         $tournament->addExpense(50);
         $tournament->addExpense(200);

@@ -26,6 +26,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function createCashGame($user = null)
     {
+        // In User.php startCashGame has default values
         return $this->signIn($user)->startCashGame([
             'start_time' => date('Y-m-d H:i:s'),
         ]);
@@ -33,7 +34,9 @@ abstract class TestCase extends BaseTestCase
 
     protected function createTournament($user = null)
     {
-        return $this->signIn($user)->startTournament();
+        // In User.php startTournament does not have default values
+        // So need to add them here.
+        return $this->signIn($user)->startTournament($this->getTournamentAttributes());
     }
 
     protected function getCashGameAttributes($amount = 1000, $start_time = null) {
@@ -44,6 +47,25 @@ abstract class TestCase extends BaseTestCase
             'variant_id' => Variant::inRandomOrder()->first()->id,
             'limit_id' => Limit::inRandomOrder()->first()->id,
             'table_size_id' => TableSize::inRandomOrder()->first()->id,
+            'location' => 'Casino MK',
+        ];
+
+        // Only add start time to the request if needed.
+        if ($start_time) {
+            $attributes['start_time'] = $start_time;
+        }
+        
+        return $attributes;
+    }
+
+    protected function getTournamentAttributes($amount = 1000, $start_time = null) {
+
+        $attributes = [
+            'amount' => $amount,
+            'name' => 'FU Flip',
+            'variant_id' => Variant::inRandomOrder()->first()->id,
+            'limit_id' => Limit::inRandomOrder()->first()->id,
+            'entries' => rand(30,500),
             'location' => 'Casino MK',
         ];
 

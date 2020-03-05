@@ -19,6 +19,13 @@ class CreateTournamentsTable extends Migration
             $table->timestamp('start_time')->useCurrent();
             $table->timestamp('end_time')->nullable();
             $table->bigInteger('profit')->default(0);
+            $table->bigInteger('buy_in');
+            $table->unsignedBigInteger('limit_id')->nullable();
+            $table->unsignedBigInteger('variant_id')->nullable();
+            $table->string('name')->nullable();
+            $table->unsignedInteger('entries')->nullable();
+            $table->string('location')->nullable();
+            $table->text('comments')->nullable();
             $table->timestamps();
         });
     }

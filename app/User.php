@@ -182,16 +182,26 @@ class User extends Authenticatable
     * Start a Tournament with the current time as start_time
     * This first checks if we have a Tournament in progress by checking the count of Tournament where end_time is null
     *
+    * @param Array $attributes
     * @return \App\Tournament
     */
-    public function startTournament(Carbon $start_time = null) : Tournament
+    public function startTournament(Array $attributes = []) : Tournament
     {
+        // The $attributes array will have been validated in the TournamentController
+        
         if ($this->liveTournament()) {
-            throw new TournamentInProgress;
+            throw new TournamentInProgress('A Tournament is already in progress.');
         }
 
         return $this->tournaments()->create([
-            'start_time' => $start_time ?? now()
+            'start_time' => (isset($attributes['start_time'])) ? Carbon::create($attributes['start_time']) : now(),
+            'buy_in' => $attributes['amount'],
+            'name' => $attributes['name'] ?? null,
+            'variant_id' => $attributes['variant_id'],
+            'limit_id' => $attributes['limit_id'],
+            'entries' => $attributes['entries'] ?? null,
+            'location' => $attributes['location'] ?? null,
+            'comments' => $attributes['comments'] ?? null,
         ]);
     }
 

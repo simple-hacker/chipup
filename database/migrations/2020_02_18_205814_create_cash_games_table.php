@@ -23,7 +23,7 @@ class CreateCashGamesTable extends Migration
             $table->unsignedBigInteger('limit_id')->nullable();
             $table->unsignedBigInteger('variant_id')->nullable();
             $table->unsignedBigInteger('table_size_id')->nullable();
-            $table->text('location')->nullable();
+            $table->string('location')->nullable();
             $table->text('comments')->nullable();
             $table->timestamps();
         });

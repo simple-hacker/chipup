@@ -2,32 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\CashGame;
+use App\Tournament;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Http\Requests\AddCashGameRequest;
-use App\Http\Requests\UpdateCashGameRequest;
+use App\Http\Requests\AddTournamentRequest;
+use App\Http\Requests\UpdateTournamentRequest;
 
-class CashGameController extends Controller
+class TournamentController extends Controller
 {
     /**
-    * POST method for starting a Cash Game for the authenticated user
+    * POST method for starting a Tournament for the authenticated user
     * 
-    * @param AddCashGameRequest $request
+    * @param AddTournamentRequest $request
     * @return json 
     */
-    public function start(AddCashGameRequest $request)
+    public function start(AddTournamentRequest $request)
     {
         try {
-            $cash_game = auth()->user()->startCashGame($request->validated());
+            $tournament = auth()->user()->startTournament($request->validated());
 
             if ($request->amount) {
-                $cash_game->addBuyIn($request->amount);
+                $tournament->addBuyIn($request->amount);
             }
 
             return [
                 'success' => true,
-                'cash_game' => $cash_game
+                'tournament' => $tournament
             ];
         } catch(\Exception $e) {
 
@@ -39,30 +39,30 @@ class CashGameController extends Controller
     }
 
     /**
-    * Returns the User's current CashGame or null
+    * Returns the User's current Tournament or null
     * 
     * @return json
     */
     public function current()
     {
-        $cash_game = auth()->user()->liveCashGame();
+        $tournament = auth()->user()->liveTournament();
 
-        if ($cash_game) {
+        if ($tournament) {
             return response()->json([
                 'success' => true,
                 'status' => 'live',
-                'cash_game' => $cash_game
+                'tournament' => $tournament
             ]);
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'You currently don\'t have a Cash Game in progress'
+                'message' => 'You currently don\'t have a Tournament in progress'
             ], 422);
         }
     }
 
     /**
-    * POST method to end the current live Cash Game
+    * POST method to end the current live Tournament
     * 
     * @param Request $request
     * @return json
@@ -74,16 +74,16 @@ class CashGameController extends Controller
             'amount' => 'sometimes|integer|min:0'
         ]);
 
-        // Get the current live Cash Game if there is one.
-        $cash_game = auth()->user()->liveCashGame();
+        // Get the current live Tournament if there is one.
+        $tournament = auth()->user()->liveTournament();
 
-        if ($cash_game) {
-            // If there is a live CashGame try to end if with supplied time or null
+        if ($tournament) {
+            // If there is a live Tournament try to end if with supplied time or null
             try {
                 $end_time = ($request->end_time) ? Carbon::create($request->end_time) : null;
-                $cash_game->end($end_time);
+                $tournament->end($end_time);
                 if ($request->amount) {
-                    $cash_game->cashOut($request->amount);
+                    $tournament->cashOut($request->amount);
                 }
             } catch (\Exception $e) {
                 return response()->json([
@@ -95,13 +95,13 @@ class CashGameController extends Controller
             // Else send a 422
             return response()->json([
                 'success' => false,
-                'message' => 'You currently don\'t have a Cash Game in progress'
+                'message' => 'You currently don\'t have a Tournament in progress'
             ], 422);
         }
     }
 
     /**
-    * GET method to retrieve auth user's cash games
+    * GET method to retrieve auth user's tournaments
     *
     * @return json
     */
@@ -109,56 +109,56 @@ class CashGameController extends Controller
     {
         return response()->json([
             'success' => true,
-            'cash_games' => auth()->user()->cashGames()->get()
+            'tournaments' => auth()->user()->tournaments()->get()
         ]);
     }
 
     /**
-    * GET method to retrieve specific cash game
+    * GET method to retrieve specific tournament
     *
-    * @param CashGame $cash_game
+    * @param Tournament $tournament
     * @return json
     */
-    public function view(CashGame $cash_game)
+    public function view(Tournament $tournament)
     {
-        $this->authorize('manage', $cash_game);
+        $this->authorize('manage', $tournament);
 
         return response()->json([
             'success' => true,
-            'cash_game' => $cash_game
+            'tournament' => $tournament
         ]);
     }
 
     /**
-    * PATCH method to retrieve specific cash game
+    * PATCH method to retrieve specific tournament
     *
-    * @param CashGame $cash_game
-    * @param UpdateCashGameRequest $request
+    * @param Tournament $tournament
+    * @param UpdateTournamentRequest $request
     * @return json
     */
-    public function update(CashGame $cash_game, UpdateCashGameRequest $request)
+    public function update(Tournament $tournament, UpdateTournamentRequest $request)
     {
-        $this->authorize('manage', $cash_game);
+        $this->authorize('manage', $tournament);
 
-        $cash_game->update($request->validated());
+        $tournament->update($request->validated());
         
         return response()->json([
             'success' => true,
-            'cash_game' => $cash_game
+            'tournament' => $tournament
         ]);
     }
 
     /**
-    * DELETE method to retrieve specific cash game
+    * DELETE method to retrieve specific tournament
     *
-    * @param CashGame $cash_game
+    * @param Tournament $tournament
     * @return json
     */
-    public function destroy(CashGame $cash_game)
+    public function destroy(Tournament $tournament)
     {
-        $this->authorize('manage', $cash_game);
+        $this->authorize('manage', $tournament);
 
-        $cash_game->delete();
+        $tournament->delete();
         
         return response()->json([
             'success' => true,
