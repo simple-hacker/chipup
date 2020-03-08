@@ -20,7 +20,8 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->string('currency');
+            $table->boolean('setup_complete')->default(false);
+            $table->string('currency')->default('GBP');
             $table->bigInteger('bankroll')->default(0);
             $table->unsignedBigInteger('default_stake_id')->nullable();
             $table->unsignedBigInteger('default_limit_id')->nullable();

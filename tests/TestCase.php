@@ -19,6 +19,8 @@ abstract class TestCase extends BaseTestCase
             $user = factory('App\User')->create();
         }
 
+        $user->completeSetup();
+
         $this->actingAs($user);
 
         return $user;

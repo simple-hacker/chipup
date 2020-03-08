@@ -44,6 +44,7 @@ class BankrollTest extends TestCase
         $user = factory('App\User')->create([
             'bankroll' => 0,
         ]);
+        $user->completeSetup();
 
         $this->actingAs($user);
 
@@ -66,6 +67,7 @@ class BankrollTest extends TestCase
         $user = factory('App\User')->create([
             'bankroll' => 50000,
         ]);
+        $user->completeSetup();
 
         $this->actingAs($user);
 
@@ -88,6 +90,7 @@ class BankrollTest extends TestCase
         $user = factory('App\User')->create([
             'bankroll' => 0,
         ]);
+        $user->completeSetup();
 
         $this->actingAs($user);
 
@@ -109,6 +112,7 @@ class BankrollTest extends TestCase
         $user = factory('App\User')->create([
             'bankroll' => 50000,
         ]);
+        $user->completeSetup();
 
         $this->actingAs($user);
 
@@ -164,6 +168,7 @@ class BankrollTest extends TestCase
         $user = factory('App\User')->create([
             'bankroll' => 10000  //This doesn't create a BankrollTransaction
         ]);
+        $user->completeSetup();
         $this->actingAs($user);
 
         // Check negative numbers for addition

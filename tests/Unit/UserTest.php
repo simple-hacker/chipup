@@ -72,4 +72,13 @@ class UserTest extends TestCase
         // liveCashGame should now be an empty Collection.
         $this->assertEmpty($user->liveCashGame());
     }
+
+    public function testAUserCanCompleteTheSetup()
+    {
+        $user = factory('App\User')->create();
+
+        $user->completeSetup();
+
+        $this->assertTrue($user->fresh()->setup_complete);
+    }
 }

@@ -39,6 +39,12 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'setup_complete' => 'boolean',
+        'bankroll' => 'integer',
+        'default_stake_id' => 'integer',
+        'default_limit_id' => 'integer',
+        'default_variant_id' => 'integer',
+        'default_table_size_id' => 'integer',
     ];
 
     /**
@@ -258,5 +264,19 @@ class User extends Authenticatable
     public function default_table_size()
     {
         return $this->hasOne('App\Attributes\TableSize', 'id', 'default_table_size_id');
+    }
+
+    /**
+    * Boolean if user has completed the account setup.
+    * 
+    * @return 
+    */
+    public function completeSetup(): User
+    {
+        $this->update([
+            'setup_complete' => true
+        ]);
+
+        return $this;
     }
 }
