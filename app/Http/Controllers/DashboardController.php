@@ -13,6 +13,8 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        return auth()->user();
+
+        // return view('dashboard');
     }
 }

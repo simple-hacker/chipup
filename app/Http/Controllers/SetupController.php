@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Attributes\Limit;
+use App\Attributes\Stake;
+use App\Attributes\Variant;
+use App\Attributes\TableSize;
 use App\Http\Requests\SetupRequest;
 
 class SetupController extends Controller
@@ -13,7 +17,12 @@ class SetupController extends Controller
     */
     public function index()
     {
-        return view('setup');
+        $stakes = Stake::all();
+        $limits = Limit::all();
+        $variants = Variant::all();
+        $table_sizes = TableSize::all();
+        
+        return view('setup', compact('stakes', 'limits', 'variants', 'table_sizes'));
     }
 
     /**
@@ -28,6 +37,9 @@ class SetupController extends Controller
 
         auth()->user()->completeSetup();
 
-        return redirect('/dashboard');
+        return response()->json([
+            'success' => true,
+            'redirect' => route('dashboard'),
+        ]);
     }
 }

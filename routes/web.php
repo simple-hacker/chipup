@@ -21,5 +21,3 @@ Route::get('/setup', 'SetupController@index')->name('setup.index')->middleware([
 Route::post('/setup', 'SetupController@complete')->name('setup.complete')->middleware(['auth', 'setup.incomplete']);
 
 Auth::routes();
-
-
