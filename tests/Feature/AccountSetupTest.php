@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Transactions\Bankroll;
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -64,6 +65,9 @@ class AccountSetupTest extends TestCase
             'default_location' => 'Casino MK'
         ];
 
+        // Create a new user with empty default attributes
+        // Send in blank $attributes because UserFactory generates a user which has already chosen them.
+        // So now User is as if they've just registered and have not yet completed setup.
         $user = factory('App\User')->create($attributes);
         $this->actingAs($user);
 
@@ -72,7 +76,13 @@ class AccountSetupTest extends TestCase
         $this->assertDatabaseMissing('users', $new_attributes);
 
         // Make POST request to complete user's setup with new default values.
-        $this->postJson(route('setup.complete'), $new_attributes)->assertRedirect(route('dashboard'));
+        $this->postJson(route('setup.complete'), $new_attributes)
+                ->assertOk()
+                ->assertJsonStructure(['success', 'redirect'])
+                ->assertJson([
+                    'success' => true,
+                    'redirect' => route('dashboard')
+                ]);
 
         // Assert original attributes are missing from table and have been replaced by new attributes
         $this->assertDatabaseMissing('users', $attributes);
@@ -146,9 +156,15 @@ class AccountSetupTest extends TestCase
         ];
 
         // Create user and send old_attributes when completing setup.
-        $user = factory('App\User')->create($old_attributes);
+        $user = factory('App\User')->create(['bankroll' => 0]);
         $this->actingAs($user);
-        $this->postJson(route('setup.complete'), $old_attributes)->assertRedirect(route('dashboard'));
+        $this->postJson(route('setup.complete'), $old_attributes)
+                ->assertOk()
+                ->assertJsonStructure(['success', 'redirect'])
+                ->assertJson([
+                    'success' => true,
+                    'redirect' => route('dashboard')
+                ]);
 
         // Assert old_attributes are in table and new_attributes have not been saved yet.
         $this->assertDatabaseHas('users', $old_attributes);
@@ -193,5 +209,29 @@ class AccountSetupTest extends TestCase
         $this->postJson(route('bankroll.add'), ['amount' => 5000])->assertRedirect(route('setup.index'));
         $this->postJson(route('cash.start'), $this->getCashGameAttributes())->assertRedirect(route('setup.index'));
         $this->postJson(route('tournament.start'), $this->getTournamentAttributes())->assertRedirect(route('setup.index'));
+    }
+
+    public function testABankrollTransactionIsAddedIfUserGivesBankrollAmountInSetup()
+    {
+        $attributes = [
+            'bankroll' => 1000,
+            'default_stake_id' => 1,
+            'default_limit_id' => 1,
+            'default_variant_id' => 1,
+            'default_table_size_id' => 1,
+            'default_location' => 'Casino MK'
+        ];
+
+        // Create user and send attributes when completing setup.
+        $user = factory('App\User')->create(['bankroll' => 0]);
+        $this->actingAs($user);
+        $this->postJson(route('setup.complete'), $attributes)->assertOk();
+
+        $user->refresh();
+
+        // Assert BankrollTransaction was created and user's bankroll is updated.
+        //This is updated BankrollTransactionObserver created method.
+        $this->assertEquals(1000, $user->bankroll);
+        $this->assertCount(1, $user->bankrollTransactions);
     }
 }
