@@ -3,3 +3,14 @@
 @import "tailwindcss/components";
 
 @import "tailwindcss/utilities";
+
+
+.background-image {
+    background-image: url('../images/background.jpg');
+}
+
+@media(min-width: 1280px) {
+    .background-image {
+        background-image: none;
+    }
+}

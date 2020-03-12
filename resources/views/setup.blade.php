@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Poker Setup</title>
     <link rel="stylesheet" href="/css/app.css">
+    <script src="/js/setup.js" defer></script>
 </head>
 <body class="bg-gray-100">
     <div id="app">
@@ -27,6 +28,5 @@
             </div>
         </div>
     </div>
-    <script src="/js/setup.js"></script>
 </body>
 </html>
