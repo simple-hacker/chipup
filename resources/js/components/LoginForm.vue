@@ -11,7 +11,7 @@
                 <button @click.prevent="login" class="w-full bg-green-600 hover:bg-green-700 text-white uppercase mt-2 px-4 py-3" v-html="btnText"></button>
                 <div class="flex justify-around mt-3">
                     <div class="flex items-center">
-                        <input type="checkbox" name="remeber" value="remember" class="mr-2">
+                        <input type="checkbox" name="remeber" v-model="remember" class="mr-2">
                         <label for="remember" class="text-sm">Remember me</label>
                     </div>
                     <a href="/password-reset" class="text-green-600 text-sm font-bold">Forgot your password?</a>
@@ -32,6 +32,7 @@ export default {
         return {
             email: '',
             password: '',
+            remember: false,
             errors: [],
             btnText: 'Login'
         }
@@ -43,6 +44,7 @@ export default {
             axios.post('/login', {
                 'email': this.email,
                 'password': this.password,
+                'rememer': this.remember,
             })
             .then(response => {
                 if (response.status === 200) {
