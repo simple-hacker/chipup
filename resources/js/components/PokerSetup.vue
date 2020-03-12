@@ -74,6 +74,7 @@
     Vue.use(VueFormWizard)
 
     export default {
+        name: 'PokerSetup',
         props: {
             stakes: Array,
             limits: Array,

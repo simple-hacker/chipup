@@ -35,7 +35,6 @@ class AccountSetupTest extends TestCase
     public function testAUserIsRedirectedToCompleteSetupAfterRegistering()
     {
         $this->postJson('/register', [
-            'name' => 'Michael',
             'email' => 'test@example.com',
             'password' => 'secret123',
             'password_confirmation' => 'secret123',

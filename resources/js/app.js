@@ -8,6 +8,9 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -19,10 +22,21 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('login-form', require('./components/LoginForm.vue').default);
-Vue.component('register-form', require('./components/RegisterForm.vue').default);
+// Vue.component('login-form', require('./components/LoginForm.vue').default);
+// Vue.component('register-form', require('./components/RegisterForm.vue').default);
+
+import routes from './routes.js'
+
+import LoginForm from './components/LoginForm.vue';
+import RegisterForm from './components/RegisterForm.vue';
+import App from './App.vue';
 
 import '@fortawesome/fontawesome-free/css/all.css';
+
+const router = new VueRouter({
+    mode: 'history',
+    routes,
+});
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -32,4 +46,6 @@ import '@fortawesome/fontawesome-free/css/all.css';
 
 const app = new Vue({
     el: '#app',
+    components: { App, LoginForm, RegisterForm },
+    router,
 });

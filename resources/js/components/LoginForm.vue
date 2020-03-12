@@ -3,10 +3,10 @@
         <form action="/login" method="POST" class="w-full">
             <div class="flex flex-col">
                 <label for="email" class="text-sm font-bold text-gray-800">Email address</label>
-                <input name="email" type="email" v-model="email" class="border p-2 w-full bg-white mb-2" :class="errors.email ? 'border-red-700' : ''" placeholder="Email" required>
+                <input name="email" type="email" v-model="email" class="border p-2 w-full bg-white mb-2 focus:shadow" :class="errors.email ? 'border-red-700' : ''" placeholder="Email" required>
                 <span v-if="errors.email" class="w-full text-center text-xs text-red-700 mt-1 mb-3">{{ errors.email[0] }}</span>
                 <label for="password" class="mt-3 text-sm font-bold text-gray-800">Password</label>
-                <input name="password" type="password" v-model="password" class="border p-2 w-full bg-white mb-2" :class="errors.password ? 'border-red-700' : ''" placeholder="Password" required>
+                <input name="password" type="password" v-model="password" class="border p-2 w-full bg-white mb-2 focus:shadow" :class="errors.password ? 'border-red-700' : ''" placeholder="Password" required>
                 <span v-if="errors.password" class="w-full text-center text-xs text-red-700 mt-1 mb-3">{{ errors.password[0] }}</span>
                 <button @click.prevent="login" class="w-full bg-green-600 hover:bg-green-700 text-white uppercase mt-2 px-4 py-3" v-html="btnText"></button>
                 <div class="flex justify-around mt-3">
@@ -27,6 +27,7 @@
 
 <script>
 export default {
+    name: 'LoginForm',
     data() {
         return {
             email: '',
