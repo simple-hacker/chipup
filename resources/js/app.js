@@ -25,11 +25,13 @@ Vue.use(VueRouter);
 // Vue.component('login-form', require('./components/LoginForm.vue').default);
 // Vue.component('register-form', require('./components/RegisterForm.vue').default);
 
-import routes from './routes.js'
 
 import LoginForm from './components/LoginForm.vue';
 import RegisterForm from './components/RegisterForm.vue';
 import App from './App.vue';
+import NotFound from './NotFound.vue';
+
+import routes from './routes.js'
 
 import '@fortawesome/fontawesome-free/css/all.css';
 
@@ -46,6 +48,6 @@ const router = new VueRouter({
 
 const app = new Vue({
     el: '#app',
-    components: { App, LoginForm, RegisterForm },
+    components: { App, LoginForm, RegisterForm, NotFound },
     router,
 });

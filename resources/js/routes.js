@@ -3,6 +3,7 @@ import Settings from './views/Settings.vue';
 import Bankroll from './views/Bankroll.vue';
 import Stats from './views/Stats.vue';
 import Session from './views/Session.vue';
+import NotFound from './NotFound.vue';
 
 const routes = [
     {
@@ -29,6 +30,15 @@ const routes = [
         path: '/session',
         name: 'session',
         component: Session,
+    },
+    {
+        path: '/whoops',
+        name: 'NotFound',
+        component: NotFound
+    },
+    {
+        path: '*',
+        redirect: '/whoops'
     },
 ]
 
