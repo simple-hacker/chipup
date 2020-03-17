@@ -4,6 +4,9 @@
 
 @import "tailwindcss/utilities";
 
+@import "~vue-snotify/styles/material";
+// @import "~vue-snotify/styles/dark";
+
 
 .background-image {
     background-image: url('../images/background.jpg');

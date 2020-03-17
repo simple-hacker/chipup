@@ -28,7 +28,8 @@ export default {
       }
     },
     mounted () {
-      this.fillData()
+      this.fillData();
+      this.$snotify.success('Dashboard loaded');
     },
     methods: {
       fillData () {

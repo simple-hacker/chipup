@@ -8,8 +8,13 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+// vue-router
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
+
+// vue-snotify
+import Snotify from 'vue-snotify';
+Vue.use(Snotify)
 
 /**
  * The following block of code may be used to automatically register your

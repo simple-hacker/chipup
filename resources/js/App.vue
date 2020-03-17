@@ -12,6 +12,8 @@
             </transition>
         </div>
 
+        <vue-snotify></vue-snotify>
+
         <!-- Bottom Nav -->
         <nav aria-label="bottom-navigation" class="sticky bottom-0 flex justify-around items-center sticky bg-gray-200 border-t border-gray-400 shadow">
             <router-link :to="{ name: 'session' }" class="w-1/6 text-center p-4 text-gray-700 hover:bg-gray-300 focus:bg-gray-300" ><i class="fas fa-plus fa-lg"></i></router-link>
