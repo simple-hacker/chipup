@@ -49,7 +49,9 @@
             
         </div>
 
-        <vue-snotify></vue-snotify>
+        <vue-snotify/>
+
+        <modals-container/>
 
     </div>
 </template>

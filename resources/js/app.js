@@ -30,6 +30,14 @@ import VueApexCharts from 'vue-apexcharts';
 Vue.use(VueApexCharts);
 Vue.component('apexchart', VueApexCharts);
 
+// vue-js-modal
+import VModal from 'vue-js-modal';
+Vue.use(VModal, {
+    dynamic: true,
+    dynamicDefaults: { 
+    }
+});
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

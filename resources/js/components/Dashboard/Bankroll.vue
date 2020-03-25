@@ -11,8 +11,8 @@
         />
     </div>
 	<div class="flex w-full my-3 justify-around">
-		<button class="w-1/3 p-3 uppercase text-white text-lg md:text-xl font-bold border border-green-600 bg-green-500 hover:bg-green-600">Deposit</button>
-		<button class="w-1/3 p-3 uppercase text-white text-lg md:text-xl font-bold border border-red-600 bg-red-500 hover:bg-red-600">Withdraw</button>
+		<button @click.prevent="bankrollTransactionModal" class="w-1/3 p-3 uppercase text-white text-lg md:text-xl font-bold border border-green-600 bg-green-500 hover:bg-green-600">Deposit</button>
+		<button @click.prevent="bankrollTransactionModal" class="w-1/3 p-3 uppercase text-white text-lg md:text-xl font-bold border border-red-600 bg-red-500 hover:bg-red-600">Withdraw</button>
 	</div>
 	<div class="flex w-full mt-3 border rounded flex flex-col">
 		<apexchart type="bar" width="100%" height="200px" :options="options" :series="series"></apexchart>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import TestModal from '../Modals/Test'
 
 export default {
 	name: 'Bankroll',
@@ -60,7 +61,12 @@ export default {
 				},
 			]
 		}
-    },
+	},
+	methods: {
+		bankrollTransactionModal() {
+			this.$modal.show(TestModal);
+		}
+	}
 }
 </script>
 
