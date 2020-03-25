@@ -13,6 +13,9 @@ module.exports = {
           dark: '#1d8ff2',
         }
       },
+      maxWidth: {
+        'nav': '230px'
+      }
     },
   },
   variants: {},

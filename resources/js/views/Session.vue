@@ -1,17 +1,29 @@
 <template>
-    <div class="flex flex-col flex-1 items-center py-2">
-        <h1>Session</h1>
-        <start-cash-game></start-cash-game>
+    <div class="w-full md:w-5/6">
+        <current-cash-game v-if="showCurrentCashGame"></current-cash-game>
+        <start-cash-game v-else></start-cash-game>
     </div>
 </template>
 
 <script>
 import StartCashGame from '../components/StartCashGame';
+import CurrentCashGame from '../components/CurrentCashGame';
 
 export default {
     name: 'Session',
     components: {
-        'start-cash-game': StartCashGame
+        'start-cash-game': StartCashGame,
+        'current-cash-game': CurrentCashGame,
+    },
+    data() {
+        return {
+            currentCashGame: {},
+        }
+    },
+    computed: {
+        showCurrentCashGame: function() {
+            return (Object.keys(this.currentCashGame).length > 0)
+        }
     }
 }
 </script>

@@ -1,0 +1,75 @@
+Todo:
+    ✔ Create models and migrations for all GameTransaction types @done(20-02-20 21:35)
+    ✔ Create model observers for all GameTransaction type which update the profit of the CashGame @done(20-02-20 21:35)
+    ✔ Create the relationships between all GameTransaction types @done(20-02-20 21:35)
+    ✔ Convert GameTransactions to abstract classes/Interfaces to reduce code. @done(20-02-21 15:43)
+    ✔ Move all Transactions to Transactions folder. @done(20-02-21 17:09)
+    ✔ Rename BankrollTransaction to Bankroll and put in Transaction folder @done(20-02-21 17:09)
+    ✔ All Transactions should extend GameTransaction @done(20-02-21 17:21)
+    ✔ Look in to one observer for all GameTransactions. @done(20-02-21 20:11)
+        Model observer on Transaction to update profit.
+        Update:
+            Decided on Positive and Negative GameTransactions.  Manage to split all Observers in to two Pos/Neg Observers
+    ✔ Test updating and deletion of game transactions corrects the GameType's profit @done(20-02-21 18:16)
+    ✔ Add Rebuy and AddOn GameTransactions for Tournaments only (@file:///var/www/html/poker/app/Tournament.php) @done(20-02-21 19:29)
+    
+
+    ✔ Unit Tests for Updating and Deleting GameTypes also updates the user's bankroll @done(20-03-01 21:40)
+    ✔ All GameTransactions need to update user's bankroll as well as the Game's profit @done(20-03-01 21:40)
+        ✘ Option 1: @cancelled(20-02-25 19:31)
+            ✘ Could add extra code in the Negative/PositiveGameTransactionObserver @cancelled(20-02-25 20:08)
+            ✘ $this->game->user->updateBankroll($amount); @cancelled(20-02-25 20:08)
+            ✘ Note: This could is adding extra DB calls for the User. @cancelled(20-02-25 20:08)
+        ✔ Option 2: @done(20-02-25 19:31)
+            Model Observer on Game.  When it's created/updated/deleted check if profit isDirty and updateBankroll
+                We just need Updated and Deleted
+                Don't need Created because the CashGame is created without amount/profit before the BuyIn
+                But the BuyIn Updates the CashGame profit.  So just need CashGame isDirty(profit) and update user's bankroll.
+            This is probably better because we need to be able to delete CashGames and Tournaments which needs to update BankRoll.
+            ✘ But if we cascade down on deletion it should delete all the GameTransactions which have Observers (this only affects Game's profit, nvm) @cancelled(20-02-25 19:30)
+
+    ☐ Include relationship in $with on Models
+        I feel a lot of DB calls are being made with Model Observers.
+    ✔ Create location and game_type models and seeds and factories, and update CashGame and Tournament migrations to include them @done(20-03-07 20:13)
+    ✔ Add SB/BB/Straddle to CashGame model and migrations @done(20-03-07 20:13)
+    ✔ Create routes for viewing/updating/deleting CashGames and Tournaments @done(20-03-07 20:13)
+    ☐ Account Setup
+            User should have a boolean field called completed_setup
+            Create middleware to check if auth user has completed setup, redirect to setup if not
+            To complete setup just post to /user/setup with ['complete' => true];
+    ☐ All requests should have custom messages
+
+Don't Forget:
+    ✔ $amount validation should be integer and positive for all Transactions (BuyIn, Expense, CashOut etc) @file:///var/www/html/poker/app/CashGame.php @done(20-03-07 20:13)
+    ☐ Change amounts in migrations to unsignedBigInteger so we don't have negative values.
+    ☐ Come up with a better name for cashOutModel method in @file:///var/www/html/poker/app/CashGame.php
+    ☐ Controllers should return success => true for successful api requests
+
+Thoughts:
+    ✔ CashGame and Tournament should be extended from an Abstract Class called Game? @done(20-02-21 15:47)
+
+Learning:
+    ✔ Go over Abstract classes and Interfaces again on Laracasts (https://laracasts.com/series/object-oriented-principles-in-php/episodes/4) @done(20-02-21 15:47)
+
+    
+Models:
+    CashGame:
+        Create all Transaction type for CashGames:
+            CashGame can haveMany BuyIn
+            CashGame can haveMany Expenses
+            CashGame can haveOne CashOut (only one)
+    Tournament:
+        Transaction types:
+            Tournament can haveMany BuyIn
+            Tournament can haveMany Rebuy
+            Tournament can haveMany AddOn
+            Tournament can haveMany Expenses
+            Tournament can haveOne CashOut (only one)
+    GameTransactions:
+            All three transactions (BuyIn, Expenses, Cashout) should be Polymorphic because both a CashGame and a Tournament can have them
+
+            BuyIn extends Transaction
+            Expense extends Transaction
+            CashOut extends Transation
+
+            Create a Model Observer on Transaction so that when each type is created or updated we update CashGame/Tournament profit

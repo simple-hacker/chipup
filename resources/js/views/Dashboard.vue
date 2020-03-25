@@ -1,19 +1,29 @@
 <template>
-    <div>
-        <h1>Dashboard</h1>
-        <div class="w-full md:w-5/6 justify-center mx-auto">
+    <div class="w-full grid grid-cols-4 gap-4">
+        <div class="col-span-4 xl:col-span-3 p-2 border shadow">
             <line-chart :chart-data="datacollection" :options="chartoptions"></line-chart>
+        </div>
+        <div class="col-span-4 md:col-span-2 xl:col-span-1 xl:order-first p-2 border shadow">
+            <dashboard-bankroll></dashboard-bankroll>
+        </div>
+        <div class="col-span-4 md:col-span-2 p-2 border shadow">
+            <h1>Stats</h1>
+        </div>
+        <div class="col-span-4 xl:col-span-2 p-2 border shadow">
+			<h1>Sessions</h1>
         </div>
     </div>
 </template>
 
 <script>
 import LineChart from '../charts/LineChart.js'
+import DashboardBankroll from '../components/DashboardBankroll'
 
 export default {
     name: 'Dashboard',
     components: {
-      LineChart
+	  LineChart,
+	  DashboardBankroll
     },
     data () {
       return {
@@ -29,7 +39,6 @@ export default {
     },
     mounted () {
       this.fillData();
-      this.$snotify.success('Dashboard loaded');
     },
     methods: {
       fillData () {

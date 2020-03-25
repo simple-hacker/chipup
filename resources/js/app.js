@@ -14,7 +14,16 @@ Vue.use(VueRouter);
 
 // vue-snotify
 import Snotify from 'vue-snotify';
-Vue.use(Snotify)
+Vue.use(Snotify);
+
+// vue-datetime
+import Datetime from 'vue-datetime';
+import 'vue-datetime/dist/vue-datetime.css';
+Vue.use(Datetime);
+
+// vue-number-animation
+import VueNumber from 'vue-number-animation';
+Vue.use(VueNumber);
 
 /**
  * The following block of code may be used to automatically register your
