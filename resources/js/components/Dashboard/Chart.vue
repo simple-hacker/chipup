@@ -11,12 +11,16 @@ export default {
 		return {
 			options: {
 				chart: {
-					id: 'bankroll'
+					id: 'bankroll',
+					foreColor: '#FFFFFF'
 				},
 				xaxis: {
 					categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
 				},
-				colors: ['#48bb78']
+				colors: ['#48bb78'],
+				grid: {
+					borderColor: '#38393D',
+				}
 			},
 			series: [
 				{

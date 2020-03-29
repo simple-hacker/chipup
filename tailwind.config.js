@@ -2,6 +2,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        background: '#16171B',
+        card: '#202125',
+        muted: {
+          light: '#505155',
+          dark: '#38393D',
+        },
         facebook: {
           default: '#4267B2',
           light: '#4270b2',

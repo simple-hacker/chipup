@@ -34,7 +34,8 @@ Vue.component('apexchart', VueApexCharts);
 import VModal from 'vue-js-modal';
 Vue.use(VModal, {
     dynamic: true,
-    dynamicDefaults: { 
+    dynamicDefaults: {
+        adaptive: true,
     }
 });
 

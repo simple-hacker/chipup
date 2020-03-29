@@ -1,6 +1,6 @@
 import Dashboard from './views/Dashboard.vue';
 import Settings from './views/Settings.vue';
-import Bankroll from './views/Bankroll.vue';
+import Sessions from './views/Sessions.vue';
 import Stats from './views/Stats.vue';
 import Session from './views/Session.vue';
 import NotFound from './NotFound.vue';
@@ -17,9 +17,9 @@ const routes = [
         component: Settings,
     },
     {
-        path: '/bankroll',
-        name: 'bankroll',
-        component: Bankroll,
+        path: '/sessions',
+        name: 'sessions',
+        component: Sessions,
     },
     {
         path: '/stats',
