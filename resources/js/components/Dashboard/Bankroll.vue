@@ -4,9 +4,9 @@
         <number
             ref="dashboard-bankroll"
             :from="0"
-            :to="10000"
+            :to="10000.00"
             :duration="1"
-            :format="(number) => '£'+number.toFixed(2)"
+            :format="(number) => '£'+number.toLocaleString()"
             easing="Power1.easeOut"
         />
     </div>
@@ -30,7 +30,7 @@ export default {
 			options: {
 				chart: {
 					id: 'bankroll',
-					foreColor: '#FFFFFF'
+					foreColor: '#FFFFFF',
 				},
 				xaxis: {
 					type: 'category',
@@ -52,6 +52,9 @@ export default {
 				},
 				grid: {
 					borderColor: '#38393D'
+				},
+				tooltip: {
+					theme: false,
 				}
 			},
 			series: [

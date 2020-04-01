@@ -13,7 +13,7 @@
 						:from="0"
 						:to="1056.84"
 						:duration="1"
-						:format="(number) => '£'+number.toFixed(2)"
+						:format="(number) => '£'+number.toLocaleString()"
 						easing="Power1.easeOut"
 					/>
 				</span>
@@ -26,7 +26,7 @@
 						:from="0"
 						:to="24.46"
 						:duration="1"
-						:format="(number) => '£'+number.toFixed(2)"
+						:format="(number) => '£'+number.toLocaleString()"
 						easing="Power1.easeOut"
 					/>
 				</span>
@@ -39,7 +39,7 @@
 						:from="0"
 						:to="254.21"
 						:duration="1"
-						:format="(number) => '£'+number.toFixed(2)"
+						:format="(number) => '£'+number.toLocaleString()"
 						easing="Power1.easeOut"
 					/>
 				</span>
