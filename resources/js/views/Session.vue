@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full md:w-5/6 bg-card rounded border border-muted-dark p-4 text-white">
+    <div class="w-full md:w-5/6 mx-auto bg-card rounded border border-muted-dark p-4 text-white">
         <current-cash-game v-if="showCurrentCashGame"></current-cash-game>
         <start-cash-game v-else></start-cash-game>
     </div>

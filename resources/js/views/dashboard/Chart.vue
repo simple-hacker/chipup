@@ -11,7 +11,7 @@ export default {
 		return {
 			options: {
 				chart: {
-					id: 'bankroll',
+					id: 'profit',
 					foreColor: '#FFFFFF',
 					toolbar: {
 						show: true,
@@ -50,21 +50,5 @@ export default {
 </script>
 
 <style>
-.apexcharts-tooltip {
-	background: #202125;
-	color: #FFF;
-	box-shadow: 2px 2px 6px -4px #16171B;
-	border: 1px solid #16171B;
-}
 
-.apexcharts-tooltip-title {
-	background: #16171B;
-}
-
-.apexcharts-xaxistooltip {
-	background: #16171B;
-	color: #FFF;
-	box-shadow: 2px 2px 6px -4px #16171B;
-	border: 1px solid #16171B;
-}
 </style>

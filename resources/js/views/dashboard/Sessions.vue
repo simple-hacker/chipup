@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import SessionSummary from '../SessionSummary';
+import SessionSummary from '../../components/SessionSummary';
 
 export default {
 	name: 'Sessions',
@@ -25,7 +25,7 @@ export default {
 					id: 1,
 					date: 'Today',
 					location: 'Aspers Casino MK',
-					profit: -300
+					profit: -300000
 				},
 				{
 					id: 2,

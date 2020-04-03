@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col h-screen">
         <!-- Top Nav -->
-        <nav aria-label="top-navigation" class="sticky top-0 z-50 flex justify-between items-center px-3 py-2 bg-card">
+        <nav aria-label="top-navigation" class="sticky top-0 z-50 flex justify-between items-center px-3 py-2 bg-card border-b-2 border-background lg:border-none">
             <h1 class="text-2xl font-bold text-white">
                 <router-link
                     :to="{ name: 'dashboard' }"
@@ -15,14 +15,14 @@
         </nav>
 
         <div class="flex flex-1 flex-col lg:flex-row lg:relative overflow-hidden">
-            <div class="flex flex-auto justify-center pt-4 px-2 w-full mx-auto lg:w-2/3 lg:px-4 lg:order-last overflow-y-auto">
+            <div class="flex-1 justify-center pt-4 px-2 w-full lg:px-4 lg:order-last overflow-y-auto">
                 <transition name="fade" mode="out-in">
                     <router-view></router-view>
                 </transition>
             </div>
 
             <!-- Bottom Nav -->
-            <nav aria-label="bottom-navigation" class="sticky bottom-0 p-2 flex justify-around items-center bg-card lg:order-first lg:flex-col lg:justify-start lg:items-start lg:w-1/6 lg:max-w-nav lg:p-3">
+            <nav aria-label="bottom-navigation" class="sticky bottom-0 p-2 flex justify-around items-center bg-card border-t-2 border-background lg:order-first lg:flex-col lg:justify-start lg:items-start lg:w-1/6 lg:max-w-nav lg:p-3 lg:border-none">
                 <router-link
                     :to="{ name: 'session' }"
                     class="w-1/6 flex justify-center items-center rounded-lg p-4 text-white hover:bg-green-500 hover:text-muted-dark focus:bg-green-500 focus:text-muted-dark flex lg:w-full lg:justify-start lg:p-3 lg:mb-2"
@@ -31,7 +31,7 @@
                     <i class="fas fa-plus fa-lg lg:w-1/5 text-muted-dark"></i><span class="hidden lg:block text-lg font-medium">Session</span>
                 </router-link>
                 <router-link
-                    :to="{ name: 'stats' }"
+                    :to="{ name: 'statistics' }"
                     class="w-1/6 flex justify-center items-center rounded-lg p-4 text-white hover:bg-green-500 hover:text-muted-dark focus:bg-green-500 focus:text-muted-dark flex lg:w-full lg:justify-start lg:p-3 lg:mb-2"
                     :active-class="'bg-green-600 text-muted-dark'"
                 >

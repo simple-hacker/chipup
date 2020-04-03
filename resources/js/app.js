@@ -39,6 +39,21 @@ Vue.use(VModal, {
     }
 });
 
+// vue-js-toggle-button
+import ToggleButton from 'vue-js-toggle-button';
+Vue.use(ToggleButton);
+
+//v-show-slide
+import VShowSlide from 'v-show-slide';
+Vue.use(VShowSlide);
+
+
+Vue.prototype.currency = new Intl.NumberFormat('en-GB', {
+    style: 'currency',
+    currency: 'GBP',
+    minimumFractionDigits: 2
+});
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

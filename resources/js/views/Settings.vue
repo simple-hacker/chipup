@@ -1,5 +1,7 @@
 <template>
-    <h1>Settings</h1>
+    <div class="bg-card rounded border border-muted-dark p-4 text-white">
+        <h1>Settings</h1>
+    </div>
 </template>
 
 <script>

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import TestModal from '../Modals/Test';
+import TestModal from '../../components/Modals/Test';
 
 export default {
 	name: 'Bankroll',
@@ -32,6 +32,12 @@ export default {
 					id: 'bankroll',
 					foreColor: '#FFFFFF',
 				},
+				dataLabels: {
+                    enabled: true,
+                    formatter: function (val, opts) {
+						return Vue.prototype.currency.format(val);
+                    },
+                },
 				xaxis: {
 					type: 'category',
       				categories: ['Bankroll Transactions'],

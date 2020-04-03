@@ -21,11 +21,7 @@ export default {
 	},
 	computed: {
 		formattedProfit() {
-			if (this.session.profit < 0) {
-				return '-£'+((this.session.profit * -1).toFixed(2));
-			} else {
-				return '£'+this.session.profit.toFixed(2);
-			}
+			return Vue.prototype.currency.format(this.session.profit);
 		}
 	}
 }
