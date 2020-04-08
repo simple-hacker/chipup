@@ -4,7 +4,7 @@
             <filters />
         </div>
         <div class="col-span-4 grid grid-cols-4 grid-2 md:gap-3 xxl:grid-4 bg-background rounded border border-card p-1 text-white">
-            <div v-for="session in sessions" :key="session.id" class="col-span-4 md:col-span-2 xxl:col-span-1">
+            <div v-for="session in sessions" :key="session.id" class="col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0">
                 <session-summary :session="session"></session-summary>
             </div>
         </div>

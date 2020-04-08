@@ -4,8 +4,8 @@
             <div class="flex flex-col">
                 <p class="text-lg md:text-2xl text-gray-700 mb-5">What is your starting bankroll?</p>
                 <div class="flex flex-col items-center">
-                    <input v-model="bankroll" type="number" step="0.01" min="0" class="w-full md:w-3/4 border p-3" :class="errors.bankroll ? 'border-red-700' : 'border-gray-400'"/>
-                    <span v-if="errors.bankroll" class="text-xs text-red-700 mt-1 mb-2">{{ errors.bankroll[0] }}</span>
+                    <input v-model="bankroll" type="number" step="0.01" min="0" class="w-full md:w-3/4 border p-3 bg-white" :class="errors.bankroll ? 'border-red-700' : 'border-gray-400'"/>
+                    <span v-if="errors.bankroll" class="error">{{ errors.bankroll[0] }}</span>
                 </div>
             </div>
         </tab-content>
@@ -16,7 +16,7 @@
                     <select v-model="default_stake" class="w-full md:w-3/4 bg-white border p-3 mb-2" :class="errors.default_stake_id ? 'border-red-700' : 'border-gray-400'">
                         <option v-for="stake in stakes" :key="stake.id" :value="stake.id">{{ stake.stake }}</option>
                     </select>
-                    <span v-if="errors.default_stake_id" class="text-xs text-red-700 mt-1 mb-2">{{ errors.default_stake_id[0] }}</span>
+                    <span v-if="errors.default_stake_id" class="error">{{ errors.default_stake_id[0] }}</span>
                 </div>
             </div>
         </tab-content>
@@ -27,19 +27,19 @@
                     <select v-model="default_limit" class="w-full md:w-3/4 bg-white border p-3 mb-2" :class="errors.default_limit_id ? 'border-red-700' : 'border-gray-400'">
                         <option v-for="limit in limits" :key="limit.id" :value="limit.id">{{ limit.limit }}</option>
                     </select>
-                    <span v-if="errors.default_limit_id" class="text-xs text-red-700 mt-1 mb-2">{{ errors.default_limit_id[0] }}</span>
+                    <span v-if="errors.default_limit_id" class="error">{{ errors.default_limit_id[0] }}</span>
                 </div>
                 <div class="flex flex-col items-center">
                     <select v-model="default_variant" class="w-full md:w-3/4 bg-white border p-3 mb-2" :class="errors.default_variant_id ? 'border-red-700' : 'border-gray-400'">
                         <option v-for="variant in variants" :key="variant.id" :value="variant.id">{{ variant.variant }}</option>
                     </select>
-                    <span v-if="errors.default_variant_id" class="text-xs text-red-700 mt-1 mb-2">{{ errors.default_variant_id[0] }}</span>
+                    <span v-if="errors.default_variant_id" class="error">{{ errors.default_variant_id[0] }}</span>
                 </div>
                 <div class="flex flex-col items-center">
                     <select v-model="default_table_size" class="w-full md:w-3/4 bg-white border p-3 mb-2" :class="errors.default_table_size_id ? 'border-red-700' : 'border-gray-400'">
                         <option v-for="table_size in table_sizes" :key="table_size.id" :value="table_size.id">{{ table_size.table_size }}</option>
                     </select>
-                    <span v-if="errors.default_table_size_id" class="text-xs text-red-700 mt-1 mb-2">{{ errors.default_table_size_id[0] }}</span>
+                    <span v-if="errors.default_table_size_id" class="error">{{ errors.default_table_size_id[0] }}</span>
                 </div>
             </div>
         </tab-content>
@@ -47,8 +47,8 @@
             <div class="flex flex-col">
                 <p class="text-lg md:text-2xl text-gray-700 mb-5">Where do you usually play?</p>
                 <div class="flex flex-col items-center">
-                    <input v-model="location" type="text" placeholder="Enter location" class="w-full md:w-3/4 border p-3 mb-2" :class="errors.default_location ? 'border-red-700' : 'border-gray-400'"/>
-                    <span v-if="errors.default_location" class="text-xs text-red-700 mt-1 mb-2">{{ errors.default_location[0] }}</span>
+                    <input v-model="location" type="text" placeholder="Enter location" class="w-full md:w-3/4 border p-3 mb-2 bg-white" :class="errors.default_location ? 'border-red-700' : 'border-gray-400'"/>
+                    <span v-if="errors.default_location" class="error">{{ errors.default_location[0] }}</span>
                 </div>
             </div>
         </tab-content>

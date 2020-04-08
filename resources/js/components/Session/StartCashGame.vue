@@ -8,26 +8,26 @@
 					<p class="text-base md:text-lg mb-2">What are you playing?</p>
 					<div class="flex flex-wrap">
 						<div class="w-1/2 lg:w-1/4 p-1">
-							<select v-model="stake" class="w-full bg-muted-light rounded border border-muted-dark p-2 mb-2" :class="errors.stake_id ? 'border-red-700' : 'border-gray-400'">
-							<option v-for="stake in stakes" :key="stake.id" :value="stake.id">{{ stake.stake }}</option>
+							<select v-model="stake" :class="{ 'border-red-700' : errors.stake_id }">
+								<option v-for="stake in stakes" :key="stake.id" :value="stake.id">{{ stake.stake }}</option>
 							</select>
 							<span v-if="errors.stake_id" class="text-xs text-red-700 mt-1 mb-2">{{ errors.stake_id[0] }}</span>
 						</div>
 						<div class="w-1/2 lg:w-1/4 p-1">
-							<select v-model="limit" class="w-full bg-muted-light rounded border border-muted-dark p-2 mb-2" :class="errors.limit_id ? 'border-red-700' : 'border-gray-400'">
-							<option v-for="limit in limits" :key="limit.id" :value="limit.id">{{ limit.limit }}</option>
+							<select v-model="limit" :class="{ 'border-red-700' : errors.limit_id }">
+								<option v-for="limit in limits" :key="limit.id" :value="limit.id">{{ limit.limit }}</option>
 							</select>
 							<span v-if="errors.limit_id" class="text-xs text-red-700 mt-1 mb-2">{{ errors.limit_id[0] }}</span>
 						</div>
 						<div class="w-1/2 lg:w-1/4 p-1">
-							<select v-model="variant" class="w-full bg-muted-light rounded border border-muted-dark p-2 mb-2" :class="errors.variant_id ? 'border-red-700' : 'border-gray-400'">
-							<option v-for="variant in variants" :key="variant.id" :value="variant.id">{{ variant.variant }}</option>
+							<select v-model="variant" :class="{ 'border-red-700' : errors.variant_id }">
+								<option v-for="variant in variants" :key="variant.id" :value="variant.id">{{ variant.variant }}</option>
 							</select>
 							<span v-if="errors.variant_id" class="text-xs text-red-700 mt-1 mb-2">{{ errors.variant_id[0] }}</span>
 						</div>
 						<div class="w-1/2 lg:w-1/4 p-1">
-							<select v-model="table_size" class="w-full bg-muted-light rounded border border-muted-dark p-2 mb-2" :class="errors.table_size_id ? 'border-red-700' : 'border-gray-400'">
-							<option v-for="table_size in table_sizes" :key="table_size.id" :value="table_size.id">{{ table_size.table_size }}</option>
+							<select v-model="table_size" :class="{ 'border-red-700' : errors.table_size_id }">
+								<option v-for="table_size in table_sizes" :key="table_size.id" :value="table_size.id">{{ table_size.table_size }}</option>
 							</select>
 							<span v-if="errors.table_size_id" class="text-xs text-red-700 mt-1 mb-2">{{ errors.table_size_id[0] }}</span>
 						</div>
@@ -35,12 +35,12 @@
 				</div>
 				<div class="mt-3">
 					<p class="text-base md:text-lg mb-2">Where are you playing?</p>
-					<input v-model="location" type="text" placeholder="Enter location" class="w-full bg-muted-light border border-muted-dark rounded p-3" :class="errors.location ? 'border-red-700' : 'border-gray-400 mb-2'"/>
+					<input v-model="location" type="text" placeholder="Enter location" :class="{ 'border-red-700' : errors.location }"/>
 					<span v-if="errors.location" class="text-xs text-red-700">{{ errors.location[0] }}</span>
 				</div>
 				<div class="mt-3">
 					<p class="text-base md:text-lg mb-2">What's your buyin?</p>
-					<input v-model="buyin" type="number" step="0.01" min="0" class="w-full bg-muted-light border border-muted-dark rounded p-3" :class="errors.buyin ? 'border-red-700' : 'border-gray-400 mb-2'"/>
+					<input v-model="buyin" type="number" step="0.01" min="0" :class="{ 'border-red-700' : errors.buyin }"/>
 					<span v-if="errors.buyin" class="text-xs text-red-700">{{ errors.buyin[0] }}</span>        
 				</div>
 				<transition name="fade-slide" mode="out-in">
@@ -103,11 +103,11 @@ export default {
 			start_time: '',
 			end_time: '',
 			buyin: 0,
-			errors: [],
-			stake: 0,
-			limit: 0,
-			variant: 0,
-			table_size: 0,
+			errors: {},
+			stake: 1,
+			limit: 1,
+			variant: 1,
+			table_size: 1,
 			location: '',
 			stakes: [
 				{id: 1, stake: '1/1'},

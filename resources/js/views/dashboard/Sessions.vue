@@ -6,7 +6,7 @@
 		<div class="mt-4 flex justify-end">
 			<router-link
 				:to="{ name: 'sessions' }"
-				class="bg-green-600 border border-green-700 hover:bg-green-700 py-2 px-4 uppercase text-white text-sm text-center"
+				class="btn-green"
 			>
 			View all sessions
 			</router-link>

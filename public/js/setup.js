@@ -20625,7 +20625,7 @@ var render = function() {
                     expression: "bankroll"
                   }
                 ],
-                staticClass: "w-full md:w-3/4 border p-3",
+                staticClass: "w-full md:w-3/4 border p-3 bg-white",
                 class: _vm.errors.bankroll
                   ? "border-red-700"
                   : "border-gray-400",
@@ -20642,11 +20642,9 @@ var render = function() {
               }),
               _vm._v(" "),
               _vm.errors.bankroll
-                ? _c(
-                    "span",
-                    { staticClass: "text-xs text-red-700 mt-1 mb-2" },
-                    [_vm._v(_vm._s(_vm.errors.bankroll[0]))]
-                  )
+                ? _c("span", { staticClass: "error" }, [
+                    _vm._v(_vm._s(_vm.errors.bankroll[0]))
+                  ])
                 : _vm._e()
             ])
           ])
@@ -20702,7 +20700,7 @@ var render = function() {
             ),
             _vm._v(" "),
             _vm.errors.default_stake_id
-              ? _c("span", { staticClass: "text-xs text-red-700 mt-1 mb-2" }, [
+              ? _c("span", { staticClass: "error" }, [
                   _vm._v(_vm._s(_vm.errors.default_stake_id[0]))
                 ])
               : _vm._e()
@@ -20762,11 +20760,9 @@ var render = function() {
               ),
               _vm._v(" "),
               _vm.errors.default_limit_id
-                ? _c(
-                    "span",
-                    { staticClass: "text-xs text-red-700 mt-1 mb-2" },
-                    [_vm._v(_vm._s(_vm.errors.default_limit_id[0]))]
-                  )
+                ? _c("span", { staticClass: "error" }, [
+                    _vm._v(_vm._s(_vm.errors.default_limit_id[0]))
+                  ])
                 : _vm._e()
             ]),
             _vm._v(" "),
@@ -20813,11 +20809,9 @@ var render = function() {
               ),
               _vm._v(" "),
               _vm.errors.default_variant_id
-                ? _c(
-                    "span",
-                    { staticClass: "text-xs text-red-700 mt-1 mb-2" },
-                    [_vm._v(_vm._s(_vm.errors.default_variant_id[0]))]
-                  )
+                ? _c("span", { staticClass: "error" }, [
+                    _vm._v(_vm._s(_vm.errors.default_variant_id[0]))
+                  ])
                 : _vm._e()
             ]),
             _vm._v(" "),
@@ -20864,11 +20858,9 @@ var render = function() {
               ),
               _vm._v(" "),
               _vm.errors.default_table_size_id
-                ? _c(
-                    "span",
-                    { staticClass: "text-xs text-red-700 mt-1 mb-2" },
-                    [_vm._v(_vm._s(_vm.errors.default_table_size_id[0]))]
-                  )
+                ? _c("span", { staticClass: "error" }, [
+                    _vm._v(_vm._s(_vm.errors.default_table_size_id[0]))
+                  ])
                 : _vm._e()
             ])
           ])
@@ -20894,7 +20886,7 @@ var render = function() {
                     expression: "location"
                   }
                 ],
-                staticClass: "w-full md:w-3/4 border p-3 mb-2",
+                staticClass: "w-full md:w-3/4 border p-3 mb-2 bg-white",
                 class: _vm.errors.default_location
                   ? "border-red-700"
                   : "border-gray-400",
@@ -20911,11 +20903,9 @@ var render = function() {
               }),
               _vm._v(" "),
               _vm.errors.default_location
-                ? _c(
-                    "span",
-                    { staticClass: "text-xs text-red-700 mt-1 mb-2" },
-                    [_vm._v(_vm._s(_vm.errors.default_location[0]))]
-                  )
+                ? _c("span", { staticClass: "error" }, [
+                    _vm._v(_vm._s(_vm.errors.default_location[0]))
+                  ])
                 : _vm._e()
             ])
           ])

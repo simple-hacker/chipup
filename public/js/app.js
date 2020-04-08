@@ -2203,6 +2203,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'App'
 });
@@ -2226,6 +2231,87 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'NotFound'
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'BankrollTransaction',
+  props: ['title'],
+  data: function data() {
+    return {
+      bankrollAmount: 0,
+      comments: ''
+    };
+  },
+  methods: {
+    save: function save() {
+      this.$emit('close');
+      this.$snotify.success('Well done');
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Bankroll/BankrollTransactionSummary.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Bankroll/BankrollTransactionSummary.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'BankrollTransactionSummary',
+  props: {
+    bankrollTransaction: Object
+  },
+  computed: {
+    transactionAmount: function transactionAmount() {
+      return Vue.prototype.currency.format(this.bankrollTransaction.amount);
+    }
+  }
 });
 
 /***/ }),
@@ -2474,51 +2560,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Modals/BankrollTransaction.vue?vue&type=script&lang=js&":
-/*!*************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Modals/BankrollTransaction.vue?vue&type=script&lang=js& ***!
-  \*************************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'BankrollTransactionModal',
-  data: function data() {
-    return {
-      bankrollAmount: 0,
-      comments: ''
-    };
-  },
-  methods: {
-    save: function save() {
-      this.$emit('close');
-      this.$snotify.success('Well done');
-    }
-  }
-});
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RegisterForm.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RegisterForm.vue?vue&type=script&lang=js& ***!
@@ -2751,11 +2792,11 @@ __webpack_require__.r(__webpack_exports__);
       start_time: '',
       end_time: '',
       buyin: 0,
-      errors: [],
-      stake: 0,
-      limit: 0,
-      variant: 0,
-      table_size: 0,
+      errors: {},
+      stake: 1,
+      limit: 1,
+      variant: 1,
+      table_size: 1,
       location: '',
       stakes: [{
         id: 1,
@@ -3044,14 +3085,219 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_Bankroll_BankrollTransaction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Bankroll/BankrollTransaction */ "./resources/js/components/Bankroll/BankrollTransaction.vue");
+/* harmony import */ var _components_Bankroll_BankrollTransactionSummary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Bankroll/BankrollTransactionSummary */ "./resources/js/components/Bankroll/BankrollTransactionSummary.vue");
 //
 //
 //
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'Settings'
+  name: 'Settings',
+  components: {
+    BankrollTransaction: _components_Bankroll_BankrollTransaction__WEBPACK_IMPORTED_MODULE_0__["default"],
+    BankrollTransactionSummary: _components_Bankroll_BankrollTransactionSummary__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      email: '',
+      current_password: '',
+      new_password: '',
+      new_password_confirmation: '',
+      errors: {},
+      stake: 1,
+      limit: 1,
+      variant: 1,
+      table_size: 1,
+      location: '',
+      stakes: [{
+        id: 1,
+        stake: '1/1'
+      }, {
+        id: 2,
+        stake: '1/2'
+      }, {
+        id: 3,
+        stake: '2/4'
+      }],
+      limits: [{
+        id: 1,
+        limit: 'No Limit'
+      }, {
+        id: 2,
+        limit: 'Pot Limit'
+      }, {
+        id: 3,
+        limit: 'Limit'
+      }],
+      variants: [{
+        id: 1,
+        variant: 'Holdem'
+      }, {
+        id: 2,
+        variant: 'Omaha'
+      }, {
+        id: 3,
+        variant: 'Stud8'
+      }],
+      table_sizes: [{
+        id: 1,
+        table_size: 'Full-Ring'
+      }, {
+        id: 2,
+        table_size: 'Mixed'
+      }, {
+        id: 3,
+        table_size: 'Heads Up'
+      }],
+      bankrollTransactions: [{
+        id: 1,
+        date: 'Today',
+        amount: -300000
+      }, {
+        id: 2,
+        date: 'Yesterday',
+        amount: 75.85
+      }, {
+        id: 3,
+        date: 'Monday 25th March',
+        amount: -60.00
+      }, {
+        id: 4,
+        date: 'Saturday 23rd March',
+        amount: 212
+      }, {
+        id: 5,
+        date: 'Friday 22nd March',
+        amount: 118
+      }, {
+        id: 6,
+        date: 'Thursday 21st March',
+        amount: 45
+      }, {
+        id: 7,
+        date: 'Sunday 16th March',
+        amount: -214
+      }, {
+        id: 8,
+        date: 'Saturday 15th March',
+        amount: -200
+      }, {
+        id: 9,
+        date: 'Friday 14th March',
+        amount: 415
+      }, {
+        id: 10,
+        date: 'Sunday 9th March',
+        amount: 85
+      }, {
+        id: 11,
+        date: 'Saturday 8th March',
+        amount: 725
+      }]
+    };
+  }
 });
 
 /***/ }),
@@ -3139,7 +3385,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Modals_BankrollTransaction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/Modals/BankrollTransaction */ "./resources/js/components/Modals/BankrollTransaction.vue");
+/* harmony import */ var _components_Bankroll_BankrollTransaction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/Bankroll/BankrollTransaction */ "./resources/js/components/Bankroll/BankrollTransaction.vue");
 //
 //
 //
@@ -3213,7 +3459,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     bankrollTransactionModal: function bankrollTransactionModal() {
-      this.$modal.show(_components_Modals_BankrollTransaction__WEBPACK_IMPORTED_MODULE_0__["default"], {}, {
+      this.$modal.show(_components_Bankroll_BankrollTransaction__WEBPACK_IMPORTED_MODULE_0__["default"], {
+        title: 'Manage Bankroll'
+      }, {
         classes: 'bg-card text-white p-6 rounded-lg border border-muted-dark',
         minHeight: 150,
         height: 'auto'
@@ -3876,10 +4124,10 @@ exports.push([module.i, ".vdatetime-fade-enter-active,\n.vdatetime-fade-leave-ac
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Modals/BankrollTransaction.vue?vue&type=style&index=0&id=d1850672&scoped=true&lang=css&":
-/*!********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Modals/BankrollTransaction.vue?vue&type=style&index=0&id=d1850672&scoped=true&lang=css& ***!
-  \********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=style&index=0&id=5515685a&scoped=true&lang=css&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=style&index=0&id=5515685a&scoped=true&lang=css& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3888,7 +4136,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".vue-js-switch[data-v-d1850672] {\n  font-size: 16px !important;\n}\n.fade-enter-active[data-v-d1850672], .fade-leave-active[data-v-d1850672] {\n  transition: background-color 0.25s ease-out;\n}\n.fade-enter[data-v-d1850672], .fade-leave-to[data-v-d1850672] {\n  background-color: 0;\n}\n", ""]);
+exports.push([module.i, ".vue-js-switch[data-v-5515685a] {\n  font-size: 16px !important;\n}\n.fade-enter-active[data-v-5515685a], .fade-leave-active[data-v-5515685a] {\n  transition: background-color 0.25s ease-out;\n}\n.fade-enter[data-v-5515685a], .fade-leave-to[data-v-5515685a] {\n  background-color: 0;\n}\n", ""]);
 
 // exports
 
@@ -38487,15 +38735,15 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Modals/BankrollTransaction.vue?vue&type=style&index=0&id=d1850672&scoped=true&lang=css&":
-/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Modals/BankrollTransaction.vue?vue&type=style&index=0&id=d1850672&scoped=true&lang=css& ***!
-  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=style&index=0&id=5515685a&scoped=true&lang=css&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=style&index=0&id=5515685a&scoped=true&lang=css& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./BankrollTransaction.vue?vue&type=style&index=0&id=d1850672&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Modals/BankrollTransaction.vue?vue&type=style&index=0&id=d1850672&scoped=true&lang=css&");
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./BankrollTransaction.vue?vue&type=style&index=0&id=5515685a&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=style&index=0&id=5515685a&scoped=true&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -41434,7 +41682,7 @@ var render = function() {
         "nav",
         {
           staticClass:
-            "sticky top-0 z-50 flex justify-between items-center px-3 py-2 bg-card border-b-2 border-background lg:border-none",
+            "sticky top-0 z-50 flex justify-between items-center px-3 py-2 bg-card border-b-2 border-background",
           attrs: { "aria-label": "top-navigation" }
         },
         [
@@ -41509,15 +41757,12 @@ var render = function() {
           ),
           _vm._v(" "),
           _c(
-            "a",
-            {
-              staticClass:
-                "flex items-center bg-green-600 border border-green-700 hover:bg-green-700 py-2 px-4 uppercase text-white text-sm text-center",
-              attrs: { href: "#" }
-            },
-            [_vm._v("Start Session")]
+            "router-link",
+            { staticClass: "btn-green", attrs: { to: { name: "session" } } },
+            [_vm._v("\n\t\t\tStart Session\n\t\t\t")]
           )
-        ]
+        ],
+        1
       ),
       _vm._v(" "),
       _c(
@@ -41531,7 +41776,7 @@ var render = function() {
             "div",
             {
               staticClass:
-                "flex-1 justify-center pt-4 px-2 w-full lg:px-4 lg:order-last overflow-y-auto"
+                "flex-1 justify-center pt-4 px-2 w-full lg:px-4 lg:order-last overflow-y-auto scrolling-touch"
             },
             [
               _c(
@@ -41548,7 +41793,7 @@ var render = function() {
             "nav",
             {
               staticClass:
-                "sticky bottom-0 p-2 flex justify-around items-center bg-card border-t-2 border-background lg:order-first lg:flex-col lg:justify-start lg:items-start lg:w-1/6 lg:max-w-nav lg:p-3 lg:border-none",
+                "sticky bottom-0 p-2 flex justify-around items-center bg-card border-t-2 border-background lg:order-first lg:flex-col lg:justify-start lg:items-start lg:w-1/6 lg:max-w-nav lg:p-2 xl:p-3 lg:border-none",
               attrs: { "aria-label": "bottom-navigation" }
             },
             [
@@ -41564,7 +41809,8 @@ var render = function() {
                 },
                 [
                   _c("i", {
-                    staticClass: "fas fa-plus fa-lg lg:w-1/5 text-muted-dark"
+                    staticClass:
+                      "fas fa-plus fa-lg lg:w-1/5 lg:mr-2 text-muted-light"
                   }),
                   _c(
                     "span",
@@ -41587,7 +41833,7 @@ var render = function() {
                 [
                   _c("i", {
                     staticClass:
-                      "fas fa-chart-line fa-lg lg:w-1/5 text-muted-dark"
+                      "fas fa-chart-line fa-lg lg:w-1/5 lg:mr-2 text-muted-light"
                   }),
                   _c(
                     "span",
@@ -41611,7 +41857,7 @@ var render = function() {
                 [
                   _c("i", {
                     staticClass:
-                      "fas fa-th-large fa-lg lg:w-1/5 text-muted-dark"
+                      "fas fa-th-large fa-lg lg:w-1/5 lg:mr-2 text-muted-light"
                   }),
                   _c(
                     "span",
@@ -41633,7 +41879,8 @@ var render = function() {
                 },
                 [
                   _c("i", {
-                    staticClass: "fas fa-bars fa-lg lg:w-1/5 text-muted-dark"
+                    staticClass:
+                      "fas fa-bars fa-lg lg:w-1/5 lg:mr-2 text-muted-light"
                   }),
                   _c(
                     "span",
@@ -41655,7 +41902,8 @@ var render = function() {
                 },
                 [
                   _c("i", {
-                    staticClass: "fas fa-cog fa-lg lg:w-1/5 text-muted-dark"
+                    staticClass:
+                      "fas fa-cog fa-lg lg:w-1/5 lg:mr-2 text-muted-light"
                   }),
                   _c(
                     "span",
@@ -41717,6 +41965,158 @@ var staticRenderFns = [
     )
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=template&id=5515685a&scoped=true&":
+/*!*******************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=template&id=5515685a&scoped=true& ***!
+  \*******************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "flex flex-col" }, [
+    _vm.title
+      ? _c("h1", {
+          staticClass: "text-2xl font-semibold mb-6",
+          domProps: { textContent: _vm._s(_vm.title) }
+        })
+      : _vm._e(),
+    _vm._v(" "),
+    _c("div", { staticClass: "flex-1 flex mb-4 justify-center items-center" }, [
+      _c("span", { staticClass: "text-4xl font-bold mr-3" }, [_vm._v("£")]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.bankrollAmount,
+            expression: "bankrollAmount"
+          }
+        ],
+        staticClass:
+          "w-1/2 rounded border border-muted-dark bg-background px-4 py-2 text-3xl",
+        attrs: { type: "text" },
+        domProps: { value: _vm.bankrollAmount },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.bankrollAmount = $event.target.value
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "flex-1 flex mb-6 justify-center items-center" }, [
+      _c("textarea", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.comments,
+            expression: "comments"
+          }
+        ],
+        staticClass:
+          "w-full xl:w-3/4 rounded border border-muted-dark bg-background p-2",
+        attrs: { placeholder: "Add comments", rows: "4" },
+        domProps: { value: _vm.comments },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.comments = $event.target.value
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "flex justify-around" }, [
+      _c(
+        "button",
+        {
+          staticClass:
+            "w-1/3 p-3 text-lg uppercase font-bold rounded text-white capitalize bg-red-500",
+          on: { click: _vm.save }
+        },
+        [_vm._v("Withdraw")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "w-1/3 p-3 text-lg uppercase font-bold rounded text-white capitalize bg-green-500",
+          on: { click: _vm.save }
+        },
+        [_vm._v("Deposit")]
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Bankroll/BankrollTransactionSummary.vue?vue&type=template&id=8a4329c8&":
+/*!**************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Bankroll/BankrollTransactionSummary.vue?vue&type=template&id=8a4329c8& ***!
+  \**************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "flex justify-between items-center p-2 border border-muted-dark shadow bg-card hover:bg-muted-dark cursor-pointer text-white"
+    },
+    [
+      _c("div", { staticClass: "uppercase" }, [
+        _vm._v(_vm._s(_vm.bankrollTransaction.date))
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "text-lg font-bold",
+          class:
+            _vm.bankrollTransaction.amount < 0
+              ? "text-red-500"
+              : "text-green-500"
+        },
+        [_vm._v("\n\t\t" + _vm._s(_vm.transactionAmount) + "\n\t")]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -41805,7 +42205,7 @@ var render = function() {
             },
             [
               _c(
-                "h3",
+                "h2",
                 {
                   staticClass:
                     "w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3"
@@ -41885,7 +42285,7 @@ var render = function() {
             },
             [
               _c(
-                "h3",
+                "h2",
                 {
                   staticClass:
                     "w-full border-b border-muted-dark text-xl font-medium p-1 mb-3"
@@ -41935,7 +42335,7 @@ var render = function() {
             },
             [
               _c(
-                "h3",
+                "h2",
                 {
                   staticClass:
                     "w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3"
@@ -41979,7 +42379,7 @@ var render = function() {
             },
             [
               _c(
-                "h3",
+                "h2",
                 {
                   staticClass:
                     "w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3"
@@ -42023,7 +42423,7 @@ var render = function() {
             },
             [
               _c(
-                "h3",
+                "h2",
                 {
                   staticClass:
                     "w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3"
@@ -42067,7 +42467,7 @@ var render = function() {
             },
             [
               _c(
-                "h3",
+                "h2",
                 {
                   staticClass:
                     "w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3"
@@ -42108,7 +42508,7 @@ var render = function() {
             { staticClass: "col-span-4 border border-muted-dark p-1 md:p-3" },
             [
               _c(
-                "h3",
+                "h2",
                 {
                   staticClass:
                     "w-full border-b border-muted-dark text-xl font-medium p-1 mb-3"
@@ -42151,8 +42551,7 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass:
-                  "bg-green-600 border border-green-700 hover:bg-green-700 py-2 px-4 uppercase text-white text-sm text-center",
+                staticClass: "btn-green",
                 attrs: { type: "button" },
                 on: {
                   click: function($event) {
@@ -42457,107 +42856,6 @@ var staticRenderFns = [
     )
   }
 ]
-render._withStripped = true
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Modals/BankrollTransaction.vue?vue&type=template&id=d1850672&scoped=true&":
-/*!*****************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Modals/BankrollTransaction.vue?vue&type=template&id=d1850672&scoped=true& ***!
-  \*****************************************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "flex flex-col justify-around h-100" }, [
-    _c("h1", { staticClass: "text-2xl font-semibold" }, [
-      _vm._v("Manage Bankroll")
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "flex-1 flex mt-6 justify-center items-center" }, [
-      _c("span", { staticClass: "text-4xl font-bold mr-3" }, [_vm._v("£")]),
-      _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.bankrollAmount,
-            expression: "bankrollAmount"
-          }
-        ],
-        staticClass:
-          "w-1/2 rounded border border-muted-dark bg-background px-4 py-2 text-3xl",
-        attrs: { type: "text" },
-        domProps: { value: _vm.bankrollAmount },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.bankrollAmount = $event.target.value
-          }
-        }
-      })
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "flex-1 flex mt-6 justify-center items-center" }, [
-      _c("textarea", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.comments,
-            expression: "comments"
-          }
-        ],
-        staticClass: "w-2/3 rounded border border-muted-dark bg-background p-2",
-        attrs: { placeholder: "Add comments" },
-        domProps: { value: _vm.comments },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.comments = $event.target.value
-          }
-        }
-      })
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "flex mt-6 justify-around" }, [
-      _c(
-        "button",
-        {
-          staticClass:
-            "w-1/3 p-3 text-lg uppercase font-bold rounded text-white capitalize bg-red-500",
-          on: { click: _vm.save }
-        },
-        [_vm._v("Withdraw")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass:
-            "w-1/3 p-3 text-lg uppercase font-bold rounded text-white capitalize bg-green-500",
-          on: { click: _vm.save }
-        },
-        [_vm._v("Deposit")]
-      )
-    ])
-  ])
-}
-var staticRenderFns = []
 render._withStripped = true
 
 
@@ -42902,11 +43200,7 @@ var render = function() {
                           expression: "stake"
                         }
                       ],
-                      staticClass:
-                        "w-full bg-muted-light rounded border border-muted-dark p-2 mb-2",
-                      class: _vm.errors.stake_id
-                        ? "border-red-700"
-                        : "border-gray-400",
+                      class: { "border-red-700": _vm.errors.stake_id },
                       on: {
                         change: function($event) {
                           var $$selectedVal = Array.prototype.filter
@@ -42954,11 +43248,7 @@ var render = function() {
                           expression: "limit"
                         }
                       ],
-                      staticClass:
-                        "w-full bg-muted-light rounded border border-muted-dark p-2 mb-2",
-                      class: _vm.errors.limit_id
-                        ? "border-red-700"
-                        : "border-gray-400",
+                      class: { "border-red-700": _vm.errors.limit_id },
                       on: {
                         change: function($event) {
                           var $$selectedVal = Array.prototype.filter
@@ -43006,11 +43296,7 @@ var render = function() {
                           expression: "variant"
                         }
                       ],
-                      staticClass:
-                        "w-full bg-muted-light rounded border border-muted-dark p-2 mb-2",
-                      class: _vm.errors.variant_id
-                        ? "border-red-700"
-                        : "border-gray-400",
+                      class: { "border-red-700": _vm.errors.variant_id },
                       on: {
                         change: function($event) {
                           var $$selectedVal = Array.prototype.filter
@@ -43058,11 +43344,7 @@ var render = function() {
                           expression: "table_size"
                         }
                       ],
-                      staticClass:
-                        "w-full bg-muted-light rounded border border-muted-dark p-2 mb-2",
-                      class: _vm.errors.table_size_id
-                        ? "border-red-700"
-                        : "border-gray-400",
+                      class: { "border-red-700": _vm.errors.table_size_id },
                       on: {
                         change: function($event) {
                           var $$selectedVal = Array.prototype.filter
@@ -43117,11 +43399,7 @@ var render = function() {
                     expression: "location"
                   }
                 ],
-                staticClass:
-                  "w-full bg-muted-light border border-muted-dark rounded p-3",
-                class: _vm.errors.location
-                  ? "border-red-700"
-                  : "border-gray-400 mb-2",
+                class: { "border-red-700": _vm.errors.location },
                 attrs: { type: "text", placeholder: "Enter location" },
                 domProps: { value: _vm.location },
                 on: {
@@ -43155,11 +43433,7 @@ var render = function() {
                     expression: "buyin"
                   }
                 ],
-                staticClass:
-                  "w-full bg-muted-light border border-muted-dark rounded p-3",
-                class: _vm.errors.buyin
-                  ? "border-red-700"
-                  : "border-gray-400 mb-2",
+                class: { "border-red-700": _vm.errors.buyin },
                 attrs: { type: "number", step: "0.01", min: "0" },
                 domProps: { value: _vm.buyin },
                 on: {
@@ -43485,7 +43759,7 @@ var render = function() {
           "div",
           {
             key: session.id,
-            staticClass: "col-span-4 md:col-span-2 xxl:col-span-1"
+            staticClass: "col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0"
           },
           [_c("session-summary", { attrs: { session: session } })],
           1
@@ -43517,22 +43791,553 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    { staticClass: "w-full grid grid-cols-4 gap-4 text-white" },
+    [
+      _c(
+        "div",
+        {
+          staticClass:
+            "col-span-4 md:col-span-2 p-2 md:p-4 bg-card border border-muted-dark rounded shadow"
+        },
+        [
+          _c(
+            "h2",
+            {
+              staticClass:
+                "w-full border-b border-muted-dark text-xl font-medium p-1 mb-4 md:mb-3"
+            },
+            [_vm._v("Account Settings")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex flex-col mb-6" }, [
+            _c("div", { staticClass: "flex justify-between items-center" }, [
+              _c("h3", { staticClass: "hidden md:block font-medium" }, [
+                _vm._v("Change Email")
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "flex flex-col w-full md:w-1/2" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.email,
+                      expression: "email"
+                    }
+                  ],
+                  class: { "border-red-700": _vm.errors.email },
+                  attrs: { type: "text", placeholder: "Enter email" },
+                  domProps: { value: _vm.email },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.email = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.email
+                  ? _c("span", { staticClass: "error" }, [
+                      _vm._v(_vm._s(_vm.errors.email))
+                    ])
+                  : _vm._e()
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn-green self-end mt-3",
+                attrs: { type: "button" }
+              },
+              [_vm._v("Change email")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex flex-col" }, [
+            _c(
+              "div",
+              { staticClass: "flex justify-between items-center mb-2" },
+              [
+                _c("h3", { staticClass: "hidden md:block font-medium" }, [
+                  _vm._v("Current Password")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex flex-col w-full md:w-1/2" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.current_password,
+                        expression: "current_password"
+                      }
+                    ],
+                    class: { "border-red-700": _vm.errors.current_password },
+                    attrs: {
+                      type: "password",
+                      placeholder: "Current password"
+                    },
+                    domProps: { value: _vm.current_password },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.current_password = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.current_password
+                    ? _c("span", { staticClass: "error" }, [
+                        _vm._v(_vm._s(_vm.errors.current_password))
+                      ])
+                    : _vm._e()
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "flex justify-between items-center mb-2" },
+              [
+                _c("h3", { staticClass: "hidden md:block font-medium" }, [
+                  _vm._v("New Password")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex flex-col w-full md:w-1/2" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.new_password,
+                        expression: "new_password"
+                      }
+                    ],
+                    class: { "border-red-700": _vm.errors.new_password },
+                    attrs: { type: "password", placeholder: "New password" },
+                    domProps: { value: _vm.new_password },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.new_password = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.new_password
+                    ? _c("span", { staticClass: "error" }, [
+                        _vm._v(_vm._s(_vm.errors.new_password))
+                      ])
+                    : _vm._e()
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex justify-between items-center" }, [
+              _c("h3", { staticClass: "hidden md:block font-medium" }, [
+                _vm._v("Confirm New Password")
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "flex flex-col w-full md:w-1/2" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.new_password_confirmation,
+                      expression: "new_password_confirmation"
+                    }
+                  ],
+                  class: {
+                    "border-red-700": _vm.errors.new_password_confirmation
+                  },
+                  attrs: {
+                    type: "password",
+                    placeholder: "Confirm new password"
+                  },
+                  domProps: { value: _vm.new_password_confirmation },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.new_password_confirmation = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.new_password_confirmation
+                  ? _c("span", { staticClass: "error" }, [
+                      _vm._v(_vm._s(_vm.errors.new_password_confirmation))
+                    ])
+                  : _vm._e()
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn-green self-end mt-3",
+                attrs: { type: "button" }
+              },
+              [_vm._v("Change Password")]
+            )
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "col-span-4 md:col-span-2 flex flex-col p-2 md:p-4 bg-card border border-muted-dark rounded shadow"
+        },
+        [
+          _c(
+            "h2",
+            {
+              staticClass:
+                "w-full border-b border-muted-dark text-xl font-medium p-1 mb-4 md:mb-3"
+            },
+            [_vm._v("Default Values")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex-1" }, [
+            _c(
+              "div",
+              { staticClass: "flex justify-between items-center mb-2" },
+              [
+                _c("h3", { staticClass: "hidden md:block font-medium" }, [
+                  _vm._v("Stake")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex flex-col w-full md:w-1/2" }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.stake,
+                          expression: "stake"
+                        }
+                      ],
+                      class: { "border-red-700": _vm.errors.stake_id },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.stake = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        }
+                      }
+                    },
+                    _vm._l(_vm.stakes, function(stake) {
+                      return _c(
+                        "option",
+                        { key: stake.id, domProps: { value: stake.id } },
+                        [_vm._v(_vm._s(stake.stake))]
+                      )
+                    }),
+                    0
+                  ),
+                  _vm._v(" "),
+                  _vm.errors.stake
+                    ? _c("span", { staticClass: "error" }, [
+                        _vm._v(_vm._s(_vm.errors.stake))
+                      ])
+                    : _vm._e()
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "flex justify-between items-center mb-2" },
+              [
+                _c("h3", { staticClass: "hidden md:block font-medium" }, [
+                  _vm._v("Limit")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex flex-col w-full md:w-1/2" }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.limit,
+                          expression: "limit"
+                        }
+                      ],
+                      class: { "border-red-700": _vm.errors.limit_id },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.limit = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        }
+                      }
+                    },
+                    _vm._l(_vm.limits, function(limit) {
+                      return _c(
+                        "option",
+                        { key: limit.id, domProps: { value: limit.id } },
+                        [_vm._v(_vm._s(limit.limit))]
+                      )
+                    }),
+                    0
+                  ),
+                  _vm._v(" "),
+                  _vm.errors.limit
+                    ? _c("span", { staticClass: "error" }, [
+                        _vm._v(_vm._s(_vm.errors.limit))
+                      ])
+                    : _vm._e()
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "flex justify-between items-center mb-2" },
+              [
+                _c("h3", { staticClass: "hidden md:block font-medium" }, [
+                  _vm._v("Variant")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex flex-col w-full md:w-1/2" }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.variant,
+                          expression: "variant"
+                        }
+                      ],
+                      class: { "border-red-700": _vm.errors.variant_id },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.variant = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        }
+                      }
+                    },
+                    _vm._l(_vm.variants, function(variant) {
+                      return _c(
+                        "option",
+                        { key: variant.id, domProps: { value: variant.id } },
+                        [_vm._v(_vm._s(variant.variant))]
+                      )
+                    }),
+                    0
+                  ),
+                  _vm._v(" "),
+                  _vm.errors.variant
+                    ? _c("span", { staticClass: "error" }, [
+                        _vm._v(_vm._s(_vm.errors.variant))
+                      ])
+                    : _vm._e()
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "flex justify-between items-center mb-2" },
+              [
+                _c("h3", { staticClass: "hidden md:block font-medium" }, [
+                  _vm._v("Table Size")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex flex-col w-full md:w-1/2" }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.table_size,
+                          expression: "table_size"
+                        }
+                      ],
+                      class: { "border-red-700": _vm.errors.table_size_id },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.table_size = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        }
+                      }
+                    },
+                    _vm._l(_vm.table_sizes, function(table_size) {
+                      return _c(
+                        "option",
+                        {
+                          key: table_size.id,
+                          domProps: { value: table_size.id }
+                        },
+                        [_vm._v(_vm._s(table_size.table_size))]
+                      )
+                    }),
+                    0
+                  ),
+                  _vm._v(" "),
+                  _vm.errors.table_size
+                    ? _c("span", { staticClass: "error" }, [
+                        _vm._v(_vm._s(_vm.errors.table_size))
+                      ])
+                    : _vm._e()
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex justify-between items-center" }, [
+              _c("h3", { staticClass: "hidden md:block font-medium" }, [
+                _vm._v("Location")
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "flex flex-col w-full md:w-1/2" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.location,
+                      expression: "location"
+                    }
+                  ],
+                  class: { "border-red-700": _vm.errors.location },
+                  attrs: { type: "password", placeholder: "Location" },
+                  domProps: { value: _vm.location },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.location = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.location
+                  ? _c("span", { staticClass: "error" }, [
+                      _vm._v(_vm._s(_vm.errors.location))
+                    ])
+                  : _vm._e()
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn-green self-end mt-3",
+              attrs: { type: "button" }
+            },
+            [_vm._v("Save default values")]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "col-span-4 p-2 bg-card border border-muted-dark rounded shadow"
+        },
+        [
+          _c(
+            "h2",
+            {
+              staticClass:
+                "w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3"
+            },
+            [_vm._v("Bankroll")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "grid grid-cols-2 gap-4" }, [
+            _c(
+              "div",
+              { staticClass: "col-span-2 md:col-span-1 p-3 md:p-1" },
+              [_c("bankroll-transaction")],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass:
+                  "col-span-2 md:col-span-1 mt-4 md:mt-0 p-1 md:p-2 h-96 overflow-y-auto scrolling-touch border border-background"
+              },
+              _vm._l(_vm.bankrollTransactions, function(bankrollTransaction) {
+                return _c(
+                  "div",
+                  { key: bankrollTransaction.id, staticClass: "mb-2" },
+                  [
+                    _c("bankroll-transaction-summary", {
+                      attrs: { bankrollTransaction: bankrollTransaction }
+                    })
+                  ],
+                  1
+                )
+              }),
+              0
+            )
+          ])
+        ]
+      )
+    ]
+  )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass: "bg-card rounded border border-muted-dark p-4 text-white"
-      },
-      [_c("h1", [_vm._v("Settings")])]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -43704,8 +44509,7 @@ var render = function() {
       _c(
         "button",
         {
-          staticClass:
-            "bg-green-600 border border-green-700 hover:bg-green-700 py-2 px-4 uppercase text-white text-sm text-center",
+          staticClass: "btn-green",
           on: {
             click: function($event) {
               $event.preventDefault()
@@ -43797,11 +44601,7 @@ var render = function() {
         [
           _c(
             "router-link",
-            {
-              staticClass:
-                "bg-green-600 border border-green-700 hover:bg-green-700 py-2 px-4 uppercase text-white text-sm text-center",
-              attrs: { to: { name: "sessions" } }
-            },
+            { staticClass: "btn-green", attrs: { to: { name: "sessions" } } },
             [_vm._v("\n\t\tView all sessions\n\t\t")]
           )
         ],
@@ -43960,11 +44760,7 @@ var render = function() {
       [
         _c(
           "router-link",
-          {
-            staticClass:
-              "bg-green-600 border border-green-700 hover:bg-green-700 py-2 px-4 uppercase text-white text-sm text-center",
-            attrs: { to: { name: "statistics" } }
-          },
+          { staticClass: "btn-green", attrs: { to: { name: "statistics" } } },
           [_vm._v("\n\t\tView more statistics\n\t\t")]
         )
       ],
@@ -61787,6 +62583,162 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
+/***/ "./resources/js/components/Bankroll/BankrollTransaction.vue":
+/*!******************************************************************!*\
+  !*** ./resources/js/components/Bankroll/BankrollTransaction.vue ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _BankrollTransaction_vue_vue_type_template_id_5515685a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BankrollTransaction.vue?vue&type=template&id=5515685a&scoped=true& */ "./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=template&id=5515685a&scoped=true&");
+/* harmony import */ var _BankrollTransaction_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BankrollTransaction.vue?vue&type=script&lang=js& */ "./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _BankrollTransaction_vue_vue_type_style_index_0_id_5515685a_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BankrollTransaction.vue?vue&type=style&index=0&id=5515685a&scoped=true&lang=css& */ "./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=style&index=0&id=5515685a&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _BankrollTransaction_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _BankrollTransaction_vue_vue_type_template_id_5515685a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _BankrollTransaction_vue_vue_type_template_id_5515685a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "5515685a",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Bankroll/BankrollTransaction.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./BankrollTransaction.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=style&index=0&id=5515685a&scoped=true&lang=css&":
+/*!***************************************************************************************************************************!*\
+  !*** ./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=style&index=0&id=5515685a&scoped=true&lang=css& ***!
+  \***************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_style_index_0_id_5515685a_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./BankrollTransaction.vue?vue&type=style&index=0&id=5515685a&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=style&index=0&id=5515685a&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_style_index_0_id_5515685a_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_style_index_0_id_5515685a_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_style_index_0_id_5515685a_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_style_index_0_id_5515685a_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_style_index_0_id_5515685a_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=template&id=5515685a&scoped=true&":
+/*!*************************************************************************************************************!*\
+  !*** ./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=template&id=5515685a&scoped=true& ***!
+  \*************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_template_id_5515685a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./BankrollTransaction.vue?vue&type=template&id=5515685a&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Bankroll/BankrollTransaction.vue?vue&type=template&id=5515685a&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_template_id_5515685a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_template_id_5515685a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Bankroll/BankrollTransactionSummary.vue":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/Bankroll/BankrollTransactionSummary.vue ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _BankrollTransactionSummary_vue_vue_type_template_id_8a4329c8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BankrollTransactionSummary.vue?vue&type=template&id=8a4329c8& */ "./resources/js/components/Bankroll/BankrollTransactionSummary.vue?vue&type=template&id=8a4329c8&");
+/* harmony import */ var _BankrollTransactionSummary_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BankrollTransactionSummary.vue?vue&type=script&lang=js& */ "./resources/js/components/Bankroll/BankrollTransactionSummary.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _BankrollTransactionSummary_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _BankrollTransactionSummary_vue_vue_type_template_id_8a4329c8___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _BankrollTransactionSummary_vue_vue_type_template_id_8a4329c8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Bankroll/BankrollTransactionSummary.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Bankroll/BankrollTransactionSummary.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/components/Bankroll/BankrollTransactionSummary.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransactionSummary_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./BankrollTransactionSummary.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Bankroll/BankrollTransactionSummary.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransactionSummary_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Bankroll/BankrollTransactionSummary.vue?vue&type=template&id=8a4329c8&":
+/*!********************************************************************************************************!*\
+  !*** ./resources/js/components/Bankroll/BankrollTransactionSummary.vue?vue&type=template&id=8a4329c8& ***!
+  \********************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransactionSummary_vue_vue_type_template_id_8a4329c8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./BankrollTransactionSummary.vue?vue&type=template&id=8a4329c8& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Bankroll/BankrollTransactionSummary.vue?vue&type=template&id=8a4329c8&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransactionSummary_vue_vue_type_template_id_8a4329c8___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransactionSummary_vue_vue_type_template_id_8a4329c8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/Filters.vue":
 /*!*********************************************!*\
   !*** ./resources/js/components/Filters.vue ***!
@@ -61920,93 +62872,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginForm_vue_vue_type_template_id_12a98f72___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginForm_vue_vue_type_template_id_12a98f72___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./resources/js/components/Modals/BankrollTransaction.vue":
-/*!****************************************************************!*\
-  !*** ./resources/js/components/Modals/BankrollTransaction.vue ***!
-  \****************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _BankrollTransaction_vue_vue_type_template_id_d1850672_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BankrollTransaction.vue?vue&type=template&id=d1850672&scoped=true& */ "./resources/js/components/Modals/BankrollTransaction.vue?vue&type=template&id=d1850672&scoped=true&");
-/* harmony import */ var _BankrollTransaction_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BankrollTransaction.vue?vue&type=script&lang=js& */ "./resources/js/components/Modals/BankrollTransaction.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _BankrollTransaction_vue_vue_type_style_index_0_id_d1850672_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BankrollTransaction.vue?vue&type=style&index=0&id=d1850672&scoped=true&lang=css& */ "./resources/js/components/Modals/BankrollTransaction.vue?vue&type=style&index=0&id=d1850672&scoped=true&lang=css&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _BankrollTransaction_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _BankrollTransaction_vue_vue_type_template_id_d1850672_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _BankrollTransaction_vue_vue_type_template_id_d1850672_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  "d1850672",
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/Modals/BankrollTransaction.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/components/Modals/BankrollTransaction.vue?vue&type=script&lang=js&":
-/*!*****************************************************************************************!*\
-  !*** ./resources/js/components/Modals/BankrollTransaction.vue?vue&type=script&lang=js& ***!
-  \*****************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./BankrollTransaction.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Modals/BankrollTransaction.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/Modals/BankrollTransaction.vue?vue&type=style&index=0&id=d1850672&scoped=true&lang=css&":
-/*!*************************************************************************************************************************!*\
-  !*** ./resources/js/components/Modals/BankrollTransaction.vue?vue&type=style&index=0&id=d1850672&scoped=true&lang=css& ***!
-  \*************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_style_index_0_id_d1850672_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./BankrollTransaction.vue?vue&type=style&index=0&id=d1850672&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Modals/BankrollTransaction.vue?vue&type=style&index=0&id=d1850672&scoped=true&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_style_index_0_id_d1850672_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_style_index_0_id_d1850672_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_style_index_0_id_d1850672_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_style_index_0_id_d1850672_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_style_index_0_id_d1850672_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
-
-/***/ }),
-
-/***/ "./resources/js/components/Modals/BankrollTransaction.vue?vue&type=template&id=d1850672&scoped=true&":
-/*!***********************************************************************************************************!*\
-  !*** ./resources/js/components/Modals/BankrollTransaction.vue?vue&type=template&id=d1850672&scoped=true& ***!
-  \***********************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_template_id_d1850672_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./BankrollTransaction.vue?vue&type=template&id=d1850672&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Modals/BankrollTransaction.vue?vue&type=template&id=d1850672&scoped=true&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_template_id_d1850672_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BankrollTransaction_vue_vue_type_template_id_d1850672_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

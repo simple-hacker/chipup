@@ -14,13 +14,13 @@
 		<apexchart type="bar" width="100%" height="200px" :options="options" :series="series"></apexchart>
 	</div>
 	<div class="flex w-full mt-3 justify-end">
-		<button @click.prevent="bankrollTransactionModal" class="bg-green-600 border border-green-700 hover:bg-green-700 py-2 px-4 uppercase text-white text-sm text-center">Manage Bankroll</button>
+		<button @click.prevent="bankrollTransactionModal" class="btn-green">Manage Bankroll</button>
 	</div>
   </div>
 </template>
 
 <script>
-import BankrollTransactionModal from '../../components/Modals/BankrollTransaction';
+import BankrollTransaction from '../../components/Bankroll/BankrollTransaction';
 
 export default {
 	name: 'Bankroll',
@@ -76,7 +76,9 @@ export default {
 	},
 	methods: {
 		bankrollTransactionModal() {
-			this.$modal.show(BankrollTransactionModal, {}, {
+			this.$modal.show(BankrollTransaction, {
+				title: 'Manage Bankroll'
+			}, {
 				classes: 'bg-card text-white p-6 rounded-lg border border-muted-dark',
 				minHeight: 150,
 				height: 'auto',

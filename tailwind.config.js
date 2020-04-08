@@ -8,6 +8,12 @@ module.exports = {
       'xxl': '1930px',
     },
     extend: {
+      spacing: {
+        '72': '18rem',
+        '84': '21rem',
+        '96': '24rem',
+        '128': '36rem',
+      },
       colors: {
         background: '#16171B',
         card: '#202125',

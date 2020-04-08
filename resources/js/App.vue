@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col h-screen">
         <!-- Top Nav -->
-        <nav aria-label="top-navigation" class="sticky top-0 z-50 flex justify-between items-center px-3 py-2 bg-card border-b-2 border-background lg:border-none">
+        <nav aria-label="top-navigation" class="sticky top-0 z-50 flex justify-between items-center px-3 py-2 bg-card border-b-2 border-background">
             <h1 class="text-2xl font-bold text-white">
                 <router-link
                     :to="{ name: 'dashboard' }"
@@ -11,31 +11,36 @@
                     <span class="ml-4">Poker</span>
                 </router-link>
             </h1>
-            <a href="#" class="flex items-center bg-green-600 border border-green-700 hover:bg-green-700 py-2 px-4 uppercase text-white text-sm text-center">Start Session</a>
+            <router-link
+				:to="{ name: 'session' }"
+				class="btn-green"
+			>
+			Start Session
+			</router-link>
         </nav>
 
         <div class="flex flex-1 flex-col lg:flex-row lg:relative overflow-hidden">
-            <div class="flex-1 justify-center pt-4 px-2 w-full lg:px-4 lg:order-last overflow-y-auto">
+            <div class="flex-1 justify-center pt-4 px-2 w-full lg:px-4 lg:order-last overflow-y-auto scrolling-touch">
                 <transition name="fade" mode="out-in">
                     <router-view></router-view>
                 </transition>
             </div>
 
             <!-- Bottom Nav -->
-            <nav aria-label="bottom-navigation" class="sticky bottom-0 p-2 flex justify-around items-center bg-card border-t-2 border-background lg:order-first lg:flex-col lg:justify-start lg:items-start lg:w-1/6 lg:max-w-nav lg:p-3 lg:border-none">
+            <nav aria-label="bottom-navigation" class="sticky bottom-0 p-2 flex justify-around items-center bg-card border-t-2 border-background lg:order-first lg:flex-col lg:justify-start lg:items-start lg:w-1/6 lg:max-w-nav lg:p-2 xl:p-3 lg:border-none">
                 <router-link
                     :to="{ name: 'session' }"
                     class="w-1/6 flex justify-center items-center rounded-lg p-4 text-white hover:bg-green-500 hover:text-muted-dark focus:bg-green-500 focus:text-muted-dark flex lg:w-full lg:justify-start lg:p-3 lg:mb-2"
                     :active-class="'bg-green-600 text-muted-dark'"
                 >
-                    <i class="fas fa-plus fa-lg lg:w-1/5 text-muted-dark"></i><span class="hidden lg:block text-lg font-medium">Session</span>
+                    <i class="fas fa-plus fa-lg lg:w-1/5 lg:mr-2 text-muted-light"></i><span class="hidden lg:block text-lg font-medium">Session</span>
                 </router-link>
                 <router-link
                     :to="{ name: 'statistics' }"
                     class="w-1/6 flex justify-center items-center rounded-lg p-4 text-white hover:bg-green-500 hover:text-muted-dark focus:bg-green-500 focus:text-muted-dark flex lg:w-full lg:justify-start lg:p-3 lg:mb-2"
                     :active-class="'bg-green-600 text-muted-dark'"
                 >
-                    <i class="fas fa-chart-line fa-lg lg:w-1/5 text-muted-dark"></i><span class="hidden lg:block text-lg font-medium">Statistics</span>
+                    <i class="fas fa-chart-line fa-lg lg:w-1/5 lg:mr-2 text-muted-light"></i><span class="hidden lg:block text-lg font-medium">Statistics</span>
                 </router-link>
                 <router-link
                     :to="{ name: 'dashboard' }"
@@ -43,21 +48,21 @@
                     exact
                     :active-class="'bg-green-600 text-muted-dark'"
                 >
-                    <i class="fas fa-th-large fa-lg lg:w-1/5 text-muted-dark"></i><span class="hidden lg:block text-lg font-medium">Dashboard</span>
+                    <i class="fas fa-th-large fa-lg lg:w-1/5 lg:mr-2 text-muted-light"></i><span class="hidden lg:block text-lg font-medium">Dashboard</span>
                 </router-link>
                 <router-link
                     :to="{ name: 'sessions' }"
                     class="w-1/6 flex justify-center items-center rounded-lg p-4 text-white hover:bg-green-500 hover:text-muted-dark focus:bg-green-500 focus:text-muted-dark flex lg:w-full lg:justify-start lg:p-3 lg:mb-2"
                     :active-class="'bg-green-600 text-muted-dark'"
                 >
-                    <i class="fas fa-bars fa-lg lg:w-1/5 text-muted-dark"></i><span class="hidden lg:block text-lg font-medium">Sessions</span>
+                    <i class="fas fa-bars fa-lg lg:w-1/5 lg:mr-2 text-muted-light"></i><span class="hidden lg:block text-lg font-medium">Sessions</span>
                 </router-link>
                 <router-link
                     :to="{ name: 'settings' }"
                     class="w-1/6 flex justify-center items-center rounded-lg p-4 text-white hover:bg-green-500 hover:text-muted-dark focus:bg-green-500 focus:text-muted-dark flex lg:w-full lg:justify-start lg:p-3 lg:mb-2"
                     :active-class="'bg-green-600 text-muted-dark'"
                 >
-                    <i class="fas fa-cog fa-lg lg:w-1/5 text-muted-dark"></i><span class="hidden lg:block text-lg font-medium">Settings</span>
+                    <i class="fas fa-cog fa-lg lg:w-1/5 lg:mr-2 text-muted-light"></i><span class="hidden lg:block text-lg font-medium">Settings</span>
                 </router-link>
             </nav>
             

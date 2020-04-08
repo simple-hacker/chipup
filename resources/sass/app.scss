@@ -2,6 +2,22 @@
 
 @import "tailwindcss/components";
 
+.btn-green {
+    @apply bg-green-600 border border-green-700 py-2 px-4 uppercase text-white text-sm text-center;
+}
+
+.btn-green:hover {
+    @apply bg-green-700;
+}
+
+.error {
+    @apply text-xs text-red-700 mt-2 mb-2;
+}
+
+input, select {
+    @apply w-full bg-muted-light border border-muted-dark rounded p-3;
+}
+
 @import "tailwindcss/utilities";
 
 @import "~vue-snotify/styles/material";
@@ -81,3 +97,24 @@
 	box-shadow: 2px 2px 6px -4px #16171B;
 	border: 1px solid #16171B;
 }
+
+// Webkit Scrollbar
+::-webkit-scrollbar {
+    width:7px;
+}
+
+::-webkit-scrollbar-track{
+    background:#16171B;
+    border-radius:7px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#38393D;
+    border-radius:7px;
+}
+
+@media screen and (min-width: 768px) {
+    ::-webkit-scrollbar, ::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
+        width:10px;
+    }
+  }

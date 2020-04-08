@@ -13,7 +13,7 @@
 		<div v-show-slide="showFilters" class="flex-col">
 			<div class="grid cols-4 gap-2">
 				<div class="col-span-4 lg:col-span-3 xxl:col-span-2 border border-muted-dark p-1 md:p-3">
-					<h3 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3">Dates</h3>
+					<h2 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3">Dates</h2>
 					<div class="flex md:justify-around">
 						<div class="w-1/2 md:w-auto flex items-center">
 							<span class="hidden md:block"><i class="fas fa-calendar-alt fa-lg"></i></span>
@@ -44,7 +44,7 @@
 					</div>
 				</div>
 				<div class="col-span-4 lg:col-span-1 xxl:col-span-2 border border-muted-dark p-1 md:p-3">
-					<h3 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-3">Game Type</h3>
+					<h2 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-3">Game Type</h2>
 					<div class="flex flex-wrap justify-around">
 						<div class="mb-1">
 							<label class="mr-3">Cash Games</label>
@@ -57,7 +57,7 @@
 					</div>
 				</div>
 				<div class="col-span-4 md:col-span-1 border border-muted-dark p-1 md:p-3">
-					<h3 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3">Stakes</h3>
+					<h2 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3">Stakes</h2>
 					<div class="flex flex-wrap">
 						<div v-for="stake in stakes" :key="stake.id" class="w-1/2 md:w-full xxl:w-1/2 flex justify-between py-1 px-3">
 							<label class="mr-3">{{ stake.stake }}</label>
@@ -66,7 +66,7 @@
 					</div>
 				</div>
 				<div class="col-span-4 md:col-span-1 border border-muted-dark p-1 md:p-3">
-					<h3 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3">Limits</h3>
+					<h2 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3">Limits</h2>
 					<div class="flex flex-wrap">
 						<div v-for="limit in limits" :key="limit.id" class="w-1/2 md:w-full xxl:w-1/2 flex justify-between py-1 px-3">
 							<label class="mr-3">{{ limit.limit }}</label>
@@ -75,7 +75,7 @@
 					</div>
 				</div>
 				<div class="col-span-4 md:col-span-1 border border-muted-dark p-1 md:p-3">
-					<h3 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3">Variant</h3>
+					<h2 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3">Variant</h2>
 					<div class="flex flex-wrap">
 						<div v-for="variant in variants" :key="variant.id" class="w-1/2 md:w-full xxl:w-1/2 flex justify-between py-1 px-3">
 							<label class="mr-3">{{ variant.variant }}</label>
@@ -84,7 +84,7 @@
 					</div>
 				</div>
 				<div class="col-span-4 md:col-span-1 border border-muted-dark p-1 md:p-3">
-					<h3 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3">Table Size</h3>
+					<h2 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3">Table Size</h2>
 					<div class="flex flex-wrap">
 						<div v-for="table_size in table_sizes" :key="table_size.id" class="w-1/2 md:w-full xxl:w-1/2 flex justify-between py-1 px-3">
 							<label class="mr-3">{{ table_size.table_size }}</label>
@@ -93,7 +93,7 @@
 					</div>
 				</div>
 				<div class="col-span-4 border border-muted-dark p-1 md:p-3">
-					<h3 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-3">Locations</h3>
+					<h2 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-3">Locations</h2>
 					<div class="flex flex-wrap justify-around">
 						<div v-for="location in locations" :key="location" class="mb-1">
 							<label class="mr-3">{{ location }}</label>
@@ -103,7 +103,7 @@
 				</div>
 			</div>
 			<div class="col-span-4 border border-muted-dark p-1 md:p-3 flex justify-end">
-				<button @click.prevent="showFilters = false" type="button" class="bg-green-600 border border-green-700 hover:bg-green-700 py-2 px-4 uppercase text-white text-sm text-center">Apply Filters</button>
+				<button @click.prevent="showFilters = false" type="button" class="btn-green">Apply Filters</button>
 			</div>
 		</div>
 	</div>
