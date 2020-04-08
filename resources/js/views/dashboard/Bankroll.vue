@@ -10,18 +10,17 @@
             easing="Power1.easeOut"
         />
     </div>
-	<div class="flex w-full my-3 justify-around">
-		<button @click.prevent="bankrollTransactionModal" class="w-1/3 p-3 uppercase text-white text-lg md:text-xl font-bold border border-green-600 bg-green-500 hover:bg-green-600">Deposit</button>
-		<button @click.prevent="bankrollTransactionModal" class="w-1/3 p-3 uppercase text-white text-lg md:text-xl font-bold border border-red-600 bg-red-500 hover:bg-red-600">Withdraw</button>
-	</div>
-	<div class="flex w-full mt-3 border border-muted-dark rounded flex flex-col">
+	<div class="flex w-full my-3 border border-muted-dark rounded flex flex-col">
 		<apexchart type="bar" width="100%" height="200px" :options="options" :series="series"></apexchart>
+	</div>
+	<div class="flex w-full mt-3 justify-end">
+		<button @click.prevent="bankrollTransactionModal" class="bg-green-600 border border-green-700 hover:bg-green-700 py-2 px-4 uppercase text-white text-sm text-center">Manage Bankroll</button>
 	</div>
   </div>
 </template>
 
 <script>
-import TestModal from '../../components/Modals/Test';
+import BankrollTransactionModal from '../../components/Modals/BankrollTransaction';
 
 export default {
 	name: 'Bankroll',
@@ -77,7 +76,11 @@ export default {
 	},
 	methods: {
 		bankrollTransactionModal() {
-			this.$modal.show(TestModal);
+			this.$modal.show(BankrollTransactionModal, {}, {
+				classes: 'bg-card text-white p-6 rounded-lg border border-muted-dark',
+				minHeight: 150,
+				height: 'auto',
+			});
 		}
 	}
 }

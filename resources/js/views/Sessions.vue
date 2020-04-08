@@ -1,12 +1,149 @@
 <template>
-    <div class="bg-card rounded border border-muted-dark p-4 text-white">
-        <h1>Sessions</h1>
+    <div class="w-full grid grid-cols-4 gap-4">
+        <div class="col-span-4 bg-background rounded border border-card p-1 text-white">
+            <filters />
+        </div>
+        <div class="col-span-4 grid grid-cols-4 grid-2 md:gap-3 xxl:grid-4 bg-background rounded border border-card p-1 text-white">
+            <div v-for="session in sessions" :key="session.id" class="col-span-4 md:col-span-2 xxl:col-span-1">
+                <session-summary :session="session"></session-summary>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import Filters from '../components/Filters'
+import SessionSummary from '../components/Session/SessionSummary'
+
 export default {
     name: 'Sessions',
+    components: { Filters, SessionSummary},
+	data() {
+		return {
+			sessions: [
+				{
+					id: 1,
+					date: 'Today',
+					location: 'Aspers Casino MK',
+					profit: -300000
+				},
+				{
+					id: 2,
+					date: 'Yesterday',
+					location: 'Aspers Casino MK',
+					profit: 75.85
+				},
+				{
+					id: 3,
+					date: 'Monday 25th March',
+					location: 'Aspers Casino MK',
+					profit: -60.00
+				},
+				{
+					id: 4,
+					date: 'Saturday 23rd March',
+					location: 'Groveners Luton',
+					profit: 212
+				},
+				{
+					id: 5,
+					date: 'Friday 22nd March',
+					location: 'Groveners Luton',
+					profit: 118
+				},
+				{
+					id: 6,
+					date: 'Today',
+					location: 'Aspers Casino MK',
+					profit: -300000
+				},
+				{
+					id: 7,
+					date: 'Yesterday',
+					location: 'Aspers Casino MK',
+					profit: 75.85
+				},
+				{
+					id: 8,
+					date: 'Monday 25th March',
+					location: 'Aspers Casino MK',
+					profit: -60.00
+				},
+				{
+					id: 9,
+					date: 'Saturday 23rd March',
+					location: 'Groveners Luton',
+					profit: 212
+				},
+				{
+					id: 10,
+					date: 'Friday 22nd March',
+					location: 'Groveners Luton',
+					profit: 118
+				},
+				{
+					id: 11,
+					date: 'Today',
+					location: 'Aspers Casino MK',
+					profit: -300000
+				},
+				{
+					id: 12,
+					date: 'Yesterday',
+					location: 'Aspers Casino MK',
+					profit: 75.85
+				},
+				{
+					id: 13,
+					date: 'Monday 25th March',
+					location: 'Aspers Casino MK',
+					profit: -60.00
+				},
+				{
+					id: 14,
+					date: 'Saturday 23rd March',
+					location: 'Groveners Luton',
+					profit: 212
+				},
+				{
+					id: 15,
+					date: 'Friday 22nd March',
+					location: 'Groveners Luton',
+					profit: 118
+				},
+				{
+					id: 16,
+					date: 'Today',
+					location: 'Aspers Casino MK',
+					profit: -300000
+				},
+				{
+					id: 17,
+					date: 'Yesterday',
+					location: 'Aspers Casino MK',
+					profit: 75.85
+				},
+				{
+					id: 18,
+					date: 'Monday 25th March',
+					location: 'Aspers Casino MK',
+					profit: -60.00
+				},
+				{
+					id: 19,
+					date: 'Saturday 23rd March',
+					location: 'Groveners Luton',
+					profit: 212
+				},
+				{
+					id: 20,
+					date: 'Friday 22nd March',
+					location: 'Groveners Luton',
+					profit: 118
+				},
+			]
+		}
+	}
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-	<div class="flex justify-between mb-2 p-4 border border-muted-dark shadow bg-card hover:bg-muted-dark cursor-pointer text-white">
+	<div class="flex justify-between p-4 border border-muted-dark shadow bg-card hover:bg-muted-dark cursor-pointer text-white">
 		<div class="flex flex-col">
 			<div class="uppercase">{{ session.date }}</div>
 			<div class="text-sm text-gray-600">{{ session.location }}</div>

@@ -15626,6 +15626,10 @@ video {
   opacity: 0;
 }
 
+.v--modal-overlay {
+  background-color: rgba(22, 23, 27, 0.93) !important;
+}
+
 .theme-green .vdatetime-popup {
   background: #202125;
   color: #FFFFFF;

@@ -1,6 +1,8 @@
 <template>
 	<div class="flex flex-col">
-		<session-summary v-for="session in sessions" :key="session.id" :session="session"></session-summary>
+		<div v-for="session in sessions" :key="session.id" class="mb-2">
+			<session-summary :session="session"></session-summary>
+		</div>
 		<div class="mt-4 flex justify-end">
 			<router-link
 				:to="{ name: 'sessions' }"
@@ -13,7 +15,7 @@
 </template>
 
 <script>
-import SessionSummary from '../../components/SessionSummary';
+import SessionSummary from '../../components/Session/SessionSummary';
 
 export default {
 	name: 'Sessions',

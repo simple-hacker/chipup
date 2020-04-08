@@ -36,7 +36,7 @@ Vue.use(VModal, {
     dynamic: true,
     dynamicDefaults: {
         adaptive: true,
-    }
+    },
 });
 
 // vue-js-toggle-button

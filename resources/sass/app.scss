@@ -20,6 +20,11 @@
     opacity: 0
 }
 
+// vue-js-modal
+.v--modal-overlay {
+    background-color: rgba(22, 23, 27, 0.93) !important;
+}
+
 // vue-datetime picker theme
 .theme-green .vdatetime-popup {
     background: #202125;
