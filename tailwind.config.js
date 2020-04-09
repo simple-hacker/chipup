@@ -7,6 +7,11 @@ module.exports = {
       'xl': '1280px',
       'xxl': '1930px',
     },
+    inset: {
+      '0': 0,
+      auto: 'auto',
+      5: '5px',
+    },
     extend: {
       spacing: {
         '72': '18rem',

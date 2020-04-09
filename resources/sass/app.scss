@@ -117,4 +117,24 @@ input, select {
     ::-webkit-scrollbar, ::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
         width:10px;
     }
-  }
+}
+
+
+// v-dialog
+.vue-dialog {
+    border: 1px solid #16171B;
+}
+
+.dialog-content {
+    background-color: #202125;
+    color: white;
+}
+
+.vue-dialog-buttons {
+    border-top: 1px solid #16171B !important;
+}
+
+.vue-dialog-button {
+    background-color: #38393D !important;
+    color: white !important;
+}

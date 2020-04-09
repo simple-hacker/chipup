@@ -93,7 +93,10 @@
                     <bankroll-transaction />
                 </div>
                 <div class="col-span-2 md:col-span-1 mt-4 md:mt-0 p-1 md:p-2 h-96 overflow-y-auto scrolling-touch border border-background">
-                    <div v-for="bankrollTransaction in bankrollTransactions" :key="bankrollTransaction.id" class="mb-2">
+                    <div v-for="bankrollTransaction in bankrollTransactions"
+                        :key="bankrollTransaction.id"
+                        @click.prevent="showTransactionDetails(bankrollTransaction)"
+                        class="mb-2">
                         <bankroll-transaction-summary :bankrollTransaction="bankrollTransaction"></bankroll-transaction-summary>
                     </div>
                 </div>
@@ -105,10 +108,11 @@
 <script>
 import BankrollTransaction from '../components/Bankroll/BankrollTransaction'
 import BankrollTransactionSummary from '../components/Bankroll/BankrollTransactionSummary'
+import BankrollTransactionDetails from '../components/Bankroll/BankrollTransactionDetails'
 
 export default {
     name: 'Settings',
-    components: { BankrollTransaction, BankrollTransactionSummary },
+    components: { BankrollTransaction, BankrollTransactionSummary, BankrollTransactionDetails },
     data() {
         return {
             email: '',
@@ -198,6 +202,20 @@ export default {
 					amount: 725
 				},
 			]
+        }
+    },
+    methods: {
+        showTransactionDetails: function (bankrollTransaction) {
+            this.$modal.show(BankrollTransactionDetails, {
+                // Modal props
+                bankrollTransaction: bankrollTransaction,
+            }, {
+                // Modal Options
+                classes: 'bg-background text-white p-1 md:p-3 rounded-lg border border-muted-dark',
+                height: 'auto',
+                width: '95%',
+                maxWidth: 600,
+            })
         }
     }
 }

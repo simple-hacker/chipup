@@ -10793,6 +10793,13 @@ input, select {
   left: 0;
 }
 
+.inset-5 {
+  top: 5px;
+  right: 5px;
+  bottom: 5px;
+  left: 5px;
+}
+
 .inset-auto {
   top: auto;
   right: auto;
@@ -10808,6 +10815,16 @@ input, select {
 .inset-x-0 {
   right: 0;
   left: 0;
+}
+
+.inset-y-5 {
+  top: 5px;
+  bottom: 5px;
+}
+
+.inset-x-5 {
+  right: 5px;
+  left: 5px;
 }
 
 .inset-y-auto {
@@ -10834,6 +10851,22 @@ input, select {
 
 .left-0 {
   left: 0;
+}
+
+.top-5 {
+  top: 5px;
+}
+
+.right-5 {
+  right: 5px;
+}
+
+.bottom-5 {
+  bottom: 5px;
+}
+
+.left-5 {
+  left: 5px;
 }
 
 .top-auto {
@@ -16388,6 +16421,24 @@ input, select {
   ::-webkit-scrollbar, ::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
     width: 10px;
   }
+}
+
+.vue-dialog {
+  border: 1px solid #16171B;
+}
+
+.dialog-content {
+  background-color: #202125;
+  color: white;
+}
+
+.vue-dialog-buttons {
+  border-top: 1px solid #16171B !important;
+}
+
+.vue-dialog-button {
+  background-color: #38393D !important;
+  color: white !important;
 }
 
 @media (min-width: 640px) {
@@ -26521,6 +26572,13 @@ input, select {
     left: 0;
   }
 
+  .sm\:inset-5 {
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+  }
+
   .sm\:inset-auto {
     top: auto;
     right: auto;
@@ -26536,6 +26594,16 @@ input, select {
   .sm\:inset-x-0 {
     right: 0;
     left: 0;
+  }
+
+  .sm\:inset-y-5 {
+    top: 5px;
+    bottom: 5px;
+  }
+
+  .sm\:inset-x-5 {
+    right: 5px;
+    left: 5px;
   }
 
   .sm\:inset-y-auto {
@@ -26562,6 +26630,22 @@ input, select {
 
   .sm\:left-0 {
     left: 0;
+  }
+
+  .sm\:top-5 {
+    top: 5px;
+  }
+
+  .sm\:right-5 {
+    right: 5px;
+  }
+
+  .sm\:bottom-5 {
+    bottom: 5px;
+  }
+
+  .sm\:left-5 {
+    left: 5px;
   }
 
   .sm\:top-auto {
@@ -41285,6 +41369,13 @@ input, select {
     left: 0;
   }
 
+  .md\:inset-5 {
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+  }
+
   .md\:inset-auto {
     top: auto;
     right: auto;
@@ -41300,6 +41391,16 @@ input, select {
   .md\:inset-x-0 {
     right: 0;
     left: 0;
+  }
+
+  .md\:inset-y-5 {
+    top: 5px;
+    bottom: 5px;
+  }
+
+  .md\:inset-x-5 {
+    right: 5px;
+    left: 5px;
   }
 
   .md\:inset-y-auto {
@@ -41326,6 +41427,22 @@ input, select {
 
   .md\:left-0 {
     left: 0;
+  }
+
+  .md\:top-5 {
+    top: 5px;
+  }
+
+  .md\:right-5 {
+    right: 5px;
+  }
+
+  .md\:bottom-5 {
+    bottom: 5px;
+  }
+
+  .md\:left-5 {
+    left: 5px;
   }
 
   .md\:top-auto {
@@ -56049,6 +56166,13 @@ input, select {
     left: 0;
   }
 
+  .lg\:inset-5 {
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+  }
+
   .lg\:inset-auto {
     top: auto;
     right: auto;
@@ -56064,6 +56188,16 @@ input, select {
   .lg\:inset-x-0 {
     right: 0;
     left: 0;
+  }
+
+  .lg\:inset-y-5 {
+    top: 5px;
+    bottom: 5px;
+  }
+
+  .lg\:inset-x-5 {
+    right: 5px;
+    left: 5px;
   }
 
   .lg\:inset-y-auto {
@@ -56090,6 +56224,22 @@ input, select {
 
   .lg\:left-0 {
     left: 0;
+  }
+
+  .lg\:top-5 {
+    top: 5px;
+  }
+
+  .lg\:right-5 {
+    right: 5px;
+  }
+
+  .lg\:bottom-5 {
+    bottom: 5px;
+  }
+
+  .lg\:left-5 {
+    left: 5px;
   }
 
   .lg\:top-auto {
@@ -70813,6 +70963,13 @@ input, select {
     left: 0;
   }
 
+  .xl\:inset-5 {
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+  }
+
   .xl\:inset-auto {
     top: auto;
     right: auto;
@@ -70828,6 +70985,16 @@ input, select {
   .xl\:inset-x-0 {
     right: 0;
     left: 0;
+  }
+
+  .xl\:inset-y-5 {
+    top: 5px;
+    bottom: 5px;
+  }
+
+  .xl\:inset-x-5 {
+    right: 5px;
+    left: 5px;
   }
 
   .xl\:inset-y-auto {
@@ -70854,6 +71021,22 @@ input, select {
 
   .xl\:left-0 {
     left: 0;
+  }
+
+  .xl\:top-5 {
+    top: 5px;
+  }
+
+  .xl\:right-5 {
+    right: 5px;
+  }
+
+  .xl\:bottom-5 {
+    bottom: 5px;
+  }
+
+  .xl\:left-5 {
+    left: 5px;
   }
 
   .xl\:top-auto {
@@ -85577,6 +85760,13 @@ input, select {
     left: 0;
   }
 
+  .xxl\:inset-5 {
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+  }
+
   .xxl\:inset-auto {
     top: auto;
     right: auto;
@@ -85592,6 +85782,16 @@ input, select {
   .xxl\:inset-x-0 {
     right: 0;
     left: 0;
+  }
+
+  .xxl\:inset-y-5 {
+    top: 5px;
+    bottom: 5px;
+  }
+
+  .xxl\:inset-x-5 {
+    right: 5px;
+    left: 5px;
   }
 
   .xxl\:inset-y-auto {
@@ -85618,6 +85818,22 @@ input, select {
 
   .xxl\:left-0 {
     left: 0;
+  }
+
+  .xxl\:top-5 {
+    top: 5px;
+  }
+
+  .xxl\:right-5 {
+    right: 5px;
+  }
+
+  .xxl\:bottom-5 {
+    bottom: 5px;
+  }
+
+  .xxl\:left-5 {
+    left: 5px;
   }
 
   .xxl\:top-auto {

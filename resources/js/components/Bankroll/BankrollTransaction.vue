@@ -1,5 +1,10 @@
 <template>
-	<div class="flex flex-col">
+	<div class="flex flex-col relative">
+		<div v-if="closeBtn" class="absolute top-0 right-0">
+			<button @click="$emit('close')" class="hover:text-muted-light cursor-pointer">
+				<i class="fas fa-times-circle fa-2x"></i>
+			</button>
+		</div>
 		<h1 v-if="title" v-text="title" class="text-2xl font-semibold mb-6"></h1>
 
 		<div class="flex-1 flex mb-4 justify-center items-center">
@@ -19,7 +24,7 @@
 <script>
 export default {
 	name: 'BankrollTransaction',
-	props: ['title'],
+	props: ['title', 'closeBtn'],
     data() {
       return {
 		bankrollAmount: 0,
