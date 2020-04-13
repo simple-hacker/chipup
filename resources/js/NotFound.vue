@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-full justify-center items-center">
+  <div class="flex flex-col h-full justify-center items-center text-white">
       <h1 class="text-2xl font-bold">Whoops, page not found!</h1>
   </div>
 </template>

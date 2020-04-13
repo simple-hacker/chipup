@@ -35,13 +35,13 @@
 </template>
 
 <script>
-import Filters from '../components/Filters'
-import StatsTable from './statistics/StatsTable'
-import ProfitLineChart from './statistics/ProfitLineChart'
-import LocationsPieChart from './statistics/LocationsPieChart'
-import LocationsProfitBarChart from './statistics/LocationsProfitBarChart'
-import GameTypesPieChart from './statistics/GameTypesPieChart'
-import GameTypesProfitBarChart from './statistics/GameTypesProfitBarChart'
+import Filters from '@components/Filters'
+import StatsTable from '@views/statistics/StatsTable'
+import ProfitLineChart from '@views/statistics/ProfitLineChart'
+import LocationsPieChart from '@views/statistics/LocationsPieChart'
+import LocationsProfitBarChart from '@views/statistics/LocationsProfitBarChart'
+import GameTypesPieChart from '@views/statistics/GameTypesPieChart'
+import GameTypesProfitBarChart from '@views/statistics/GameTypesProfitBarChart'
 
 export default {
     name: 'Statistics',

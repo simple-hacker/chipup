@@ -3124,10 +3124,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _dashboard_Bankroll__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dashboard/Bankroll */ "./resources/js/views/dashboard/Bankroll.vue");
-/* harmony import */ var _dashboard_Chart__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dashboard/Chart */ "./resources/js/views/dashboard/Chart.vue");
-/* harmony import */ var _dashboard_Statistics__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dashboard/Statistics */ "./resources/js/views/dashboard/Statistics.vue");
-/* harmony import */ var _dashboard_Sessions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./dashboard/Sessions */ "./resources/js/views/dashboard/Sessions.vue");
+/* harmony import */ var _views_dashboard_Bankroll__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @views/dashboard/Bankroll */ "./resources/js/views/dashboard/Bankroll.vue");
+/* harmony import */ var _views_dashboard_Chart__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @views/dashboard/Chart */ "./resources/js/views/dashboard/Chart.vue");
+/* harmony import */ var _views_dashboard_Statistics__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @views/dashboard/Statistics */ "./resources/js/views/dashboard/Statistics.vue");
+/* harmony import */ var _views_dashboard_Sessions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @views/dashboard/Sessions */ "./resources/js/views/dashboard/Sessions.vue");
 //
 //
 //
@@ -3152,10 +3152,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Dashboard',
   components: {
-    Chart: _dashboard_Chart__WEBPACK_IMPORTED_MODULE_1__["default"],
-    Bankroll: _dashboard_Bankroll__WEBPACK_IMPORTED_MODULE_0__["default"],
-    Statistics: _dashboard_Statistics__WEBPACK_IMPORTED_MODULE_2__["default"],
-    Sessions: _dashboard_Sessions__WEBPACK_IMPORTED_MODULE_3__["default"]
+    Chart: _views_dashboard_Chart__WEBPACK_IMPORTED_MODULE_1__["default"],
+    Bankroll: _views_dashboard_Bankroll__WEBPACK_IMPORTED_MODULE_0__["default"],
+    Statistics: _views_dashboard_Statistics__WEBPACK_IMPORTED_MODULE_2__["default"],
+    Sessions: _views_dashboard_Sessions__WEBPACK_IMPORTED_MODULE_3__["default"]
   }
 });
 
@@ -3170,8 +3170,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Session_StartCashGame__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Session/StartCashGame */ "./resources/js/components/Session/StartCashGame.vue");
-/* harmony import */ var _components_Session_CurrentCashGame__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Session/CurrentCashGame */ "./resources/js/components/Session/CurrentCashGame.vue");
+/* harmony import */ var _components_Session_StartCashGame__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @components/Session/StartCashGame */ "./resources/js/components/Session/StartCashGame.vue");
+/* harmony import */ var _components_Session_CurrentCashGame__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @components/Session/CurrentCashGame */ "./resources/js/components/Session/CurrentCashGame.vue");
 //
 //
 //
@@ -3210,9 +3210,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Filters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Filters */ "./resources/js/components/Filters.vue");
-/* harmony import */ var _components_Session_SessionSummary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Session/SessionSummary */ "./resources/js/components/Session/SessionSummary.vue");
-/* harmony import */ var _components_Session_SessionDetails__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Session/SessionDetails */ "./resources/js/components/Session/SessionDetails.vue");
+/* harmony import */ var _components_Filters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @components/Filters */ "./resources/js/components/Filters.vue");
+/* harmony import */ var _components_Session_SessionSummary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @components/Session/SessionSummary */ "./resources/js/components/Session/SessionSummary.vue");
+/* harmony import */ var _components_Session_SessionDetails__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @components/Session/SessionDetails */ "./resources/js/components/Session/SessionDetails.vue");
 //
 //
 //
@@ -3376,9 +3376,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Bankroll_BankrollTransaction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Bankroll/BankrollTransaction */ "./resources/js/components/Bankroll/BankrollTransaction.vue");
-/* harmony import */ var _components_Bankroll_BankrollTransactionSummary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Bankroll/BankrollTransactionSummary */ "./resources/js/components/Bankroll/BankrollTransactionSummary.vue");
-/* harmony import */ var _components_Bankroll_BankrollTransactionDetails__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Bankroll/BankrollTransactionDetails */ "./resources/js/components/Bankroll/BankrollTransactionDetails.vue");
+/* harmony import */ var _components_Bankroll_BankrollTransaction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @components/Bankroll/BankrollTransaction */ "./resources/js/components/Bankroll/BankrollTransaction.vue");
+/* harmony import */ var _components_Bankroll_BankrollTransactionSummary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @components/Bankroll/BankrollTransactionSummary */ "./resources/js/components/Bankroll/BankrollTransactionSummary.vue");
+/* harmony import */ var _components_Bankroll_BankrollTransactionDetails__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @components/Bankroll/BankrollTransactionDetails */ "./resources/js/components/Bankroll/BankrollTransactionDetails.vue");
 //
 //
 //
@@ -3622,13 +3622,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Filters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Filters */ "./resources/js/components/Filters.vue");
-/* harmony import */ var _statistics_StatsTable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./statistics/StatsTable */ "./resources/js/views/statistics/StatsTable.vue");
-/* harmony import */ var _statistics_ProfitLineChart__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./statistics/ProfitLineChart */ "./resources/js/views/statistics/ProfitLineChart.vue");
-/* harmony import */ var _statistics_LocationsPieChart__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./statistics/LocationsPieChart */ "./resources/js/views/statistics/LocationsPieChart.vue");
-/* harmony import */ var _statistics_LocationsProfitBarChart__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./statistics/LocationsProfitBarChart */ "./resources/js/views/statistics/LocationsProfitBarChart.vue");
-/* harmony import */ var _statistics_GameTypesPieChart__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./statistics/GameTypesPieChart */ "./resources/js/views/statistics/GameTypesPieChart.vue");
-/* harmony import */ var _statistics_GameTypesProfitBarChart__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./statistics/GameTypesProfitBarChart */ "./resources/js/views/statistics/GameTypesProfitBarChart.vue");
+/* harmony import */ var _components_Filters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @components/Filters */ "./resources/js/components/Filters.vue");
+/* harmony import */ var _views_statistics_StatsTable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @views/statistics/StatsTable */ "./resources/js/views/statistics/StatsTable.vue");
+/* harmony import */ var _views_statistics_ProfitLineChart__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @views/statistics/ProfitLineChart */ "./resources/js/views/statistics/ProfitLineChart.vue");
+/* harmony import */ var _views_statistics_LocationsPieChart__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @views/statistics/LocationsPieChart */ "./resources/js/views/statistics/LocationsPieChart.vue");
+/* harmony import */ var _views_statistics_LocationsProfitBarChart__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @views/statistics/LocationsProfitBarChart */ "./resources/js/views/statistics/LocationsProfitBarChart.vue");
+/* harmony import */ var _views_statistics_GameTypesPieChart__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @views/statistics/GameTypesPieChart */ "./resources/js/views/statistics/GameTypesPieChart.vue");
+/* harmony import */ var _views_statistics_GameTypesProfitBarChart__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @views/statistics/GameTypesProfitBarChart */ "./resources/js/views/statistics/GameTypesProfitBarChart.vue");
 //
 //
 //
@@ -3676,12 +3676,12 @@ __webpack_require__.r(__webpack_exports__);
   name: 'Statistics',
   components: {
     Filters: _components_Filters__WEBPACK_IMPORTED_MODULE_0__["default"],
-    StatsTable: _statistics_StatsTable__WEBPACK_IMPORTED_MODULE_1__["default"],
-    ProfitLineChart: _statistics_ProfitLineChart__WEBPACK_IMPORTED_MODULE_2__["default"],
-    LocationsPieChart: _statistics_LocationsPieChart__WEBPACK_IMPORTED_MODULE_3__["default"],
-    LocationsProfitBarChart: _statistics_LocationsProfitBarChart__WEBPACK_IMPORTED_MODULE_4__["default"],
-    GameTypesPieChart: _statistics_GameTypesPieChart__WEBPACK_IMPORTED_MODULE_5__["default"],
-    GameTypesProfitBarChart: _statistics_GameTypesProfitBarChart__WEBPACK_IMPORTED_MODULE_6__["default"]
+    StatsTable: _views_statistics_StatsTable__WEBPACK_IMPORTED_MODULE_1__["default"],
+    ProfitLineChart: _views_statistics_ProfitLineChart__WEBPACK_IMPORTED_MODULE_2__["default"],
+    LocationsPieChart: _views_statistics_LocationsPieChart__WEBPACK_IMPORTED_MODULE_3__["default"],
+    LocationsProfitBarChart: _views_statistics_LocationsProfitBarChart__WEBPACK_IMPORTED_MODULE_4__["default"],
+    GameTypesPieChart: _views_statistics_GameTypesPieChart__WEBPACK_IMPORTED_MODULE_5__["default"],
+    GameTypesProfitBarChart: _views_statistics_GameTypesProfitBarChart__WEBPACK_IMPORTED_MODULE_6__["default"]
   }
 });
 
@@ -3696,7 +3696,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Bankroll_BankrollTransaction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/Bankroll/BankrollTransaction */ "./resources/js/components/Bankroll/BankrollTransaction.vue");
+/* harmony import */ var _components_Bankroll_BankrollTransaction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @components/Bankroll/BankrollTransaction */ "./resources/js/components/Bankroll/BankrollTransaction.vue");
 //
 //
 //
@@ -3851,7 +3851,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Session_SessionSummary__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/Session/SessionSummary */ "./resources/js/components/Session/SessionSummary.vue");
+/* harmony import */ var _components_Session_SessionSummary__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @components/Session/SessionSummary */ "./resources/js/components/Session/SessionSummary.vue");
 //
 //
 //
@@ -42268,7 +42268,10 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c(
       "div",
-      { staticClass: "flex flex-col h-full justify-center items-center" },
+      {
+        staticClass:
+          "flex flex-col h-full justify-center items-center text-white"
+      },
       [
         _c("h1", { staticClass: "text-2xl font-bold" }, [
           _vm._v("Whoops, page not found!")
@@ -43237,7 +43240,7 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "label",
-                { staticClass: "text-sm", attrs: { for: "remember" } },
+                { staticClass: "text-sm w-48", attrs: { for: "remember" } },
                 [_vm._v("Remember me")]
               )
             ]),

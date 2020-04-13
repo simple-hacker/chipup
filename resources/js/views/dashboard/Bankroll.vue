@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import BankrollTransaction from '../../components/Bankroll/BankrollTransaction';
+import BankrollTransaction from '@components/Bankroll/BankrollTransaction';
 
 export default {
 	name: 'Bankroll',

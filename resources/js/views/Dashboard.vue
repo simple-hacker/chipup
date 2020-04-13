@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import Bankroll from './dashboard/Bankroll'
-import Chart from './dashboard/Chart'
-import Statistics from './dashboard/Statistics'
-import Sessions from './dashboard/Sessions'
+import Bankroll from '@views/dashboard/Bankroll'
+import Chart from '@views/dashboard/Chart'
+import Statistics from '@views/dashboard/Statistics'
+import Sessions from '@views/dashboard/Sessions'
 
 export default {
     name: 'Dashboard',

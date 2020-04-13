@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import SessionSummary from '../../components/Session/SessionSummary';
+import SessionSummary from '@components/Session/SessionSummary';
 
 export default {
 	name: 'Sessions',

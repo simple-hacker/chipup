@@ -106,9 +106,9 @@
 </template>
 
 <script>
-import BankrollTransaction from '../components/Bankroll/BankrollTransaction'
-import BankrollTransactionSummary from '../components/Bankroll/BankrollTransactionSummary'
-import BankrollTransactionDetails from '../components/Bankroll/BankrollTransactionDetails'
+import BankrollTransaction from '@components/Bankroll/BankrollTransaction'
+import BankrollTransactionSummary from '@components/Bankroll/BankrollTransactionSummary'
+import BankrollTransactionDetails from '@components/Bankroll/BankrollTransactionDetails'
 
 export default {
     name: 'Settings',

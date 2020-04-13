@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import StartCashGame from '../components/Session/StartCashGame';
-import CurrentCashGame from '../components/Session/CurrentCashGame';
+import StartCashGame from '@components/Session/StartCashGame';
+import CurrentCashGame from '@components/Session/CurrentCashGame';
 
 export default {
     name: 'Session',

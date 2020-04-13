@@ -12,7 +12,7 @@
                 <div class="flex justify-around mt-3">
                     <div class="flex items-center">
                         <input type="checkbox" name="remeber" v-model="remember" class="mr-2">
-                        <label for="remember" class="text-sm">Remember me</label>
+                        <label for="remember" class="text-sm w-48">Remember me</label>
                     </div>
                     <a href="/password-reset" class="text-green-600 text-sm font-bold">Forgot your password?</a>
                 </div>

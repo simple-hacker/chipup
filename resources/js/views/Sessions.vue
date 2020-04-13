@@ -16,9 +16,9 @@
 </template>
 
 <script>
-import Filters from '../components/Filters'
-import SessionSummary from '../components/Session/SessionSummary'
-import SessionDetails from '../components/Session/SessionDetails'
+import Filters from '@components/Filters'
+import SessionSummary from '@components/Session/SessionSummary'
+import SessionDetails from '@components/Session/SessionDetails'
 
 export default {
     name: 'Sessions',
