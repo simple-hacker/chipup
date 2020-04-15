@@ -1,9 +1,9 @@
-import Dashboard from './views/Dashboard.vue';
-import Settings from './views/Settings.vue';
-import Sessions from './views/Sessions.vue';
-import Statistics from './views/Statistics.vue';
-import Session from './views/Session.vue';
-import NotFound from './NotFound.vue';
+import Dashboard from './views/Dashboard.vue'
+import Settings from './views/Settings.vue'
+import Sessions from './views/Sessions.vue'
+import Statistics from './views/Statistics.vue'
+import Session from './views/Session.vue'
+import NotFound from './NotFound.vue'
 
 const routes = [
     {
@@ -42,4 +42,4 @@ const routes = [
     },
 ]
 
-export default routes;
+export default routes

@@ -5,7 +5,8 @@ mix.webpackConfig({
       extensions: ['.js', '.vue', '.json'],
       alias: {
          '@components': __dirname + '/resources/js/components',
-         '@views': __dirname + '/resources/js/views'
+         '@views': __dirname + '/resources/js/views',
+         '@' : __dirname + '/resources/js',
       },
    },
 });

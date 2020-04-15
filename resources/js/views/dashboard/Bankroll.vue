@@ -4,7 +4,7 @@
 			<number
 				ref="dashboard-bankroll"
 				:from="0"
-				:to="10000.00"
+				:to="bankroll"
 				:duration="1"
 				:format="(number) => '£'+number.toLocaleString()"
 				easing="Power1.easeOut"
@@ -20,7 +20,8 @@
 </template>
 
 <script>
-import BankrollTransaction from '@components/Bankroll/BankrollTransaction';
+import { mapState } from 'vuex'
+import BankrollTransaction from '@components/Bankroll/BankrollTransaction'
 
 export default {
 	name: 'Bankroll',
@@ -85,6 +86,9 @@ export default {
 				height: 'auto',
 			});
 		}
+	},
+	computed: {
+		...mapState(['bankroll']),
 	}
 }
 </script>

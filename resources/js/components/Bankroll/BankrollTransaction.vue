@@ -9,7 +9,7 @@
 
 		<div class="flex-1 flex mb-4 justify-center items-center">
 			<span class="text-4xl font-bold mr-3">£</span>
-			<input v-model="bankrollAmount" type="text" class="w-1/2 rounded border border-muted-dark bg-background px-4 py-2 text-3xl">
+			<input v-model="bankrollTransactionAmount" type="text" class="w-1/2 rounded border border-muted-dark bg-background px-4 py-2 text-3xl">
 		</div>
 		<div class="flex-1 flex mb-6 justify-center items-center">
 			<textarea v-model="comments" placeholder="Add comments" rows=4 class="w-full xl:w-3/4 rounded border border-muted-dark bg-background p-2"></textarea>
@@ -27,7 +27,7 @@ export default {
 	props: ['title', 'closeBtn'],
     data() {
       return {
-		bankrollAmount: 0,
+		bankrollTransactionAmount: 0,
 		comments: ''
       }
 	},
