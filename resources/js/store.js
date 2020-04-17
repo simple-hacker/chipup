@@ -9,12 +9,12 @@ const store = new Vuex.Store({
         user: {
             email: 'example@email.com'
         },
-        bankroll: 8575,
+        // bankroll: 8575,
         bankrollTransactions: [
             {
                 id: 1,
                 date: 'Today',
-                amount: -300000
+                amount: -30
             },
             {
                 id: 2,
@@ -68,6 +68,33 @@ const store = new Vuex.Store({
             },
         ]
     },
+    getters: {
+        deposits: state => {
+            return state.bankrollTransactions.filter(bankrollTransaction => bankrollTransaction.amount > 0)
+        },
+        withdrawals: state => {
+            return state.bankrollTransactions.filter(bankrollTransaction => bankrollTransaction.amount <= 0)
+        },
+        depositsTotal: (state, getters) => {
+            return getters.deposits.reduce((total, deposit) => total + deposit.amount, 0)
+        },
+        withdrawalsTotal: (state, getters) => {
+            return getters.withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0)
+        },
+        bankroll: state => {
+            return state.bankrollTransactions.reduce((total, transaction) => total + transaction.amount, 0)
+        }
+    },
+    mutations: {
+        ADD_BANKROLL_TRANSACTION (state, transaction) {
+            state.bankrollTransactions.unshift({id: 55, ...transaction})
+        }
+    },
+    actions: {
+        addBankrollTransaction({ commit }, transaction) {
+            commit('ADD_BANKROLL_TRANSACTION', transaction)
+        }
+    }
 })
 
 export default store

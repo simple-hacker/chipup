@@ -2245,6 +2245,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2268,6 +2275,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'BankrollTransaction',
   props: ['title', 'closeBtn'],
@@ -2277,12 +2285,23 @@ __webpack_require__.r(__webpack_exports__);
       comments: ''
     };
   },
-  methods: {
+  methods: _objectSpread({
     save: function save() {
       this.$emit('close');
       this.$snotify.success('Well done');
+    },
+    addDeposit: function addDeposit() {
+      this.addBankrollTransaction({
+        amount: this.bankrollTransactionAmount
+      }).then(function () {})["catch"](function () {});
+    },
+    addWithdrawal: function addWithdrawal() {
+      this.addBankrollTransaction({
+        date: new Date(),
+        amount: this.bankrollTransactionAmount * -1
+      });
     }
-  }
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['addBankrollTransaction']))
 });
 
 /***/ }),
@@ -3572,7 +3591,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     }
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['bankroll', 'bankrollTransactions']))
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['bankroll', 'bankrollTransactions']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['deposits', 'withdrawals']))
 });
 
 /***/ }),
@@ -3689,6 +3708,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3730,14 +3751,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         tooltip: {
           theme: false
         }
-      },
-      series: [{
-        name: 'Deposits',
-        data: [10000]
-      }, {
-        name: 'Withdrawals',
-        data: [4585]
-      }]
+      }
     };
   },
   methods: {
@@ -3752,7 +3766,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     }
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['bankroll']))
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['bankroll']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['bankroll', 'depositsTotal', 'withdrawalsTotal']), {
+    series: function series() {
+      return [{
+        name: 'Deposits',
+        data: [this.depositsTotal]
+      }, {
+        name: 'Withdrawals',
+        data: [this.withdrawalsTotal * -1]
+      }];
+    }
+  })
 });
 
 /***/ }),
@@ -45440,6 +45464,36 @@ var render = function() {
           }
         },
         [_vm._v("Manage Bankroll")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "bg-blue-600 border border-blue-700 py-2 px-4 uppercase text-white text-sm text-center",
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.addDeposit($event)
+            }
+          }
+        },
+        [_vm._v("Add Deposit")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "bg-red-600 border border-red-700 py-2 px-4 uppercase text-white text-sm text-center",
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.addWithdrawal($event)
+            }
+          }
+        },
+        [_vm._v("Add Withdrawal")]
       )
     ])
   ])
@@ -65377,6 +65431,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 // vuex
 
 
@@ -65386,11 +65446,11 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     user: {
       email: 'example@email.com'
     },
-    bankroll: 8575,
+    // bankroll: 8575,
     bankrollTransactions: [{
       id: 1,
       date: 'Today',
-      amount: -300000
+      amount: -30
     }, {
       id: 2,
       date: 'Yesterday',
@@ -65432,6 +65492,46 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
       date: 'Saturday 8th March',
       amount: 725
     }]
+  },
+  getters: {
+    deposits: function deposits(state) {
+      return state.bankrollTransactions.filter(function (bankrollTransaction) {
+        return bankrollTransaction.amount > 0;
+      });
+    },
+    withdrawals: function withdrawals(state) {
+      return state.bankrollTransactions.filter(function (bankrollTransaction) {
+        return bankrollTransaction.amount <= 0;
+      });
+    },
+    depositsTotal: function depositsTotal(state, getters) {
+      return getters.deposits.reduce(function (total, deposit) {
+        return total + deposit.amount;
+      }, 0);
+    },
+    withdrawalsTotal: function withdrawalsTotal(state, getters) {
+      return getters.withdrawals.reduce(function (total, withdrawal) {
+        return total + withdrawal.amount;
+      }, 0);
+    },
+    bankroll: function bankroll(state) {
+      return state.bankrollTransactions.reduce(function (total, transaction) {
+        return total + transaction.amount;
+      }, 0);
+    }
+  },
+  mutations: {
+    ADD_BANKROLL_TRANSACTION: function ADD_BANKROLL_TRANSACTION(state, transaction) {
+      state.bankrollTransactions.unshift(_objectSpread({
+        id: 55
+      }, transaction));
+    }
+  },
+  actions: {
+    addBankrollTransaction: function addBankrollTransaction(_ref, transaction) {
+      var commit = _ref.commit;
+      commit('ADD_BANKROLL_TRANSACTION', transaction);
+    }
   }
 });
 /* harmony default export */ __webpack_exports__["default"] = (store);

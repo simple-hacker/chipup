@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import BankrollTransaction from '@components/Bankroll/BankrollTransaction'
 import BankrollTransactionSummary from '@components/Bankroll/BankrollTransactionSummary'
 import BankrollTransactionDetails from '@components/Bankroll/BankrollTransactionDetails'
@@ -163,7 +163,8 @@ export default {
         }
     },
     computed: {
-        ...mapState(['bankroll', 'bankrollTransactions'])
+        ...mapState(['bankroll', 'bankrollTransactions']),
+        ...mapGetters(['deposits', 'withdrawals'])
     }
 }
 </script>

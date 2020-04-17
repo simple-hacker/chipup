@@ -15,12 +15,14 @@
 		</div>
 		<div class="flex w-full mt-3 justify-end">
 			<button @click.prevent="bankrollTransactionModal" class="btn-green">Manage Bankroll</button>
+			<button @click.prevent="addDeposit" class="bg-blue-600 border border-blue-700 py-2 px-4 uppercase text-white text-sm text-center">Add Deposit</button>
+			<button @click.prevent="addWithdrawal" class="bg-red-600 border border-red-700 py-2 px-4 uppercase text-white text-sm text-center">Add Withdrawal</button>
 		</div>
 	</div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import BankrollTransaction from '@components/Bankroll/BankrollTransaction'
 
 export default {
@@ -63,16 +65,6 @@ export default {
 					theme: false,
 				}
 			},
-			series: [
-				{
-					name: 'Deposits',
-					data: [10000]
-				},
-				{
-					name: 'Withdrawals',
-					data: [4585]
-				},
-			]
 		}
 	},
 	methods: {
@@ -85,10 +77,23 @@ export default {
 				minHeight: 150,
 				height: 'auto',
 			});
-		}
+		},
 	},
 	computed: {
 		...mapState(['bankroll']),
+		...mapGetters(['bankroll', 'depositsTotal', 'withdrawalsTotal']),
+		series() {
+			return [
+				{
+					name: 'Deposits',
+					data: [this.depositsTotal]
+				},
+				{
+					name: 'Withdrawals',
+					data: [this.withdrawalsTotal * -1]
+				},
+			]
+		}
 	}
 }
 </script>

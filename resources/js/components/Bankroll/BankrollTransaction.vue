@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
 	name: 'BankrollTransaction',
 	props: ['title', 'closeBtn'],
@@ -36,7 +38,26 @@ export default {
 			this.$emit('close');
 			this.$snotify.success('Well done');
 		},
-    }
+		addTransaction(amount) {
+			this.addBankrollTransaction({
+				amount: this.bankrollTransactionAmount,
+			})
+			.then(() => {
+				this.$emit('close');
+				this.$snotify.success('Well done');
+			})
+			.catch(() => {
+
+			})
+		},
+		addWithdrawal() {
+			this.addBankrollTransaction({
+				date: new Date(),
+				amount: this.bankrollTransactionAmount * -1,
+			})
+		},
+		...mapActions(['addBankrollTransaction'])
+	},
 }
 </script>
 
