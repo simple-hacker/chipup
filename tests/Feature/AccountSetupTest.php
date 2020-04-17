@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Transactions\Bankroll;
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -45,6 +44,8 @@ class AccountSetupTest extends TestCase
     public function testAUserCanCompleteTheirSetup()
     {
         // TODO:  Choose default currency
+
+        $this->withoutExceptionHandling();
 
         $attributes = [
             'bankroll' => 0,
@@ -205,7 +206,7 @@ class AccountSetupTest extends TestCase
         $this->actingAs($user);
 
         // Test a couple of API routes as all API routes are under the same middleware group.
-        $this->postJson(route('bankroll.add'), ['amount' => 5000])->assertRedirect(route('setup.index'));
+        $this->postJson(route('bankroll.create'), ['amount' => 5000])->assertRedirect(route('setup.index'));
         $this->postJson(route('cash.start'), $this->getCashGameAttributes())->assertRedirect(route('setup.index'));
         $this->postJson(route('tournament.start'), $this->getTournamentAttributes())->assertRedirect(route('setup.index'));
     }

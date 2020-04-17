@@ -16,7 +16,7 @@ class BankrollTest extends TestCase
         ]);
 
         // Add 500 (£5) to user's bankroll.
-        $user->addToBankroll(500);
+        $user->createBankrollTransaction(500);
 
         // A user should have one Bankroll
         $this->assertCount(1, $user->bankrollTransactions);
@@ -32,7 +32,7 @@ class BankrollTest extends TestCase
         ]);
 
         // Withdraw 500 (£5) to user's bankroll.
-        $user->withdrawFromBankroll(500);
+        $user->createBankrollTransaction(-500);
         
         // A user should have one Bankroll
         $this->assertCount(1, $user->bankrollTransactions);
@@ -47,14 +47,14 @@ class BankrollTest extends TestCase
         $user = factory('App\User')->create();
 
         // Add 500 (£5) to user's bankroll.
-        $user->addToBankroll(500);
+        $user->createBankrollTransaction(500);
         // Assert bankroll is incremented with this addition.
         $this->assertEquals($user->fresh()->bankroll, 10500);
 
         // Get the user's Bankroll
         $bankroll = $user->bankrollTransactions()->first();
 
-        // Update the addToBankroll amount to 1000 instead of 500. i.e. greater than original
+        // Update the createBankrollTransaction amount to 1000 instead of 500. i.e. greater than original
         $bankroll->update([
             'amount' => 1000
         ]);

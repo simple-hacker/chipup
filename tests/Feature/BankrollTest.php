@@ -14,13 +14,8 @@ class BankrollTest extends TestCase
     {
         $user = factory('App\User')->create();
 
-        $this->postJson(route('bankroll.add'), [
+        $this->postJson(route('bankroll.create'), [
                 'amount' => 30000
-            ])
-            ->assertUnauthorized();
-
-        $this->postJson(route('bankroll.withdraw'), [
-                'amount' => 10000
             ])
             ->assertUnauthorized();
 
@@ -48,7 +43,7 @@ class BankrollTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->postJson(route('bankroll.add'), [
+        $this->postJson(route('bankroll.create'), [
                 'amount' => 30000
             ])
             ->assertStatus(200)
@@ -71,8 +66,9 @@ class BankrollTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->postJson(route('bankroll.withdraw'), [
-                'amount' => 10000
+        // Supply negative number for withdrawals
+        $this->postJson(route('bankroll.create'), [
+                'amount' => -10000
             ])
             ->assertStatus(200)
             ->assertJson([
@@ -94,7 +90,7 @@ class BankrollTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->postJson(route('bankroll.add'), [
+        $this->postJson(route('bankroll.create'), [
             'amount' => 30000
         ]);
 
@@ -117,8 +113,8 @@ class BankrollTest extends TestCase
         $this->actingAs($user);
 
         // Withdraw 10000
-        $this->postJson(route('bankroll.withdraw'), [
-            'amount' => 10000
+        $this->postJson(route('bankroll.create'), [
+            'amount' => -10000
         ]);
 
         $user->refresh();
@@ -140,7 +136,7 @@ class BankrollTest extends TestCase
         $user1 = $this->signIn();
 
         // Add 30000 to user1's bankroll.
-        $this->postJson(route('bankroll.add'), [
+        $this->postJson(route('bankroll.create'), [
             'amount' => 30000
         ]);
 
@@ -164,6 +160,8 @@ class BankrollTest extends TestCase
     {
         // When creating a Bankroll Transaction for addition, withdrawal, or update
         // the amount given must be a positive integer.
+        // NOTE: Update 17/04/20  You can now supply a negative integer for withdrawing
+        // Instead of having separate additional, withdrawing functions, refactor to a single add transaction function that accepts postive amounts for adding, and negative amounts for withdrawals.
 
         $user = factory('App\User')->create([
             'bankroll' => 10000  //This doesn't create a BankrollTransaction
@@ -171,41 +169,30 @@ class BankrollTest extends TestCase
         $user->completeSetup();
         $this->actingAs($user);
 
-        // Check negative numbers for addition
-        $this->postJson(route('bankroll.add'), [
+        // Check negative numbers for withdrawals - will result in status 200.
+        $this->postJson(route('bankroll.create'), [
                 'amount' => -1000
             ])
-            ->assertStatus(422);
+            ->assertStatus(200);
 
-        // Check float numbers for addition
-        $this->postJson(route('bankroll.add'), [
+        // Check float numbers
+        $this->postJson(route('bankroll.create'), [
                 'amount' => 50.82
             ])
             ->assertStatus(422);
 
-        // Check negative numbers for withdrawals
-        $this->postJson(route('bankroll.withdraw'), [
-                'amount' => -1000
-            ])
-            ->assertStatus(422);
-
-        // Check float numbers for withdrawals
-        $this->postJson(route('bankroll.withdraw'), [
-                'amount' => 50.82
-            ])
-            ->assertStatus(422);
 
         // Create a BankrollTransaction and get it from user.
-        $this->postJson(route('bankroll.add'), [
+        $this->postJson(route('bankroll.create'), [
                 'amount' => 500
             ]);
         $bankrollTransaction = $user->bankrollTransactions->first();
 
-        // Check negative numbers for updates.
+        // Check negative numbers for updates, will result in a 200
         $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
                 'amount' => -1000
             ])
-            ->assertStatus(422);
+            ->assertStatus(200);
 
         // Check float numbers for updates
         $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [

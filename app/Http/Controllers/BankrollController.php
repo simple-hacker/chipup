@@ -15,24 +15,9 @@ class BankrollController extends Controller
     * @param BankrollTransactionRequest $request
     * @return json
     */
-    public function add(BankrollTransactionRequest $request)
+    public function create(BankrollTransactionRequest $request)
     {
-        auth()->user()->addToBankroll($request->amount);
-
-        return [
-            'success' => true,
-        ];
-    }
-
-    /**
-    * POST method to add to the user's bankroll.
-    * 
-    * @param BankrollTransactionRequest $request
-    * @return json
-    */
-    public function withdraw(BankrollTransactionRequest $request)
-    {
-        auth()->user()->withdrawFromBankroll($request->amount);
+        auth()->user()->createBankrollTransaction($request->amount);
 
         return [
             'success' => true,

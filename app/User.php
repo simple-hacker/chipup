@@ -80,7 +80,7 @@ class User extends Authenticatable
     * @param integer amount
     * @return void
     */
-    public function addToBankroll($amount)
+    public function createBankrollTransaction($amount)
     {
         if (!is_int($amount)) {
             throw new NonIntegerAmount;
@@ -91,28 +91,6 @@ class User extends Authenticatable
             'amount' => $amount
         ]);
     }
-
-
-    /**
-    * Withdraw amount from bankroll.
-    * This updates the user's bankroll and creates and Bankroll.
-    * The bankroll is updated with a Bankroll model observer in the created method.
-    * 
-    * @param integer amount
-    * @return void
-    */
-    public function withdrawFromBankroll($amount)
-    {
-        if (!is_int($amount)) {
-            throw new NonIntegerAmount;
-        }
-
-        return Bankroll::create([
-            'user_id' => $this->id,
-            'amount' => $amount * -1
-        ]);
-    }
-
 
     /**
     * Returns the user's bankroll transactions

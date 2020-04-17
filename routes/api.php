@@ -20,8 +20,7 @@ use Illuminate\Http\Request;
 
 // Bankroll Routes
 Route::prefix('bankroll')->name('bankroll.')->middleware(['auth', 'setup.complete'])->group(function () {
-    Route::post('add', 'BankrollController@add')->name('add');
-    Route::post('withdraw', 'BankrollController@withdraw')->name('withdraw');
+    Route::post('create', 'BankrollController@create')->name('create');
     Route::get('{bankrollTransaction}', 'BankrollController@view')->name('view');
     Route::patch('{bankrollTransaction}/update', 'BankrollController@update')->name('update');
     Route::delete('{bankrollTransaction}/delete', 'BankrollController@delete')->name('delete');

@@ -39,7 +39,7 @@ class SetupController extends Controller
         // If bankroll was supplied during setup, create the Bankroll Transaction which will also update
         // the user's bankroll.
         if ($request->bankroll && $request->bankroll > 0) {
-            auth()->user()->addToBankroll($request->bankroll);
+            auth()->user()->createBankrollTransaction($request->bankroll);
         }
 
         auth()->user()->completeSetup();

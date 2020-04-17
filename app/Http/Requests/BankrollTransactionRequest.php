@@ -14,7 +14,7 @@ class BankrollTransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            'amount' => 'required|integer|min:0',
+            'amount' => 'required|integer',
         ];
     }
 }

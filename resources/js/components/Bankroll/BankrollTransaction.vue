@@ -50,12 +50,6 @@ export default {
 
 			})
 		},
-		addWithdrawal() {
-			this.addBankrollTransaction({
-				date: new Date(),
-				amount: this.bankrollTransactionAmount * -1,
-			})
-		},
 		...mapActions(['addBankrollTransaction'])
 	},
 }
