@@ -15,6 +15,8 @@ class Bankroll extends Model
         'amount' => 'integer',
     ];
 
+    protected $with = [];
+
     /**
     * Returns the user the Bankroll belongs to
     *

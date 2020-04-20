@@ -2295,18 +2295,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       this.addBankrollTransaction({
-        amount: amount
+        amount: amount,
+        comments: this.comments
       }).then(function (res) {
         _this.$emit('close');
 
         if (amount < 0) {
-          _this.$snotify.success("Withdrew \xA3" + amount * -1 + ' from your bankroll.');
+          _this.$snotify.warning("Withdrew \xA3" + amount * -1 + ' from your bankroll.');
         } else {
-          _this.$snotify.success("Withdrew \xA3" + amount + ' from your bankroll.');
+          _this.$snotify.success("Deposited \xA3" + amount + ' to your bankroll.');
         }
-      })["catch"](function (err) {
-        console.log(err);
 
+        _this.amount = 0;
+        _this.comments = '';
+      })["catch"](function (err) {
         _this.$snotify.error("Something went wrong.  Please try again.");
       });
     }
@@ -2358,6 +2360,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'BankrollTransactionDetails',
   props: {
@@ -2365,8 +2372,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      date: this.bankrollTransaction.date,
+      date: new Date(this.bankrollTransaction.updated_at).toISOString(),
       amount: this.bankrollTransaction.amount,
+      comments: this.bankrollTransaction.comments,
       errors: {}
     };
   },
@@ -2428,6 +2436,9 @@ __webpack_require__.r(__webpack_exports__);
     bankrollTransaction: Object
   },
   computed: {
+    transactionDate: function transactionDate() {
+      return new Date(this.bankrollTransaction.updated_at).toDateString();
+    },
     transactionAmount: function transactionAmount() {
       return Vue.prototype.currency.format(this.bankrollTransaction.amount);
     }
@@ -42394,7 +42405,7 @@ var render = function() {
           on: {
             click: function($event) {
               $event.preventDefault()
-              return _vm.addTransaction(_vm.amount)
+              return _vm.addTransaction(_vm.withdrawalAmount)
             }
           }
         },
@@ -42409,7 +42420,7 @@ var render = function() {
           on: {
             click: function($event) {
               $event.preventDefault()
-              return _vm.addTransaction(_vm.withdrawalAmount)
+              return _vm.addTransaction(_vm.amount)
             }
           }
         },
@@ -42465,7 +42476,6 @@ var render = function() {
               attrs: {
                 type: "date",
                 "input-class": "w-full p-3",
-                "minute-step": 5,
                 auto: "",
                 title: "Bankroll Transaction Date"
               },
@@ -42504,6 +42514,34 @@ var render = function() {
                   return
                 }
                 _vm.amount = $event.target.value
+              }
+            }
+          })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "flex w-full items-center mb-3" }, [
+        _c("div", { staticClass: "w-1/4 font-medium" }, [_vm._v("Comments")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "w-3/4" }, [
+          _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.comments,
+                expression: "comments"
+              }
+            ],
+            class: { "border-red-700": _vm.errors.comments },
+            attrs: { placeholder: "Comments", rows: "4" },
+            domProps: { value: _vm.comments },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.comments = $event.target.value
               }
             }
           })
@@ -42582,7 +42620,7 @@ var render = function() {
     },
     [
       _c("div", { staticClass: "uppercase" }, [
-        _vm._v(_vm._s(_vm.bankrollTransaction.date))
+        _vm._v(_vm._s(_vm.transactionDate))
       ]),
       _vm._v(" "),
       _c(
@@ -65421,67 +65459,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 // vuex
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
+  strict: true,
   state: {
     user: {
       email: 'example@email.com'
     },
     // bankroll: 8575,
-    bankrollTransactions: [{
-      id: 1,
-      date: 'Today',
-      amount: -30
-    }, {
-      id: 2,
-      date: 'Yesterday',
-      amount: 75.85
-    }, {
-      id: 3,
-      date: 'Monday 25th March',
-      amount: -60.00
-    }, {
-      id: 4,
-      date: 'Saturday 23rd March',
-      amount: 212
-    }, {
-      id: 5,
-      date: 'Friday 22nd March',
-      amount: 118
-    }, {
-      id: 6,
-      date: 'Thursday 21st March',
-      amount: 45
-    }, {
-      id: 7,
-      date: 'Sunday 16th March',
-      amount: -214
-    }, {
-      id: 8,
-      date: 'Saturday 15th March',
-      amount: -200
-    }, {
-      id: 9,
-      date: 'Friday 14th March',
-      amount: 415
-    }, {
-      id: 10,
-      date: 'Sunday 9th March',
-      amount: 85
-    }, {
-      id: 11,
-      date: 'Saturday 8th March',
-      amount: 725
-    }]
+    bankrollTransactions: []
   },
   getters: {
     deposits: function deposits(state) {
@@ -65512,21 +65501,20 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   },
   mutations: {
     ADD_BANKROLL_TRANSACTION: function ADD_BANKROLL_TRANSACTION(state, transaction) {
-      state.bankrollTransactions.unshift(_objectSpread({
-        id: 55
-      }, transaction));
+      state.bankrollTransactions.unshift(transaction);
     }
   },
   actions: {
     addBankrollTransaction: function addBankrollTransaction(_ref, transaction) {
       var commit = _ref.commit;
       axios.post('/api/bankroll/create', {
-        amount: transaction.amount
-      }).then(function () {
-        console.log('success store');
-      })["catch"](function () {
-        console.log('error store');
-      }); // commit('ADD_BANKROLL_TRANSACTION', transaction)
+        amount: transaction.amount,
+        comments: transaction.comments
+      }).then(function (response) {
+        commit('ADD_BANKROLL_TRANSACTION', response.data.bankrollTransaction);
+      })["catch"](function (err) {
+        console.log('There was an error adding the bankroll transaction.');
+      });
     }
   }
 });

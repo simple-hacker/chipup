@@ -14,7 +14,7 @@
     @apply text-xs text-red-700 mt-2 mb-2;
 }
 
-input, select {
+input, select, textarea {
     @apply w-full bg-muted-light border border-muted-dark rounded p-3;
 }
 

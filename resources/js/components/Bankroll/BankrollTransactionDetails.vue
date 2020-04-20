@@ -9,7 +9,6 @@
                         v-model="date"
                         type="date"
                         input-class="w-full p-3"
-                        :minute-step="5"
                         auto
                         title="Bankroll Transaction Date"
                         class="w-full bg-muted-light border border-muted-dark rounded border theme-green"
@@ -22,6 +21,12 @@
                 <div class="w-1/4 font-medium">Amount</div>
                 <div class="w-3/4">
                     <input v-model="amount" type="number" step="0.01" :class="{ 'border-red-700' : errors.amount }"/>
+                </div>
+            </div>
+            <div class="flex w-full items-center mb-3">
+                <div class="w-1/4 font-medium">Comments</div>
+                <div class="w-3/4">
+                    <textarea v-model="comments" placeholder="Comments" rows=4 :class="{ 'border-red-700' : errors.comments }"></textarea>
                 </div>
             </div>
         </div>
@@ -40,8 +45,9 @@ export default {
     },
     data() {
         return {
-            date: this.bankrollTransaction.date,
+            date: new Date(this.bankrollTransaction.updated_at).toISOString(),
             amount: this.bankrollTransaction.amount,
+            comments: this.bankrollTransaction.comments,
             errors: {},
         }
     },

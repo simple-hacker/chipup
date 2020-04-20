@@ -15,8 +15,8 @@
 			<textarea v-model="comments" placeholder="Add comments" rows=4 class="w-full xl:w-3/4 rounded border border-muted-dark bg-background p-2"></textarea>
 		</div>
 		<div class="flex justify-around">
-			<button @click.prevent="addTransaction(amount)" class="w-1/3 p-3 text-lg uppercase font-bold rounded text-white capitalize bg-red-500">Withdraw</button>
-			<button @click.prevent="addTransaction(withdrawalAmount)" class="w-1/3 p-3 text-lg uppercase font-bold rounded text-white capitalize bg-green-500">Deposit</button>
+			<button @click.prevent="addTransaction(withdrawalAmount)" class="w-1/3 p-3 text-lg uppercase font-bold rounded text-white capitalize bg-red-500">Withdraw</button>
+			<button @click.prevent="addTransaction(amount)" class="w-1/3 p-3 text-lg uppercase font-bold rounded text-white capitalize bg-green-500">Deposit</button>
 		</div>
 	</div>
 </template>
@@ -41,18 +41,20 @@ export default {
     methods: {
 		addTransaction: function(amount) {
 			this.addBankrollTransaction({
-				amount: amount
+				amount: amount,
+				comments: this.comments
 			})
 			.then((res) =>{
 				this.$emit('close');
 				if (amount < 0) {
-					this.$snotify.success(`Withdrew £`+(amount * -1)+' from your bankroll.');
+					this.$snotify.warning(`Withdrew £`+(amount * -1)+' from your bankroll.');
 				} else {
-					this.$snotify.success(`Withdrew £`+amount+' from your bankroll.');
+					this.$snotify.success(`Deposited £`+amount+' to your bankroll.');
 				}
+				this.amount = 0
+				this.comments = ''
 			})
 			.catch((err) => {
-				console.log(err)
 				this.$snotify.error(`Something went wrong.  Please try again.`);
 			})
 		},

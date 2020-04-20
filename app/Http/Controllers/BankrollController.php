@@ -17,7 +17,7 @@ class BankrollController extends Controller
     */
     public function index()
     {
-        return auth()->user()->bankrollTransactions();
+        return auth()->user()->bankrollTransactions;
     }
 
     /**
@@ -65,12 +65,10 @@ class BankrollController extends Controller
     */
     public function delete(Bankroll $bankrollTransaction)
     {
-        $this->authorize('update', $bankrollTransaction);
-        
-        $bankrollTransaction->delete();
+        $this->authorize('update', $bankrollTransaction);      
 
         return [
-            'success' => true
+            'success' => $bankrollTransaction->delete()
         ];
     }
 }

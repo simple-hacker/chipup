@@ -47,10 +47,6 @@ class User extends Authenticatable
         'default_table_size_id' => 'integer',
     ];
 
-    protected $with = [
-        'bankrollTransactions'
-    ];
-
     /**
     * Updates the user's bankroll.
     * 
