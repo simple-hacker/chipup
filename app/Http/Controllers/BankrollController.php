@@ -10,6 +10,17 @@ use App\Http\Requests\BankrollTransactionRequest;
 class BankrollController extends Controller
 {
     /**
+    * GET method to retrieve user's bankroll transactions
+    * 
+    * @param BankrollTransactionRequest $request
+    * @return json
+    */
+    public function index()
+    {
+        return auth()->user()->bankrollTransactions();
+    }
+
+    /**
     * POST method to add to the user's bankroll.
     * 
     * @param BankrollTransactionRequest $request
@@ -17,7 +28,7 @@ class BankrollController extends Controller
     */
     public function create(BankrollTransactionRequest $request)
     {
-        $bankrollTransaction = auth()->user()->createBankrollTransaction($request->amount);
+        $bankrollTransaction = auth()->user()->createBankrollTransaction($request->validated());
 
         return [
             'success' => true,

@@ -2,10 +2,8 @@
 
 namespace App;
 
-use App\Attributes\Stake;
 use App\Transactions\Bankroll;
 use Illuminate\Support\Carbon;
-use App\Exceptions\NonIntegerAmount;
 use App\Exceptions\CashGameInProgress;
 use App\Exceptions\TournamentInProgress;
 use Illuminate\Notifications\Notifiable;
@@ -60,10 +58,6 @@ class User extends Authenticatable
     */
     public function updateBankroll($amount)
     {   
-        if (!is_int($amount)) {
-            throw new NonIntegerAmount;
-        }
-
         if ($amount > 0) {
             $this->increment('bankroll', $amount);
         } else {
@@ -82,15 +76,12 @@ class User extends Authenticatable
     * @param integer amount
     * @return void
     */
-    public function createBankrollTransaction($amount)
+    public function createBankrollTransaction($transaction)
     {
-        if (!is_int($amount)) {
-            throw new NonIntegerAmount;
-        }
-
         return Bankroll::create([
             'user_id' => $this->id,
-            'amount' => $amount
+            'amount' => $transaction['amount'],
+            'comments' => $transaction['comments'] ?? null,
         ]);
     }
 

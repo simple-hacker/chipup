@@ -15,6 +15,7 @@ class BankrollTransactionRequest extends FormRequest
     {
         return [
             'amount' => 'required|integer',
+            'comments' => 'sometimes|nullable|string'
         ];
     }
 }

@@ -12,6 +12,7 @@ class Bankroll extends Model
 
     protected $casts = [
         'user_id' => 'integer',
+        'amount' => 'integer',
     ];
 
     /**

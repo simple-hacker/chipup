@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
     // Bankroll Routes
     Route::prefix('bankroll')->name('bankroll.')->group(function () {
+        Route::get('/', 'BankrollController@index')->name('index');
         Route::post('create', 'BankrollController@create')->name('create');
         Route::get('{bankrollTransaction}', 'BankrollController@view')->name('view');
         Route::patch('{bankrollTransaction}/update', 'BankrollController@update')->name('update');

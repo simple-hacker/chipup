@@ -32,15 +32,6 @@ class UserTest extends TestCase
         $this->assertEquals($user->fresh()->bankroll, 10000);
     }
 
-    public function testBankrollUpdateMustBeInteger()
-    {
-        $this->expectException(\App\Exceptions\NonIntegerAmount::class);
-      
-        $user = factory('App\User')->create();
-
-        $user->updateBankroll(50.99);
-    }
-
     public function testGetTheLiveCashGameForAUser()
     {
         $user = factory('App\User')->create();
