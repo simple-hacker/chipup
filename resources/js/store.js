@@ -92,7 +92,16 @@ const store = new Vuex.Store({
     },
     actions: {
         addBankrollTransaction({ commit }, transaction) {
-            commit('ADD_BANKROLL_TRANSACTION', transaction)
+            axios.post('/api/bankroll/create', {
+                amount: transaction.amount
+            })
+            .then(() => {
+                console.log('success store')
+            })
+            .catch(() => {
+                console.log('error store')
+            })
+            // commit('ADD_BANKROLL_TRANSACTION', transaction)
         }
     }
 })

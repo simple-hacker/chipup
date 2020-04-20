@@ -2281,25 +2281,34 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   props: ['title', 'closeBtn'],
   data: function data() {
     return {
-      bankrollTransactionAmount: 0,
+      amount: 0,
       comments: ''
     };
   },
+  computed: {
+    withdrawalAmount: function withdrawalAmount() {
+      return this.amount * -1;
+    }
+  },
   methods: _objectSpread({
-    save: function save() {
-      this.$emit('close');
-      this.$snotify.success('Well done');
-    },
     addTransaction: function addTransaction(amount) {
       var _this = this;
 
       this.addBankrollTransaction({
-        amount: this.bankrollTransactionAmount
-      }).then(function () {
+        amount: amount
+      }).then(function (res) {
         _this.$emit('close');
 
-        _this.$snotify.success('Well done');
-      })["catch"](function () {});
+        if (amount < 0) {
+          _this.$snotify.success("Withdrew \xA3" + amount * -1 + ' from your bankroll.');
+        } else {
+          _this.$snotify.success("Withdrew \xA3" + amount + ' from your bankroll.');
+        }
+      })["catch"](function (err) {
+        console.log(err);
+
+        _this.$snotify.error("Something went wrong.  Please try again.");
+      });
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['addBankrollTransaction']))
 });
@@ -4441,7 +4450,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".vue-js-switch[data-v-5515685a] {\n  font-size: 16px !important;\n}\n.fade-enter-active[data-v-5515685a], .fade-leave-active[data-v-5515685a] {\n  transition: background-color 0.25s ease-out;\n}\n.fade-enter[data-v-5515685a], .fade-leave-to[data-v-5515685a] {\n  background-color: 0;\n}\n", ""]);
+exports.push([module.i, ".fade-enter-active[data-v-5515685a], .fade-leave-active[data-v-5515685a] {\n  transition: background-color 0.25s ease-out;\n}\n.fade-enter[data-v-5515685a], .fade-leave-to[data-v-5515685a] {\n  background-color: 0;\n}\n", ""]);
 
 // exports
 
@@ -42338,20 +42347,20 @@ var render = function() {
           {
             name: "model",
             rawName: "v-model",
-            value: _vm.bankrollTransactionAmount,
-            expression: "bankrollTransactionAmount"
+            value: _vm.amount,
+            expression: "amount"
           }
         ],
         staticClass:
           "w-1/2 rounded border border-muted-dark bg-background px-4 py-2 text-3xl",
-        attrs: { type: "text" },
-        domProps: { value: _vm.bankrollTransactionAmount },
+        attrs: { type: "number" },
+        domProps: { value: _vm.amount },
         on: {
           input: function($event) {
             if ($event.target.composing) {
               return
             }
-            _vm.bankrollTransactionAmount = $event.target.value
+            _vm.amount = $event.target.value
           }
         }
       })
@@ -42388,7 +42397,12 @@ var render = function() {
         {
           staticClass:
             "w-1/3 p-3 text-lg uppercase font-bold rounded text-white capitalize bg-red-500",
-          on: { click: _vm.save }
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.addTransaction(_vm.amount)
+            }
+          }
         },
         [_vm._v("Withdraw")]
       ),
@@ -42398,7 +42412,12 @@ var render = function() {
         {
           staticClass:
             "w-1/3 p-3 text-lg uppercase font-bold rounded text-white capitalize bg-green-500",
-          on: { click: _vm.save }
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.addTransaction(_vm.withdrawalAmount)
+            }
+          }
         },
         [_vm._v("Deposit")]
       )
@@ -65507,7 +65526,13 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   actions: {
     addBankrollTransaction: function addBankrollTransaction(_ref, transaction) {
       var commit = _ref.commit;
-      commit('ADD_BANKROLL_TRANSACTION', transaction);
+      axios.post('/api/bankroll/create', {
+        amount: transaction.amount
+      }).then(function () {
+        console.log('success store');
+      })["catch"](function () {
+        console.log('error store');
+      }); // commit('ADD_BANKROLL_TRANSACTION', transaction)
     }
   }
 });

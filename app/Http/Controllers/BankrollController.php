@@ -17,10 +17,11 @@ class BankrollController extends Controller
     */
     public function create(BankrollTransactionRequest $request)
     {
-        auth()->user()->createBankrollTransaction($request->amount);
+        $bankrollTransaction = auth()->user()->createBankrollTransaction($request->amount);
 
         return [
             'success' => true,
+            'bankrollTransaction' => $bankrollTransaction
         ];
     }
 
@@ -36,11 +37,12 @@ class BankrollController extends Controller
         $this->authorize('update', $bankrollTransaction);
 
         $bankrollTransaction->update([
-            'amount' => $request->amount
+            'amount' => $request->amount,
         ]);
 
         return [
-            'success' => true
+            'success' => true,
+            'bankrollTransaction' => $bankrollTransaction
         ];
     }
 
