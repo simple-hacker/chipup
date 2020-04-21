@@ -76,7 +76,7 @@ import App from '@/App.vue'
 import NotFound from '@/NotFound.vue'
 
 import routes from '@/routes.js'
-import store from '@/store.js'
+import store from '@store/store.js'
 
 import '@fortawesome/fontawesome-free/css/all.css'
 

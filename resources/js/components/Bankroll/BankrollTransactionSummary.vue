@@ -21,7 +21,7 @@ export default {
 			return new Date(this.bankrollTransaction.updated_at).toDateString()
 		},
 		transactionAmount() {
-			return Vue.prototype.currency.format(this.bankrollTransaction.amount);
+			return Vue.prototype.currency.format(this.bankrollTransaction.amount / 100);
 		}
 	}
 }

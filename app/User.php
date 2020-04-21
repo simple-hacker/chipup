@@ -88,7 +88,7 @@ class User extends Authenticatable
     */
     public function bankrollTransactions()
     {
-        return $this->hasMany('App\Transactions\Bankroll');
+        return $this->hasMany('App\Transactions\Bankroll')->orderByDesc('updated_at');
     }
 
 

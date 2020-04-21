@@ -4,6 +4,8 @@ mix.webpackConfig({
    resolve: {
       extensions: ['.js', '.vue', '.json'],
       alias: {
+         '@modules': __dirname + '/resources/js/store/modules',
+         '@store': __dirname + '/resources/js/store',
          '@components': __dirname + '/resources/js/components',
          '@views': __dirname + '/resources/js/views',
          '@' : __dirname + '/resources/js',

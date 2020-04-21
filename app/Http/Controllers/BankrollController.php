@@ -17,7 +17,7 @@ class BankrollController extends Controller
     */
     public function index()
     {
-        return auth()->user()->bankrollTransactions;
+        return ['bankrollTransactions' => auth()->user()->bankrollTransactions];
     }
 
     /**

@@ -46,7 +46,7 @@ export default {
     data() {
         return {
             date: new Date(this.bankrollTransaction.updated_at).toISOString(),
-            amount: this.bankrollTransaction.amount,
+            amount: this.bankrollTransaction.amount / 100,
             comments: this.bankrollTransaction.comments,
             errors: {},
         }

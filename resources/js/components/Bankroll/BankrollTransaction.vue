@@ -58,7 +58,7 @@ export default {
 				this.$snotify.error(`Something went wrong.  Please try again.`);
 			})
 		},
-		...mapActions(['addBankrollTransaction'])
+		...mapActions('bankroll', ['addBankrollTransaction'])
 	},
 }
 </script>

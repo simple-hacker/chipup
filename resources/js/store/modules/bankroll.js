@@ -1,17 +1,7 @@
-// vuex
-import Vue from 'vue'
-import Vuex from 'vuex'
-
-Vue.use(Vuex)
-
-const store = new Vuex.Store({
-    strict: true,
+export default {
+    namespaced: true,
     state: {
-        user: {
-            email: 'example@email.com'
-        },
-        // bankroll: 8575,
-        bankrollTransactions: []
+        bankrollTransactions: [],
     },
     getters: {
         deposits: state => {
@@ -21,24 +11,36 @@ const store = new Vuex.Store({
             return state.bankrollTransactions.filter(bankrollTransaction => bankrollTransaction.amount <= 0)
         },
         depositsTotal: (state, getters) => {
-            return getters.deposits.reduce((total, deposit) => total + deposit.amount, 0)
+            return getters.deposits.reduce((total, deposit) => total + deposit.amount, 0) / 100
         },
         withdrawalsTotal: (state, getters) => {
-            return getters.withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0)
+            return getters.withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0) / 100
         },
         bankroll: state => {
-            return state.bankrollTransactions.reduce((total, transaction) => total + transaction.amount, 0)
+            return state.bankrollTransactions.reduce((total, transaction) => total + transaction.amount, 0) /100
         }
     },
     mutations: {
+        ASSIGN_BANKROLL_TRANSACTIONS (state, transactions) {
+            state.bankrollTransactions = transactions
+        },
         ADD_BANKROLL_TRANSACTION (state, transaction) {
             state.bankrollTransactions.unshift(transaction)
         }
     },
     actions: {
+        getBankrollTransactions({ commit}) {
+            axios.get('/api/bankroll/')
+            .then((response) => {
+                commit('ASSIGN_BANKROLL_TRANSACTIONS', response.data.bankrollTransactions)
+            })
+            .catch((err) => {
+                console.log('There was an error retrieving the user\'s bankroll transactions')
+            })
+        },
         addBankrollTransaction({ commit }, transaction) {
             axios.post('/api/bankroll/create', {
-                amount: transaction.amount,
+                amount: transaction.amount * 100,
                 comments: transaction.comments
             })
             .then((response) => {
@@ -49,6 +51,4 @@ const store = new Vuex.Store({
             })
         }
     }
-})
-
-export default store
+}

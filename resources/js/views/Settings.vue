@@ -93,7 +93,7 @@
                     <bankroll-transaction />
                 </div>
                 <div class="col-span-2 md:col-span-1 mt-4 md:mt-0 p-1 md:p-2 h-96 overflow-y-auto scrolling-touch border border-background">
-                    <div v-for="bankrollTransaction in bankrollTransactions"
+                    <div v-for="bankrollTransaction in bankroll.bankrollTransactions"
                         :key="bankrollTransaction.id"
                         @click.prevent="showTransactionDetails(bankrollTransaction)"
                         class="mb-2">
@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import BankrollTransaction from '@components/Bankroll/BankrollTransaction'
 import BankrollTransactionSummary from '@components/Bankroll/BankrollTransactionSummary'
 import BankrollTransactionDetails from '@components/Bankroll/BankrollTransactionDetails'
@@ -152,7 +152,7 @@ export default {
         showTransactionDetails: function (bankrollTransaction) {
             this.$modal.show(BankrollTransactionDetails, {
                 // Modal props
-                bankrollTransaction: bankrollTransaction,
+                bankrollTransaction,
             }, {
                 // Modal Options
                 classes: 'bg-background text-white p-1 md:p-3 rounded-lg border border-muted-dark',
@@ -163,9 +163,8 @@ export default {
         }
     },
     computed: {
-        ...mapState(['bankroll', 'bankrollTransactions']),
-        ...mapGetters(['deposits', 'withdrawals'])
-    }
+        ...mapState(['bankroll']),
+    },
 }
 </script>
 

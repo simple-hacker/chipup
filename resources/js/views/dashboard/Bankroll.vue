@@ -79,7 +79,7 @@ export default {
 	},
 	computed: {
 		...mapState(['bankroll']),
-		...mapGetters(['bankroll', 'depositsTotal', 'withdrawalsTotal']),
+		...mapGetters('bankroll', ['bankroll', 'depositsTotal', 'withdrawalsTotal']),
 		series() {
 			return [
 				{
