@@ -44,18 +44,18 @@ export default {
 				amount: amount,
 				comments: this.comments
 			})
-			.then((res) =>{
+			.then(response =>{
 				this.$emit('close');
 				if (amount < 0) {
-					this.$snotify.warning(`Withdrew £`+(amount * -1)+' from your bankroll.');
+					this.$snotify.warning(`Withdrew £`+(amount * -1).toLocaleString()+' from your bankroll.')
 				} else {
-					this.$snotify.success(`Deposited £`+amount+' to your bankroll.');
+					this.$snotify.success(`Deposited £`+parseInt(amount).toLocaleString()+' to your bankroll.')
 				}
 				this.amount = 0
 				this.comments = ''
 			})
-			.catch((err) => {
-				this.$snotify.error(`Something went wrong.  Please try again.`);
+			.catch(error => {
+				this.$snotify.error(error.response.data.message);
 			})
 		},
 		...mapActions('bankroll', ['addBankrollTransaction'])

@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
 	name: 'BankrollTransactionDetails',
     props: {
@@ -63,9 +65,15 @@ export default {
 					{
 						title: 'Yes, delete.',
 						handler: () => { 
-                            this.$modal.hide('dialog');
-                            this.$emit('close');
-                            this.$snotify.warning('Successfully deleted.');
+                            this.deleteBankrollTransaction(this.bankrollTransaction)
+                            .then(response => {
+                                this.$modal.hide('dialog');
+                                this.$emit('close');
+                                this.$snotify.warning('Successfully deleted bankroll transaction.');
+                            })
+                            .catch(error => {
+                                this.$snotify.error('Error: '+error.response.data.message);
+                            })
 						},
 						class: 'bg-red-500 text-white'
 					},
@@ -74,9 +82,23 @@ export default {
 			})
         },
         saveTransaction: function () {
-            this.$emit('close');
-            this.$snotify.success('Saved changes!');
-        }
+            this.updateBankrollTransaction({
+                transaction: this.bankrollTransaction,
+                data: {
+                    amount: this.amount,
+                    comments: this.comments
+                }
+            })
+            .then(response => {
+                this.$modal.hide('dialog');
+                this.$emit('close');
+                this.$snotify.success('Successfully updated bankroll transaction.');
+            })
+            .catch(error => {
+                this.$snotify.error('Error: '+error.response.data.message);
+            })
+        },
+        ...mapActions('bankroll', ['updateBankrollTransaction', 'deleteBankrollTransaction'])
 	}
 }
 </script>

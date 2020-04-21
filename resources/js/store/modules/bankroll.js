@@ -21,33 +21,62 @@ export default {
         }
     },
     mutations: {
-        ASSIGN_BANKROLL_TRANSACTIONS (state, transactions) {
+        ASSIGN_BANKROLL_TRANSACTIONS(state, transactions) {
             state.bankrollTransactions = transactions
         },
-        ADD_BANKROLL_TRANSACTION (state, transaction) {
+        ADD_BANKROLL_TRANSACTION(state, transaction) {
             state.bankrollTransactions.unshift(transaction)
+        },
+        UPDATE_BANKROLL_TRANSACTION(state, transaction) {
+            const index = state.bankrollTransactions.findIndex(bankrollTransaction => bankrollTransaction.id == transaction.id)
+            state.bankrollTransactions.splice(index, 1, transaction)
+        },
+        REMOVE_BANKROLL_TRANSACTION(state, transaction) {
+            const index = state.bankrollTransactions.indexOf(transaction)
+            state.bankrollTransactions.splice(index, 1)
         }
     },
     actions: {
-        getBankrollTransactions({ commit}) {
-            axios.get('/api/bankroll/')
-            .then((response) => {
+        getBankrollTransactions({ commit }) {
+            return axios.get('/api/bankroll/')
+            .then(response => {
                 commit('ASSIGN_BANKROLL_TRANSACTIONS', response.data.bankrollTransactions)
             })
-            .catch((err) => {
-                console.log('There was an error retrieving the user\'s bankroll transactions')
+            .catch(error => {
+                throw error
             })
         },
         addBankrollTransaction({ commit }, transaction) {
-            axios.post('/api/bankroll/create', {
+            return axios.post('/api/bankroll/create', {
                 amount: transaction.amount * 100,
                 comments: transaction.comments
             })
-            .then((response) => {
+            .then(response => {
                 commit('ADD_BANKROLL_TRANSACTION', response.data.bankrollTransaction)
             })
-            .catch((err) => {
-                console.log('There was an error adding the bankroll transaction.')
+            .catch(error => {
+                throw error
+            })
+        },
+        updateBankrollTransaction({ commit }, payload) {
+            return axios.patch('/api/bankroll/'+payload.transaction.id+'/update', {
+                amount: payload.data.amount * 100,
+                comments: payload.data.comments
+            })
+            .then(response => {
+                commit('UPDATE_BANKROLL_TRANSACTION', response.data.bankrollTransaction)
+            })
+            .catch(error => {
+                throw error
+            })
+        },
+        deleteBankrollTransaction({ commit }, transaction) {
+            return axios.delete('/api/bankroll/'+transaction.id+'/delete/')
+            .then(response => {
+                commit('REMOVE_BANKROLL_TRANSACTION', transaction)
+            })
+            .catch(error => {
+                throw error
             })
         }
     }

@@ -2300,19 +2300,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.addBankrollTransaction({
         amount: amount,
         comments: this.comments
-      }).then(function (res) {
+      }).then(function (response) {
         _this.$emit('close');
 
         if (amount < 0) {
-          _this.$snotify.warning("Withdrew \xA3" + amount * -1 + ' from your bankroll.');
+          _this.$snotify.warning("Withdrew \xA3" + (amount * -1).toLocaleString() + ' from your bankroll.');
         } else {
-          _this.$snotify.success("Deposited \xA3" + amount + ' to your bankroll.');
+          _this.$snotify.success("Deposited \xA3" + parseInt(amount).toLocaleString() + ' to your bankroll.');
         }
 
         _this.amount = 0;
         _this.comments = '';
-      })["catch"](function (err) {
-        _this.$snotify.error("Something went wrong.  Please try again.");
+      })["catch"](function (error) {
+        _this.$snotify.error(error.response.data.message);
       });
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('bankroll', ['addBankrollTransaction']))
@@ -2329,6 +2329,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2368,6 +2375,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'BankrollTransactionDetails',
   props: {
@@ -2381,7 +2389,7 @@ __webpack_require__.r(__webpack_exports__);
       errors: {}
     };
   },
-  methods: {
+  methods: _objectSpread({
     deleteTransaction: function deleteTransaction() {
       var _this = this;
 
@@ -2393,21 +2401,40 @@ __webpack_require__.r(__webpack_exports__);
         }, {
           title: 'Yes, delete.',
           handler: function handler() {
-            _this.$modal.hide('dialog');
+            _this.deleteBankrollTransaction(_this.bankrollTransaction).then(function (response) {
+              _this.$modal.hide('dialog');
 
-            _this.$emit('close');
+              _this.$emit('close');
 
-            _this.$snotify.warning('Successfully deleted.');
+              _this.$snotify.warning('Successfully deleted bankroll transaction.');
+            })["catch"](function (error) {
+              _this.$snotify.error('Error: ' + error.response.data.message);
+            });
           },
           "class": 'bg-red-500 text-white'
         }]
       });
     },
     saveTransaction: function saveTransaction() {
-      this.$emit('close');
-      this.$snotify.success('Saved changes!');
+      var _this2 = this;
+
+      this.updateBankrollTransaction({
+        transaction: this.bankrollTransaction,
+        data: {
+          amount: this.amount,
+          comments: this.comments
+        }
+      }).then(function (response) {
+        _this2.$modal.hide('dialog');
+
+        _this2.$emit('close');
+
+        _this2.$snotify.success('Successfully updated bankroll transaction.');
+      })["catch"](function (error) {
+        _this2.$snotify.error('Error: ' + error.response.data.message);
+      });
     }
-  }
+  }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('bankroll', ['updateBankrollTransaction', 'deleteBankrollTransaction']))
 });
 
 /***/ }),
@@ -3551,6 +3578,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   data: function data() {
     return {
+      refreshKey: 0,
       email: '',
       current_password: '',
       new_password: '',
@@ -65508,26 +65536,55 @@ __webpack_require__.r(__webpack_exports__);
     },
     ADD_BANKROLL_TRANSACTION: function ADD_BANKROLL_TRANSACTION(state, transaction) {
       state.bankrollTransactions.unshift(transaction);
+    },
+    UPDATE_BANKROLL_TRANSACTION: function UPDATE_BANKROLL_TRANSACTION(state, transaction) {
+      var index = state.bankrollTransactions.findIndex(function (bankrollTransaction) {
+        return bankrollTransaction.id == transaction.id;
+      });
+      state.bankrollTransactions.splice(index, 1, transaction);
+    },
+    REMOVE_BANKROLL_TRANSACTION: function REMOVE_BANKROLL_TRANSACTION(state, transaction) {
+      var index = state.bankrollTransactions.indexOf(transaction);
+      state.bankrollTransactions.splice(index, 1);
     }
   },
   actions: {
     getBankrollTransactions: function getBankrollTransactions(_ref) {
       var commit = _ref.commit;
-      axios.get('/api/bankroll/').then(function (response) {
+      return axios.get('/api/bankroll/').then(function (response) {
         commit('ASSIGN_BANKROLL_TRANSACTIONS', response.data.bankrollTransactions);
-      })["catch"](function (err) {
-        console.log('There was an error retrieving the user\'s bankroll transactions');
+      })["catch"](function (error) {
+        throw error;
       });
     },
     addBankrollTransaction: function addBankrollTransaction(_ref2, transaction) {
       var commit = _ref2.commit;
-      axios.post('/api/bankroll/create', {
+      return axios.post('/api/bankroll/create', {
         amount: transaction.amount * 100,
         comments: transaction.comments
       }).then(function (response) {
         commit('ADD_BANKROLL_TRANSACTION', response.data.bankrollTransaction);
-      })["catch"](function (err) {
-        console.log('There was an error adding the bankroll transaction.');
+      })["catch"](function (error) {
+        throw error;
+      });
+    },
+    updateBankrollTransaction: function updateBankrollTransaction(_ref3, payload) {
+      var commit = _ref3.commit;
+      return axios.patch('/api/bankroll/' + payload.transaction.id + '/update', {
+        amount: payload.data.amount * 100,
+        comments: payload.data.comments
+      }).then(function (response) {
+        commit('UPDATE_BANKROLL_TRANSACTION', response.data.bankrollTransaction);
+      })["catch"](function (error) {
+        throw error;
+      });
+    },
+    deleteBankrollTransaction: function deleteBankrollTransaction(_ref4, transaction) {
+      var commit = _ref4.commit;
+      return axios["delete"]('/api/bankroll/' + transaction.id + '/delete/').then(function (response) {
+        commit('REMOVE_BANKROLL_TRANSACTION', transaction);
+      })["catch"](function (error) {
+        throw error;
       });
     }
   }

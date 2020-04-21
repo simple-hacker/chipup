@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Transactions\Bankroll;
 use App\Http\Requests\BankrollTransactionRequest;
-
 
 class BankrollController extends Controller
 {
@@ -32,7 +30,8 @@ class BankrollController extends Controller
 
         return [
             'success' => true,
-            'bankrollTransaction' => $bankrollTransaction
+            'bankrollTransaction' => $bankrollTransaction->unsetRelation('user')
+            // The user relation is added on because we modify user in BankrollTransactionObserver
         ];
     }
 
@@ -47,13 +46,11 @@ class BankrollController extends Controller
     {
         $this->authorize('update', $bankrollTransaction);
 
-        $bankrollTransaction->update([
-            'amount' => $request->amount,
-        ]);
+        $bankrollTransaction->update($request->validated());
 
         return [
             'success' => true,
-            'bankrollTransaction' => $bankrollTransaction
+            'bankrollTransaction' => $bankrollTransaction->unsetRelation('user')
         ];
     }
 
