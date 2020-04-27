@@ -16,6 +16,7 @@ class CreateBankrollTransactionsTable extends Migration
         Schema::create('bankroll_transactions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
+            $table->date('date');
             $table->bigInteger('amount');
             $table->text('comments')->nullable();
             $table->timestamps();

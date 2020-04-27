@@ -2,9 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Transactions\Bankroll;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Transactions\Bankroll;
+use Illuminate\Support\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BankrollTest extends TestCase
 {
@@ -22,6 +23,7 @@ class BankrollTest extends TestCase
         // Create a BankrollTransaction to update
         $bankrollTransaction = Bankroll::create([
             'user_id' => $user->id,
+            'date' => '2020-01-01',
             'amount' => 1000,
         ]);
         
@@ -199,5 +201,86 @@ class BankrollTest extends TestCase
                 'amount' => 50.82
             ])
             ->assertStatus(422);
+    }
+
+    public function testDateIsSetToNowWhenCreatingBankrollTransaction()
+    {
+        $this->withoutExceptionHandling();
+
+        // We don't provide a date when creating a bankroll transaction, so it defaults to now()
+        $user = $this->signIn();
+        $this->postJson(route('bankroll.create'), [
+            'amount' => 30000
+        ]);
+
+        $bankrollTransaction = $user->bankrollTransactions->first();
+
+        $this->assertEquals($bankrollTransaction->date, Carbon::today());
+    }
+
+    public function testBankrollTransactionDateCanBeUpdated()
+    {
+        $user = $this->signIn();
+        $this->postJson(route('bankroll.create'), [
+            'amount' => 30000
+        ]);
+
+        $bankrollTransaction = $user->bankrollTransactions->first();
+ 
+        // Amount must be supplied when updating a bankroll transaction
+        // because the whole purpose of a transaction is the amount, without it we might as well delete the transaction
+        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
+            'date' => '2019-12-25',
+            'amount' => 999,
+        ]);
+
+        $this->assertEquals(Carbon::create(2019, 12, 25, 0, 0, 0), $bankrollTransaction->fresh()->date);
+    }
+
+    public function testUpdatedDateCannotBeInTheFuture()
+    {
+        $user = $this->signIn();
+        $this->postJson(route('bankroll.create'), [
+            'amount' => 30000
+        ]);
+
+        $bankrollTransaction = $user->bankrollTransactions->first();
+
+        // Assert okay if changing date to today.
+        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
+            'date' => Carbon::create('today')->toDateString(),
+            'amount' => 30000,
+        ])
+        ->assertOk();
+
+        // Assert status 422 and date should fail validation for future date (tomorrow)
+        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
+            'date' => Carbon::create('tomorrow')->toDateString(),
+            'amount' => 30000,
+        ])
+        ->assertStatus(422);
+    }
+
+    public function testBankrollTransactionCommentsCanBeAddedAndUpdated()
+    {
+        $user = $this->signIn();
+        $this->postJson(route('bankroll.create'), [
+            'amount' => 30000,
+            'comments' => 'This is a comment'
+        ]);
+
+        $bankrollTransaction = $user->bankrollTransactions->first();
+        // Assert comment was adding when creating a bankroll transaction.
+        $this->assertEquals($bankrollTransaction->comments, 'This is a comment');
+
+        // Update the transaction's comments.
+        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
+            'amount' => 30000,
+            'comments' => 'Updated comments'
+        ]);
+
+        // Assert fresh copy of transaction has updated comments.
+        $this->assertEquals($bankrollTransaction->fresh()->comments, 'Updated comments');
+
     }
 }

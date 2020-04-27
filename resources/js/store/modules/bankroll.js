@@ -60,6 +60,7 @@ export default {
         },
         updateBankrollTransaction({ commit }, payload) {
             return axios.patch('/api/bankroll/'+payload.transaction.id+'/update', {
+                date: payload.data.date.split("T")[0],
                 amount: payload.data.amount * 100,
                 comments: payload.data.comments
             })

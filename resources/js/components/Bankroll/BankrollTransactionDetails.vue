@@ -6,7 +6,7 @@
                 <div class="w-1/4 font-medium">Date</div>
                 <div class="w-3/4">
                     <datetime
-                        v-model="date"
+                        :value="date"
                         type="date"
                         input-class="w-full p-3"
                         auto
@@ -45,9 +45,13 @@ export default {
     props: {
 		bankrollTransaction: Object
     },
+    created() {
+        console.log(this.bankrollTransaction.date)
+    },
     data() {
         return {
-            date: new Date(this.bankrollTransaction.updated_at).toISOString(),
+            date: this.bankrollTransaction.date.split(' ')[0],
+            // Laravel migration is a timestamp column so it can default to today's date if not supplied when creating bankroll transaction which is then casted as a Carbon object which supplies 00:00:)) as the time.
             amount: this.bankrollTransaction.amount / 100,
             comments: this.bankrollTransaction.comments,
             errors: {},
@@ -85,6 +89,7 @@ export default {
             this.updateBankrollTransaction({
                 transaction: this.bankrollTransaction,
                 data: {
+                    date: this.date,
                     amount: this.amount,
                     comments: this.comments
                 }

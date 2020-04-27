@@ -76,6 +76,7 @@ class User extends Authenticatable
     {
         return Bankroll::create([
             'user_id' => $this->id,
+            'date' => $transaction['date'] ?? date('Y-m-d'),
             'amount' => $transaction['amount'],
             'comments' => $transaction['comments'] ?? null,
         ]);
@@ -88,7 +89,7 @@ class User extends Authenticatable
     */
     public function bankrollTransactions()
     {
-        return $this->hasMany('App\Transactions\Bankroll')->orderByDesc('updated_at');
+        return $this->hasMany('App\Transactions\Bankroll')->orderByDesc('date');
     }
 
 

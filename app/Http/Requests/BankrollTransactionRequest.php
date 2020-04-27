@@ -14,6 +14,7 @@ class BankrollTransactionRequest extends FormRequest
     public function rules()
     {
         return [
+            'date' => 'sometimes|date|before:tomorrow',
             'amount' => 'required|integer',
             'comments' => 'sometimes|nullable|string'
         ];

@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BankrollTest extends TestCase
@@ -71,5 +72,15 @@ class BankrollTest extends TestCase
 
         // New bankroll should equal 8500.  (10000 + 500 + (1000 - 500) + (-1500 - 1000) = 8500)
         $this->assertEquals($user->fresh()->bankroll, 8500);
+    }
+
+    public function testBankrollTransactionDefaultDateToNow()
+    {       
+        $user = factory('App\User')->create();
+        // Create a bankroll transaction without a date.
+        $bankrollTransaction = $user->createBankrollTransaction(['amount' => 500]);
+
+        // Assert you can retrieve transaction's date and it's set to now.
+        $this->assertEquals($bankrollTransaction->fresh()->date, Carbon::today());
     }
 }

@@ -18,7 +18,7 @@ export default {
 	},
 	computed: {
 		transactionDate() {
-			return new Date(this.bankrollTransaction.updated_at).toDateString()
+			return new Date(this.bankrollTransaction.date).toDateString()
 		},
 		transactionAmount() {
 			return Vue.prototype.currency.format(this.bankrollTransaction.amount / 100);
