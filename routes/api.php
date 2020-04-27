@@ -33,6 +33,7 @@ Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
         Route::get('current', 'CashGameController@current')->name('current');
         Route::post('end', 'CashGameController@end')->name('end');  
         Route::get('', 'CashGameController@index')->name('index');
+        Route::post('create', 'CashGameController@create')->name('create');
         Route::get('{cash_game}', 'CashGameController@view')->name('view');
         Route::patch('{cash_game}', 'CashGameController@update')->name('update');
         Route::delete('{cash_game}', 'CashGameController@destroy')->name('delete');

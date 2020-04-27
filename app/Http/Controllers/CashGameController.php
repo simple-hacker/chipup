@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\CashGame;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Http\Requests\AddCashGameRequest;
+use App\Http\Requests\StartCashGameRequest;
+use App\Http\Requests\CreateCashGameRequest;
 use App\Http\Requests\UpdateCashGameRequest;
 
 class CashGameController extends Controller
@@ -13,10 +14,10 @@ class CashGameController extends Controller
     /**
     * POST method for starting a Cash Game for the authenticated user
     * 
-    * @param AddCashGameRequest $request
+    * @param StartCashGameRequest $request
     * @return json 
     */
-    public function start(AddCashGameRequest $request)
+    public function start(StartCashGameRequest $request)
     {
         try {
             $cash_game = auth()->user()->startCashGame($request->validated());
@@ -71,7 +72,7 @@ class CashGameController extends Controller
     {
         $request->validate([
             'end_time' => 'nullable|date',
-            'amount' => 'sometimes|integer|min:0'
+            'amount' => 'required|integer|min:0'
         ]);
 
         // Get the current live Cash Game if there is one.
@@ -81,10 +82,7 @@ class CashGameController extends Controller
             // If there is a live CashGame try to end if with supplied time or null
             try {
                 $end_time = ($request->end_time) ? Carbon::create($request->end_time) : null;
-                $cash_game->end($end_time);
-                if ($request->amount) {
-                    $cash_game->cashOut($request->amount);
-                }
+                $cash_game->cashOut($request->amount, $end_time);
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
@@ -111,6 +109,55 @@ class CashGameController extends Controller
             'success' => true,
             'cash_games' => auth()->user()->cashGames()->get()
         ]);
+    }
+
+    /**
+    * POST method to create a completed cash game with all required attributes.
+    * 
+    * @param CreateCashGameRequest $request
+    * @return json
+    */
+    public function create(CreateCashGameRequest $request)
+    {
+        // TODO: Validate times don't conflict with already existing cash game
+
+        if (!$request->buy_ins) {
+            throw new \Exception('At least one buy in must be supplied');
+        }
+
+        try {
+            $cash_game = auth()->user()->startCashGame($request->cash_game);
+            
+            // Add the BuyIn.
+            foreach ($request->buy_ins as $buy_in) {
+                $cash_game->addBuyIn($buy_in['amount']);
+            }
+
+            // Add the Expenses.
+            if ($request->expenses) {
+                foreach ($request->expenses as $expense) {
+                    $cash_game->addExpense($expense['amount'], $expense['comments'] ?? null);
+                }
+            }
+
+            // CashOut the CashGame straight away with CashOut amount and end_time
+            if ($request->cash_out['amount']) {
+                $end_time = ($request->cash_out['end_time']) ? Carbon::create($request->cash_out['end_time']) : null;
+                $cash_game->cashOut($request->cash_out['amount'], $end_time);
+            }
+
+            return [
+                'success' => true,
+                'cash_game' => $cash_game
+            ];
+        } catch(\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 422);
+        }
+
+
     }
 
     /**

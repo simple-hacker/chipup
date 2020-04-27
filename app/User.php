@@ -74,8 +74,7 @@ class User extends Authenticatable
     */
     public function createBankrollTransaction($transaction)
     {
-        return Bankroll::create([
-            'user_id' => $this->id,
+        return $this->bankrollTransactions()->create([
             'date' => $transaction['date'] ?? date('Y-m-d'),
             'amount' => $transaction['amount'],
             'comments' => $transaction['comments'] ?? null,

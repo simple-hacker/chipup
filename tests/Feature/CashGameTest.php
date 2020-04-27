@@ -16,7 +16,7 @@ class CashGameTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testAUserMustBeLoggedInToStartCashGame()
+    public function testUserMustBeLoggedInToStartCashGame()
     {
         factory('App\User')->create();
 
@@ -27,7 +27,7 @@ class CashGameTest extends TestCase
                 ->assertUnauthorized();
     }
 
-    public function testAUserCanStartALiveCashGame()
+    public function testUserCanStartALiveCashGame()
     {     
         $user = $this->signIn();
 
@@ -43,7 +43,7 @@ class CashGameTest extends TestCase
         $this->assertEquals($user->id, $cash_game->user_id);
     }
 
-    public function testAUserCanStartACashGameAtASpecifiedTime()
+    public function testUserCanStartACashGameAtASpecifiedTime()
     {
         $user = $this->signIn();
 
@@ -56,7 +56,7 @@ class CashGameTest extends TestCase
         $this->assertEquals($start_time, $cash_game->start_time);
     }
 
-    public function testAUserCannotStartACashGameInTheFuture()
+    public function testUserCannotStartACashGameInTheFuture()
     {
         $user = $this->signIn();
 
@@ -67,7 +67,7 @@ class CashGameTest extends TestCase
                 ->assertStatus(422);
     }
 
-    public function testAUserCanGetTheirCurrentLiveCashGame()
+    public function testUserCanGetTheirCurrentLiveCashGame()
     {
         $user = $this->signIn();
         // Start CashGame
@@ -85,7 +85,7 @@ class CashGameTest extends TestCase
         $this->assertEquals($response->json()['cash_game'], $user->liveCashGame()->toArray());
     }
 
-    public function testGettingAUsersLiveCashGameWhenNotStartedResultsInNull()
+    public function testGettingUsersLiveCashGameWhenNotStartedResultsInNull()
     {
         $user = $this->signIn();
         // Don't start CashGame
@@ -99,7 +99,7 @@ class CashGameTest extends TestCase
         $this->assertEmpty($user->liveCashGame());
     }
 
-    public function testAUserCannotStartACashGameWhenThereIsOneInProgress()
+    public function testUserCannotStartACashGameWhenThereIsOneInProgress()
     {
         $this->signIn();
 
@@ -115,7 +115,7 @@ class CashGameTest extends TestCase
                 ]);
     }
 
-    public function testAUserCanEndACashGame()
+    public function testUserCanEndACashGame()
     {
         $user = $this->signIn();
 
@@ -123,7 +123,7 @@ class CashGameTest extends TestCase
         $this->postJson(route('cash.start'), $this->getCashGameAttributes());
 
         //  End the cash game
-        $this->postJson(route('cash.end'))
+        $this->postJson(route('cash.end'), ['amount' => 1000])
                 ->assertOk();
 
         $cash_game = $user->cashGames()->first();
@@ -131,19 +131,22 @@ class CashGameTest extends TestCase
         $this->assertEquals($cash_game->end_time, Carbon::now()->toDateTimeString());      
     }
 
-    public function testAUserCanEndACashGameAtASuppliedTime()
+    public function testUserCanEndACashGameAtASuppliedTime()
     {
+        $this->withoutExceptionHandling();
+
         $user = $this->signIn();
 
         // Start one cash game
         $this->postJson(route('cash.start'), $this->getCashGameAttributes())
                 ->assertOk();
 
-        $end_time = Carbon::create('+1 hour')->toDateTimeString();
+        $end_time = Carbon::create('+30 mins')->toDateTimeString();
 
         // End the cash game
         $this->postJson(route('cash.end'), [
-                    'end_time' => $end_time
+                    'end_time' => $end_time,
+                    'amount' => 1000,
                 ])
                 ->assertOk();
 
@@ -151,7 +154,7 @@ class CashGameTest extends TestCase
         $this->assertEquals($cash_game->end_time, $end_time);
     }
 
-    public function testAUserCannotEndACashGameAtAInvalidTime()
+    public function testUserCannotEndACashGameAtAInvalidTime()
     {
         $this->signIn();
 
@@ -171,14 +174,14 @@ class CashGameTest extends TestCase
                 ->assertStatus(422);
     }
 
-    public function testAUserCannotEndACashGameWhichDoesntExist()
+    public function testUserCannotEndACashGameWhichDoesntExist()
     {
         $user = $this->signIn();
 
         // Don't Start Cash Game
 
         // End the cash game
-        $this->postJson(route('cash.end'))
+        $this->postJson(route('cash.end'), ['amount' => 1000])
                 ->assertStatus(422)
                 ->assertJsonStructure(['success', 'message'])
                 ->assertJson([
@@ -186,7 +189,7 @@ class CashGameTest extends TestCase
                 ]);
     }
 
-    public function testAUserCannotEndACashGameBeforeItsStartTime()
+    public function testUserCannotEndACashGameBeforeItsStartTime()
     {
         $start_time = Carbon::create('-1 hour')->toDateTimeString();
         $end_time = Carbon::create('-2 hour')->toDateTimeString();
@@ -198,7 +201,7 @@ class CashGameTest extends TestCase
                 ->assertOk();
 
         // End the cash game at $end_time which is before $start_time
-        $this->postJson(route('cash.end'), ['end_time' => $end_time])
+        $this->postJson(route('cash.end'), ['end_time' => $end_time, 'amount' => 1000])
                 ->assertStatus(422)
                 ->assertJsonStructure(['success', 'message'])
                 ->assertJson([
@@ -243,7 +246,7 @@ class CashGameTest extends TestCase
             ->assertOk();
     }
 
-    public function testAUserCanSupplyACashOutWhenEndingTheirSession()
+    public function testUserCanSupplyACashOutWhenEndingTheirSession()
     {
         $user = $this->signIn();
 
@@ -404,7 +407,7 @@ class CashGameTest extends TestCase
                 ->assertStatus(422);
     }
 
-    public function testAUserCanGetAllTheirCashGamesAsJson()
+    public function testUserCanGetAllTheirCashGamesAsJson()
     {   
         $user = $this->signIn();
 
@@ -438,7 +441,7 @@ class CashGameTest extends TestCase
                 ->assertNotFound();
     }
 
-    public function testAUserCanViewAValidCashGame()
+    public function testUserCanViewAValidCashGame()
     {
         $cash_game = $this->createCashGame();
 
@@ -448,7 +451,7 @@ class CashGameTest extends TestCase
                 ->assertJsonStructure(['success', 'cash_game']);
     }
 
-    public function testAUserCannotViewAnotherUsersCashGame()
+    public function testUserCannotViewAnotherUsersCashGame()
     {
         // Sign in User and create cash game
         $cash_game = $this->createCashGame();
@@ -461,7 +464,7 @@ class CashGameTest extends TestCase
                 ->assertForbidden();
     }
 
-    public function testAUserCanUpdateTheCashGameDetails()
+    public function testUserCanUpdateTheCashGameDetails()
     {
         $cash_game = $this->createCashGame();
 
@@ -487,7 +490,7 @@ class CashGameTest extends TestCase
         $this->assertDatabaseHas('cash_games', $attributes);
     }
 
-    public function testAUserCannnotUpdateAnotherUsersCashGame()
+    public function testUserCannnotUpdateAnotherUsersCashGame()
     {
         $cash_game = $this->createCashGame();
         
@@ -560,7 +563,7 @@ class CashGameTest extends TestCase
         ])->assertStatus(422);
     }
 
-    public function testAUserCanDeleteTheirCashGame()
+    public function testUserCanDeleteTheirCashGame()
     {
         $user = $this->signIn();
         $cash_game = $user->startCashGame();
@@ -571,7 +574,7 @@ class CashGameTest extends TestCase
         $this->assertEmpty($user->cashGames);
     }
 
-    public function testAUserCannotDeleteAnotherUsersCashGame()
+    public function testUserCannotDeleteAnotherUsersCashGame()
     {
         // Sign in new user and create cash game
         $cash_game = $this->createCashGame();
@@ -583,4 +586,58 @@ class CashGameTest extends TestCase
         $this->deleteJson(route('cash.delete', ['cash_game' => $cash_game->id]))
                 ->assertForbidden();
     }
+
+    public function testUserCanAddACompletedCashGame()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = $this->signIn();
+
+        $start_time = Carbon::create('-4 hour')->toDateTimeString();
+        $end_time = Carbon::create('-1 hour')->toDateTimeString();
+
+        $attributes = [
+            'cash_game' => [
+                'start_time' => $start_time,
+                'stake_id' => 2,
+                'limit_id' => 2,
+                'variant_id' => 2,
+                'table_size_id' => 2,
+                'location' => 'CasinoMK',
+            ],
+            'buy_ins' => [
+                ['amount' => 1000],
+                ['amount' => 4000],
+                ['amount' => 2500],
+            ],
+            'expenses' => [
+                ['amount' => 500, 'comments' => 'Drinks'],
+                ['amount' => 400],
+                ['amount' => 750, 'comments' => 'Tips'],
+            ],
+            'cash_out' => [
+                'end_time' => $end_time,
+                'amount' => 500,
+            ],
+        ];
+
+        $this->postJson(route('cash.create'), $attributes)->assertOk();
+
+        $cash_game = $user->cashGames()->first();
+
+        $this->assertCount(1, $user->cashGames);
+        $this->assertCount(3, $cash_game->buyIns);
+        $this->assertCount(3, $cash_game->expenses);
+        $this->assertInstanceOf(CashOut::class, $cash_game->cashOutModel);
+    }
+
+    // public function testDataMustBeValidWhenAddingCompletedCashGame()
+    // {
+        
+    // }
+
+    // public function testCannotCreateCashGameIfOneExistsBetweenStartAndEndTimes()
+    // {
+        
+    // }
 }
