@@ -6,7 +6,7 @@
                 <div class="w-1/4 font-medium">Date</div>
                 <div class="w-3/4">
                     <datetime
-                        :value="date"
+                        v-model="date"
                         type="date"
                         input-class="w-full p-3"
                         auto
@@ -44,9 +44,6 @@ export default {
 	name: 'BankrollTransactionDetails',
     props: {
 		bankrollTransaction: Object
-    },
-    created() {
-        console.log(this.bankrollTransaction.date)
     },
     data() {
         return {
