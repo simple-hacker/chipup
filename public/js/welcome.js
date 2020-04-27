@@ -1950,21 +1950,18 @@ __webpack_require__.r(__webpack_exports__);
     login: function login() {
       var _this = this;
 
-      this.btnText = '<i class="fas fa-lg fa-circle-notch fa-spin"></i>'; // Login via /sanctum/csrf-cookie to initialize Sanctum cookies, then proceed to login.
-
-      axios.get('/sanctum/csrf-cookie').then(function (response) {
-        axios.post('/login', {
-          'email': _this.email,
-          'password': _this.password,
-          'rememer': _this.remember
-        }).then(function (response) {
-          if (response.status === 200) {
-            window.location = 'dashboard';
-          }
-        })["catch"](function (e) {
-          _this.btnText = 'Login';
-          _this.errors = e.response.data.errors;
-        });
+      this.btnText = '<i class="fas fa-lg fa-circle-notch fa-spin"></i>';
+      axios.post('/login', {
+        'email': this.email,
+        'password': this.password,
+        'rememer': this.remember
+      }).then(function (response) {
+        if (response.status === 200) {
+          window.location = 'dashboard';
+        }
+      })["catch"](function (e) {
+        _this.btnText = 'Login';
+        _this.errors = e.response.data.errors;
       });
     }
   }

@@ -654,7 +654,7 @@ video {
   margin-bottom: 0.5rem;
 }
 
-input, select, textarea {
+input, select {
   width: 100%;
   background-color: #505155;
   border-width: 1px;
