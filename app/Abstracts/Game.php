@@ -88,10 +88,11 @@ abstract class Game extends Model
     * @param integer amount
     * @return Expense
     */
-    public function addExpense(int $amount)
+    public function addExpense(int $amount, string $comments = null)
     {
         return $this->expenses()->create([
-            'amount' => $amount
+            'amount' => $amount,
+            'comments' => $comments
         ]);
     }
 
