@@ -146,6 +146,25 @@ class User extends Authenticatable
     }
 
     /**
+    * Returns a collection of Cash Games where provided time is between start_time and end_time
+    * This is used to prevent adding a completed cash game between an already existing cash game.
+    * 
+    * @param Carbon $time
+    * @return hasMany
+    */
+    public function cashGamesAtTime(Carbon $time)
+    {
+        return $this->cashGames()
+                    ->where('start_time', '<=', $time)
+                    // ->where('end_time', '>=', $time)
+                    ->where(function ($query) use ($time) {
+                        $query->where('end_time', '>=', $time)
+                              ->orWhere('end_time', null);
+                    })
+                    ->count();
+    }
+
+    /**
     * Returns a collection of the user's Tournaments
     * 
     * @return hasMany

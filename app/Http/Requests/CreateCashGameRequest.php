@@ -13,7 +13,7 @@ class CreateCashGameRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'cash_game.start_time' => 'required|date|before_or_equal:now',
             'cash_game.stake_id' => 'required|integer|exists:stakes,id',
             'cash_game.variant_id' => 'required|integer|exists:variants,id',
@@ -23,11 +23,17 @@ class CreateCashGameRequest extends FormRequest
 
             'buy_ins.*.amount' => 'required|integer|min:0',
 
-            'expenses.*.amount' => 'required|integer|min:0',
+            'expenses.*.amount' => 'sometimes|integer|min:0',
             'expenses.*.comments' => 'sometimes|nullable|string',
 
-            'cash_out.end_time' =>'required|date|after_or_equal:start_time',
-            'cash_out.amount' => 'required|integer|min:0',
+            'cash_out.end_time' =>'sometimes|date|before_or_equal:now',
+            'cash_out.amount' => 'sometimes|integer|min:0',
         ];
+
+        if ($this->input('cash_game.start_time') && $this->input('cash_out.end_time')) {
+            $rules['cash_out.end_time'] .= '|after:cash_game.start_time';
+        }
+
+        return $rules;
     }
 }

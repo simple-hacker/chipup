@@ -23,8 +23,8 @@ Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
         Route::get('/', 'BankrollController@index')->name('index');
         Route::post('create', 'BankrollController@create')->name('create');
         Route::get('{bankrollTransaction}', 'BankrollController@view')->name('view');
-        Route::patch('{bankrollTransaction}/update', 'BankrollController@update')->name('update');
-        Route::delete('{bankrollTransaction}/delete', 'BankrollController@delete')->name('delete');
+        Route::patch('{bankrollTransaction}', 'BankrollController@update')->name('update');
+        Route::delete('{bankrollTransaction}', 'BankrollController@delete')->name('delete');
     });
     
     // CashGame Routes

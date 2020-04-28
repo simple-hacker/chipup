@@ -83,6 +83,11 @@ class CashGameController extends Controller
             try {
                 $end_time = ($request->end_time) ? Carbon::create($request->end_time) : null;
                 $cash_game->cashOut($request->amount, $end_time);
+
+                return response()->json([
+                    'success' => true,
+                ]);
+
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
@@ -119,14 +124,18 @@ class CashGameController extends Controller
     */
     public function create(CreateCashGameRequest $request)
     {
-        // TODO: Validate times don't conflict with already existing cash game
-
-        if (!$request->buy_ins) {
-            throw new \Exception('At least one buy in must be supplied');
-        }
-
         try {
-            $cash_game = auth()->user()->startCashGame($request->cash_game);
+            // If start_time conflicts with another cash game then reject.
+            if (auth()->user()->cashGamesAtTime(Carbon::create($request->cash_game['start_time'])) > 0) {
+                throw new \Exception('You already have another cash game at that time.');
+            }
+
+            // If no buyins were provided then reject.
+            if (!$request->buy_ins) {
+                throw new \Exception('At least one buy in must be supplied');
+            }
+
+            $cash_game = auth()->user()->cashGames()->create($request->cash_game);
             
             // Add the BuyIn.
             foreach ($request->buy_ins as $buy_in) {
@@ -141,14 +150,14 @@ class CashGameController extends Controller
             }
 
             // CashOut the CashGame straight away with CashOut amount and end_time
-            if ($request->cash_out['amount']) {
-                $end_time = ($request->cash_out['end_time']) ? Carbon::create($request->cash_out['end_time']) : null;
-                $cash_game->cashOut($request->cash_out['amount'], $end_time);
-            }
+            // If no cashout time or amount is supplied then it defaults to Now() and 0
+            $end_time = isset($request->cash_out['end_time']) ? Carbon::create($request->cash_out['end_time']) : null;
+            $cash_out = $request->cash_out['amount'] ?? 0;
+            $cash_game->cashOut($cash_out, $end_time);
 
             return [
                 'success' => true,
-                'cash_game' => $cash_game
+                'cash_game' => $cash_game->fresh()
             ];
         } catch(\Exception $e) {
             return response()->json([
@@ -156,8 +165,6 @@ class CashGameController extends Controller
                 'message' => $e->getMessage()
             ], 422);
         }
-
-
     }
 
     /**
