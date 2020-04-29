@@ -2207,7 +2207,7 @@ Vue.use(vue_form_wizard__WEBPACK_IMPORTED_MODULE_0___default.a);
 
       this.finishText = '<i class="fas fa-lg fa-circle-notch fa-spin"></i>';
       axios.post('/setup', {
-        'bankroll': this.bankroll * 100,
+        'bankroll': this.bankroll,
         'default_stake_id': this.default_stake,
         'default_limit_id': this.default_limit,
         'default_variant_id': this.default_variant,

@@ -51,7 +51,7 @@ export default {
             date: moment.utc(this.bankrollTransaction.date).format(),
             // Need to convert to UTC first otherwise vue-js-datetime in date mode doesn't factor in BST
             // https://github.com/mariomka/vue-datetime/issues/214
-            amount: this.bankrollTransaction.amount / 100,
+            amount: this.bankrollTransaction.amount,
             comments: this.bankrollTransaction.comments,
             errors: {},
         }

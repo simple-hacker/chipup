@@ -2390,7 +2390,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       date: moment__WEBPACK_IMPORTED_MODULE_1___default.a.utc(this.bankrollTransaction.date).format(),
       // Need to convert to UTC first otherwise vue-js-datetime in date mode doesn't factor in BST
       // https://github.com/mariomka/vue-datetime/issues/214
-      amount: this.bankrollTransaction.amount / 100,
+      amount: this.bankrollTransaction.amount,
       comments: this.bankrollTransaction.comments,
       errors: {}
     };
@@ -2480,7 +2480,7 @@ __webpack_require__.r(__webpack_exports__);
       return moment__WEBPACK_IMPORTED_MODULE_0___default()(this.bankrollTransaction.date).format("dddd, Do MMMM YYYY");
     },
     transactionAmount: function transactionAmount() {
-      return Vue.prototype.currency.format(this.bankrollTransaction.amount / 100);
+      return Vue.prototype.currency.format(this.bankrollTransaction.amount);
     }
   }
 });
@@ -3162,16 +3162,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes']), {
     profit: function profit() {
-      return this.cash_game.profit / 100;
+      return this.cash_game.profit;
     },
     roi: function roi() {
       var buyInTotal = this.buyInsTotal < 1 ? 1 : this.buyInsTotal;
-      return this.profit / buyInTotal * 100;
+      return this.profit / buyInTotal;
     },
     buyInsTotal: function buyInsTotal() {
       return this.cash_game.buy_ins.reduce(function (total, buy_in) {
         return total + buy_in.amount;
-      }, 0) / 100;
+      }, 0);
     },
     formattedProfit: function formattedProfit() {
       return Vue.prototype.currency.format(this.profit);
@@ -3272,7 +3272,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     profit: function profit() {
-      return this.session.profit / 100;
+      return this.session.profit;
     },
     formattedProfit: function formattedProfit() {
       return Vue.prototype.currency.format(this.profit);
@@ -63626,7 +63626,7 @@ var render = function() {
                           key: buyIn.id,
                           domProps: {
                             textContent: _vm._s(
-                              _vm.formatCurrency(buyIn.amount / 100)
+                              _vm.formatCurrency(buyIn.amount)
                             )
                           }
                         })
@@ -63712,7 +63712,7 @@ var render = function() {
                       domProps: {
                         textContent: _vm._s(
                           _vm.formatCurrency(
-                            _vm.cash_game.cash_out_model.amount / 100
+                            _vm.cash_game.cash_out_model.amount
                           )
                         )
                       }
@@ -63802,7 +63802,7 @@ var render = function() {
                         staticClass: "order-last md:order-first",
                         domProps: {
                           textContent: _vm._s(
-                            _vm.formatCurrency(expense.amount / 100)
+                            _vm.formatCurrency(expense.amount)
                           )
                         }
                       }),
@@ -63854,7 +63854,7 @@ var render = function() {
                           key: rebuy.id,
                           domProps: {
                             textContent: _vm._s(
-                              _vm.formatCurrency(rebuy.amount / 100)
+                              _vm.formatCurrency(rebuy.amount)
                             )
                           }
                         })
@@ -63943,7 +63943,7 @@ var render = function() {
                           key: addOn.id,
                           domProps: {
                             textContent: _vm._s(
-                              _vm.formatCurrency(addOn.amount / 100)
+                              _vm.formatCurrency(addOn.amount)
                             )
                           }
                         })
@@ -85665,17 +85665,17 @@ __webpack_require__.r(__webpack_exports__);
     depositsTotal: function depositsTotal(state, getters) {
       return getters.deposits.reduce(function (total, deposit) {
         return total + deposit.amount;
-      }, 0) / 100;
+      }, 0);
     },
     withdrawalsTotal: function withdrawalsTotal(state, getters) {
       return getters.withdrawals.reduce(function (total, withdrawal) {
         return total + withdrawal.amount;
-      }, 0) / 100;
+      }, 0);
     },
     bankroll: function bankroll(state) {
       return state.bankrollTransactions.reduce(function (total, transaction) {
         return total + transaction.amount;
-      }, 0) / 100;
+      }, 0);
     }
   },
   mutations: {
@@ -85708,7 +85708,7 @@ __webpack_require__.r(__webpack_exports__);
     addBankrollTransaction: function addBankrollTransaction(_ref2, transaction) {
       var commit = _ref2.commit;
       return axios.post('/api/bankroll/create', {
-        amount: transaction.amount * 100,
+        amount: transaction.amount,
         comments: transaction.comments
       }).then(function (response) {
         commit('ADD_BANKROLL_TRANSACTION', response.data.bankrollTransaction);
@@ -85719,8 +85719,8 @@ __webpack_require__.r(__webpack_exports__);
     updateBankrollTransaction: function updateBankrollTransaction(_ref3, payload) {
       var commit = _ref3.commit;
       return axios.patch('/api/bankroll/' + payload.transaction.id, {
-        date: payload.data.date.split("T")[0],
-        amount: payload.data.amount * 100,
+        date: payload.data.date,
+        amount: payload.data.amount,
         comments: payload.data.comments
       }).then(function (response) {
         commit('UPDATE_BANKROLL_TRANSACTION', response.data.bankrollTransaction);
@@ -85783,7 +85783,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     // addCashGame({ commit }, cash_game) {
     //     return axios.post('/api/cash/create', {
-    //         amount: cash_game.amount * 100,
+    //         amount: cash_game.amount,
     //         comments: cash_game.comments
     //     })
     //     .then(response => {
@@ -85795,8 +85795,8 @@ __webpack_require__.r(__webpack_exports__);
     // },
     // updateCashGame({ commit }, payload) {
     //     return axios.patch('/api/cash/'+payload.cash_game.id, {
-    //         date: payload.data.date.split("T")[0],
-    //         amount: payload.data.amount * 100,
+    //         date: payload.data.date,
+    //         amount: payload.data.amount,
     //         comments: payload.data.comments
     //     })
     //     .then(response => {

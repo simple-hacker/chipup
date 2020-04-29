@@ -11,13 +11,13 @@ export default {
             return state.bankrollTransactions.filter(bankrollTransaction => bankrollTransaction.amount <= 0)
         },
         depositsTotal: (state, getters) => {
-            return getters.deposits.reduce((total, deposit) => total + deposit.amount, 0) / 100
+            return getters.deposits.reduce((total, deposit) => total + deposit.amount, 0)
         },
         withdrawalsTotal: (state, getters) => {
-            return getters.withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0) / 100
+            return getters.withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0)
         },
         bankroll: state => {
-            return state.bankrollTransactions.reduce((total, transaction) => total + transaction.amount, 0) /100
+            return state.bankrollTransactions.reduce((total, transaction) => total + transaction.amount, 0)
         }
     },
     mutations: {
@@ -48,7 +48,7 @@ export default {
         },
         addBankrollTransaction({ commit }, transaction) {
             return axios.post('/api/bankroll/create', {
-                amount: transaction.amount * 100,
+                amount: transaction.amount,
                 comments: transaction.comments
             })
             .then(response => {
@@ -60,8 +60,8 @@ export default {
         },
         updateBankrollTransaction({ commit }, payload) {
             return axios.patch('/api/bankroll/'+payload.transaction.id, {
-                date: payload.data.date.split("T")[0],
-                amount: payload.data.amount * 100,
+                date: payload.data.date,
+                amount: payload.data.amount,
                 comments: payload.data.comments
             })
             .then(response => {

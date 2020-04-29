@@ -125,7 +125,7 @@
 						<div
 							v-for="buyIn in cash_game.buy_ins"
 							:key="buyIn.id"
-							v-text="formatCurrency(buyIn.amount / 100)"
+							v-text="formatCurrency(buyIn.amount)"
 						></div>
 					</div>
 					<div v-if="editing">
@@ -148,7 +148,7 @@
 				class="col-span-6 md:col-span-2 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3">
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Cash Out</div>
 				<div class="flex flex-col self-center">
-					<div v-if="!editing" v-text="formatCurrency(cash_game.cash_out_model.amount / 100)"></div>
+					<div v-if="!editing" v-text="formatCurrency(cash_game.cash_out_model.amount)"></div>
 					<div
 						v-if="editing"
 						class="flex"
@@ -170,7 +170,7 @@
 						v-for="expense in cash_game.expenses"
 						:key="expense.id"
 						class="flex justify-end md:justify-around">
-						<div class="order-last md:order-first" v-text="formatCurrency(expense.amount / 100)"></div>
+						<div class="order-last md:order-first" v-text="formatCurrency(expense.amount)"></div>
 						<div class="mr-3 md:mr-0" v-if="expense.comments" v-text="expense.comments">Comments</div>
 					</div>
 				</div>
@@ -187,7 +187,7 @@
 						<div
 							v-for="rebuy in cash_game.rebuys"
 							:key="rebuy.id"
-							v-text="formatCurrency(rebuy.amount / 100)"
+							v-text="formatCurrency(rebuy.amount)"
 						></div>
 					</div>
 					<div v-if="editing">
@@ -214,7 +214,7 @@
 						<div
 							v-for="addOn in cash_game.add_ons"
 							:key="addOn.id"
-							v-text="formatCurrency(addOn.amount / 100)"
+							v-text="formatCurrency(addOn.amount)"
 						></div>
 					</div>
 					<div v-if="editing">
@@ -329,14 +329,14 @@ export default {
 	computed: {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
 		profit() {
-			return this.cash_game.profit / 100
+			return this.cash_game.profit
 		},
 		roi() {
 			const buyInTotal = (this.buyInsTotal < 1) ? 1 : this.buyInsTotal
-			return (this.profit / buyInTotal) * 100
+			return this.profit / buyInTotal
 		},
 		buyInsTotal() {
-			return this.cash_game.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) / 100
+			return this.cash_game.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0)
 		},
 		formattedProfit() {
 			return Vue.prototype.currency.format(this.profit);

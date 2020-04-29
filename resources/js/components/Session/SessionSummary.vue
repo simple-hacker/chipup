@@ -23,7 +23,7 @@ export default {
 	},
 	computed: {
 		profit() {
-			return this.session.profit / 100
+			return this.session.profit
 		},
 		formattedProfit() {
 			return Vue.prototype.currency.format(this.profit)

@@ -34,7 +34,7 @@ export default {
         },
         // addCashGame({ commit }, cash_game) {
         //     return axios.post('/api/cash/create', {
-        //         amount: cash_game.amount * 100,
+        //         amount: cash_game.amount,
         //         comments: cash_game.comments
         //     })
         //     .then(response => {
@@ -46,8 +46,8 @@ export default {
         // },
         // updateCashGame({ commit }, payload) {
         //     return axios.patch('/api/cash/'+payload.cash_game.id, {
-        //         date: payload.data.date.split("T")[0],
-        //         amount: payload.data.amount * 100,
+        //         date: payload.data.date,
+        //         amount: payload.data.amount,
         //         comments: payload.data.comments
         //     })
         //     .then(response => {
