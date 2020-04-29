@@ -15,7 +15,7 @@ class AddTournamentRequest extends FormRequest
     {
         return [
             'start_time' => 'sometimes|nullable|date|before_or_equal:now',
-            'amount' => 'required|integer|min:0',
+            'amount' => 'required|numeric|min:0',
             'name' => 'sometimes|nullable|string',
             'limit_id' => 'required|integer|exists:limits,id',
             'variant_id' => 'required|integer|exists:variants,id',

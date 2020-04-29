@@ -16,7 +16,7 @@ class AddGameTransactionRequest extends FormRequest
         return [
             'id' => 'required|integer',
             'game_type' => 'required|string',
-            'amount' => 'required|integer|min:0',
+            'amount' => 'required|numeric|min:0',
             'comments' => 'sometimes|nullable|string'
         ];
     }

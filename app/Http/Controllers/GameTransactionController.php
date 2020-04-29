@@ -36,6 +36,8 @@ abstract class GameTransactionController extends Controller
         // Authorize that the user can manage the game_type
         $this->authorize('manage', $game_type);
 
+        // dd($request->validated());
+
         try {
             $game_transaction = $game_type->addTransaction($this->transaction_type, $request->amount);
 
@@ -82,6 +84,8 @@ abstract class GameTransactionController extends Controller
     */
     public function update(GameTransaction $game_transaction, UpdateGameTransactionRequest $request)
     {
+        // dd($request->validated());
+
         $this->authorize('manage', $game_transaction);
 
         // Only updated the validated request data.

@@ -155,13 +155,14 @@ class CashOutTest extends TestCase
                 ])
                 ->assertStatus(422);
 
+        // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
         $this->postJson(route('cashout.add'), [
                     'id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 55.52
                 ])
-                ->assertStatus(422);
+                ->assertOk();
                 
         // Test negative numbers
         $this->postJson(route('cashout.add'), [
@@ -179,6 +180,9 @@ class CashOutTest extends TestCase
                 ])
                 ->assertStatus(422);
 
+        // Need to delete the cashOutModel for the test because we can only have one which was made in
+        // the earlier okay assertion above.
+        $cash_game->cashOutModel->delete();
         // Zero should be okay
         $this->postJson(route('cashout.add'), [
                     'id' => $cash_game->id,
@@ -200,34 +204,20 @@ class CashOutTest extends TestCase
         $cash_out = $cash_game->cashOutModel()->first();
 
         // Empty POST data is OK because it doesn't change anything.
-        $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), [
+        $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), [])->assertOk();
 
-                ])
-                ->assertOk();
-
+        // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
-        $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), [
-                    'amount' => 55.52
-                ])
-                ->assertStatus(422);
+        $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), ['amount' => 55.52])->assertOk();
                 
         // Test negative numbers
-        $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), [
-                    'amount' => -10
-                ])
-                ->assertStatus(422);
+        $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), ['amount' => -10])->assertStatus(422);
 
         // Test string
-        $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), [
-                    'amount' => 'Invalid'
-                ])
-                ->assertStatus(422);
+        $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), ['amount' => 'Invalid'])->assertStatus(422);
 
         // Zero should be okay
-        $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), [
-                    'amount' => 0
-                ])
-                ->assertOk();
+        $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), ['amount' => 0])->assertOk();
     }
 
     public function testTheCashOutMustBelongToTheAuthenticatedUser()

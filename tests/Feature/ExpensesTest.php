@@ -150,13 +150,14 @@ class ExpensesTest extends TestCase
                 ])
                 ->assertStatus(422);
 
+        // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
         $this->postJson(route('expense.add'), [
                     'id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 55.52
                 ])
-                ->assertStatus(422);
+                ->assertOk();
                 
         // Test negative numbers
         $this->postJson(route('expense.add'), [
@@ -195,34 +196,20 @@ class ExpensesTest extends TestCase
         $expense = $cash_game->expenses()->first();
 
         // Empty POST data is OK because it doesn't change anything.
-        $this->patchJson(route('expense.update', ['expense' => $expense]), [
+        $this->patchJson(route('expense.update', ['expense' => $expense]), [])->assertOk();
 
-                ])
-                ->assertOk();
-
+        // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
-        $this->patchJson(route('expense.update', ['expense' => $expense]), [
-                    'amount' => 55.52
-                ])
-                ->assertStatus(422);
+        $this->patchJson(route('expense.update', ['expense' => $expense]), ['amount' => 55.52])->assertOk();
                 
         // Test negative numbers
-        $this->patchJson(route('expense.update', ['expense' => $expense]), [
-                    'amount' => -10
-                ])
-                ->assertStatus(422);
+        $this->patchJson(route('expense.update', ['expense' => $expense]), ['amount' => -10])->assertStatus(422);
 
         // Test string
-        $this->patchJson(route('expense.update', ['expense' => $expense]), [
-                    'amount' => 'Invalid'
-                ])
-                ->assertStatus(422);
+        $this->patchJson(route('expense.update', ['expense' => $expense]), ['amount' => 'Invalid'])->assertStatus(422);
 
         // Zero should be okay
-        $this->patchJson(route('expense.update', ['expense' => $expense]), [
-                    'amount' => 0
-                ])
-                ->assertOk();
+        $this->patchJson(route('expense.update', ['expense' => $expense]), ['amount' => 0])->assertOk();
     }
 
     public function testTheExpenseMustBelongToTheAuthenticatedUser()

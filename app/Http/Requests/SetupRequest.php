@@ -14,7 +14,7 @@ class SetupRequest extends FormRequest
     public function rules()
     {
         return [
-            'bankroll' => 'sometimes|integer|min:0',
+            'bankroll' => 'sometimes|numeric|min:0',
             'default_stake_id' => 'sometimes|nullable|integer|exists:stakes,id',
             'default_limit_id' => 'sometimes|nullable|integer|exists:limits,id',
             'default_variant_id' => 'sometimes|nullable|integer|exists:variants,id',

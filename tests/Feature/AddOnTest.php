@@ -149,13 +149,14 @@ class AddOnTest extends TestCase
                 ])
                 ->assertStatus(422);
 
+        // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
         $this->postJson(route('addon.add'), [
                     'id' => $tournament->id,
                     'game_type' => $tournament->game_type,
                     'amount' => 55.52
                 ])
-                ->assertStatus(422);
+                ->assertOk();
                 
         // Test negative numbers
         $this->postJson(route('addon.add'), [
@@ -194,34 +195,20 @@ class AddOnTest extends TestCase
         $add_on = $tournament->addOns()->first();
 
         // Empty POST data is OK because it doesn't change anything.
-        $this->patchJson(route('addon.update', ['add_on' => $add_on]), [
+        $this->patchJson(route('addon.update', ['add_on' => $add_on]), [])->assertOk();
 
-                ])
-                ->assertOk();
-
+        // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
-        $this->patchJson(route('addon.update', ['add_on' => $add_on]), [
-                    'amount' => 55.52
-                ])
-                ->assertStatus(422);
+        $this->patchJson(route('addon.update', ['add_on' => $add_on]), ['amount' => 55.52])->assertOk();
                 
         // Test negative numbers
-        $this->patchJson(route('addon.update', ['add_on' => $add_on]), [
-                    'amount' => -10
-                ])
-                ->assertStatus(422);
+        $this->patchJson(route('addon.update', ['add_on' => $add_on]), ['amount' => -10])->assertStatus(422);
 
         // Test string
-        $this->patchJson(route('addon.update', ['add_on' => $add_on]), [
-                    'amount' => 'Invalid'
-                ])
-                ->assertStatus(422);
+        $this->patchJson(route('addon.update', ['add_on' => $add_on]), ['amount' => 'Invalid'])->assertStatus(422);
 
         // Zero should be okay
-        $this->patchJson(route('addon.update', ['add_on' => $add_on]), [
-                    'amount' => 0
-                ])
-                ->assertOk();
+        $this->patchJson(route('addon.update', ['add_on' => $add_on]), ['amount' => 0])->assertOk();
     }
 
     public function testTheAddOnMustBelongToTheAuthenticatedUser()

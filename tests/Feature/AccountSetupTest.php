@@ -104,10 +104,8 @@ class AccountSetupTest extends TestCase
         $user = factory('App\User')->create();  // Default setup_complete is false
         $this->actingAs($user);
 
-        // Bankroll must be an integer
-        $this->postJson(route('setup.complete'), ['bankroll' => 1.99])->assertStatus(422);
         // Bankroll must be postive
-        $this->postJson(route('setup.complete'), ['bankroll' => -1000])->assertStatus(422);
+        $this->postJson(route('setup.complete'), ['bankroll' => -10.99])->assertStatus(422);
         // Stake Id must be an integer
         $this->postJson(route('setup.complete'), ['default_stake_id' => 'Not an integer'])->assertStatus(422);
         // Stake Id must exist in the stakes table
@@ -126,6 +124,10 @@ class AccountSetupTest extends TestCase
         $this->postJson(route('setup.complete'), ['default_table_size_id' => 99])->assertStatus(422);
         // Location must be a string
         $this->postJson(route('setup.complete'), ['default_location' => 99])->assertStatus(422);
+
+        // Bankroll must be an integer.  Moved test from top to end because this completes setup for the rest of the above data.
+        // NOTE: 2020-04-29 Float numbers are now valid.
+        $this->postJson(route('setup.complete'), ['bankroll' => 1.99])->assertOk();
     }
 
     public function testAUserCannotVisitPageToCompleteSetupIfAlreadyCompleted()

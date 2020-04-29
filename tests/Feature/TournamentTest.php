@@ -230,16 +230,17 @@ class TournamentTest extends TestCase
         $this->signIn();
 
         // Should fail when starting with a negative number
-        $this->postJson(route('tournament.start'), $this->getTournamentAttributes(-1000))
-            ->assertStatus(422);
+        $this->postJson(route('tournament.start'), $this->getTournamentAttributes(-1000))->assertStatus(422);
 
+        // NOTE: 2020-04-29 Float numbers are now valid.
         // Should fail when starting with a float number
-        $this->postJson(route('tournament.start'), $this->getTournamentAttributes(5.2))
-            ->assertStatus(422);
+        $this->postJson(route('tournament.start'), $this->getTournamentAttributes(5.2))->assertOk();
 
+        // Delete the tournament for the test because we can only have one tournament at a time which was created
+        // in the assertion above
+        Tournament::first()->delete();
         // Starting with 0 is ok
-        $this->postJson(route('tournament.start'), $this->getTournamentAttributes(0))
-                ->assertOk();
+        $this->postJson(route('tournament.start'), $this->getTournamentAttributes(0))->assertOk();
     }
 
     public function testAUserCanSupplyACashOutWhenEndingTheirSession()

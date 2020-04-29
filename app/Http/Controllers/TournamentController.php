@@ -30,7 +30,6 @@ class TournamentController extends Controller
                 'tournament' => $tournament
             ];
         } catch(\Exception $e) {
-
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()

@@ -149,13 +149,14 @@ class RebuyTest extends TestCase
                 ])
                 ->assertStatus(422);
 
+        // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
         $this->postJson(route('rebuy.add'), [
                     'id' => $tournament->id,
                     'game_type' => $tournament->game_type,
                     'amount' => 55.52
                 ])
-                ->assertStatus(422);
+                ->assertOk();
                 
         // Test negative numbers
         $this->postJson(route('rebuy.add'), [
@@ -194,34 +195,20 @@ class RebuyTest extends TestCase
         $rebuy = $tournament->rebuys()->first();
 
         // Empty POST data is OK because it doesn't change anything.
-        $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), [
+        $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), [])->assertOk();
 
-                ])
-                ->assertOk();
-
+        // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
-        $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), [
-                    'amount' => 55.52
-                ])
-                ->assertStatus(422);
+        $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), ['amount' => 55.52])->assertOk();
                 
         // Test negative numbers
-        $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), [
-                    'amount' => -10
-                ])
-                ->assertStatus(422);
+        $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), ['amount' => -10])->assertStatus(422);
 
         // Test string
-        $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), [
-                    'amount' => 'Invalid'
-                ])
-                ->assertStatus(422);
+        $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), ['amount' => 'Invalid'])->assertStatus(422);
 
         // Zero should be okay
-        $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), [
-                    'amount' => 0
-                ])
-                ->assertOk();
+        $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), ['amount' => 0])->assertOk();
     }
 
     public function testTheRebuyMustBelongToTheAuthenticatedUser()
