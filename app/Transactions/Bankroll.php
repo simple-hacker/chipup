@@ -30,4 +30,26 @@ class Bankroll extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    /**
+    * Mutate amount in to currency
+    *
+    * @param  Integer $amount
+    * @return void
+    */
+    public function getAmountAttribute($amount)
+    {
+        return $amount / 100;
+    }
+
+    /**
+    * Mutate amount in to lowest denomination
+    *
+    * @param  Float $amount
+    * @return void
+    */
+    public function setAmountAttribute($amount)
+    {
+        $this->attributes['amount'] = $amount * 100;
+    }
 }

@@ -32,4 +32,26 @@ abstract class GameTransaction extends Model
     {
         return $this->game->user;
     }
+
+    /**
+    * Mutate amount in to currency
+    *
+    * @param  Integer $amount
+    * @return void
+    */
+    public function getAmountAttribute($amount)
+    {
+        return $amount / 100;
+    }
+
+    /**
+    * Mutate amount in to lowest denomination
+    *
+    * @param  Float $amount
+    * @return void
+    */
+    public function setAmountAttribute($amount)
+    {
+        $this->attributes['amount'] = $amount * 100;
+    }
 }

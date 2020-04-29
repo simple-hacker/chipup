@@ -27,7 +27,7 @@ class PositiveGameTransactionObserver
     public function updated(PositiveGameTransaction $positiveGameTransaction)
     {
         // Find the difference needed for profit to be accurate.
-        $amount = $positiveGameTransaction->amount - $positiveGameTransaction->getOriginal('amount');
+        $amount = $positiveGameTransaction->amount - ($positiveGameTransaction->getOriginal('amount') / 100);
 
         $positiveGameTransaction->game->profit += $amount;
         $positiveGameTransaction->game->save();

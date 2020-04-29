@@ -55,12 +55,12 @@ class User extends Authenticatable
     public function updateBankroll($amount)
     {   
         if ($amount > 0) {
-            $this->increment('bankroll', $amount);
+            $this->increment('bankroll', $amount * 100);
         } else {
-            $this->decrement('bankroll', $amount * -1);
+            $this->decrement('bankroll', $amount * -100);
         }
 
-        return $this->bankroll;
+        // return $this->bankroll;
     }
 
 
@@ -268,5 +268,27 @@ class User extends Authenticatable
         ]);
 
         return $this;
+    }
+
+    /**
+    * Mutate bankroll in to currency
+    *
+    * @param  Integer $bankroll
+    * @return void
+    */
+    public function getBankrollAttribute($bankroll)
+    {
+        return $bankroll / 100;
+    }
+
+    /**
+    * Mutate bankroll in to lowest denomination
+    *
+    * @param  Float $bankroll
+    * @return void
+    */
+    public function setBankrollAttribute($bankroll)
+    {
+        $this->attributes['bankroll'] = $bankroll * 100;
     }
 }

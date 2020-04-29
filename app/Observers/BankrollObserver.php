@@ -26,7 +26,7 @@ class BankrollObserver
     public function updated(Bankroll $bankrollTransaction)
     {
         // Find the difference needed for bankroll to be accurate.
-        $amount = $bankrollTransaction->amount - $bankrollTransaction->getOriginal('amount');
+        $amount = $bankrollTransaction->amount - ($bankrollTransaction->getOriginal('amount') / 100);
 
         $bankrollTransaction->user->updateBankroll($amount);
     }

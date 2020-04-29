@@ -18,20 +18,6 @@ class UserTest extends TestCase
         $this->assertEquals($user->bankroll, 10000);
     }
 
-    public function testBankrollCanBeUpdated()
-    {
-        // Create user with default 10000 bankroll.
-        $user = factory('App\User')->create();
-
-        $user->updateBankroll(50);
-
-        $this->assertEquals($user->bankroll, 10050);
-
-        $user->updateBankroll(-50);
-
-        $this->assertEquals($user->fresh()->bankroll, 10000);
-    }
-
     public function testGetTheLiveCashGameForAUser()
     {
         $user = factory('App\User')->create();
