@@ -116,7 +116,6 @@ export default {
     components: { BankrollTransaction, BankrollTransactionSummary, BankrollTransactionDetails },
     data() {
         return {
-            refreshKey: 0,
             email: '',
             current_password: '',
             new_password: '',

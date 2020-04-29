@@ -184,7 +184,7 @@ class CashGameController extends Controller
     }
 
     /**
-    * PATCH method to retrieve specific cash game
+    * PATCH method to update specific cash game
     *
     * @param CashGame $cash_game
     * @param UpdateCashGameRequest $request
@@ -203,7 +203,7 @@ class CashGameController extends Controller
     }
 
     /**
-    * DELETE method to retrieve specific cash game
+    * DELETE method to delete specific cash game
     *
     * @param CashGame $cash_game
     * @return json

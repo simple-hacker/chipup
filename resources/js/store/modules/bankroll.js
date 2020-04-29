@@ -59,7 +59,7 @@ export default {
             })
         },
         updateBankrollTransaction({ commit }, payload) {
-            return axios.patch('/api/bankroll/'+payload.transaction.id+'/update', {
+            return axios.patch('/api/bankroll/'+payload.transaction.id, {
                 date: payload.data.date.split("T")[0],
                 amount: payload.data.amount * 100,
                 comments: payload.data.comments
@@ -72,7 +72,7 @@ export default {
             })
         },
         deleteBankrollTransaction({ commit }, transaction) {
-            return axios.delete('/api/bankroll/'+transaction.id+'/delete/')
+            return axios.delete('/api/bankroll/'+transaction.id)
             .then(response => {
                 commit('REMOVE_BANKROLL_TRANSACTION', transaction)
             })

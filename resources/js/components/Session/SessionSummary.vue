@@ -1,7 +1,7 @@
 <template>
 	<div class="flex justify-between p-4 border border-muted-dark shadow bg-card hover:bg-muted-dark cursor-pointer text-white">
 		<div class="flex flex-col">
-			<div class="uppercase">{{ session.date }}</div>
+			<div class="uppercase">{{ date }}</div>
 			<div class="text-sm text-gray-600">{{ session.location }}</div>
 		</div>
 		<div
@@ -14,14 +14,22 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
 	name: 'SessionSummary',
 	props: {
 		session: Object
 	},
 	computed: {
+		profit() {
+			return this.session.profit / 100
+		},
 		formattedProfit() {
-			return Vue.prototype.currency.format(this.session.profit);
+			return Vue.prototype.currency.format(this.profit)
+		},
+		date() {
+			return moment(this.session.start_time).format("dddd, Do MMMM YYYY")
 		}
 	}
 }

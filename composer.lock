@@ -336,16 +336,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v6.18.8",
+            "version": "v6.18.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "852c91c46adfbc2f5a0f6985cba3d7b7a769b773"
+                "reference": "73bc10bb23aab7539c8ffae6d5dc3c4b277de557"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/852c91c46adfbc2f5a0f6985cba3d7b7a769b773",
-                "reference": "852c91c46adfbc2f5a0f6985cba3d7b7a769b773",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/73bc10bb23aab7539c8ffae6d5dc3c4b277de557",
+                "reference": "73bc10bb23aab7539c8ffae6d5dc3c4b277de557",
                 "shasum": ""
             },
             "require": {
@@ -478,20 +478,20 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2020-04-15T20:56:03+00:00"
+            "time": "2020-04-28T15:18:58+00:00"
         },
         {
             "name": "laravel/sanctum",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sanctum.git",
-                "reference": "3615d39ecd7c609660413e80f5d051f6f0fccf3d"
+                "reference": "51e401ef99fd5698e489cc090e873ecb4437793e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sanctum/zipball/3615d39ecd7c609660413e80f5d051f6f0fccf3d",
-                "reference": "3615d39ecd7c609660413e80f5d051f6f0fccf3d",
+                "url": "https://api.github.com/repos/laravel/sanctum/zipball/51e401ef99fd5698e489cc090e873ecb4437793e",
+                "reference": "51e401ef99fd5698e489cc090e873ecb4437793e",
                 "shasum": ""
             },
             "require": {
@@ -538,7 +538,7 @@
                 "laravel",
                 "sanctum"
             ],
-            "time": "2020-04-14T15:29:04+00:00"
+            "time": "2020-04-21T19:28:48+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -660,16 +660,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "1.4.1",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "c995966d35424bae20f76f8b31248099487a3f57"
+                "reference": "9e780d972185e4f737a03bade0fd34a9e67bbf31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/c995966d35424bae20f76f8b31248099487a3f57",
-                "reference": "c995966d35424bae20f76f8b31248099487a3f57",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/9e780d972185e4f737a03bade0fd34a9e67bbf31",
+                "reference": "9e780d972185e4f737a03bade0fd34a9e67bbf31",
                 "shasum": ""
             },
             "require": {
@@ -730,7 +730,7 @@
                 "md",
                 "parser"
             ],
-            "time": "2020-04-20T13:36:51+00:00"
+            "time": "2020-04-24T13:39:56+00:00"
         },
         {
             "name": "league/flysystem",
@@ -3783,23 +3783,20 @@
         },
         {
             "name": "phpdocumentor/reflection-common",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionCommon.git",
-                "reference": "63a995caa1ca9e5590304cd845c15ad6d482a62a"
+                "reference": "6568f4687e5b41b054365f9ae03fcb1ed5f2069b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/63a995caa1ca9e5590304cd845c15ad6d482a62a",
-                "reference": "63a995caa1ca9e5590304cd845c15ad6d482a62a",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/6568f4687e5b41b054365f9ae03fcb1ed5f2069b",
+                "reference": "6568f4687e5b41b054365f9ae03fcb1ed5f2069b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~6"
             },
             "type": "library",
             "extra": {
@@ -3831,7 +3828,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2018-08-07T13:53:10+00:00"
+            "time": "2020-04-27T09:25:28+00:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -4249,16 +4246,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "8.5.3",
+            "version": "8.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "67750516bc02f300e2742fed2f50177f8f37bedf"
+                "reference": "8474e22d7d642f665084ba5ec780626cbd1efd23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/67750516bc02f300e2742fed2f50177f8f37bedf",
-                "reference": "67750516bc02f300e2742fed2f50177f8f37bedf",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8474e22d7d642f665084ba5ec780626cbd1efd23",
+                "reference": "8474e22d7d642f665084ba5ec780626cbd1efd23",
                 "shasum": ""
             },
             "require": {
@@ -4328,7 +4325,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2020-03-31T08:52:04+00:00"
+            "time": "2020-04-23T04:39:42+00:00"
         },
         {
             "name": "scrivo/highlight.php",

@@ -99,7 +99,7 @@ class User extends Authenticatable
     */
     public function cashGames()
     {
-        return $this->hasMany('App\CashGame');
+        return $this->hasMany('App\CashGame')->orderByDesc('start_time');
     }
 
     /**

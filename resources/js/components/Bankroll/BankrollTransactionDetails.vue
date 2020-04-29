@@ -39,6 +39,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import moment from 'moment'
 
 export default {
 	name: 'BankrollTransactionDetails',
@@ -47,14 +48,16 @@ export default {
     },
     data() {
         return {
-            date: this.bankrollTransaction.date.split(' ')[0],
-            // Laravel migration is a timestamp column so it can default to today's date if not supplied when creating bankroll transaction which is then casted as a Carbon object which supplies 00:00:)) as the time.
+            date: moment.utc(this.bankrollTransaction.date).format(),
+            // Need to convert to UTC first otherwise vue-js-datetime in date mode doesn't factor in BST
+            // https://github.com/mariomka/vue-datetime/issues/214
             amount: this.bankrollTransaction.amount / 100,
             comments: this.bankrollTransaction.comments,
             errors: {},
         }
     },
     methods: {
+        ...mapActions('bankroll', ['updateBankrollTransaction', 'deleteBankrollTransaction']),
 		deleteTransaction: function() {
 			this.$modal.show('dialog', {
 				title: 'Are you sure?',
@@ -99,8 +102,7 @@ export default {
             .catch(error => {
                 this.$snotify.error('Error: '+error.response.data.message);
             })
-        },
-        ...mapActions('bankroll', ['updateBankrollTransaction', 'deleteBankrollTransaction'])
+        }
 	}
 }
 </script>

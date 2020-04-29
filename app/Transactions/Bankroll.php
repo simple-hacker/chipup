@@ -13,7 +13,10 @@ class Bankroll extends Model
     protected $casts = [
         'user_id' => 'integer',
         'amount' => 'integer',
-        'date' => 'date:Y-m-d',
+    ];
+
+    protected $dates = [
+        'date'
     ];
 
     protected $with = [];
