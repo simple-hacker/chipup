@@ -12,7 +12,7 @@ class Bankroll extends Model
 
     protected $casts = [
         'user_id' => 'integer',
-        'amount' => 'integer',
+        'amount' => 'float',
     ];
 
     protected $dates = [
@@ -34,7 +34,7 @@ class Bankroll extends Model
     /**
     * Mutate amount in to currency
     *
-    * @param  Integer $amount
+    * @param Float $amount
     * @return void
     */
     public function getAmountAttribute($amount)
@@ -45,7 +45,7 @@ class Bankroll extends Model
     /**
     * Mutate amount in to lowest denomination
     *
-    * @param  Float $amount
+    * @param Float $amount
     * @return void
     */
     public function setAmountAttribute($amount)

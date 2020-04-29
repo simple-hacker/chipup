@@ -85719,7 +85719,7 @@ __webpack_require__.r(__webpack_exports__);
     updateBankrollTransaction: function updateBankrollTransaction(_ref3, payload) {
       var commit = _ref3.commit;
       return axios.patch('/api/bankroll/' + payload.transaction.id, {
-        date: payload.data.date,
+        date: payload.data.date.split("T")[0],
         amount: payload.data.amount,
         comments: payload.data.comments
       }).then(function (response) {

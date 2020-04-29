@@ -15,10 +15,10 @@ class Tournament extends Game
     * This overwrites the abstract Game->addBuyIn() function because a tournament should only have
     * one buyIn, where as Cash can have multiple
     * 
-    * @param integer amount
+    * @param float amount
     * @return BuyIn
     */
-    public function addBuyIn(int $amount)
+    public function addBuyIn(float $amount)
     {
         if ($this->buyIn()->count() > 0) {
             throw new MultipleBuyInsNotAllowed();
@@ -33,10 +33,10 @@ class Tournament extends Game
     * Add a Rebuy for the tournament.
     * This updates the Tournament's profit by subtracting the Rebuy amount.
     *
-    * @param integer amount
+    * @param float amount
     * @return Rebuy
     */
-    public function addRebuy(int $amount)
+    public function addRebuy(float $amount)
     {
         return $this->rebuys()->create([
             'amount' => $amount
@@ -47,10 +47,10 @@ class Tournament extends Game
     * Add a AddOn for the tournament.
     * This updates the Tournament's profit by subtracting the Rebuy amount.
     *
-    * @param integer amount
+    * @param float amount
     * @return AddOn
     */
-    public function addAddOn(int $amount)
+    public function addAddOn(float $amount)
     {
         return $this->addOns()->create([
             'amount' => $amount

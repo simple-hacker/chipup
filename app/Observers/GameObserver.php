@@ -27,7 +27,7 @@ class GameObserver
     {
         // Get difference between the new $game->profit and the old profit if it's been changed
         if ($game->isDirty('profit')) {
-            $game->user->updateBankroll($game->profit - $game->getOriginal('profit'));
+            $game->user->updateBankroll($game->profit - ($game->getOriginal('profit') / 100));
         }
     }
 

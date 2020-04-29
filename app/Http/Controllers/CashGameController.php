@@ -72,7 +72,7 @@ class CashGameController extends Controller
     {
         $request->validate([
             'end_time' => 'nullable|date',
-            'amount' => 'required|integer|min:0'
+            'amount' => 'required|numeric|min:0'
         ]);
 
         // Get the current live Cash Game if there is one.
@@ -112,7 +112,7 @@ class CashGameController extends Controller
     {
         return response()->json([
             'success' => true,
-            'cash_games' => auth()->user()->cashGames()->get()
+            'cash_games' => auth()->user()->cashGames()->whereNotNull('end_time')->get()
         ]);
     }
 

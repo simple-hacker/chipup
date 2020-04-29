@@ -9,7 +9,7 @@ abstract class GameTransaction extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'amount' => 'integer'
+        'amount' => 'float'
     ];
     
     /**
@@ -36,7 +36,7 @@ abstract class GameTransaction extends Model
     /**
     * Mutate amount in to currency
     *
-    * @param  Integer $amount
+    * @param Float $amount
     * @return void
     */
     public function getAmountAttribute($amount)
@@ -47,7 +47,7 @@ abstract class GameTransaction extends Model
     /**
     * Mutate amount in to lowest denomination
     *
-    * @param  Float $amount
+    * @param Float $amount
     * @return void
     */
     public function setAmountAttribute($amount)

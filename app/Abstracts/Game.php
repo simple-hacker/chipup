@@ -10,7 +10,7 @@ abstract class Game extends Model
 {
     protected $casts = [
         'user_id' => 'integer',
-        'profit' => 'integer'
+        'profit' => 'float'
     ];
 
     /**
@@ -48,10 +48,10 @@ abstract class Game extends Model
     * Method for calling any adding GameTransaction with a valid string
     * 
     * @param string $transaction_type
-    * @param integer amount
+    * @param float amount
     * @return mixed
     */
-    public function addTransaction(string $transaction_type, int $amount)
+    public function addTransaction(string $transaction_type, float $amount)
     {
         switch($transaction_type) {
             case 'buyIn':
@@ -71,10 +71,10 @@ abstract class Game extends Model
     * Add a BuyIn for the game type.
     * This updates the game type's profit by subtracting the BuyIn amount.
     * 
-    * @param integer amount
+    * @param float amount
     * @return BuyIn
     */
-    public function addBuyIn(int $amount)
+    public function addBuyIn(float $amount)
     {
         return $this->buyIns()->create([
             'amount' => $amount
@@ -85,10 +85,10 @@ abstract class Game extends Model
     * Add an Expense for the game type.
     * This updates the game type's profit by subtracting the Expense amount
     * 
-    * @param integer amount
+    * @param float amount
     * @return Expense
     */
-    public function addExpense(int $amount, string $comments = null)
+    public function addExpense(float $amount, string $comments = null)
     {
         return $this->expenses()->create([
             'amount' => $amount,
@@ -100,10 +100,10 @@ abstract class Game extends Model
     * Add an Expense for the game type.
     * This updates the game type's profit by subtracting the Expense amount
     * 
-    * @param integer amount
+    * @param float amount
     * @return CashOut
     */
-    public function cashOut(int $amount, Carbon $end_time = null)
+    public function cashOut(float $amount, Carbon $end_time = null)
     {
         $this->end($end_time);
 
@@ -167,5 +167,27 @@ abstract class Game extends Model
     public function getGameTypeAttribute()
     {
         return strtolower(class_basename($this));
+    }
+
+    /**
+    * Mutate profit in to currency
+    *
+    * @param Float $profit
+    * @return void
+    */
+    public function getProfitAttribute($profit)
+    {
+        return $profit / 100;
+    }
+
+    /**
+    * Mutate profit in to lowest denomination
+    *
+    * @param Float $profit
+    * @return void
+    */
+    public function setProfitAttribute($profit)
+    {
+        $this->attributes['profit'] = $profit * 100;
     }
 }
