@@ -234,16 +234,16 @@ class CashGameTest extends TestCase
         $this->signIn();
 
         // Should fail when starting with a negative number
-        $this->postJson(route('cash.start'), $this->getCashGameAttributes(-1000))
-            ->assertStatus(422);
+        $this->postJson(route('cash.start'), $this->getCashGameAttributes(-1000))->assertStatus(422);
 
+        // NOTE: 2020-05-01 Float numbers are valid
         // Should fail when starting with a float number
-        $this->postJson(route('cash.start'), $this->getCashGameAttributes(5.2))
-            ->assertStatus(422);
+        $this->postJson(route('cash.start'), $this->getCashGameAttributes(5.2))->assertOk();
 
+        // Delete the cash game for the test as it was created in assertion above and can only have one running at a time.
+        CashGame::first()->delete();
         // Starting with 0 is ok
-        $this->postJson(route('cash.start'), $this->getCashGameAttributes(0))
-            ->assertOk();
+        $this->postJson(route('cash.start'), $this->getCashGameAttributes(0))->assertOk();
     }
 
     public function testUserCanSupplyACashOutWhenEndingTheirSession()
@@ -254,10 +254,7 @@ class CashGameTest extends TestCase
         $this->postJson(route('cash.start'), $this->getCashGameAttributes(1000));
 
         // End the cash game with a CashOut amount
-        $this->postJson(route('cash.end'), [
-                'amount' => 5000
-            ])
-            ->assertOk();
+        $this->postJson(route('cash.end'), ['amount' => 5000])->assertOk();
 
         // CashGame profit should be 4000. (-1000 buyIn + 5000 cashOut)
         $cash_game = $user->cashGames()->first();
@@ -279,22 +276,15 @@ class CashGameTest extends TestCase
         $this->postJson(route('cash.start'), $this->getCashGameAttributes());
 
         // Should fail when ending with a negative number
-        $this->postJson(route('cash.end'), [
-                'amount' => -1000
-            ])
-            ->assertStatus(422);
+        $this->postJson(route('cash.end'), ['amount' => -1000])->assertStatus(422);
 
-        // Should fail when ending with a float number
-        $this->postJson(route('cash.end'), [
-                'amount' => 54.2
-            ])
-            ->assertStatus(422);
+        // NOTE: 2020-05-01 Float numbers are now valid.
+        $this->postJson(route('cash.end'), ['amount' => 54.2])->assertOk();
 
+        // Start another cash game as the one above was completed in the last assertion
+        $this->postJson(route('cash.start'), $this->getCashGameAttributes());
         // Ending with 0 is ok
-        $this->postJson(route('cash.end'), [
-                'amount' => 0
-            ])
-            ->assertOk();
+        $this->postJson(route('cash.end'), ['amount' => 0])->assertOk();
     }
 
     public function testCashGameAttributesMustBeValidWhenAdding()

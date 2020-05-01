@@ -31,7 +31,6 @@ class CashGameController extends Controller
                 'cash_game' => $cash_game
             ];
         } catch(\Exception $e) {
-
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
