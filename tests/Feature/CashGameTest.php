@@ -673,6 +673,9 @@ class CashGameTest extends TestCase
 
     public function testDataMustBeValidWhenAddingCompletedCashGame()
     {
+        // NOTE: Need to delete CashGame after every assertOk as it uses the same start and end times and unable
+        // to create a CashGame if it clashes with another one.
+
         $this->signIn();
 
         // Valid attributes.  Will change each one before testing.
@@ -716,10 +719,12 @@ class CashGameTest extends TestCase
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
         $attributes['buy_ins'][0]['amount'] = -1000;
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
-        $attributes['buy_ins'][0]['amount'] = 56.69;
-        $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
         unset($attributes['buy_ins'][0]);
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
+        // NOTE: 2020-04-01 Float amounts are valid
+        $attributes['buy_ins'][0]['amount'] = 56.69;
+        $this->postJson(route('cash.create'), $attributes)->assertOk();
+        CashGame::first()->delete();
 
         // Expenses amount must be a non negative integer
         $attributes = $valid_attributes;
@@ -727,10 +732,19 @@ class CashGameTest extends TestCase
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
         $attributes['expenses'][0]['amount'] = -1000;
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
-        $attributes['expenses'][0]['amount'] = 56.69;
-        $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
+        // If given empty amount then it default to 0.
         unset($attributes['expenses'][0]['amount']);
+        $this->postJson(route('cash.create'), $attributes)->assertOk();
+        CashGame::first()->delete();
+        // If supply comments without amount, then 422.
+        $attributes = $valid_attributes;
+        unset($attributes['expenses'][1]['amount']);
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
+        // NOTE: 2020-04-01 Float amounts are valid
+        $attributes = $valid_attributes;
+        $attributes['expenses'][0]['amount'] = 56.69;
+        $this->postJson(route('cash.create'), $attributes)->assertOk();
+        CashGame::first()->delete();
         
         // CashOut amount must be a non negative integer
         $attributes = $valid_attributes;
@@ -738,8 +752,9 @@ class CashGameTest extends TestCase
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
         $attributes['cash_out']['amount'] = -1000;
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
+        // NOTE: 2020-04-01 Float amounts are valid
         $attributes['cash_out']['amount'] = 56.69;
-        $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
+        $this->postJson(route('cash.create'), $attributes)->assertOk();
     }
 
     public function testStartAndEndTimesMustBeValidWhenAddingACompletedCashGame()

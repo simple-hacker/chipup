@@ -21,13 +21,13 @@ class CreateCashGameRequest extends FormRequest
             'cash_game.table_size_id' => 'required|integer|exists:table_sizes,id',
             'cash_game.location' => 'required|string',
 
-            'buy_ins.*.amount' => 'required|integer|min:0',
+            'buy_ins.*.amount' => 'required|numeric|min:0',
 
-            'expenses.*.amount' => 'sometimes|integer|min:0',
+            'expenses.*.amount' => 'required_with:expenses.*.comments|numeric|min:0',
             'expenses.*.comments' => 'sometimes|nullable|string',
 
             'cash_out.end_time' =>'sometimes|date|before_or_equal:now',
-            'cash_out.amount' => 'sometimes|integer|min:0',
+            'cash_out.amount' => 'sometimes|numeric|min:0',
         ];
 
         if ($this->input('cash_game.start_time') && $this->input('cash_out.end_time')) {

@@ -144,7 +144,8 @@ class CashGameController extends Controller
             // Add the Expenses.
             if ($request->expenses) {
                 foreach ($request->expenses as $expense) {
-                    $cash_game->addExpense($expense['amount'], $expense['comments'] ?? null);
+                    // Default to 0 if no amount is supplied.
+                    $cash_game->addExpense($expense['amount'] ?? 0, $expense['comments'] ?? null);
                 }
             }
 
