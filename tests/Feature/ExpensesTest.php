@@ -46,7 +46,7 @@ class ExpensesTest extends TestCase
         // ID 500 does not exist, assert 404
         $this->postJson(route('expense.add'), [
                     'id' => 99,
-                    'game_type' => 'cashgame',
+                    'game_type' => 'cash_game',
                     'amount' => 500
                 ])
                 ->assertNotFound();

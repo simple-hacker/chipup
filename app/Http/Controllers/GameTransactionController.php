@@ -23,7 +23,7 @@ abstract class GameTransactionController extends Controller
     {
         // Get the model for the correct GameType
         switch ($request->game_type) {
-            case 'cashgame':
+            case 'cash_game':
                 $game_type = CashGame::findOrFail($request->id);
                 break;
             case 'tournament':

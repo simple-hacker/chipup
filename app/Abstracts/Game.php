@@ -2,6 +2,7 @@
 
 namespace App\Abstracts;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use App\Exceptions\InvalidDate;
 use Illuminate\Database\Eloquent\Model;
@@ -166,7 +167,7 @@ abstract class Game extends Model
     */
     public function getGameTypeAttribute()
     {
-        return strtolower(class_basename($this));
+        return Str::snake(class_basename($this));
     }
 
     /**
