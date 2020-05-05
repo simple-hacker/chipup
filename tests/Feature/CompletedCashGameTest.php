@@ -41,8 +41,7 @@ class CompletedCashGameTest extends TestCase
         $this->signIn();
 
         // Assert Not Found if supply incorrect cash_game id
-        $this->getJson(route('cash.view', ['cash_game' => 99]))
-                ->assertNotFound();
+        $this->getJson(route('cash.view', ['cash_game' => 99]))->assertNotFound();
     }
 
     public function testUserCanViewAValidCashGame()
@@ -66,8 +65,7 @@ class CompletedCashGameTest extends TestCase
         $this->signIn();
 
         // Assert Forbidden if cash game does not belong to user
-        $this->getJson(route('cash.view', ['cash_game' => $cash_game->id]))
-                ->assertForbidden();
+        $this->getJson(route('cash.view', ['cash_game' => $cash_game->id]))->assertForbidden();
     }
 
     public function testUserCanAddACompletedCashGame()

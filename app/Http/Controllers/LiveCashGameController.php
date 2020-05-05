@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StartCashGameRequest;
 use App\Http\Requests\UpdateCashGameRequest;
+use App\Http\Requests\UpdateLiveCashGameRequest;
 
 class LiveCashGameController extends Controller
 {
@@ -108,7 +109,7 @@ class LiveCashGameController extends Controller
     * @param UpdateCashGameRequest $request
     * @return json
     */
-    public function update(UpdateCashGameRequest $request)
+    public function update(UpdateLiveCashGameRequest $request)
     {
         try {
             $cash_game = auth()->user()->liveCashGame();

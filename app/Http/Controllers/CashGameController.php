@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CashGame;
 use Illuminate\Support\Carbon;
 use App\Http\Requests\CreateCashGameRequest;
+use App\Http\Requests\UpdateCashGameRequest;
 
 class CashGameController extends Controller
 {
@@ -83,6 +84,25 @@ class CashGameController extends Controller
     {
         $this->authorize('manage', $cash_game);
 
+        return response()->json([
+            'success' => true,
+            'cash_game' => $cash_game
+        ]);
+    }
+
+    /**
+    * PATCH method to update cash game.
+    * 
+    * @param CashGame $cash_game
+    * @param UpdateCashGameRequest $request
+    * @return json
+    */
+    public function update(CashGame $cash_game, UpdateCashGameRequest $request)
+    {
+        $this->authorize('manage', $cash_game);
+
+        $cash_game->update($request->validated());
+        
         return response()->json([
             'success' => true,
             'cash_game' => $cash_game
