@@ -67,6 +67,33 @@ abstract class TestCase extends BaseTestCase
         return $attributes;
     }
 
+    protected function getCompletedCashGameAttributes($amount = 1000, $start_time = null, $end_time = null) {
+
+        $attributes = [
+            'cash_game' => [
+                'start_time' => $start_time ?? Carbon::create('-4 hour')->toDateTimeString(),
+                'stake_id' => 2,
+                'limit_id' => 2,
+                'variant_id' => 2,
+                'table_size_id' => 2,
+                'location' => 'CasinoMK',
+            ],
+            'buy_ins' => [
+                ['amount' => $amount]
+            ],
+            'expenses' => [
+                ['amount' => 400],
+                ['amount' => 750, 'comments' => 'Tips'],
+            ],
+            'cash_out' => [
+                'end_time' => $end_time ?? Carbon::create('-1 hour')->toDateTimeString(),
+                'amount' => 1000,
+            ]
+        ];
+        
+        return $attributes;
+    }
+
     protected function getTournamentAttributes($amount = 1000, $start_time = null) {
 
         $attributes = [

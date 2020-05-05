@@ -1,6 +1,13 @@
 Todo May:
     ✔ Separate Live Cash Game and Completed Cash Game Tests @done(20-05-05 16:10)
     ☐ Refactor Completed Cash Game tests to use /cash/create instead of /start and then /end 
+    ✔ Separate Live and Completed Cash Game and Tournament Controllers @done(20-05-05 17:03)
+    ☐ Refactor Controllers
+        Tidy up return statuses
+        $e->getCode() instead of hard coding 422
+    ☐ Custom Exception messages
+    ☐ Custom Validation error messages
+
 
 
 Todo:
