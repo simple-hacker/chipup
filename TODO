@@ -1,3 +1,8 @@
+Todo May:
+    ✔ Separate Live Cash Game and Completed Cash Game Tests @done(20-05-05 16:10)
+    ☐ Refactor Completed Cash Game tests to use /cash/create instead of /start and then /end 
+
+
 Todo:
     ✔ Create models and migrations for all GameTransaction types @done(20-02-20 21:35)
     ✔ Create model observers for all GameTransaction type which update the profit of the CashGame @done(20-02-20 21:35)

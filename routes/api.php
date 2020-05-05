@@ -29,26 +29,36 @@ Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
     
     // CashGame Routes
     Route::prefix('cash')->name('cash.')->group(function () {
-        Route::post('live/start', 'CashGameController@start')->name('start');
-        Route::get('live/current', 'CashGameController@current')->name('current');
-        Route::patch('live/update', 'CashGameController@update')->name('live.update');
-        Route::post('live/end', 'CashGameController@end')->name('end');  
+
+        Route::prefix('live')->name('live.')->group(function () {
+            Route::post('start', 'LiveCashGameController@start')->name('start');
+            Route::get('current', 'LiveCashGameController@current')->name('current');
+            Route::patch('update', 'LiveCashGameController@update')->name('update');
+            Route::post('end', 'LiveCashGameController@end')->name('end'); 
+        });
+ 
         Route::get('', 'CashGameController@index')->name('index');
-        Route::post('create', 'CashGameController@create')->name('create');
+        Route::post('', 'CashGameController@create')->name('create');
         Route::get('{cash_game}', 'CashGameController@view')->name('view');
+        Route::patch('{cash_game}', 'CashGameController@update')->name('update');
         Route::delete('{cash_game}', 'CashGameController@destroy')->name('delete');
     });
     
     // Tournament Routes
     Route::prefix('tournament')->name('tournament.')->group(function () {
-        Route::post('start', 'TournamentController@start')->name('start');
-        Route::get('current', 'TournamentController@current')->name('current');
-        Route::post('end', 'TournamentController@end')->name('end');
+
+        Route::prefix('live')->name('live.')->group(function () {
+            Route::post('start', 'LiveTournamentController@start')->name('start');
+            Route::get('current', 'LiveTournamentController@current')->name('current');
+            Route::patch('update', 'LiveTournamentController@update')->name('update');
+            Route::post('end', 'LiveTournamentController@end')->name('end'); 
+        });
+
         Route::get('', 'TournamentController@index')->name('index');
+        Route::post('', 'TournamentController@create')->name('create');
         Route::get('{tournament}', 'TournamentController@view')->name('view');
         Route::patch('{tournament}', 'TournamentController@update')->name('update');
         Route::delete('{tournament}', 'TournamentController@destroy')->name('delete');
-        // Potentially POST /tournament to @create.
     });
     
     // BuyIn Routes

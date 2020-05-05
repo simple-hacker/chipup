@@ -25,9 +25,9 @@ class CompletedCashGameTest extends TestCase
         $this->assertEmpty($response['cash_games']);
 
         // Create two cash games
-        $this->postJson(route('cash.start'), $this->getCashGameAttributes());
+        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes());
         $user->cashGames()->first()->end();
-        $this->postJson(route('cash.start'), $this->getCashGameAttributes());
+        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes());
         $user->cashGames()->get()->last()->end(); 
 
         // Assert response cash_games returns two cash games
@@ -49,6 +49,8 @@ class CompletedCashGameTest extends TestCase
 
     public function testUserCanViewAValidCashGame()
     {
+        $this->withoutExceptionHandling();
+
         $cash_game = $this->createCashGame();
 
         // Assert Not Found if supply incorrect cash_game id
@@ -170,7 +172,7 @@ class CompletedCashGameTest extends TestCase
 
         // Start a Live CashGame 10 minutes ago.
         $live_start_time = Carbon::now()->subMinutes(10)->toDateTimeString();
-        $this->post(route('cash.start'), $this->getCashGameAttributes(1000, $live_start_time));
+        $this->post(route('cash.live.start'), $this->getCashGameAttributes(1000, $live_start_time));
 
         // Create a completed Cash Game with start_time 5 hours ago and end_time 4 hours ago
         $attributes = [
@@ -403,5 +405,30 @@ class CompletedCashGameTest extends TestCase
         // User 2 is Forbidden to delete user 1s cash game.
         $this->deleteJson(route('cash.delete', ['cash_game' => $cash_game->id]))
                 ->assertForbidden();
+    }
+
+    // TODO: Updating
+    // ****************************8
+
+    public function testUserCannnotUpdateAnotherUsersCashGame()
+    {
+        $this->assertTrue(true);
+        // $cash_game = $this->createCashGame();
+        
+        // // Sign in as another user
+        // $this->signIn();
+
+        // $attributes = [
+        //     'start_time' => '2020-02-02 18:00:00',
+        //     'stake_id' => 2,
+        //     'limit_id' => 2,
+        //     'variant_id' => 2,
+        //     'table_size_id' => 2,
+        //     'location' => 'Las Vegas',
+        // ];
+
+        // $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), $attributes)->assertForbidden();
+
+        // $this->assertDatabaseMissing('cash_games', $attributes);
     }
 }

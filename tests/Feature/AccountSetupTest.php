@@ -223,8 +223,8 @@ class AccountSetupTest extends TestCase
 
         // Test a couple of API routes as all API routes are under the same middleware group.
         $this->postJson(route('bankroll.create'), ['amount' => 5000])->assertRedirect(route('setup.index'));
-        $this->postJson(route('cash.start'), $this->getCashGameAttributes())->assertRedirect(route('setup.index'));
-        $this->postJson(route('tournament.start'), $this->getTournamentAttributes())->assertRedirect(route('setup.index'));
+        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes())->assertRedirect(route('setup.index'));
+        $this->postJson(route('tournament.live.start'), $this->getTournamentAttributes())->assertRedirect(route('setup.index'));
     }
 
     public function testABankrollTransactionIsAddedIfUserGivesBankrollAmountInSetup()

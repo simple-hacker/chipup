@@ -35,7 +35,7 @@ export default {
             })
         },
         // addCashGame({ commit }, cash_game) {
-        //     return axios.post('/api/cash/create', {
+        //     return axios.post('/api/cash/', {
         //         amount: cash_game.amount,
         //         comments: cash_game.comments
         //     })
