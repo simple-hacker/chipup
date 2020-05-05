@@ -190,8 +190,10 @@ class CashGameController extends Controller
     * @param UpdateCashGameRequest $request
     * @return json
     */
-    public function update(CashGame $cash_game, UpdateCashGameRequest $request)
+    public function update(UpdateCashGameRequest $request)
     {
+        $cash_game = auth()->user()->liveCashGame();
+        
         $this->authorize('manage', $cash_game);
 
         $cash_game->update($request->validated());

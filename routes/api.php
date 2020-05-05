@@ -29,13 +29,13 @@ Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
     
     // CashGame Routes
     Route::prefix('cash')->name('cash.')->group(function () {
-        Route::post('start', 'CashGameController@start')->name('start');
-        Route::get('current', 'CashGameController@current')->name('current');
-        Route::post('end', 'CashGameController@end')->name('end');  
+        Route::post('live/start', 'CashGameController@start')->name('start');
+        Route::get('live/current', 'CashGameController@current')->name('current');
+        Route::patch('live/update', 'CashGameController@update')->name('live.update');
+        Route::post('live/end', 'CashGameController@end')->name('end');  
         Route::get('', 'CashGameController@index')->name('index');
         Route::post('create', 'CashGameController@create')->name('create');
         Route::get('{cash_game}', 'CashGameController@view')->name('view');
-        Route::patch('{cash_game}', 'CashGameController@update')->name('update');
         Route::delete('{cash_game}', 'CashGameController@destroy')->name('delete');
     });
     
