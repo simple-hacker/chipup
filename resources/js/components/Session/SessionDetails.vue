@@ -137,6 +137,14 @@
 							<input v-model="buyIn.amount" type="text" class="p-1">
 							<button @click="alert('delete')" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="far fa-trash-alt"></i></button>
 						</div>
+						<div class="mt-3 flex justify-center">
+							<div
+								@click="cash_game.buy_ins.push({ amount: 0})"
+								class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer">
+								<i class="fas fa-plus-circle mr-2"></i>
+								<span>Add Buy In</span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -324,7 +332,6 @@ export default {
 	},
 	created() {
 		this.cached_cash_game = { ...this.cash_game }
-		console.log(this.cash_game.buy_ins)
 	},
 	computed: {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
@@ -365,8 +372,15 @@ export default {
 			this.cash_game = { ...this.cached_cash_game }
 		},
 		saveSession() {
-			this.editing = false
-			this.cached_cash_game = { ...this.cash_game }
+			this.updateCashGame(this.cash_game)
+			.then(response => {
+				this.$snotify.success('Changes saved.');
+				this.editing = false
+				this.cached_cash_game = { ...this.cash_game }
+			})
+			.catch(error => {
+				this.$snotify.error('Error: '+error.response.data.message);
+			})
 		},
 		deleteSession() {
 			this.$modal.show('dialog', {

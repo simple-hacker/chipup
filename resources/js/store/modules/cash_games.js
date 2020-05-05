@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export default {
     namespaced: true,
     state: {
@@ -13,10 +15,10 @@ export default {
         // ADD_CASH_GAME(state, cash_game) {
         //     state.cash_games.unshift(cash_game)
         // },
-        // UPDATE_CASH_GAME(state, cash_game) {
-        //     const index = state.cash_games.findIndex(cash_game => cash_game.id == cash_game.id)
-        //     state.cash_games.splice(index, 1, cash_game)
-        // },
+        UPDATE_CASH_GAME(state, cash_game) {
+            const index = state.cash_games.findIndex(cash_game => cash_game.id == cash_game.id)
+            state.cash_games.splice(index, 1, cash_game)
+        },
         REMOVE_CASH_GAME(state, cash_game) {
             const index = state.cash_games.indexOf(cash_game)
             state.cash_games.splice(index, 1)
@@ -44,19 +46,19 @@ export default {
         //         throw error
         //     })
         // },
-        // updateCashGame({ commit }, payload) {
-        //     return axios.patch('/api/cash/'+payload.cash_game.id, {
-        //         date: payload.data.date,
-        //         amount: payload.data.amount,
-        //         comments: payload.data.comments
-        //     })
-        //     .then(response => {
-        //         commit('UPDATE_CASH_GAME', response.data.cash_game)
-        //     })
-        //     .catch(error => {
-        //         throw error
-        //     })
-        // },
+        updateCashGame({ commit }, cash_game) {
+            return axios.patch('/api/cash/'+cash_game.id, {
+                ...cash_game,
+				start_time: moment(cash_game.start_time).format("YYYY-MM-DD HH:mm:ss"),
+				end_time: moment(cash_game.end_time).format("YYYY-MM-DD HH:mm:ss")
+            })
+            .then(response => {
+                commit('UPDATE_CASH_GAME', response.data.cash_game)
+            })
+            .catch(error => {
+                throw error
+            })
+        },
         deleteCashGame({ commit }, cash_game) {
             return axios.delete('/api/cash/'+cash_game.id)
             .then(response => {

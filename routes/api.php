@@ -37,7 +37,6 @@ Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
         Route::get('{cash_game}', 'CashGameController@view')->name('view');
         Route::patch('{cash_game}', 'CashGameController@update')->name('update');
         Route::delete('{cash_game}', 'CashGameController@destroy')->name('delete');
-        // Potentially POST /cash to @create.
     });
     
     // Tournament Routes

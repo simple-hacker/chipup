@@ -3138,6 +3138,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3158,7 +3166,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   created: function created() {
     this.cached_cash_game = _objectSpread({}, this.cash_game);
-    console.log(this.cash_game.buy_ins);
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes']), {
     profit: function profit() {
@@ -3199,11 +3206,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.cash_game = _objectSpread({}, this.cached_cash_game);
     },
     saveSession: function saveSession() {
-      this.editing = false;
-      this.cached_cash_game = _objectSpread({}, this.cash_game);
+      var _this = this;
+
+      this.updateCashGame(this.cash_game).then(function (response) {
+        _this.$snotify.success('Changes saved.');
+
+        _this.editing = false;
+        _this.cached_cash_game = _objectSpread({}, _this.cash_game);
+      })["catch"](function (error) {
+        _this.$snotify.error('Error: ' + error.response.data.message);
+      });
     },
     deleteSession: function deleteSession() {
-      var _this = this;
+      var _this2 = this;
 
       this.$modal.show('dialog', {
         title: 'Are you sure?',
@@ -3213,14 +3228,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }, {
           title: 'Yes, delete.',
           handler: function handler() {
-            _this.deleteCashGame(_this.cash_game).then(function (response) {
-              _this.$modal.hide('dialog');
+            _this2.deleteCashGame(_this2.cash_game).then(function (response) {
+              _this2.$modal.hide('dialog');
 
-              _this.$emit('close');
+              _this2.$emit('close');
 
-              _this.$snotify.warning('Successfully deleted cash game.');
+              _this2.$snotify.warning('Successfully deleted cash game.');
             })["catch"](function (error) {
-              _this.$snotify.error('Error: ' + error.response.data.message);
+              _this2.$snotify.error('Error: ' + error.response.data.message);
             });
           },
           "class": 'bg-red-500 text-white'
@@ -63638,50 +63653,80 @@ var render = function() {
                 _vm.editing
                   ? _c(
                       "div",
-                      _vm._l(_vm.cash_game.buy_ins, function(buyIn) {
-                        return _c(
-                          "div",
-                          { key: buyIn.id, staticClass: "flex" },
-                          [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: buyIn.amount,
-                                  expression: "buyIn.amount"
-                                }
-                              ],
-                              staticClass: "p-1",
-                              attrs: { type: "text" },
-                              domProps: { value: buyIn.amount },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
+                      [
+                        _vm._l(_vm.cash_game.buy_ins, function(buyIn) {
+                          return _c(
+                            "div",
+                            { key: buyIn.id, staticClass: "flex" },
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: buyIn.amount,
+                                    expression: "buyIn.amount"
                                   }
-                                  _vm.$set(buyIn, "amount", $event.target.value)
+                                ],
+                                staticClass: "p-1",
+                                attrs: { type: "text" },
+                                domProps: { value: buyIn.amount },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      buyIn,
+                                      "amount",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.alert("delete")
+                                    }
+                                  }
+                                },
+                                [_c("i", { staticClass: "far fa-trash-alt" })]
+                              )
+                            ]
+                          )
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "mt-3 flex justify-center" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                              on: {
+                                click: function($event) {
+                                  return _vm.cash_game.buy_ins.push({
+                                    amount: 0
+                                  })
                                 }
                               }
-                            }),
-                            _vm._v(" "),
-                            _c(
-                              "button",
-                              {
-                                staticClass:
-                                  "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.alert("delete")
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "far fa-trash-alt" })]
-                            )
-                          ]
-                        )
-                      }),
-                      0
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-plus-circle mr-2"
+                              }),
+                              _vm._v(" "),
+                              _c("span", [_vm._v("Add Buy In")])
+                            ]
+                          )
+                        ])
+                      ],
+                      2
                     )
                   : _vm._e()
               ])
@@ -85750,6 +85795,15 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: {
@@ -85763,10 +85817,12 @@ __webpack_require__.r(__webpack_exports__);
     // ADD_CASH_GAME(state, cash_game) {
     //     state.cash_games.unshift(cash_game)
     // },
-    // UPDATE_CASH_GAME(state, cash_game) {
-    //     const index = state.cash_games.findIndex(cash_game => cash_game.id == cash_game.id)
-    //     state.cash_games.splice(index, 1, cash_game)
-    // },
+    UPDATE_CASH_GAME: function UPDATE_CASH_GAME(state, cash_game) {
+      var index = state.cash_games.findIndex(function (cash_game) {
+        return cash_game.id == cash_game.id;
+      });
+      state.cash_games.splice(index, 1, cash_game);
+    },
     REMOVE_CASH_GAME: function REMOVE_CASH_GAME(state, cash_game) {
       var index = state.cash_games.indexOf(cash_game);
       state.cash_games.splice(index, 1);
@@ -85793,21 +85849,19 @@ __webpack_require__.r(__webpack_exports__);
     //         throw error
     //     })
     // },
-    // updateCashGame({ commit }, payload) {
-    //     return axios.patch('/api/cash/'+payload.cash_game.id, {
-    //         date: payload.data.date,
-    //         amount: payload.data.amount,
-    //         comments: payload.data.comments
-    //     })
-    //     .then(response => {
-    //         commit('UPDATE_CASH_GAME', response.data.cash_game)
-    //     })
-    //     .catch(error => {
-    //         throw error
-    //     })
-    // },
-    deleteCashGame: function deleteCashGame(_ref2, cash_game) {
+    updateCashGame: function updateCashGame(_ref2, cash_game) {
       var commit = _ref2.commit;
+      return axios.patch('/api/cash/' + cash_game.id, _objectSpread({}, cash_game, {
+        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.start_time).format("YYYY-MM-DD HH:mm:ss"),
+        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.end_time).format("YYYY-MM-DD HH:mm:ss")
+      })).then(function (response) {
+        commit('UPDATE_CASH_GAME', response.data.cash_game);
+      })["catch"](function (error) {
+        throw error;
+      });
+    },
+    deleteCashGame: function deleteCashGame(_ref3, cash_game) {
+      var commit = _ref3.commit;
       return axios["delete"]('/api/cash/' + cash_game.id).then(function (response) {
         commit('REMOVE_CASH_GAME', cash_game);
       })["catch"](function (error) {
