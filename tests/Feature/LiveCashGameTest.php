@@ -31,7 +31,7 @@ class LiveCashGameTest extends TestCase
     {     
         $user = $this->signIn();
 
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes())
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())
                 ->assertOk()
                 ->assertJsonStructure(['success', 'cash_game'])
                 ->assertJson([
@@ -50,7 +50,7 @@ class LiveCashGameTest extends TestCase
         // We'll be passing a Y-m-d H:i:s string from the front end.
         $start_time = Carbon::create('-2 hours')->toDateTimeString();
 
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes(1000, $start_time));
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $start_time));
         $cash_game = CashGame::first();
 
         $this->assertEquals($start_time, $cash_game->start_time);
@@ -63,7 +63,7 @@ class LiveCashGameTest extends TestCase
         // We'll be passing a Y-m-d H:i:s string from the front end.
         $start_time = Carbon::create('+1 hours')->toDateTimeString();
 
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes(1000, $start_time))
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $start_time))
                 ->assertStatus(422);
     }
 
@@ -71,7 +71,7 @@ class LiveCashGameTest extends TestCase
     {
         $user = $this->signIn();
         // Start CashGame
-        $this->post(route('cash.live.start'), $this->getCashGameAttributes());
+        $this->post(route('cash.live.start'), $this->getLiveCashGameAttributes());
 
         $response = $this->getJson(route('cash.live.current'))
                             ->assertJsonStructure(['success', 'status', 'cash_game'])
@@ -104,10 +104,10 @@ class LiveCashGameTest extends TestCase
         $this->signIn();
 
         // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes());
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes());
         
         // Start the second cash game without finishing the other one
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes())
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())
                 ->assertStatus(422)
                 ->assertJsonStructure(['success', 'message'])
                 ->assertJson([
@@ -120,7 +120,7 @@ class LiveCashGameTest extends TestCase
         $user = $this->signIn();
 
         // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes());
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes());
 
         //  End the cash game
         $this->postJson(route('cash.live.end'), ['amount' => 1000])
@@ -138,7 +138,7 @@ class LiveCashGameTest extends TestCase
         $user = $this->signIn();
 
         // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes())
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())
                 ->assertOk();
 
         $end_time = Carbon::create('+30 mins')->toDateTimeString();
@@ -159,7 +159,7 @@ class LiveCashGameTest extends TestCase
         $this->signIn();
 
         // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes())
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())
                 ->assertOk();
 
         // End the cash game trying a string and a number
@@ -197,7 +197,7 @@ class LiveCashGameTest extends TestCase
         $this->signIn();
 
         // Start one cash game at $start_time
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes(1000, $start_time))
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $start_time))
                 ->assertOk();
 
         // End the cash game at $end_time which is before $start_time
@@ -214,7 +214,7 @@ class LiveCashGameTest extends TestCase
         $user = $this->signIn();
 
         // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes(5000))
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(5000))
             ->assertOk();
 
         // CashGame profit should be -5000 as it's a BuyIn
@@ -234,16 +234,16 @@ class LiveCashGameTest extends TestCase
         $this->signIn();
 
         // Should fail when starting with a negative number
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes(-1000))->assertStatus(422);
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(-1000))->assertStatus(422);
 
         // NOTE: 2020-05-01 Float numbers are valid
         // Should fail when starting with a float number
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes(5.2))->assertOk();
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(5.2))->assertOk();
 
         // Delete the cash game for the test as it was created in assertion above and can only have one running at a time.
         CashGame::first()->delete();
         // Starting with 0 is ok
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes(0))->assertOk();
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(0))->assertOk();
     }
 
     public function testUserCanSupplyACashOutWhenEndingTheirSession()
@@ -251,7 +251,7 @@ class LiveCashGameTest extends TestCase
         $user = $this->signIn();
 
         // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes(1000));
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000));
 
         // End the cash game with a CashOut amount
         $this->postJson(route('cash.live.end'), ['amount' => 5000])->assertOk();
@@ -273,7 +273,7 @@ class LiveCashGameTest extends TestCase
         $user = $this->signIn();
 
         // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes());
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes());
 
         // Should fail when ending with a negative number
         $this->postJson(route('cash.live.end'), ['amount' => -1000])->assertStatus(422);
@@ -282,7 +282,7 @@ class LiveCashGameTest extends TestCase
         $this->postJson(route('cash.live.end'), ['amount' => 54.2])->assertOk();
 
         // Start another cash game as the one above was completed in the last assertion
-        $this->postJson(route('cash.live.start'), $this->getCashGameAttributes());
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes());
         // Ending with 0 is ok
         $this->postJson(route('cash.live.end'), ['amount' => 0])->assertOk();
     }
@@ -419,7 +419,7 @@ class LiveCashGameTest extends TestCase
 
     public function testUserCanUpdateTheLiveCashGameDetails()
     {
-        $cash_game = $this->createCashGame();
+        $this->createCashGame();
 
         $attributes = [
             'start_time' => Carbon::create('-1 hour')->toDateTimeString(),
@@ -438,12 +438,13 @@ class LiveCashGameTest extends TestCase
                     'success' => true
                 ]);
 
+        $this->assertCount(1, CashGame::all());
         $this->assertDatabaseHas('cash_games', $attributes);
     }
 
     public function testDataMustBeValidWhenUpdatingALiveCashGame()
     {     
-        $this->signIn()->startCashGame($this->getCashGameAttributes());
+        $this->signIn()->startCashGame($this->getLiveCashGameAttributes());
 
         // Empty data is valid
         $this->patchJson(route('cash.live.update'), [])->assertOk();
@@ -489,42 +490,5 @@ class LiveCashGameTest extends TestCase
             'start_time' => Carbon::create('-10 minutes')->toDateTimeString(),
             'end_time' => Carbon::create('-10 minutes')->toDateTimeString(),
         ])->assertStatus(422);
-    }
-
-   
-
-    
-
-    public function testCannotAddCompletedCashGameDuringLiveCashGame()
-    {
-        $user = $this->signIn();
-
-        // Start a Live CashGame 30 minutes ago.
-        $live_start_time = Carbon::now()->subMinutes(30)->toDateTimeString();
-        $this->post(route('cash.live.start'), $this->getCashGameAttributes(1000, $live_start_time));
-
-        // Create a completed Cash Game with start_time 10 mins ago and end_time 5 mins ago
-        // So completed Cash Game is conflicting with the Live Cash Game.
-        $attributes = [
-            'cash_game' => [
-                'start_time' => Carbon::now()->subMinutes(10)->toDateTimeString(),
-                'stake_id' => 2,
-                'limit_id' => 2,
-                'variant_id' => 2,
-                'table_size_id' => 2,
-                'location' => 'CasinoMK',
-            ],
-            'buy_ins' => [
-                ['amount' => 2500]
-            ],
-            'cash_out' => [
-                'end_time' => Carbon::now()->subMinutes(5)->toDateTimeString(),
-                'amount' => 1000,
-            ]
-        ];
-        // Assert 422 because it conflicts
-        $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
-    }
-
-   
+    }   
 }

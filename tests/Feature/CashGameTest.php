@@ -6,10 +6,9 @@ use App\CashGame;
 use Tests\TestCase;
 use App\Transactions\CashOut;
 use Illuminate\Support\Carbon;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class CompletedCashGameTest extends TestCase
+class CashGameTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -25,8 +24,8 @@ class CompletedCashGameTest extends TestCase
         $this->assertEmpty($response['cash_games']);
 
         // Create two cash games
-        $this->postJson(route('cash.create'), $this->getCompletedCashGameAttributes(150, Carbon::create('-3 hour')->toDateTimeString(), Carbon::create('-2 hour')->toDateTimeString()));
-        $this->postJson(route('cash.create'), $this->getCompletedCashGameAttributes(200, Carbon::create('-6 hour')->toDateTimeString(), Carbon::create('-5 hour')->toDateTimeString()));
+        $this->postJson(route('cash.create'), $this->getCashGameAttributes(150, Carbon::create('-3 hour')->toDateTimeString(), Carbon::create('-2 hour')->toDateTimeString()));
+        $this->postJson(route('cash.create'), $this->getCashGameAttributes(200, Carbon::create('-6 hour')->toDateTimeString(), Carbon::create('-5 hour')->toDateTimeString()));
 
         // Assert response cash_games returns two cash games
         $response = $this->getJson(route('cash.index'))
@@ -72,7 +71,7 @@ class CompletedCashGameTest extends TestCase
     {
         $user = $this->signIn();
 
-        $attributes = $this->getCompletedCashGameAttributes();
+        $attributes = $this->getCashGameAttributes();
 
         $this->postJson(route('cash.create'), $attributes)->assertOk();
 
@@ -88,7 +87,7 @@ class CompletedCashGameTest extends TestCase
     {
        $this->signIn();
 
-        $attributes = $this->getCompletedCashGameAttributes();
+        $attributes = $this->getCashGameAttributes();
         unset($attributes['buy_ins']);
 
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
@@ -105,7 +104,7 @@ class CompletedCashGameTest extends TestCase
 
         Carbon::setTestNow($testNow);
 
-        $attributes = $this->getCompletedCashGameAttributes(100, $start_time);
+        $attributes = $this->getCashGameAttributes(100, $start_time);
         unset($attributes['cash_out']);
 
         $this->postJson(route('cash.create'), $attributes)->assertOk();
@@ -122,12 +121,12 @@ class CompletedCashGameTest extends TestCase
 
         // Start a Live CashGame 10 minutes ago.
         $live_start_time = Carbon::now()->subMinutes(10)->toDateTimeString();
-        $this->post(route('cash.live.start'), $this->getCashGameAttributes(1000, $live_start_time));
+        $this->post(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $live_start_time));
 
         // Create a completed Cash Game with start_time 5 hours ago and end_time 4 hours ago
         $start_time = Carbon::now()->subHours(5)->toDateTimeString();
         $end_time = Carbon::now()->subHours(4)->toDateTimeString();
-        $attributes = $this->getCompletedCashGameAttributes(100, $start_time, $end_time);
+        $attributes = $this->getCashGameAttributes(100, $start_time, $end_time);
 
         // Assert Okay because it is not conflicting the live cash game.
         $this->postJson(route('cash.create'), $attributes)->assertOk();
@@ -141,7 +140,7 @@ class CompletedCashGameTest extends TestCase
         $this->signIn();
 
         // Valid attributes.  Will change each one before testing.
-        $valid_attributes = $this->getCompletedCashGameAttributes();
+        $valid_attributes = $this->getCashGameAttributes();
 
         // Variables need to be valid.  Only testing one variable as rules are the same.
         $attributes = $valid_attributes;
@@ -204,7 +203,7 @@ class CompletedCashGameTest extends TestCase
         $this->signIn();
 
         // Valid attributes.  Will change each one before testing.
-        $valid_attributes = $this->getCompletedCashGameAttributes();
+        $valid_attributes = $this->getCashGameAttributes();
 
         //Start time is required
         $attributes = $valid_attributes;
@@ -246,7 +245,7 @@ class CompletedCashGameTest extends TestCase
 
         $start_time = Carbon::create(2020, 04, 27, 18, 0, 0)->toDateTimeString();
         $end_time = Carbon::create(2020, 04, 27, 20, 0, 0)->toDateTimeString();
-        $valid_attributes = $this->getCompletedCashGameAttributes(100, $start_time, $end_time);
+        $valid_attributes = $this->getCashGameAttributes(100, $start_time, $end_time);
 
         // Create cash game between 2020-04-27 18:00:00 and 2020-04-27 20:00:00
         $this->postJson(route('cash.create'), $valid_attributes)->assertOk();
@@ -291,6 +290,37 @@ class CompletedCashGameTest extends TestCase
 
         // User 2 is Forbidden to delete user 1s cash game.
         $this->deleteJson(route('cash.delete', ['cash_game' => $cash_game->id]))->assertForbidden();
+    }
+
+    public function testCannotAddCompletedCashGameDuringLiveCashGame()
+    {
+        $this->signIn();
+
+        // Start a Live CashGame 30 minutes ago.
+        $live_start_time = Carbon::now()->subMinutes(30)->toDateTimeString();
+        $this->post(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $live_start_time));
+
+        // Create a completed Cash Game with start_time 10 mins ago and end_time 5 mins ago
+        // So completed Cash Game is conflicting with the Live Cash Game.
+        $attributes = [
+            'cash_game' => [
+                'start_time' => Carbon::now()->subMinutes(10)->toDateTimeString(),
+                'stake_id' => 2,
+                'limit_id' => 2,
+                'variant_id' => 2,
+                'table_size_id' => 2,
+                'location' => 'CasinoMK',
+            ],
+            'buy_ins' => [
+                ['amount' => 2500]
+            ],
+            'cash_out' => [
+                'end_time' => Carbon::now()->subMinutes(5)->toDateTimeString(),
+                'amount' => 1000,
+            ]
+        ];
+        // Assert 422 because it conflicts
+        $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
     }
 
     // TODO: Updating

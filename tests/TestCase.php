@@ -48,7 +48,7 @@ abstract class TestCase extends BaseTestCase
         return $this->signIn($user)->startTournament($this->getTournamentAttributes());
     }
 
-    protected function getCashGameAttributes($amount = 1000, $start_time = null) {
+    protected function getLiveCashGameAttributes($amount = 1000, $start_time = null) {
 
         $attributes = [
             'amount' => $amount,
@@ -67,7 +67,7 @@ abstract class TestCase extends BaseTestCase
         return $attributes;
     }
 
-    protected function getCompletedCashGameAttributes($amount = 1000, $start_time = null, $end_time = null) {
+    protected function getCashGameAttributes($amount = 1000, $start_time = null, $end_time = null) {
 
         $attributes = [
             'cash_game' => [
