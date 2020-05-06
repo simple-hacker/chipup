@@ -419,7 +419,7 @@ class LiveCashGameTest extends TestCase
 
     public function testUserCanUpdateTheLiveCashGameDetails()
     {
-        $this->createCashGame();
+        $this->startLiveCashGame();
 
         $attributes = [
             'start_time' => Carbon::create('-1 hour')->toDateTimeString(),

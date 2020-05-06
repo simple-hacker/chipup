@@ -33,7 +33,7 @@ abstract class TestCase extends BaseTestCase
         return $user;
     }
 
-    protected function createCashGame($user = null)
+    protected function startLiveCashGame($user = null)
     {
         // In User.php startCashGame has default values
         return $this->signIn($user)->startCashGame([
@@ -41,7 +41,7 @@ abstract class TestCase extends BaseTestCase
         ]);
     }
 
-    protected function createTournament($user = null)
+    protected function startLiveTournament($user = null)
     {
         // In User.php startTournament does not have default values
         // So need to add them here.
@@ -72,10 +72,10 @@ abstract class TestCase extends BaseTestCase
         $attributes = [
             'cash_game' => [
                 'start_time' => $start_time ?? Carbon::create('-4 hour')->toDateTimeString(),
-                'stake_id' => 2,
-                'limit_id' => 2,
-                'variant_id' => 2,
-                'table_size_id' => 2,
+                'stake_id' => 1,
+                'limit_id' => 1,
+                'variant_id' => 1,
+                'table_size_id' => 1,
                 'location' => 'CasinoMK',
             ],
             'buy_ins' => [

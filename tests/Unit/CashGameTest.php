@@ -46,7 +46,7 @@ class CashGameTest extends TestCase
     
     public function testACashGameCanBeEnded()
     {
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         // Assert CashGame doesn't have an end time.
         $this->assertNull($cash_game->end_time);
@@ -61,7 +61,7 @@ class CashGameTest extends TestCase
 
     public function testATimeCanBeSuppliedWhenEndingACashGame()
     {
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         $time = Carbon::create('+3 hours');
 
@@ -74,7 +74,7 @@ class CashGameTest extends TestCase
     {
         $this->expectException(\App\Exceptions\InvalidDate::class);
 
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         $cash_game->end(Carbon::create('-3 hours'));
     }
@@ -109,7 +109,7 @@ class CashGameTest extends TestCase
 
     public function testCashGameCanHaveABuyIn()
     {
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         $cash_game->addBuyIn(500);
 
@@ -118,7 +118,7 @@ class CashGameTest extends TestCase
 
     public function testCashGameCanHaveMultipleBuyIns()
     {
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         $cash_game->addBuyIn(500);
         $cash_game->addBuyIn(500);
@@ -129,7 +129,7 @@ class CashGameTest extends TestCase
 
     public function testCashGameCanHaveMultipleExpenses()
     {
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         $cash_game->addExpense(500);
         $cash_game->addExpense(1000);
@@ -141,7 +141,7 @@ class CashGameTest extends TestCase
     public function testACashGameCanBeCashedOut()
     {
         // Cashing Out ends the session as well as updates the CashGame's profit.
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         $cash_game->addBuyIn(10000);
         $this->assertNull($cash_game->fresh()->end_time);
@@ -158,7 +158,7 @@ class CashGameTest extends TestCase
 
     public function testACashGameCanBeCashedOutAtASuppliedTime()
     {
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         $end_time = Carbon::create('+3 hours');
 
@@ -173,7 +173,7 @@ class CashGameTest extends TestCase
         $this->expectException(\Illuminate\Database\QueryException::class);
 
         try{
-            $cash_game = $this->createCashGame();
+            $cash_game = $this->startLiveCashGame();
 
             $cash_game->cashOut(10000);
             $cash_game->cashOut(10000);
@@ -185,7 +185,7 @@ class CashGameTest extends TestCase
 
     public function testCashGameProfitFlow()
     {
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         $cash_game->addBuyIn(1000);
         $cash_game->addExpense(50);

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\CashGame;
+use App\Transactions\BuyIn;
+use App\Transactions\Expense;
 use Illuminate\Support\Carbon;
 use App\Http\Requests\CreateCashGameRequest;
 use App\Http\Requests\UpdateCashGameRequest;
@@ -33,12 +35,12 @@ class CashGameController extends Controller
         try {
             // If start_time conflicts with another cash game then reject.
             if (auth()->user()->cashGamesAtTime(Carbon::create($request->cash_game['start_time'])) > 0) {
-                throw new \Exception('You already have another cash game at that time.');
+                throw new \Exception('You already have another cash game at that time.', 422);
             }
 
             // If no buyins were provided then reject.
             if (!$request->buy_ins) {
-                throw new \Exception('At least one buy in must be supplied');
+                throw new \Exception('At least one buy in must be supplied', 422);
             }
 
             $cash_game = auth()->user()->cashGames()->create($request->cash_game);
@@ -70,7 +72,7 @@ class CashGameController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
-            ], 422);
+            ], $e->getCode());
         }
     }
 
@@ -101,12 +103,89 @@ class CashGameController extends Controller
     {
         $this->authorize('manage', $cash_game);
 
-        $cash_game->update($request->validated());
-        
-        return response()->json([
-            'success' => true,
-            'cash_game' => $cash_game
-        ]);
+        try {
+            // Update Cash Game attributes if provided.
+            if ($request->input('cash_game')) {
+                $cash_game->update($request->input('cash_game'));
+            }
+
+            // Check Buy Ins
+            if ($request->buy_ins) {
+                foreach ($request->input('buy_ins') as $buy_in) {
+                    // Find BuyIn via id and update amount, or create a new BuyIn transaction via it's CashGame.
+                    $id = $buy_in['id'] ?? null;
+
+                    // If Buy In id is provided, locate, authorize and update.
+                    if ($id) {
+                        // Find buy in
+                        $buy_in_transaction = BuyIn::find($id);
+                        // Check it belongs to cash game
+                        if ($buy_in_transaction->game->is($cash_game)) {
+                            // Update if Buy In Transactions belongs to Cash Game
+                            $buy_in_transaction->update(['amount' => $buy_in['amount']]);
+                        } else {
+                            // Buy In Transaction does not belong to Cash Game so Forbidden to update.
+                            throw new \Exception('You do not have permission to update this Buy In transaction', 403);
+                        }
+                    }
+                    // Else just create a new Buy In through Cash Game.
+                    else {
+                        $cash_game->buyIns()->create(['amount' => $buy_in['amount']]);
+                    }
+                }
+            }
+
+            // Check Expenses
+            if ($request->expenses) {
+                foreach ($request->input('expenses') as $expense) {
+                    // Find Expense via id and update amount, or create a new Expense transaction via it's CashGame.
+                    $id = $expense['id'] ?? null;
+
+                    // If Expense id is provided, locate, authorize and update.
+                    if ($id) {
+                        // Find buy in
+                        $expense_transaction = Expense::find($id);
+                        // Check it belongs to cash game
+                        if ($expense_transaction->game->is($cash_game)) {
+                            // Update if Expense Transactions belongs to Cash Game
+                            $expense_transaction->update([
+                                'amount' => $expense['amount'],
+                                'comments' => $expense['comments'] ?? null
+                            ]);
+                        } else {
+                            // Expense Transaction does not belong to Cash Game so Forbidden to update.
+                            throw new \Exception('You do not have permission to update this Expense transaction', 403);
+                        }
+                    }
+                    // Else just create a new Buy In through Cash Game.
+                    else {
+                        $cash_game->expenses()->create([
+                            'amount' => $expense['amount'],
+                            'comments' => $expense['comments'] ?? null
+                        ]);
+                    }
+                }
+            }
+
+            // Check Cash Out
+            // Need to check if set because sending through ['cash_out' => []] will result in 0 amount.
+            if (isset($request->cash_out)) {
+                $cash_game->cashOutModel->updateOrCreate([], [
+                    'amount' => $request->cash_out['amount'] ?? 0
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'cash_game' => $cash_game->fresh()
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], $e->getCode());
+        }
     }
 
     /**

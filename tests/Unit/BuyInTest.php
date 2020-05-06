@@ -11,7 +11,7 @@ class BuyInTest extends TestCase
     
     public function testAddingBuyInsUpdatesCashGameProfit()
     {
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         $this->assertEquals(0, $cash_game->profit);
         $cash_game->addBuyIn(500);
@@ -23,7 +23,7 @@ class BuyInTest extends TestCase
 
     public function testAddingBuyInUpdatesTournamentProfit()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
         
         $this->assertEquals(0, $tournament->profit);
         $tournament->addBuyIn(500);
@@ -33,7 +33,7 @@ class BuyInTest extends TestCase
     public function testUpdatingABuyInUpdatesTheGameTypesProfit()
     {
         // Only testing CashGame which is a type of Game
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         $buy_in = $cash_game->addBuyIn(500);
         $this->assertEquals(-500, $cash_game->fresh()->profit);
@@ -49,7 +49,7 @@ class BuyInTest extends TestCase
     public function testDeletingABuyInUpdatesTheGameTypesProfit()
     {
         // Only testing CashGame which is a type of Game
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         $buy_in = $cash_game->addBuyIn(500);
         $this->assertEquals(-500, $cash_game->fresh()->profit);

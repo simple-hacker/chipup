@@ -404,7 +404,7 @@ class TournamentTest extends TestCase
 
     public function testAUserCanViewAValidTournament()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         // Assert Not Found if supply incorrect tournament id
         $this->getJson(route('tournament.view', ['tournament' => $tournament->id]))
@@ -415,7 +415,7 @@ class TournamentTest extends TestCase
     public function testAUserCannotViewAnotherUsersTournament()
     {
         // Sign in User and create tournament
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         //Sign in another user
         $this->signIn();
@@ -429,7 +429,7 @@ class TournamentTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $start_time = Carbon::create('-1 hour')->toDateTimeString();
 
@@ -454,7 +454,7 @@ class TournamentTest extends TestCase
 
     public function testAUserCannnotUpdateAnotherUsersTournament()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
         
         // Sign in as another user
         $this->signIn();
@@ -526,7 +526,7 @@ class TournamentTest extends TestCase
     public function testAUserCannotDeleteAnotherUsersTournament()
     {
         // Sign in new user and create tournament
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         //Sign in as another new user
         $this->signIn();

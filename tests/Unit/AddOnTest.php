@@ -11,7 +11,7 @@ class AddOnTest extends TestCase
 
     public function testAddingAddOnsUpdatesTournamentProfit()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
         
         $this->assertEquals(0, $tournament->profit);
         $tournament->addAddOn(50);
@@ -23,7 +23,7 @@ class AddOnTest extends TestCase
 
     public function testUpdatingAAddOnUpdatesTheTournamentsProfit()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
         
         $addOn = $tournament->addAddOn(500);
         $this->assertEquals(-500, $tournament->fresh()->profit);
@@ -38,7 +38,7 @@ class AddOnTest extends TestCase
 
     public function testDeletingAAddOnUpdatesTheTournamentsProfit()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
         
         $addOn = $tournament->addAddOn(500);
         $this->assertEquals(-500, $tournament->fresh()->profit);

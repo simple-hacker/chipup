@@ -25,7 +25,7 @@ class RebuyTest extends TestCase
 
     public function testARebuyCanBeAddedToATournament()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $this->postJson(route('rebuy.add'), [
                     'id' => $tournament->id,
@@ -56,7 +56,7 @@ class RebuyTest extends TestCase
 
     public function testUserCanAddMultipleRebuysToTournament()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $this->postJson(route('rebuy.add'), [
             'id' => $tournament->id,
@@ -75,7 +75,7 @@ class RebuyTest extends TestCase
 
     public function testViewingRebuyReturnsJsonOfRebuyTransaction()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $this->postJson(route('rebuy.add'), [
             'id' => $tournament->id,
@@ -94,7 +94,7 @@ class RebuyTest extends TestCase
 
     public function testAUserCanUpdateTheRebuy()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $this->postJson(route('rebuy.add'), [
             'id' => $tournament->id,
@@ -117,7 +117,7 @@ class RebuyTest extends TestCase
 
     public function testAUserCanDeleteTheRebuy()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $this->postJson(route('rebuy.add'), [
             'id' => $tournament->id,
@@ -140,7 +140,7 @@ class RebuyTest extends TestCase
 
     public function testRebuyAmountIsValidForAdd()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         // Test not sending amount
         $this->postJson(route('rebuy.add'), [
@@ -185,7 +185,7 @@ class RebuyTest extends TestCase
 
     public function testRebuyAmountIsValidForUpdate()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $this->postJson(route('rebuy.add'), [
             'id' => $tournament->id,

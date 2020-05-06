@@ -115,7 +115,6 @@ class LiveCashGameController extends Controller
             $cash_game = auth()->user()->liveCashGame();
 
             if ($cash_game) {
-                $this->authorize('manage', $cash_game);
 
                 $cash_game->update($request->validated());
                 

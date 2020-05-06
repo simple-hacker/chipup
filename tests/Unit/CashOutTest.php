@@ -11,7 +11,7 @@ class CashOutTest extends TestCase
     
     public function testCashingOutUpdatesTheCashGameProfit()
     {
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
         $cash_game->addBuyIn(10000);
         $cash_game->cashOut(30000);
         $this->assertEquals(20000, $cash_game->fresh()->profit);
@@ -19,7 +19,7 @@ class CashOutTest extends TestCase
 
     public function testCashingOutUpdatesTheTournamentProfit()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
         $tournament->addBuyIn(10000);
         $tournament->cashOut(30000);
         $this->assertEquals(20000, $tournament->fresh()->profit);
@@ -28,7 +28,7 @@ class CashOutTest extends TestCase
     public function testUpdatingACashOutUpdatesTheGameTypesProfit()
     {
         // Only testing CashGame which is a type of Game
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         $cash_game->addBuyIn(10000);
         $cash_out = $cash_game->cashOut(30000);
@@ -46,7 +46,7 @@ class CashOutTest extends TestCase
     public function testDeletingACashOutUpdatesTheGameTypesProfit()
     {
         // Only testing CashGame which is a type of Game
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
         
         $cash_game->addBuyIn(10000);
         $cash_out = $cash_game->cashOut(30000);

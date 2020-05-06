@@ -25,7 +25,7 @@ class AddOnTest extends TestCase
 
     public function testAnAddOnCanBeAddedToATournament()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $this->postJson(route('addon.add'), [
                     'id' => $tournament->id,
@@ -56,7 +56,7 @@ class AddOnTest extends TestCase
 
     public function testUserCanAddMultipleAddOnsToTournament()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $this->postJson(route('addon.add'), [
             'id' => $tournament->id,
@@ -75,7 +75,7 @@ class AddOnTest extends TestCase
 
     public function testViewingAddOnReturnsJsonOfAddOnTransaction()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $this->postJson(route('addon.add'), [
             'id' => $tournament->id,
@@ -94,7 +94,7 @@ class AddOnTest extends TestCase
 
     public function testAUserCanUpdateTheAddOn()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $this->postJson(route('addon.add'), [
             'id' => $tournament->id,
@@ -117,7 +117,7 @@ class AddOnTest extends TestCase
 
     public function testAUserCanDeleteTheAddOn()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $this->postJson(route('addon.add'), [
             'id' => $tournament->id,
@@ -140,7 +140,7 @@ class AddOnTest extends TestCase
 
     public function testAddOnAmountIsValidForAdd()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         // Test not sending amount
         $this->postJson(route('addon.add'), [
@@ -185,7 +185,7 @@ class AddOnTest extends TestCase
 
     public function testAddOnAmountIsValidForUpdate()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $this->postJson(route('addon.add'), [
             'id' => $tournament->id,

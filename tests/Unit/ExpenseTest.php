@@ -11,7 +11,7 @@ class ExpenseTest extends TestCase
     
     public function testAddingExpensesUpdatesCashGameProfit()
     {
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         $this->assertEquals(0, $cash_game->profit);
         $cash_game->addExpense(50);
@@ -23,7 +23,7 @@ class ExpenseTest extends TestCase
 
     public function testAddingExpensesUpdatesTournamentProfit()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $this->assertEquals(0, $tournament->profit);
         $tournament->addExpense(50);
@@ -36,7 +36,7 @@ class ExpenseTest extends TestCase
     public function testUpdatingAExpenseUpdatesTheGameTypesProfit()
     {
         // Only testing CashGame which is a type of Game
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
 
         $expense = $cash_game->addExpense(500);
         $this->assertEquals(-500, $cash_game->fresh()->profit);
@@ -52,7 +52,7 @@ class ExpenseTest extends TestCase
     public function testDeletingAExpenseUpdatesTheGameTypesProfit()
     {
         // Only testing CashGame which is a type of Game
-        $cash_game = $this->createCashGame();
+        $cash_game = $this->startLiveCashGame();
         
         $expense = $cash_game->addExpense(500);
         $this->assertEquals(-500, $cash_game->fresh()->profit);

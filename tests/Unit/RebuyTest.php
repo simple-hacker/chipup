@@ -11,7 +11,7 @@ class RebuyTest extends TestCase
 
     public function testAddingRebuysUpdatesTournamentProfit()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $this->assertEquals(0, $tournament->profit);
         $tournament->addRebuy(100);
@@ -23,7 +23,7 @@ class RebuyTest extends TestCase
 
     public function testUpdatingARebuyUpdatesTheTournamentsProfit()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $rebuy = $tournament->addRebuy(500);
         $this->assertEquals(-500, $tournament->fresh()->profit);
@@ -38,7 +38,7 @@ class RebuyTest extends TestCase
 
     public function testDeletingARebuyUpdatesTheTournamentsProfit()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
         
         $rebuy = $tournament->addRebuy(500);
         $this->assertEquals(-500, $tournament->fresh()->profit);

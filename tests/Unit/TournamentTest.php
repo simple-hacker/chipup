@@ -47,7 +47,7 @@ class TournamentTest extends TestCase
 
     public function testATournamentCanBeEnded()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         // Assert Tournament doesn't have an end time.
         $this->assertNull($tournament->end_time);
@@ -62,7 +62,7 @@ class TournamentTest extends TestCase
 
     public function testATimeCanBeSuppliedWhenEndingATournament()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $time = Carbon::create('+3 hours');
 
@@ -75,7 +75,7 @@ class TournamentTest extends TestCase
     {
         $this->expectException(\App\Exceptions\InvalidDate::class);
 
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $tournament->end(Carbon::create('-3 hours'));
     }
@@ -110,7 +110,7 @@ class TournamentTest extends TestCase
 
     public function testTournamentCanHaveABuyIn()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $tournament->addBuyIn(500);
 
@@ -123,7 +123,7 @@ class TournamentTest extends TestCase
         $this->expectException(\App\Exceptions\MultipleBuyInsNotAllowed::class);
 
         try {
-            $tournament = $this->createTournament();
+            $tournament = $this->startLiveTournament();
 
             $buy_in_1 = $tournament->addBuyIn(500);
             $tournament->addBuyIn(500);
@@ -135,7 +135,7 @@ class TournamentTest extends TestCase
 
     public function testTournamentCanHaveMultipleExpenses()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $tournament->addExpense(500);
         $tournament->addExpense(1000);
@@ -146,7 +146,7 @@ class TournamentTest extends TestCase
 
     public function testTournamentCanHaveMultipleRebuys()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $tournament->addRebuy(1000);
         $tournament->addRebuy(1000);
@@ -157,7 +157,7 @@ class TournamentTest extends TestCase
 
     public function testTournamentCanHaveMultipleAddOns()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $tournament->addAddOn(500);
         $tournament->addAddOn(500);
@@ -170,7 +170,7 @@ class TournamentTest extends TestCase
     {
         // Cashing Out ends the tournament as well as updates the Tournament's profit.
 
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $tournament->addBuyIn(10000);
         $this->assertNull($tournament->fresh()->end_time);
@@ -187,7 +187,7 @@ class TournamentTest extends TestCase
 
     public function testATournamentCanBeCashedOutAtASuppliedTime()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
 
         $end_time = Carbon::create('+3 hours');
 
@@ -202,7 +202,7 @@ class TournamentTest extends TestCase
         $this->expectException(\Illuminate\Database\QueryException::class);
 
         try{
-            $tournament = $this->createTournament();
+            $tournament = $this->startLiveTournament();
 
             $tournament->cashOut(10000);
             $tournament->cashOut(10000);
@@ -214,7 +214,7 @@ class TournamentTest extends TestCase
 
     public function testTournamentProfitFlow()
     {
-        $tournament = $this->createTournament();
+        $tournament = $this->startLiveTournament();
         
         $tournament->addBuyIn(1000);
         $tournament->addExpense(50);

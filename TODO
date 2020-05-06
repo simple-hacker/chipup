@@ -4,11 +4,12 @@ Todo May:
     ✔ Separate Live and Completed Cash Game and Tournament Controllers @done(20-05-05 17:03)
     ☐ Refactor Controllers
         Tidy up return statuses
+        Major refactor of CashGameController@update
+            Look at eloquent relationship methods, model Policies etc.
+            Pluck ids from request.  If any of them are not in cash_game->buyIns->pluck['id'] then reject the whole update.
         $e->getCode() instead of hard coding 422
     ☐ Custom Exception messages
     ☐ Custom Validation error messages
-
-
 
 Todo:
     ✔ Create models and migrations for all GameTransaction types @done(20-02-20 21:35)
