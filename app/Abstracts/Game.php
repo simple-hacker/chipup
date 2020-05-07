@@ -104,10 +104,8 @@ abstract class Game extends Model
     * @param float amount
     * @return CashOut
     */
-    public function cashOut(float $amount, Carbon $end_time = null)
+    public function cashOut(float $amount)
     {
-        $this->end($end_time);
-
         return $this->cashOutModel()->create([
             'amount' => $amount
         ]);

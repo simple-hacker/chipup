@@ -146,25 +146,9 @@ class CashGameTest extends TestCase
         $cash_game->addBuyIn(10000);
         $this->assertNull($cash_game->fresh()->end_time);
 
-        $end_time = Carbon::now()->toDateTimeString();
-
         $cash_game->cashOut(30000);
         
-        $cash_game->refresh();
-        
-        $this->assertEquals($end_time, $cash_game->end_time);
-        $this->assertEquals(20000, $cash_game->profit);
-    }
-
-    public function testACashGameCanBeCashedOutAtASuppliedTime()
-    {
-        $cash_game = $this->startLiveCashGame();
-
-        $end_time = Carbon::create('+3 hours');
-
-        $cash_game->cashOut(30000, $end_time);
-                
-        $this->assertEquals($end_time->toDateTimeString(), $cash_game->fresh()->end_time);
+        $this->assertEquals(20000, $cash_game->fresh()->profit);
     }
 
     public function testACashGameCanOnlyBeCashOutOnce()

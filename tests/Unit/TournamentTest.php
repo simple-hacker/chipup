@@ -175,25 +175,8 @@ class TournamentTest extends TestCase
         $tournament->addBuyIn(10000);
         $this->assertNull($tournament->fresh()->end_time);
 
-        $end_time = Carbon::now()->toDateTimeString();
-
         $tournament->cashOut(30000);
-        
-        $tournament->refresh();
-        
-        $this->assertEquals($end_time, $tournament->end_time);
-        $this->assertEquals(20000, $tournament->profit);
-    }
-
-    public function testATournamentCanBeCashedOutAtASuppliedTime()
-    {
-        $tournament = $this->startLiveTournament();
-
-        $end_time = Carbon::create('+3 hours');
-
-        $tournament->cashOut(30000, $end_time);
-                
-        $this->assertEquals($end_time->toDateTimeString(), $tournament->fresh()->end_time);
+        $this->assertEquals(20000, $tournament->fresh()->profit);
     }
 
     public function testATournamentCanOnlyBeCashOutOnce()

@@ -14,24 +14,24 @@ class CreateCashGameRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'cash_game.start_time' => 'required|date|before_or_equal:now',
-            'cash_game.stake_id' => 'required|integer|exists:stakes,id',
-            'cash_game.variant_id' => 'required|integer|exists:variants,id',
-            'cash_game.limit_id' => 'required|integer|exists:limits,id',
-            'cash_game.table_size_id' => 'required|integer|exists:table_sizes,id',
-            'cash_game.location' => 'required|string',
+            'start_time' => 'required|date|before_or_equal:now',
+            'stake_id' => 'required|integer|exists:stakes,id',
+            'variant_id' => 'required|integer|exists:variants,id',
+            'limit_id' => 'required|integer|exists:limits,id',
+            'table_size_id' => 'required|integer|exists:table_sizes,id',
+            'location' => 'required|string',
+            'end_time' =>'required|date|before_or_equal:now',
 
             'buy_ins.*.amount' => 'required|numeric|min:0',
 
             'expenses.*.amount' => 'required_with:expenses.*.comments|numeric|min:0',
             'expenses.*.comments' => 'sometimes|nullable|string',
 
-            'cash_out.end_time' =>'sometimes|date|before_or_equal:now',
             'cash_out.amount' => 'sometimes|numeric|min:0',
         ];
 
-        if ($this->input('cash_game.start_time') && $this->input('cash_out.end_time')) {
-            $rules['cash_out.end_time'] .= '|after:cash_game.start_time';
+        if ($this->input('start_time') && $this->input('end_time')) {
+            $rules['end_time'] .= '|after:start_time';
         }
 
         return $rules;

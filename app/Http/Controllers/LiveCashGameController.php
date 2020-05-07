@@ -81,7 +81,8 @@ class LiveCashGameController extends Controller
             // If there is a live CashGame try to end if with supplied time or null
             try {
                 $end_time = ($request->end_time) ? Carbon::create($request->end_time) : null;
-                $cash_game->cashOut($request->amount, $end_time);
+                $cash_game->end($end_time);
+                $cash_game->cashOut($request->amount);
 
                 return response()->json([
                     'success' => true,

@@ -92,16 +92,11 @@ class CashGameTest extends TestCase
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
     }
 
-    public function testIfNoCashOutIsSuppliedThenItDefaultsToNowandZero()
+    public function testIfNoCashOutIsSuppliedThenItDefaultsToZero()
     {
         $user = $this->signIn();
 
-        $start_time = Carbon::create(2020, 04, 28, 18, 30, 0)->toDateTimeString();
-        $testNow = Carbon::create(2020, 04, 28, 20, 45, 0);
-
-        Carbon::setTestNow($testNow);
-
-        $attributes = $this->getCashGameAttributes(100, $start_time);
+        $attributes = $this->getCashGameAttributes();
         unset($attributes['cash_out']);
 
         $this->postJson(route('cash.create'), $attributes)->assertOk();
@@ -109,7 +104,6 @@ class CashGameTest extends TestCase
         $cash_game = $user->cashGames()->first();
 
         $this->assertEquals($cash_game->cashOutModel->amount, 0);
-        $this->assertEquals($cash_game->end_time, $testNow->toDateTimeString());
     }
 
     public function testUserCanAddCompletedCashGameBeforeALiveCashGame()
@@ -141,14 +135,14 @@ class CashGameTest extends TestCase
 
         // Variables need to be valid.  Only testing one variable as rules are the same.
         $attributes = $valid_attributes;
-        $attributes['cash_game']['stake_id'] = 99; // 99 does not exist.
+        $attributes['stake_id'] = 99; // 99 does not exist.
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
-        unset($attributes['cash_game']['stake_id']); // Do not provide stake_id
+        unset($attributes['stake_id']); // Do not provide stake_id
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
         // Location is required.
         $attributes = $valid_attributes;
-        unset($attributes['cash_game']['location']);
+        unset($attributes['location']);
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
         // BuyIns must be supplied.
@@ -197,15 +191,15 @@ class CashGameTest extends TestCase
 
     public function testCanUpdateJustTheBasicDetailsWithoutTransactions()
     {
+        $this->withoutExceptionHandling();
+
         $user = $this->signIn();
         $this->postJson(route('cash.create'), $this->getCashGameAttributes())->assertOk();
         $cash_game = $user->cashGames->first();
 
         // Send only a new location.
         $attributes = [
-            'cash_game' => [
-                'location' => 'New Location'
-            ]
+            'location' => 'New Location'
         ];
 
         $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), $attributes)->assertOk();
@@ -221,35 +215,35 @@ class CashGameTest extends TestCase
 
         //Start time is required
         $attributes = $valid_attributes;
-        unset($attributes['cash_game']['start_time']);
+        unset($attributes['start_time']);
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
         // Start Time cannot be in the future
         $attributes = $valid_attributes;
-        $attributes['cash_game']['start_time'] = Carbon::create('+1 seconds')->toDateTimeString();
+        $attributes['start_time'] = Carbon::create('+1 seconds')->toDateTimeString();
         unset($attributes['cash_out']);
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
-        // End Time is optional as it defaults to Now()
+        // NOTE: End Time is now required.
         $attributes = $valid_attributes;
-        unset($attributes['cash_out']['end_time']);
-        $this->postJson(route('cash.create'), $attributes)->assertOk();
+        unset($attributes['end_time']);
+        $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
         // End Time cannot be in the future
         $attributes = $valid_attributes;
-        $attributes['cash_out']['end_time'] = Carbon::create('+1 seconds')->toDateTimeString();
+        $attributes['end_time'] = Carbon::create('+1 seconds')->toDateTimeString();
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
         // End Time cannot be before Start Time
         $attributes = $valid_attributes;
-        $attributes['cash_game']['start_time'] = Carbon::now()->subMinutes(10)->toDateTimeString();
-        $attributes['cash_out']['end_time'] = Carbon::now()->subMinutes(30)->toDateTimeString();
+        $attributes['start_time'] = Carbon::now()->subMinutes(10)->toDateTimeString();
+        $attributes['end_time'] = Carbon::now()->subMinutes(30)->toDateTimeString();
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
         // Start Time and End Time must not be the same
         $attributes = $valid_attributes;
-        $attributes['cash_game']['start_time'] = Carbon::now()->subMinutes(10)->toDateTimeString();
-        $attributes['cash_out']['end_time'] = Carbon::now()->subMinutes(10)->toDateTimeString();
+        $attributes['start_time'] = Carbon::now()->subMinutes(10)->toDateTimeString();
+        $attributes['end_time'] = Carbon::now()->subMinutes(10)->toDateTimeString();
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
     }
 
@@ -266,20 +260,20 @@ class CashGameTest extends TestCase
 
         // Creating a cash game at 2020-04-27 19:00:00 will fail.
         $attributes = $valid_attributes;
-        $attributes['cash_game']['start_time'] = Carbon::create(2020, 04, 27, 19, 30, 0)->toDateTimeString();
-        $attributes['cash_out']['end_time'] = Carbon::create(2020, 04, 27, 21, 30, 00)->toDateTimeString();
+        $attributes['start_time'] = Carbon::create(2020, 04, 27, 19, 30, 0)->toDateTimeString();
+        $attributes['end_time'] = Carbon::create(2020, 04, 27, 21, 30, 00)->toDateTimeString();
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
         // Creating a cash game with the same start_time (18:00:00) will fail.
         $attributes = $valid_attributes;
-        $attributes['cash_game']['start_time'] = Carbon::create(2020, 04, 27, 18, 0, 0)->toDateTimeString();
-        $attributes['cash_out']['end_time'] = Carbon::create(2020, 04, 27, 21, 30, 00)->toDateTimeString();
+        $attributes['start_time'] = Carbon::create(2020, 04, 27, 18, 0, 0)->toDateTimeString();
+        $attributes['end_time'] = Carbon::create(2020, 04, 27, 21, 30, 00)->toDateTimeString();
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
         // Creating a cash game where its start_time at an already exisiting end_time (20:00:00) will fail.
         $attributes = $valid_attributes;
-        $attributes['cash_game']['start_time'] = Carbon::create(2020, 04, 27, 20, 00, 00)->toDateTimeString();
-        $attributes['cash_out']['end_time'] = Carbon::create(2020, 04, 27, 21, 30, 00)->toDateTimeString();
+        $attributes['start_time'] = Carbon::create(2020, 04, 27, 20, 00, 00)->toDateTimeString();
+        $attributes['end_time'] = Carbon::create(2020, 04, 27, 21, 30, 00)->toDateTimeString();
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
     }
 
@@ -317,19 +311,17 @@ class CashGameTest extends TestCase
         // Create a completed Cash Game with start_time 10 mins ago and end_time 5 mins ago
         // So completed Cash Game is conflicting with the Live Cash Game.
         $attributes = [
-            'cash_game' => [
-                'start_time' => Carbon::now()->subMinutes(10)->toDateTimeString(),
-                'stake_id' => 2,
-                'limit_id' => 2,
-                'variant_id' => 2,
-                'table_size_id' => 2,
-                'location' => 'CasinoMK',
-            ],
+            'start_time' => Carbon::now()->subMinutes(10)->toDateTimeString(),
+            'stake_id' => 2,
+            'limit_id' => 2,
+            'variant_id' => 2,
+            'table_size_id' => 2,
+            'location' => 'CasinoMK',
+            'end_time' => Carbon::now()->subMinutes(5)->toDateTimeString(),
             'buy_ins' => [
                 ['amount' => 2500]
             ],
             'cash_out' => [
-                'end_time' => Carbon::now()->subMinutes(5)->toDateTimeString(),
                 'amount' => 1000,
             ]
         ];
@@ -346,9 +338,7 @@ class CashGameTest extends TestCase
         // Sign in as a different user and try to update cash_game.
         $user2 = $this->signIn();
         $attributes = [
-            'cash_game' => [
-                'location' => 'Las Vegas'
-            ]
+            'location' => 'Las Vegas'
         ];
 
         $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), $attributes)->assertForbidden();
@@ -361,18 +351,16 @@ class CashGameTest extends TestCase
         $cash_game = $user->cashGames()->first();
 
         $attributes = [
-            'cash_game' => [
-                'stake_id' => 2,
-                'limit_id' => 2,
-                'variant_id' => 2,
-                'table_size_id' => 2,
-                'location' => 'New Location',
-            ]
+            'stake_id' => 2,
+            'limit_id' => 2,
+            'variant_id' => 2,
+            'table_size_id' => 2,
+            'location' => 'New Location',
         ];
 
         $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), $attributes)->assertOk();
 
-        $this->assertDatabaseHas('cash_games', $attributes['cash_game']);
+        $this->assertDatabaseHas('cash_games', $attributes);
     }
 
     public function testBuyInsCanBeUpdatedInTheSameRequest()
