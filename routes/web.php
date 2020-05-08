@@ -21,6 +21,9 @@ Route::post('/setup', 'SetupController@complete')->name('setup.complete')->middl
 
 Auth::routes();
 
+Route::get('login/{provider}', 'Auth\SocialLoginController@redirectToProvider');
+Route::get('login/{provider}/callback','Auth\SocialLoginController@handleProviderCallback');
+
 // TODO: Go through application and change route('dashboard') to 'dashboard'
 // Keeping dashboard route for now because a lot of the application depends on the route name.  This was done before setting up SPA.
 Route::get('/dashboard', 'SpaController@index')->name('dashboard')->middleware(['auth', 'setup.complete']);

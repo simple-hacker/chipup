@@ -11,6 +11,8 @@ window.Vue = require('vue');
 import LoginForm from './components/LoginForm.vue';
 import RegisterForm from './components/RegisterForm.vue';
 
+import '@fortawesome/fontawesome-free/css/all.min.css'
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

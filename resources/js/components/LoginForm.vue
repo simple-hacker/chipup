@@ -19,8 +19,7 @@
             </div>
         </form>
         <p class="text-sm border-t border-gray-400 mt-5 py-2 w-full text-center">Or login with</p>
-        <a href="/https://www.facebook.com" class="flex justify-center items-center w-full bg-facebook hover:bg-facebook-dark text-white uppercase mt-2 px-4 py-3"><span class="text-white text-xl mr-4"><i class="fab fa-facebook-f"></i></span>Login with Facebook</a>
-        <a href="/https://www.twitter.com" class="flex justify-center items-center w-full bg-twitter hover:bg-twitter-dark text-white uppercase mt-2 px-4 py-3"><span class="text-white text-xl mr-4"><i class="fab fa-twitter"></i></span>Login with Twitter</a>
+        <a href="login/facebook" class="flex justify-center items-center w-full bg-facebook hover:bg-facebook-dark text-white uppercase mt-2 px-4 py-3"><i class="fab fa-facebook fa-2x text-white mr-4"></i>Continue with Facebook</a>
         <a href="/register" class="border-t border-gray-400 mt-5 py-2 w-full text-center text-green-600 text-sm font-bold">Click here to sign up for an account</a>
     </div>
 </template>

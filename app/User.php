@@ -48,6 +48,16 @@ class User extends Authenticatable
     ];
 
     /**
+    * Returns a collection of the user's social logins.
+    * 
+    * @return hasMany
+    */
+    public function socialLogins()
+    {
+        return $this->hasMany('App\SocialLogin');
+    }
+
+    /**
     * Updates the user's bankroll.
     * 
     * @param integer amount
