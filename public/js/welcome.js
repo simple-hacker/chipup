@@ -2150,7 +2150,7 @@ __webpack_require__.r(__webpack_exports__);
         axios.post('/login', {
           'email': _this.email,
           'password': _this.password,
-          'rememer': _this.remember
+          'remember': _this.remember
         }).then(function (response) {
           if (response.status === 200) {
             window.location = 'dashboard';
@@ -2159,6 +2159,8 @@ __webpack_require__.r(__webpack_exports__);
           _this.btnText = 'Login';
           _this.errors = e.response.data.errors;
         });
+      })["catch"](function (error) {
+        console.log(error);
       });
     }
   }
@@ -33071,6 +33073,7 @@ window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.withCredentials = true;
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

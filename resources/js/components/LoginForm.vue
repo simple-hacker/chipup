@@ -41,21 +41,25 @@ export default {
             this.btnText = '<i class="fas fa-lg fa-circle-notch fa-spin"></i>';
 
             // Login via /sanctum/csrf-cookie to initialize Sanctum cookies, then proceed to login.
-            axios.get('/sanctum/csrf-cookie').then(response => {
+            axios.get('/sanctum/csrf-cookie')
+            .then(response => {
                 axios.post('/login', {
                     'email': this.email,
                     'password': this.password,
-                    'rememer': this.remember,
+                    'remember': this.remember,
                 })
                 .then(response => {
                     if (response.status === 200) {
-                        window.location = 'dashboard';
+                        window.location = 'dashboard'
                     }
                 })
                 .catch(e => {
-                    this.btnText = 'Login';
-                    this.errors = e.response.data.errors;
+                    this.btnText = 'Login'
+                    this.errors = e.response.data.errors
                 });
+            })
+            .catch( error => {
+                console.log(error)
             });
             
         }

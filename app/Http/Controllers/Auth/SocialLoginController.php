@@ -26,7 +26,8 @@ class SocialLoginController extends Controller
 
         $user = $this->findOrCreateUser($socialUser, $provider);
         Auth::login($user, true);
-        return redirect(route('dashboard'));
+
+        return redirect('/dashboard');
     }
 
 

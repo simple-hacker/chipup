@@ -2717,7 +2717,7 @@ __webpack_require__.r(__webpack_exports__);
         axios.post('/login', {
           'email': _this.email,
           'password': _this.password,
-          'rememer': _this.remember
+          'remember': _this.remember
         }).then(function (response) {
           if (response.status === 200) {
             window.location = 'dashboard';
@@ -2726,6 +2726,8 @@ __webpack_require__.r(__webpack_exports__);
           _this.btnText = 'Login';
           _this.errors = e.response.data.errors;
         });
+      })["catch"](function (error) {
+        console.log(error);
       });
     }
   }
@@ -40835,70 +40837,80 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
+//! locale : Afrikaans [af]
+//! author : Werner Mollentze : https://github.com/wernerm
 
 ;(function (global, factory) {
     true ? factory(__webpack_require__(/*! ../moment */ "./node_modules/moment/moment.js")) :
    undefined
 }(this, (function (moment) { 'use strict';
 
+    //! moment.js locale configuration
 
     var af = moment.defineLocale('af', {
-        months : 'Januarie_Februarie_Maart_April_Mei_Junie_Julie_Augustus_September_Oktober_November_Desember'.split('_'),
-        monthsShort : 'Jan_Feb_Mrt_Apr_Mei_Jun_Jul_Aug_Sep_Okt_Nov_Des'.split('_'),
-        weekdays : 'Sondag_Maandag_Dinsdag_Woensdag_Donderdag_Vrydag_Saterdag'.split('_'),
-        weekdaysShort : 'Son_Maa_Din_Woe_Don_Vry_Sat'.split('_'),
-        weekdaysMin : 'So_Ma_Di_Wo_Do_Vr_Sa'.split('_'),
+        months: 'Januarie_Februarie_Maart_April_Mei_Junie_Julie_Augustus_September_Oktober_November_Desember'.split(
+            '_'
+        ),
+        monthsShort: 'Jan_Feb_Mrt_Apr_Mei_Jun_Jul_Aug_Sep_Okt_Nov_Des'.split('_'),
+        weekdays: 'Sondag_Maandag_Dinsdag_Woensdag_Donderdag_Vrydag_Saterdag'.split(
+            '_'
+        ),
+        weekdaysShort: 'Son_Maa_Din_Woe_Don_Vry_Sat'.split('_'),
+        weekdaysMin: 'So_Ma_Di_Wo_Do_Vr_Sa'.split('_'),
         meridiemParse: /vm|nm/i,
-        isPM : function (input) {
+        isPM: function (input) {
             return /^nm$/i.test(input);
         },
-        meridiem : function (hours, minutes, isLower) {
+        meridiem: function (hours, minutes, isLower) {
             if (hours < 12) {
                 return isLower ? 'vm' : 'VM';
             } else {
                 return isLower ? 'nm' : 'NM';
             }
         },
-        longDateFormat : {
-            LT : 'HH:mm',
-            LTS : 'HH:mm:ss',
-            L : 'DD/MM/YYYY',
-            LL : 'D MMMM YYYY',
-            LLL : 'D MMMM YYYY HH:mm',
-            LLLL : 'dddd, D MMMM YYYY HH:mm'
+        longDateFormat: {
+            LT: 'HH:mm',
+            LTS: 'HH:mm:ss',
+            L: 'DD/MM/YYYY',
+            LL: 'D MMMM YYYY',
+            LLL: 'D MMMM YYYY HH:mm',
+            LLLL: 'dddd, D MMMM YYYY HH:mm',
         },
-        calendar : {
-            sameDay : '[Vandag om] LT',
-            nextDay : '[Môre om] LT',
-            nextWeek : 'dddd [om] LT',
-            lastDay : '[Gister om] LT',
-            lastWeek : '[Laas] dddd [om] LT',
-            sameElse : 'L'
+        calendar: {
+            sameDay: '[Vandag om] LT',
+            nextDay: '[Môre om] LT',
+            nextWeek: 'dddd [om] LT',
+            lastDay: '[Gister om] LT',
+            lastWeek: '[Laas] dddd [om] LT',
+            sameElse: 'L',
         },
-        relativeTime : {
-            future : 'oor %s',
-            past : '%s gelede',
-            s : '\'n paar sekondes',
-            ss : '%d sekondes',
-            m : '\'n minuut',
-            mm : '%d minute',
-            h : '\'n uur',
-            hh : '%d ure',
-            d : '\'n dag',
-            dd : '%d dae',
-            M : '\'n maand',
-            MM : '%d maande',
-            y : '\'n jaar',
-            yy : '%d jaar'
+        relativeTime: {
+            future: 'oor %s',
+            past: '%s gelede',
+            s: "'n paar sekondes",
+            ss: '%d sekondes',
+            m: "'n minuut",
+            mm: '%d minute',
+            h: "'n uur",
+            hh: '%d ure',
+            d: "'n dag",
+            dd: '%d dae',
+            M: "'n maand",
+            MM: '%d maande',
+            y: "'n jaar",
+            yy: '%d jaar',
         },
         dayOfMonthOrdinalParse: /\d{1,2}(ste|de)/,
-        ordinal : function (number) {
-            return number + ((number === 1 || number === 8 || number >= 20) ? 'ste' : 'de'); // Thanks to Joris Röling : https://github.com/jjupiter
+        ordinal: function (number) {
+            return (
+                number +
+                (number === 1 || number === 8 || number >= 20 ? 'ste' : 'de')
+            ); // Thanks to Joris Röling : https://github.com/jjupiter
         },
-        week : {
-            dow : 1, // Maandag is die eerste dag van die week.
-            doy : 4  // Die week wat die 4de Januarie bevat is die eerste week van die jaar.
-        }
+        week: {
+            dow: 1, // Maandag is die eerste dag van die week.
+            doy: 4, // Die week wat die 4de Januarie bevat is die eerste week van die jaar.
+        },
     });
 
     return af;
@@ -87945,7 +87957,12 @@ __webpack_require__.r(__webpack_exports__);
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-__webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+__webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); // Prevents Facebook's #_=_ url
+
+
+if (window.location.hash === "#_=_") {
+  history.replaceState ? history.replaceState(null, null, window.location.href.split("#")[0]) : window.location.hash = "";
+}
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"); // vue-router
 
@@ -88044,6 +88061,7 @@ window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.withCredentials = true;
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
