@@ -6,6 +6,11 @@
 
 require('./bootstrap')
 
+// Prevents Facebook's #_=_ url
+if (window.location.hash === "#_=_"){
+    history.replaceState ? history.replaceState(null, null, window.location.href.split("#")[0]): window.location.hash = ""
+}
+
 window.Vue = require('vue')
 
 // vue-router
@@ -78,7 +83,7 @@ import NotFound from '@/NotFound.vue'
 import routes from '@/routes.js'
 import store from '@store/store.js'
 
-import '@fortawesome/fontawesome-free/css/all.css'
+import '@fortawesome/fontawesome-free/css/all.min.css'
 
 const router = new VueRouter({
     mode: 'history',
