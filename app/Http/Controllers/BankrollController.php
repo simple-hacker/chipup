@@ -36,6 +36,22 @@ class BankrollController extends Controller
     }
 
     /**
+    * GET method to view a specific bankroll transaction.
+    * 
+    * @param Bankroll $bankrollTransaction
+    * @return json
+    */
+    public function view(Bankroll $bankrollTransaction)
+    {
+        $this->authorize('manage', $bankrollTransaction);
+
+        return response()->json([
+            'success' => true,
+            'bankrollTransaction' => $bankrollTransaction
+        ]);
+    }
+
+    /**
     * PATCH method to update a Bankroll Transaction
     * 
     * @param Bankroll $bankrollTransaction
@@ -44,7 +60,7 @@ class BankrollController extends Controller
     */
     public function update(Bankroll $bankrollTransaction, BankrollTransactionRequest $request)
     {
-        $this->authorize('update', $bankrollTransaction);
+        $this->authorize('manage', $bankrollTransaction);
 
         $bankrollTransaction->update($request->validated());
 
@@ -62,7 +78,7 @@ class BankrollController extends Controller
     */
     public function delete(Bankroll $bankrollTransaction)
     {
-        $this->authorize('update', $bankrollTransaction);      
+        $this->authorize('manage', $bankrollTransaction);      
 
         return [
             'success' => $bankrollTransaction->delete()

@@ -17,19 +17,7 @@ class BankrollPolicy
      * @param  \App\Bankroll  $bankrollTransaction
      * @return mixed
      */
-    public function update(User $user, Bankroll $bankrollTransaction)
-    {
-        return $user->id === $bankrollTransaction->user_id;
-    }
-
-    /**
-     * Determine whether the user can delete the bankroll.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Bankroll  $bankrollTransaction
-     * @return mixed
-     */
-    public function delete(User $user, Bankroll $bankrollTransaction)
+    public function manage(User $user, Bankroll $bankrollTransaction)
     {
         return $user->id === $bankrollTransaction->user_id;
     }
