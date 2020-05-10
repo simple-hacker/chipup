@@ -27,7 +27,7 @@ class CreateCashGameRequest extends FormRequest
             'expenses.*.amount' => 'required_with:expenses.*.comments|numeric|min:0',
             'expenses.*.comments' => 'sometimes|nullable|string',
 
-            'cash_out.amount' => 'sometimes|numeric|min:0',
+            'cash_out_model.amount' => 'sometimes|numeric|min:0',
         ];
 
         if ($this->input('start_time') && $this->input('end_time')) {

@@ -42,10 +42,11 @@ class CashGameController extends Controller
             if (!$request->buy_ins) {
                 throw new \Exception('At least one buy in must be supplied', 422);
             }
+
+            $cashGameAttributes = $request->validated();
+            unset($cashGameAttributes['buy_ins'], $cashGameAttributes['cash_out_model'], $cashGameAttributes['expenses']);
             
-            $cash_game = auth()->user()->cashGames()->create(
-                $request->except(['buy_ins', 'expenses', 'cash_out'])
-            );
+            $cash_game = auth()->user()->cashGames()->create($cashGameAttributes);
             
             // Add the BuyIn.
             foreach ($request->buy_ins as $buy_in) {
@@ -62,7 +63,7 @@ class CashGameController extends Controller
 
             // CashOut the CashGame straight away with CashOut amount and end_time
             // If no cashout time or amount is supplied then it defaults to Now() and 0
-            $cash_out = $request->cash_out['amount'] ?? 0;
+            $cash_out = $request->cash_out_model['amount'] ?? 0;
             $cash_game->cashOut($cash_out);
 
             return [
@@ -70,8 +71,6 @@ class CashGameController extends Controller
                 'cash_game' => $cash_game->fresh()
             ];
         } catch(\Exception $e) {
-
-
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
@@ -106,9 +105,13 @@ class CashGameController extends Controller
     {
         $this->authorize('manage', $cash_game);
 
+        $cashGameAttributes = $request->validated();
+        unset($cashGameAttributes['buy_ins'], $cashGameAttributes['cash_out_model'], $cashGameAttributes['expenses']);
+
         try {
             // Update Cash Game attributes if provided.
-            $cash_game->update($request->except(['buy_ins', 'expenses', 'cash_out']));
+            // $cash_game->update($request->except(['buy_ins', 'expenses', 'cash_out']));
+            $cash_game->update($cashGameAttributes);
 
             // Check Buy Ins
             if ($request->buy_ins) {
@@ -169,12 +172,19 @@ class CashGameController extends Controller
             }
 
             // Check Cash Out
-            // Need to check if set because sending through ['cash_out' => []] will result in 0 amount.
+            // Need to check if set because sending through ['cash_out_model' => []] will result in 0 amount.
             // If no changes are to be made then cash_out array will not be set so it won't get updated to 0.
-            if (isset($request->cash_out)) {
-                $cash_game->cashOutModel->updateOrCreate([], [
-                    'amount' => $request->cash_out['amount'] ?? 0
-                ]);
+            if (isset($request->cash_out_model)) {
+                // If we have a cash out model then update, else create one.
+                if ($cash_game->cashOutModel) {
+                    $cash_game->cashOutModel->update([
+                        'amount' => $request->cash_out_model['amount'] ?? 0
+                    ]);
+                } else {
+                    $cash_game->cashOutModel->create([
+                        'amount' => $request->cash_out_model['amount'] ?? 0
+                    ]);
+                }
             }
 
             return response()->json([

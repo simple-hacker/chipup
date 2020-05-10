@@ -132,12 +132,12 @@
 						<div
 							v-for="buyIn in cash_game.buy_ins"
 							:key="buyIn.id"
-							class="flex"
+							class="flex mb-1"
 						>
 							<input v-model="buyIn.amount" type="text" class="p-1">
 							<button @click="alert('delete')" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="far fa-trash-alt"></i></button>
 						</div>
-						<div class="mt-3 flex justify-center">
+						<div class="flex justify-center">
 							<div
 								@click="cash_game.buy_ins.push({ amount: 0})"
 								class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer">
@@ -159,7 +159,7 @@
 					<div v-if="!editing" v-text="formatCurrency(cash_game.cash_out_model.amount)"></div>
 					<div
 						v-if="editing"
-						class="flex"
+						class="flex mb-1"
 					>
 						<input v-model="cash_game.cash_out_model.amount" type="text" class="p-1">
 						<button @click="alert('delete')" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="far fa-trash-alt"></i></button>
@@ -173,13 +173,33 @@
 				v-if="(cash_game.expenses && cash_game.expenses.length > 0) || editing" 
 				class="col-span-6 md:col-span-2 flex md:flex-col justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3">
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Expenses</div>
-				<div class="flex flex-col self-center w-full">
+				<div
+					v-if="!editing"
+					class="flex flex-col self-center w-full">
 					<div
 						v-for="expense in cash_game.expenses"
 						:key="expense.id"
-						class="flex justify-end md:justify-around">
+						class="flex mb- 1justify-end md:justify-around">
 						<div class="order-last md:order-first" v-text="formatCurrency(expense.amount)"></div>
 						<div class="mr-3 md:mr-0" v-if="expense.comments" v-text="expense.comments">Comments</div>
+					</div>
+				</div>
+				<div v-if="editing">
+					<div
+						v-for="expense in cash_game.expenses"
+						:key="expense.id"
+						class="flex mb-1"
+					>
+						<input v-model="expense.amount" type="text" class="p-1">
+						<button @click="alert('delete')" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="far fa-trash-alt"></i></button>
+					</div>
+					<div class="flex justify-center">
+						<div
+							@click="cash_game.expenses.push({ amount: 0})"
+							class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer">
+							<i class="fas fa-plus-circle mr-2"></i>
+							<span>Add Expense</span>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -202,7 +222,7 @@
 						<div
 							v-for="rebuy in cash_game.rebuys"
 							:key="rebuy.id"
-							class="flex"
+							class="flex mb-1"
 						>
 							<input v-model="rebuy.amount" type="text" class="p-1">
 							<button @click="alert('delete')" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="far fa-trash-alt"></i></button>
@@ -229,7 +249,7 @@
 						<div
 							v-for="addOn in cash_game.add_ons"
 							:key="addOn.id"
-							class="flex"
+							class="flex mb-1"
 						>
 							<input v-model="addOn.amount" type="text" class="p-1">
 							<button @click="alert('delete')" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="far fa-trash-alt"></i></button>
@@ -322,21 +342,22 @@ export default {
 	data() {
 		return {
 			editing: false,
-			cash_game: {
-				...this.session,
-				start_time: moment(this.session.start_time).format(),
-				end_time: moment(this.session.end_time).format()
-			},
+			cash_game: {},
 			errors: {}
 		}
 	},
 	created() {
+		this.cash_game = JSON.parse(JSON.stringify({
+			...this.session,
+			start_time: moment(this.session.start_time).format(),
+			end_time: moment(this.session.end_time).format()
+		}))
 		this.cached_cash_game = { ...this.cash_game }
 	},
 	computed: {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
 		profit() {
-			return this.cash_game.profit
+			return this.session.profit
 		},
 		roi() {
 			const buyInTotal = (this.buyInsTotal < 1) ? 1 : this.buyInsTotal

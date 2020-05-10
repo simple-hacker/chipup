@@ -97,7 +97,7 @@ class CashGameTest extends TestCase
         $user = $this->signIn();
 
         $attributes = $this->getCashGameAttributes();
-        unset($attributes['cash_out']);
+        unset($attributes['cash_out_model']);
 
         $this->postJson(route('cash.create'), $attributes)->assertOk();
 
@@ -180,12 +180,12 @@ class CashGameTest extends TestCase
         
         // CashOut amount must be a non negative integer
         $attributes = $valid_attributes;
-        $attributes['cash_out']['amount'] = 'Not an integer';
+        $attributes['cash_out_model']['amount'] = 'Not an integer';
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
-        $attributes['cash_out']['amount'] = -1000;
+        $attributes['cash_out_model']['amount'] = -1000;
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
         // NOTE: 2020-04-01 Float amounts are valid
-        $attributes['cash_out']['amount'] = 56.69;
+        $attributes['cash_out_model']['amount'] = 56.69;
         $this->postJson(route('cash.create'), $attributes)->assertOk();
     }
 
@@ -579,6 +579,8 @@ class CashGameTest extends TestCase
 
     public function testCashOutCanBeUpdatedInTheSameRequest()
     {
+        $this->withoutExceptionHandling();
+
         $user = $this->signIn();
         $this->postJson(route('cash.create'), $this->getCashGameAttributes());
         $cash_game = $user->cashGames()->first();
@@ -588,7 +590,7 @@ class CashGameTest extends TestCase
         $this->assertEquals(1000, $cash_out->amount);
 
         $attributes = [
-            'cash_out' => ['amount' => 500]
+            'cash_out_model' => ['amount' => 500]
         ];
 
         $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), $attributes)->assertOk();
@@ -603,16 +605,16 @@ class CashGameTest extends TestCase
         $cash_out = $cash_game->cashOutModel;
 
         // Amount defaults to 0 if no CashOut amount is provided.
-        $attributes = ['cash_out' => []];
+        $attributes = ['cash_out_model' => []];
         $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), $attributes)->assertOk();
         $this->assertEquals(0, $cash_out->fresh()->amount);
 
         // Amount cannot be negative
-        $attributes = ['cash_out' => ['amount' => -500]];
+        $attributes = ['cash_out_model' => ['amount' => -500]];
         $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), $attributes)->assertStatus(422);
 
         // Positive float amounts are ok.
-        $attributes = ['cash_out' => ['amount' => 120.55]];
+        $attributes = ['cash_out_model' => ['amount' => 120.55]];
         $this->patchJson(route('cash.update', ['cash_game' => $cash_game->id]), $attributes)->assertOk();
         $this->assertEquals(120.55, $cash_out->fresh()->amount);
     }
@@ -623,4 +625,6 @@ class CashGameTest extends TestCase
             // because there is only a singular Cash Out model we can just update the amount directly, or create a Cash Out record for
             // the Cash Game if one wasn't created in the first place.
     // }
+
+    // TODO:  Need to test all valid dates when updating Cash Game.
 }
