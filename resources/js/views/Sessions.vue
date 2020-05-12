@@ -19,29 +19,34 @@
 import { mapState } from 'vuex'
 import Filters from '@components/Filters'
 import SessionSummary from '@components/Session/SessionSummary'
-import SessionDetails from '@components/Session/SessionDetails'
 
 export default {
     name: 'Sessions',
-	components: { Filters, SessionSummary, SessionDetails},
+	components: { Filters, SessionSummary},
 	computed: {
 		...mapState(['cash_games'])
 	},
 	methods: {
 		showSessionDetails: function (session) {
-			this.$modal.show(SessionDetails, {
-				// Modal props
-				session: session,
-			}, {
-				// Modal Options
-				classes: 'bg-background text-white p-1 md:p-3 rounded-lg border border-muted-dark',
-				minHeight: 150,
-				height: 'auto',
-				width: '95%',
-				maxWidth: 900,
-				maxHeight: 500,
-				adaptive: true,
-				scrollable: true,
+			// this.$modal.show(SessionDetails, {
+			// 	// Modal props
+			// 	session: session,
+			// }, {
+			// 	// Modal Options
+			// 	classes: 'bg-background text-white p-1 md:p-3 rounded-lg border border-muted-dark',
+			// 	minHeight: 150,
+			// 	height: 'auto',
+			// 	width: '95%',
+			// 	maxWidth: 900,
+			// 	maxHeight: 500,
+			// 	adaptive: true,
+			// 	scrollable: true,
+			// })
+			this.$router.push({
+				name: 'session',
+				params: {
+					session: session
+				}
 			})
 		}
 	}

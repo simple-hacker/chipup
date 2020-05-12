@@ -16,7 +16,7 @@ export default {
         //     state.cash_games.unshift(cash_game)
         // },
         UPDATE_CASH_GAME(state, cash_game) {
-            const index = state.cash_games.findIndex(cash_game => cash_game.id == cash_game.id)
+            const index = state.cash_games.findIndex(cg => cg.id == cash_game.id)
             state.cash_games.splice(index, 1, cash_game)
         },
         REMOVE_CASH_GAME(state, cash_game) {

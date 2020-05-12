@@ -29,7 +29,7 @@
             <!-- Bottom Nav -->
             <nav aria-label="bottom-navigation" class="sticky bottom-0 p-2 flex justify-around items-center bg-card border-t-2 border-background lg:order-first lg:flex-col lg:justify-start lg:items-start lg:w-1/6 lg:max-w-nav lg:p-2 xl:p-3 lg:border-none">
                 <router-link
-                    :to="{ name: 'session' }"
+                    :to="{ name: 'live' }"
                     class="w-1/6 flex justify-center items-center rounded-lg p-4 text-white hover:bg-green-500 hover:text-muted-dark focus:bg-green-500 focus:text-muted-dark flex lg:w-full lg:justify-start lg:p-3 lg:mb-2"
                     :active-class="'bg-green-600 text-muted-dark'"
                 >
