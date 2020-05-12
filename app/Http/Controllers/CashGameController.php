@@ -171,20 +171,15 @@ class CashGameController extends Controller
                 }
             }
 
+            
             // Check Cash Out
             // Need to check if set because sending through ['cash_out_model' => []] will result in 0 amount.
             // If no changes are to be made then cash_out array will not be set so it won't get updated to 0.
             if (isset($request->cash_out_model)) {
-                // If we have a cash out model then update, else create one.
-                if ($cash_game->cashOutModel) {
-                    $cash_game->cashOutModel->update([
-                        'amount' => $request->cash_out_model['amount'] ?? 0
-                    ]);
-                } else {
-                    $cash_game->cashOutModel->create([
-                        'amount' => $request->cash_out_model['amount'] ?? 0
-                    ]);
-                }
+                // A CashOut record is always created when creating a Cash Game.
+                $cash_game->cashOutModel->update([
+                    'amount' => $request->cash_out_model['amount'] ?? 0
+                ]);
             }
 
             return response()->json([
