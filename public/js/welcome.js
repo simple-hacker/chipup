@@ -33272,7 +33272,7 @@ var app = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /var/www/html/poker/resources/js/welcome.js */"./resources/js/welcome.js");
+module.exports = __webpack_require__(/*! /var/www/poker/resources/js/welcome.js */"./resources/js/welcome.js");
 
 
 /***/ })

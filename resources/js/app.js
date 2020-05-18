@@ -70,8 +70,6 @@ Vue.prototype.currency = new Intl.NumberFormat('en-GB', {
 // Vue.component('register-form', require('./components/RegisterForm.vue').default)
 
 
-import LoginForm from '@components/LoginForm.vue'
-import RegisterForm from '@components/RegisterForm.vue'
 import App from '@/App.vue'
 import NotFound from '@/NotFound.vue'
 
@@ -93,7 +91,7 @@ const router = new VueRouter({
 
 const app = new Vue({
     el: '#app',
-    components: { App, LoginForm, RegisterForm, NotFound },
+    components: { App, NotFound },
     router,
     store,
 })

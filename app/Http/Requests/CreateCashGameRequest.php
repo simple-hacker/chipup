@@ -21,6 +21,7 @@ class CreateCashGameRequest extends FormRequest
             'table_size_id' => 'required|integer|exists:table_sizes,id',
             'location' => 'required|string',
             'end_time' =>'required|date|before_or_equal:now',
+            'comments' => 'nullable|string',
 
             'buy_ins.*.amount' => 'required|numeric|min:0',
 

@@ -2661,140 +2661,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoginForm.vue?vue&type=script&lang=js&":
-/*!********************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LoginForm.vue?vue&type=script&lang=js& ***!
-  \********************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'LoginForm',
-  data: function data() {
-    return {
-      email: '',
-      password: '',
-      remember: false,
-      errors: [],
-      btnText: 'Login'
-    };
-  },
-  methods: {
-    login: function login() {
-      var _this = this;
-
-      this.btnText = '<i class="fas fa-lg fa-circle-notch fa-spin"></i>'; // Login via /sanctum/csrf-cookie to initialize Sanctum cookies, then proceed to login.
-
-      axios.get('/sanctum/csrf-cookie').then(function (response) {
-        axios.post('/login', {
-          'email': _this.email,
-          'password': _this.password,
-          'rememer': _this.remember
-        }).then(function (response) {
-          if (response.status === 200) {
-            window.location = 'dashboard';
-          }
-        })["catch"](function (e) {
-          _this.btnText = 'Login';
-          _this.errors = e.response.data.errors;
-        });
-      });
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RegisterForm.vue?vue&type=script&lang=js&":
-/*!***********************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RegisterForm.vue?vue&type=script&lang=js& ***!
-  \***********************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'RegisterForm',
-  data: function data() {
-    return {
-      email: '',
-      password: '',
-      password_confirmation: '',
-      errors: [],
-      btnText: 'Register'
-    };
-  },
-  methods: {
-    login: function login() {
-      var _this = this;
-
-      this.btnText = '<i class="fas fa-lg fa-circle-notch fa-spin"></i>';
-      axios.post('/register', {
-        'email': this.email,
-        'password': this.password,
-        'password_confirmation': this.password_confirmation
-      }).then(function (response) {
-        if (response.status === 200) {
-          window.location = 'setup';
-        }
-      })["catch"](function (e) {
-        _this.btnText = 'Register';
-        _this.errors = e.response.data.errors;
-      });
-    }
-  }
-});
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Session/CurrentCashGame.vue?vue&type=script&lang=js&":
 /*!**********************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Session/CurrentCashGame.vue?vue&type=script&lang=js& ***!
@@ -3031,6 +2897,390 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/CreateSession.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/CreateSession.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var moment_duration_format__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment-duration-format */ "./node_modules/moment-duration-format/lib/moment-duration-format.js");
+/* harmony import */ var moment_duration_format__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment_duration_format__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'CreateSession',
+  data: function data() {
+    return {
+      game_type: 'cash_game',
+      session: {
+        location: '',
+        start_time: '',
+        end_time: '',
+        variant_id: 1,
+        limit_id: 1,
+        table_size_id: 1,
+        expenses: [],
+        cash_out_model: {
+          amount: 0
+        },
+        comments: ''
+      },
+      cash_game: {
+        stake_id: 1,
+        buy_ins: [{
+          amount: 0
+        }]
+      },
+      tournament: {
+        entries: '',
+        buy_in: {
+          amount: 0
+        },
+        rebuys: [],
+        add_ons: []
+      },
+      errors: {}
+    };
+  },
+  created: function created() {},
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes']), {
+    game_type_label_inverse: function game_type_label_inverse() {
+      if (this.game_type === 'cash_game') {
+        return 'Tournament';
+      } else {
+        return 'Cash Game';
+      }
+    },
+    game_type_label: function game_type_label() {
+      if (this.game_type === 'cash_game') {
+        return 'Cash Game';
+      } else {
+        return 'Tournament';
+      }
+    }
+  }),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])('cash_games', ['addCashGame']), {
+    switchGameType: function switchGameType() {
+      if (this.game_type === 'cash_game') {
+        this.game_type = 'tournament';
+      } else {
+        this.game_type = 'cash_game';
+      }
+    },
+    saveSession: function saveSession() {
+      var _this = this;
+
+      if (this.game_type === 'cash_game') {
+        this.addCashGame(_objectSpread({}, this.session, {}, this.cash_game)).then(function (response) {
+          _this.$snotify.success('Successfully created cash game');
+
+          _this.$router.push({
+            name: 'sessions'
+          });
+        })["catch"](function (error) {
+          _this.$snotify.error('Error: ' + error.response.data.message);
+        });
+      } else if (this.game_type === 'tournament') {
+        console.log('TOURNAMENT');
+        console.log(_objectSpread({}, this.session, {}, this.tournament));
+      } // this.saveCashGame({
+      // 	...this.session,
+      // 	...this.cash_game
+      // })
+      // .then(response => {
+      // 	this.$snotify.success('Successfully created new session');
+      // })
+      // .catch(error => {
+      // 	this.$snotify.error('Error: '+error.response.data.message);
+      // })
+
+    }
+  })
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Dashboard.vue?vue&type=script&lang=js&":
 /*!***************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/Dashboard.vue?vue&type=script&lang=js& ***!
@@ -3137,9 +3387,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
-//
-//
 //
 //
 //
@@ -3595,6 +3842,15 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -65880,449 +66136,6 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoginForm.vue?vue&type=template&id=12a98f72&":
-/*!************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LoginForm.vue?vue&type=template&id=12a98f72& ***!
-  \************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "w-full flex flex-col items-center" }, [
-    _c(
-      "form",
-      { staticClass: "w-full", attrs: { action: "/login", method: "POST" } },
-      [
-        _c("div", { staticClass: "flex flex-col" }, [
-          _c(
-            "label",
-            {
-              staticClass: "text-sm font-bold text-gray-800",
-              attrs: { for: "email" }
-            },
-            [_vm._v("Email address")]
-          ),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.email,
-                expression: "email"
-              }
-            ],
-            staticClass: "border p-2 w-full bg-white mb-2 focus:shadow",
-            class: _vm.errors.email ? "border-red-700" : "",
-            attrs: {
-              name: "email",
-              type: "email",
-              placeholder: "Email",
-              required: ""
-            },
-            domProps: { value: _vm.email },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.email = $event.target.value
-              }
-            }
-          }),
-          _vm._v(" "),
-          _vm.errors.email
-            ? _c(
-                "span",
-                {
-                  staticClass:
-                    "w-full text-center text-xs text-red-700 mt-1 mb-3"
-                },
-                [_vm._v(_vm._s(_vm.errors.email[0]))]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _c(
-            "label",
-            {
-              staticClass: "mt-3 text-sm font-bold text-gray-800",
-              attrs: { for: "password" }
-            },
-            [_vm._v("Password")]
-          ),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.password,
-                expression: "password"
-              }
-            ],
-            staticClass: "border p-2 w-full bg-white mb-2 focus:shadow",
-            class: _vm.errors.password ? "border-red-700" : "",
-            attrs: {
-              name: "password",
-              type: "password",
-              placeholder: "Password",
-              required: ""
-            },
-            domProps: { value: _vm.password },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.password = $event.target.value
-              }
-            }
-          }),
-          _vm._v(" "),
-          _vm.errors.password
-            ? _c(
-                "span",
-                {
-                  staticClass:
-                    "w-full text-center text-xs text-red-700 mt-1 mb-3"
-                },
-                [_vm._v(_vm._s(_vm.errors.password[0]))]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _c("button", {
-            staticClass:
-              "w-full bg-green-600 hover:bg-green-700 text-white uppercase mt-2 px-4 py-3",
-            domProps: { innerHTML: _vm._s(_vm.btnText) },
-            on: {
-              click: function($event) {
-                $event.preventDefault()
-                return _vm.login($event)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "flex justify-around mt-3" }, [
-            _c("div", { staticClass: "flex items-center" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.remember,
-                    expression: "remember"
-                  }
-                ],
-                staticClass: "mr-2",
-                attrs: { type: "checkbox", name: "remeber" },
-                domProps: {
-                  checked: Array.isArray(_vm.remember)
-                    ? _vm._i(_vm.remember, null) > -1
-                    : _vm.remember
-                },
-                on: {
-                  change: function($event) {
-                    var $$a = _vm.remember,
-                      $$el = $event.target,
-                      $$c = $$el.checked ? true : false
-                    if (Array.isArray($$a)) {
-                      var $$v = null,
-                        $$i = _vm._i($$a, $$v)
-                      if ($$el.checked) {
-                        $$i < 0 && (_vm.remember = $$a.concat([$$v]))
-                      } else {
-                        $$i > -1 &&
-                          (_vm.remember = $$a
-                            .slice(0, $$i)
-                            .concat($$a.slice($$i + 1)))
-                      }
-                    } else {
-                      _vm.remember = $$c
-                    }
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "label",
-                { staticClass: "text-sm w-48", attrs: { for: "remember" } },
-                [_vm._v("Remember me")]
-              )
-            ]),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "text-green-600 text-sm font-bold",
-                attrs: { href: "/password-reset" }
-              },
-              [_vm._v("Forgot your password?")]
-            )
-          ])
-        ])
-      ]
-    ),
-    _vm._v(" "),
-    _c(
-      "p",
-      {
-        staticClass:
-          "text-sm border-t border-gray-400 mt-5 py-2 w-full text-center"
-      },
-      [_vm._v("Or login with")]
-    ),
-    _vm._v(" "),
-    _vm._m(0),
-    _vm._v(" "),
-    _c(
-      "a",
-      {
-        staticClass:
-          "border-t border-gray-400 mt-5 py-2 w-full text-center text-green-600 text-sm font-bold",
-        attrs: { href: "/register" }
-      },
-      [_vm._v("Click here to sign up for an account")]
-    )
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass:
-          "flex justify-center items-center w-full bg-facebook hover:bg-facebook-dark text-white uppercase mt-2 px-4 py-3",
-        attrs: { href: "login/facebook" }
-      },
-      [
-        _c("i", { staticClass: "fab fa-facebook fa-2x text-white mr-4" }),
-        _vm._v("Continue with Facebook")
-      ]
-    )
-  }
-]
-render._withStripped = true
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RegisterForm.vue?vue&type=template&id=7942be72&":
-/*!***************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/RegisterForm.vue?vue&type=template&id=7942be72& ***!
-  \***************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "w-full" }, [
-    _c("form", { attrs: { action: "/login", method: "POST" } }, [
-      _c("div", { staticClass: "flex flex-col" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.email,
-              expression: "email"
-            }
-          ],
-          staticClass: "border p-2 w-full bg-white mb-2",
-          class: _vm.errors.email ? "border-red-700" : "",
-          attrs: {
-            name: "email",
-            type: "email",
-            placeholder: "Email",
-            required: ""
-          },
-          domProps: { value: _vm.email },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.email = $event.target.value
-            }
-          }
-        }),
-        _vm._v(" "),
-        _vm.errors.email
-          ? _c(
-              "span",
-              {
-                staticClass: "w-full text-center text-xs text-red-700 mt-1 mb-3"
-              },
-              [_vm._v(_vm._s(_vm.errors.email[0]))]
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.password,
-              expression: "password"
-            }
-          ],
-          staticClass: "border p-2 w-full bg-white mb-2",
-          class: _vm.errors.password ? "border-red-700" : "",
-          attrs: {
-            name: "password",
-            type: "password",
-            placeholder: "Password",
-            required: ""
-          },
-          domProps: { value: _vm.password },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.password = $event.target.value
-            }
-          }
-        }),
-        _vm._v(" "),
-        _vm.errors.password
-          ? _c(
-              "span",
-              {
-                staticClass: "w-full text-center text-xs text-red-700 mt-1 mb-3"
-              },
-              [_vm._v(_vm._s(_vm.errors.password[0]))]
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.password_confirmation,
-              expression: "password_confirmation"
-            }
-          ],
-          staticClass: "border p-2 w-full bg-white mb-2",
-          class: _vm.errors.password_confirmation ? "border-red-700" : "",
-          attrs: {
-            name: "password_confirmation",
-            type: "password",
-            placeholder: "Confirm Password",
-            required: ""
-          },
-          domProps: { value: _vm.password_confirmation },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.password_confirmation = $event.target.value
-            }
-          }
-        }),
-        _vm._v(" "),
-        _vm.errors.password_confirmation
-          ? _c(
-              "span",
-              {
-                staticClass: "w-full text-center text-xs text-red-700 mt-1 mb-3"
-              },
-              [_vm._v(_vm._s(_vm.errors.password_confirmation[0]))]
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _c("button", {
-          staticClass:
-            "w-full bg-green-600 text-white uppercase mt-2 px-4 py-3",
-          domProps: { innerHTML: _vm._s(_vm.btnText) },
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.login($event)
-            }
-          }
-        })
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "p",
-      {
-        staticClass:
-          "text-sm border-t border-gray-400 mt-5 py-2 w-full text-center"
-      },
-      [_vm._v("Or create an account using")]
-    ),
-    _vm._v(" "),
-    _vm._m(0),
-    _vm._v(" "),
-    _vm._m(1)
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass:
-          "flex justify-center items-center w-full bg-facebook hover:bg-facebook-dark text-white uppercase mt-2 px-4 py-3",
-        attrs: { href: "/https://www.facebook.com" }
-      },
-      [
-        _c("span", { staticClass: "text-white text-xl mr-4" }, [
-          _c("i", { staticClass: "fab fa-facebook-f" })
-        ]),
-        _vm._v("Sign Up with Facebook")
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass:
-          "flex justify-center items-center w-full bg-twitter hover:bg-twitter-dark text-white uppercase mt-2 px-4 py-3",
-        attrs: { href: "/https://www.twitter.com" }
-      },
-      [
-        _c("span", { staticClass: "text-white text-xl mr-4" }, [
-          _c("i", { staticClass: "fab fa-twitter" })
-        ]),
-        _vm._v("Sign Up with Twitter")
-      ]
-    )
-  }
-]
-render._withStripped = true
-
-
-
-/***/ }),
-
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Session/CurrentCashGame.vue?vue&type=template&id=419c11aa&":
 /*!**************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Session/CurrentCashGame.vue?vue&type=template&id=419c11aa& ***!
@@ -66879,6 +66692,1014 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/CreateSession.vue?vue&type=template&id=ddd3532a&":
+/*!***********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/CreateSession.vue?vue&type=template&id=ddd3532a& ***!
+  \***********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "flex flex-col w-full text-white" }, [
+    _c(
+      "div",
+      {
+        staticClass: "text-center text-4xl lg:text-6xl font-bold text-green-500"
+      },
+      [_vm._v("\n\t\tCreate " + _vm._s(_vm.game_type_label) + "\n\t")]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "text-center font-bold text-green-500 p-3 cursor-pointer",
+        on: { click: _vm.switchGameType }
+      },
+      [
+        _c("span", { staticClass: "mr-3" }, [
+          _vm._v("Switch to " + _vm._s(_vm.game_type_label_inverse) + " Mode")
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "grid grid-cols-6 gap-2 md:gap-3 mt-2 md:mt-4" }, [
+      _c(
+        "div",
+        {
+          staticClass:
+            "col-span-6 md:col-span-3 md:row-span-3 flex-col bg-card border border-muted-dark rounded-lg p-3 text-lg"
+        },
+        [
+          _c(
+            "div",
+            {
+              staticClass:
+                "font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2"
+            },
+            [_vm._v("Details")]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+            [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.session.location,
+                    expression: "session.location"
+                  }
+                ],
+                staticClass: "p-1 text-lg",
+                attrs: { type: "text", placeholder: "Location" },
+                domProps: { value: _vm.session.location },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.session, "location", $event.target.value)
+                  }
+                }
+              })
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show-slide",
+                  rawName: "v-show-slide",
+                  value: _vm.game_type === "cash_game",
+                  expression: "game_type === 'cash_game'"
+                }
+              ]
+            },
+            [
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.cash_game.stake_id,
+                          expression: "cash_game.stake_id"
+                        }
+                      ],
+                      staticClass: "p-1 text-lg mr-1",
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.cash_game,
+                            "stake_id",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    _vm._l(_vm.stakes, function(stake) {
+                      return _c("option", {
+                        key: stake.id,
+                        domProps: {
+                          value: stake.id,
+                          textContent: _vm._s(stake.stake)
+                        }
+                      })
+                    }),
+                    0
+                  )
+                ]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+            [
+              _vm._m(2),
+              _vm._v(" "),
+              _c("div", { staticClass: "flex w-full" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.session.limit_id,
+                        expression: "session.limit_id"
+                      }
+                    ],
+                    staticClass: "p-1 text-lg mr-1",
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.session,
+                          "limit_id",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  _vm._l(_vm.limits, function(limit) {
+                    return _c("option", {
+                      key: limit.id,
+                      domProps: {
+                        value: limit.id,
+                        textContent: _vm._s(limit.limit)
+                      }
+                    })
+                  }),
+                  0
+                ),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.session.variant_id,
+                        expression: "session.variant_id"
+                      }
+                    ],
+                    staticClass: "p-1 text-lg",
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.session,
+                          "variant_id",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  _vm._l(_vm.variants, function(variant) {
+                    return _c("option", {
+                      key: variant.id,
+                      domProps: {
+                        value: variant.id,
+                        textContent: _vm._s(variant.variant)
+                      }
+                    })
+                  }),
+                  0
+                )
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+            [
+              _vm._m(3),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.session.table_size_id,
+                      expression: "session.table_size_id"
+                    }
+                  ],
+                  staticClass: "p-1 text-lg",
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.session,
+                        "table_size_id",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                _vm._l(_vm.table_sizes, function(table_size) {
+                  return _c("option", {
+                    key: table_size.id,
+                    domProps: {
+                      value: table_size.id,
+                      textContent: _vm._s(table_size.table_size)
+                    }
+                  })
+                }),
+                0
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show-slide",
+                  rawName: "v-show-slide",
+                  value: _vm.game_type === "tournament",
+                  expression: "game_type === 'tournament'"
+                }
+              ]
+            },
+            [
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+                [
+                  _vm._m(4),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.tournament.entries,
+                        expression: "tournament.entries"
+                      }
+                    ],
+                    staticClass: "p-1 text-lg",
+                    attrs: {
+                      type: "number",
+                      min: "0",
+                      placeholder: "Number of entries"
+                    },
+                    domProps: { value: _vm.tournament.entries },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.tournament, "entries", $event.target.value)
+                      }
+                    }
+                  })
+                ]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+            [
+              _vm._m(5),
+              _vm._v(" "),
+              _c("datetime", {
+                staticClass:
+                  "w-full bg-muted-light border border-muted-dark rounded border theme-green",
+                class: _vm.errors.start_time
+                  ? "border-red-700"
+                  : "border-gray-400",
+                attrs: {
+                  "input-id": "start_time",
+                  type: "datetime",
+                  "minute-step": 5,
+                  value: "2019-12-25T11:11:11Z",
+                  "input-class": "self-center p-1",
+                  auto: "",
+                  placeholder: "Start Date and Time",
+                  title: "Start Date and Time"
+                },
+                model: {
+                  value: _vm.session.start_time,
+                  callback: function($$v) {
+                    _vm.$set(_vm.session, "start_time", $$v)
+                  },
+                  expression: "session.start_time"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+            [
+              _vm._m(6),
+              _vm._v(" "),
+              _c("datetime", {
+                staticClass:
+                  "w-full bg-muted-light border border-muted-dark rounded border theme-green",
+                class: _vm.errors.end_time
+                  ? "border-red-700"
+                  : "border-gray-400",
+                attrs: {
+                  "input-id": "end_time",
+                  type: "datetime",
+                  "minute-step": 5,
+                  "input-class": "self-center p-1",
+                  auto: "",
+                  placeholder: "End Date and Time",
+                  title: "End Date and Time"
+                },
+                model: {
+                  value: _vm.session.end_time,
+                  callback: function($$v) {
+                    _vm.$set(_vm.session, "end_time", $$v)
+                  },
+                  expression: "session.end_time"
+                }
+              })
+            ],
+            1
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+        },
+        [
+          _c("div", {
+            staticClass:
+              "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0",
+            domProps: {
+              textContent: _vm._s(
+                _vm.game_type === "cash_game" ? "Buy Ins" : "Buy In"
+              )
+            }
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex flex-col justify-center flex-1" }, [
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show-slide",
+                    rawName: "v-show-slide",
+                    value: _vm.game_type === "tournament",
+                    expression: "game_type === 'tournament'"
+                  }
+                ]
+              },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.tournament.buy_in.amount,
+                      expression: "tournament.buy_in.amount"
+                    }
+                  ],
+                  staticClass: "p-1",
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.tournament.buy_in.amount },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.tournament.buy_in,
+                        "amount",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show-slide",
+                    rawName: "v-show-slide",
+                    value: _vm.game_type === "cash_game",
+                    expression: "game_type === 'cash_game'"
+                  }
+                ]
+              },
+              [
+                _vm._l(_vm.cash_game.buy_ins, function(buy_in, index) {
+                  return _c("div", { key: index, staticClass: "flex mb-2" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: buy_in.amount,
+                          expression: "buy_in.amount"
+                        }
+                      ],
+                      staticClass: "p-1",
+                      attrs: { type: "text" },
+                      domProps: { value: buy_in.amount },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(buy_in, "amount", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    index != 0
+                      ? _c(
+                          "button",
+                          {
+                            staticClass:
+                              "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                            on: {
+                              click: function($event) {
+                                return _vm.cash_game.buy_ins.splice(index, 1)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fas fa-times" })]
+                        )
+                      : _vm._e()
+                  ])
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex justify-center items-center" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                      on: {
+                        click: function($event) {
+                          return _vm.cash_game.buy_ins.push({ amount: 0 })
+                        }
+                      }
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                      _vm._v(" "),
+                      _c("span", [_vm._v("Add Buy In")])
+                    ]
+                  )
+                ])
+              ],
+              2
+            )
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+        },
+        [
+          _c(
+            "div",
+            {
+              staticClass:
+                "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
+            },
+            [_vm._v("Cash Out")]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex flex-col justify-center flex-1" }, [
+            _c("div", { staticClass: "flex mb-2" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.session.cash_out_model.amount,
+                    expression: "session.cash_out_model.amount"
+                  }
+                ],
+                staticClass: "p-1",
+                attrs: { type: "text" },
+                domProps: { value: _vm.session.cash_out_model.amount },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.session.cash_out_model,
+                      "amount",
+                      $event.target.value
+                    )
+                  }
+                }
+              })
+            ])
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "col-span-6 md:col-span-3 flex md:flex-col justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+        },
+        [
+          _c(
+            "div",
+            {
+              staticClass:
+                "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
+            },
+            [_vm._v("Expenses")]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "flex flex-col justify-center flex-1" },
+            [
+              _vm._l(_vm.session.expenses, function(expense, index) {
+                return _c("div", { key: index, staticClass: "flex mb-2" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: expense.amount,
+                        expression: "expense.amount"
+                      }
+                    ],
+                    staticClass: "p-1",
+                    attrs: { type: "text" },
+                    domProps: { value: expense.amount },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(expense, "amount", $event.target.value)
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                      on: {
+                        click: function($event) {
+                          return _vm.session.expenses.splice(index, 1)
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "fas fa-times" })]
+                  )
+                ])
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "flex justify-center items-center" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                    on: {
+                      click: function($event) {
+                        return _vm.session.expenses.push({ amount: 0 })
+                      }
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                    _vm._v(" "),
+                    _c("span", [_vm._v("Add Expense")])
+                  ]
+                )
+              ])
+            ],
+            2
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show-slide",
+              rawName: "v-show-slide",
+              value: _vm.game_type === "tournament",
+              expression: "game_type === 'tournament'"
+            }
+          ],
+          staticClass:
+            "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg"
+        },
+        [
+          _c("div", { staticClass: "p-3" }, [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
+              },
+              [_vm._v("Rebuys")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "flex flex-col justify-center flex-1" },
+              [
+                _vm._l(_vm.tournament.rebuys, function(rebuy, index) {
+                  return _c("div", { key: index, staticClass: "flex mb-2" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: rebuy.amount,
+                          expression: "rebuy.amount"
+                        }
+                      ],
+                      staticClass: "p-1",
+                      attrs: { type: "text" },
+                      domProps: { value: rebuy.amount },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(rebuy, "amount", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass:
+                          "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                        on: {
+                          click: function($event) {
+                            return _vm.tournament.rebuys.splice(index, 1)
+                          }
+                        }
+                      },
+                      [_c("i", { staticClass: "fas fa-times" })]
+                    )
+                  ])
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex justify-center items-center" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                      on: {
+                        click: function($event) {
+                          return _vm.tournament.rebuys.push({ amount: 0 })
+                        }
+                      }
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                      _vm._v(" "),
+                      _c("span", [_vm._v("Add Rebuy")])
+                    ]
+                  )
+                ])
+              ],
+              2
+            )
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show-slide",
+              rawName: "v-show-slide",
+              value: _vm.game_type === "tournament",
+              expression: "game_type === 'tournament'"
+            }
+          ],
+          staticClass:
+            "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg"
+        },
+        [
+          _c("div", { staticClass: "p-3" }, [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
+              },
+              [_vm._v("Add Ons")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "flex flex-col justify-center flex-1" },
+              [
+                _vm._l(_vm.tournament.add_ons, function(add_on, index) {
+                  return _c("div", { key: index, staticClass: "flex mb-2" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: add_on.amount,
+                          expression: "add_on.amount"
+                        }
+                      ],
+                      staticClass: "p-1",
+                      attrs: { type: "text" },
+                      domProps: { value: add_on.amount },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(add_on, "amount", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass:
+                          "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                        on: {
+                          click: function($event) {
+                            return _vm.tournament.add_ons.splice(index, 1)
+                          }
+                        }
+                      },
+                      [_c("i", { staticClass: "fas fa-times" })]
+                    )
+                  ])
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex justify-center items-center" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                      on: {
+                        click: function($event) {
+                          return _vm.tournament.add_ons.push({ amount: 0 })
+                        }
+                      }
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                      _vm._v(" "),
+                      _c("span", [_vm._v("Add Add On")])
+                    ]
+                  )
+                ])
+              ],
+              2
+            )
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "col-span-6 flex flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+        },
+        [
+          _c(
+            "div",
+            {
+              staticClass:
+                "font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2"
+            },
+            [_vm._v("Comments")]
+          ),
+          _vm._v(" "),
+          _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.session.comments,
+                expression: "session.comments"
+              }
+            ],
+            attrs: { name: "comments", cols: "30", rows: "5" },
+            domProps: { value: _vm.session.comments },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.session, "comments", $event.target.value)
+              }
+            }
+          })
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "flex my-3" }, [
+      _c(
+        "button",
+        {
+          staticClass:
+            "w-full p-4 bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white uppercase",
+          attrs: { type: "button" },
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.saveSession($event)
+            }
+          }
+        },
+        [
+          _c("i", { staticClass: "fas fa-edit mr-3" }),
+          _c("span", [_vm._v("Save " + _vm._s(_vm.game_type_label) + " ")])
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-map-marker-alt" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-coins" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-stream" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-user-friends" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-users" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "far fa-clock" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-clock" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Dashboard.vue?vue&type=template&id=1f79daf6&scoped=true&":
 /*!*******************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/Dashboard.vue?vue&type=template&id=1f79daf6&scoped=true& ***!
@@ -66894,7 +67715,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "w-full grid grid-cols-4 gap-4" }, [
+  return _c("div", { staticClass: "w-full grid grid-cols-4 gap-4 pb-4" }, [
     _c(
       "div",
       {
@@ -66994,18 +67815,65 @@ var render = function() {
     "div",
     { staticClass: "flex flex-col w-full relative text-white" },
     [
-      _c("div", { staticClass: "absolute top-5 right-5" }, [
+      _c("div", { staticClass: "absolute top-5 right-5 w-full" }, [
+        !_vm.editing
+          ? _c(
+              "button",
+              {
+                staticClass:
+                  "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    _vm.editing = true
+                  }
+                }
+              },
+              [
+                _c("i", { staticClass: "fas fa-edit mr-3" }),
+                _c("span", [_vm._v("Edit")])
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.editing
+          ? _c("div", [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.saveSession($event)
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-edit mr-3" }),
+                  _c("span", [_vm._v("Save Changes")])
+                ]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
         _c(
           "button",
           {
-            staticClass: "hover:text-muted-light cursor-pointer",
+            staticClass:
+              "bg-red-500 hover:bg-red-600 focus:bg-red-600 rounded text-white text-sm px-4 py-2",
+            attrs: { type: "button" },
             on: {
               click: function($event) {
-                return _vm.$emit("close")
+                $event.preventDefault()
+                return _vm.deleteSession($event)
               }
             }
           },
-          [_c("i", { staticClass: "fas fa-times-circle fa-2x" })]
+          [_c("i", { staticClass: "fas fa-trash" })]
         )
       ]),
       _vm._v(" "),
@@ -67020,409 +67888,514 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        {
-          staticClass:
-            "flex flex-col md:flex-row md:justify-around items-center text-xl"
-        },
-        [
-          _c(
-            "div",
-            { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
-            [
-              _c("i", { staticClass: "fas fa-map-marker-alt mr-3" }),
-              _vm._v(" "),
-              !_vm.editing
-                ? _c("span", {
-                    domProps: { textContent: _vm._s(_vm.cash_game.location) }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.editing
-                ? _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.cash_game.location,
-                        expression: "cash_game.location"
-                      }
-                    ],
-                    staticClass: "p-1 text-lg",
-                    attrs: { type: "text" },
-                    domProps: { value: _vm.cash_game.location },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.cash_game, "location", $event.target.value)
-                      }
-                    }
-                  })
-                : _vm._e()
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
-            [
-              _c("i", { staticClass: "fas fa-stream mr-3" }),
-              _vm._v(" "),
-              !_vm.editing
-                ? _c("span", {
-                    domProps: { textContent: _vm._s(_vm.gameDetails) }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.editing
-                ? _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.cash_game.stake_id,
-                          expression: "cash_game.stake_id"
-                        }
-                      ],
-                      staticClass: "p-1 text-lg mr-1",
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.cash_game,
-                            "stake_id",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
-                      }
-                    },
-                    _vm._l(_vm.stakes, function(stake) {
-                      return _c("option", {
-                        key: stake.id,
-                        domProps: {
-                          value: stake.id,
-                          textContent: _vm._s(stake.stake)
-                        }
-                      })
-                    }),
-                    0
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.editing
-                ? _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.cash_game.limit_id,
-                          expression: "cash_game.limit_id"
-                        }
-                      ],
-                      staticClass: "p-1 text-lg mr-1",
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.cash_game,
-                            "limit_id",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
-                      }
-                    },
-                    _vm._l(_vm.limits, function(limit) {
-                      return _c("option", {
-                        key: limit.id,
-                        domProps: {
-                          value: limit.id,
-                          textContent: _vm._s(limit.limit)
-                        }
-                      })
-                    }),
-                    0
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.editing
-                ? _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.cash_game.variant_id,
-                          expression: "cash_game.variant_id"
-                        }
-                      ],
-                      staticClass: "p-1 text-lg",
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.cash_game,
-                            "variant_id",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
-                      }
-                    },
-                    _vm._l(_vm.variants, function(variant) {
-                      return _c("option", {
-                        key: variant.id,
-                        domProps: {
-                          value: variant.id,
-                          textContent: _vm._s(variant.variant)
-                        }
-                      })
-                    }),
-                    0
-                  )
-                : _vm._e()
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
-            [
-              _c("i", { staticClass: "fas fa-users mr-3" }),
-              _vm._v(" "),
-              !_vm.editing
-                ? _c("span", {
-                    domProps: {
-                      textContent: _vm._s(_vm.cash_game.table_size.table_size)
-                    }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.editing
-                ? _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.cash_game.table_size_id,
-                          expression: "cash_game.table_size_id"
-                        }
-                      ],
-                      staticClass: "p-1 text-lg",
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.cash_game,
-                            "table_size_id",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
-                      }
-                    },
-                    _vm._l(_vm.table_sizes, function(table_size) {
-                      return _c("option", {
-                        key: table_size.id,
-                        domProps: {
-                          value: table_size.id,
-                          textContent: _vm._s(table_size.table_size)
-                        }
-                      })
-                    }),
-                    0
-                  )
-                : _vm._e()
-            ]
-          )
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
         { staticClass: "grid grid-cols-6 gap-2 md:gap-3 mt-2 md:mt-4" },
         [
           _c(
             "div",
             {
               staticClass:
-                "col-span-6 md:col-span-2 flex md:flex-col justify-between bg-card border border-muted-dark rounded-lg p-3"
+                "col-span-6 md:col-span-3 md:row-span-2 flex-col bg-card border border-muted-dark rounded-lg p-3 text-lg"
             },
             [
               _c(
                 "div",
                 {
                   staticClass:
-                    "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
+                    "font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2"
                 },
-                [_vm._v("Session Start")]
+                [_vm._v("Details")]
               ),
               _vm._v(" "),
-              !_vm.editing
-                ? _c("div", {
-                    staticClass: "self-center",
-                    domProps: {
-                      textContent: _vm._s(
-                        _vm.formatDate(_vm.cash_game.start_time)
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+                [
+                  _c("i", { staticClass: "fas fa-map-marker-alt mr-3" }),
+                  _vm._v(" "),
+                  !_vm.editing
+                    ? _c("span", {
+                        domProps: {
+                          textContent: _vm._s(_vm.cash_game.location)
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.editing
+                    ? _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.cash_game.location,
+                            expression: "cash_game.location"
+                          }
+                        ],
+                        staticClass: "p-1 text-lg",
+                        attrs: { type: "text", placeholder: "Location" },
+                        domProps: { value: _vm.cash_game.location },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.cash_game,
+                              "location",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    : _vm._e()
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+                [
+                  _c("i", { staticClass: "fas fa-stream mr-3" }),
+                  _vm._v(" "),
+                  !_vm.editing
+                    ? _c("span", {
+                        domProps: { textContent: _vm._s(_vm.gameDetails) }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.editing
+                    ? _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.cash_game.stake_id,
+                              expression: "cash_game.stake_id"
+                            }
+                          ],
+                          staticClass: "p-1 text-lg mr-1",
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.cash_game,
+                                "stake_id",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        _vm._l(_vm.stakes, function(stake) {
+                          return _c("option", {
+                            key: stake.id,
+                            domProps: {
+                              value: stake.id,
+                              textContent: _vm._s(stake.stake)
+                            }
+                          })
+                        }),
+                        0
                       )
-                    }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.editing
-                ? _c("datetime", {
-                    staticClass:
-                      "w-full bg-muted-light border border-muted-dark rounded border theme-green",
-                    class: _vm.errors.start_time
-                      ? "border-red-700"
-                      : "border-gray-400",
-                    attrs: {
-                      "input-id": "start_time",
-                      type: "datetime",
-                      "minute-step": 5,
-                      value: "2019-12-25T11:11:11Z",
-                      "input-class": "self-center p-1",
-                      auto: "",
-                      title: "Bankroll Transaction Date"
-                    },
-                    model: {
-                      value: _vm.cash_game.start_time,
-                      callback: function($$v) {
-                        _vm.$set(_vm.cash_game, "start_time", $$v)
-                      },
-                      expression: "cash_game.start_time"
-                    }
-                  })
-                : _vm._e()
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass:
-                "col-span-6 md:col-span-2 flex md:flex-col justify-between bg-card border border-muted-dark rounded-lg p-3"
-            },
-            [
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
-                },
-                [_vm._v("Session End")]
-              ),
-              _vm._v(" "),
-              !_vm.editing
-                ? _c("div", {
-                    staticClass: "self-center",
-                    domProps: {
-                      textContent: _vm._s(
-                        _vm.formatDate(_vm.cash_game.end_time)
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.editing
+                    ? _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.cash_game.limit_id,
+                              expression: "cash_game.limit_id"
+                            }
+                          ],
+                          staticClass: "p-1 text-lg mr-1",
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.cash_game,
+                                "limit_id",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        _vm._l(_vm.limits, function(limit) {
+                          return _c("option", {
+                            key: limit.id,
+                            domProps: {
+                              value: limit.id,
+                              textContent: _vm._s(limit.limit)
+                            }
+                          })
+                        }),
+                        0
                       )
-                    }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.editing
-                ? _c("datetime", {
-                    staticClass:
-                      "w-full bg-muted-light border border-muted-dark rounded border theme-green",
-                    class: _vm.errors.end_time
-                      ? "border-red-700"
-                      : "border-gray-400",
-                    attrs: {
-                      "input-id": "end_time",
-                      type: "datetime",
-                      "minute-step": 5,
-                      "input-class": "self-center p-1",
-                      auto: "",
-                      title: "Bankroll Transaction Date"
-                    },
-                    model: {
-                      value: _vm.cash_game.end_time,
-                      callback: function($$v) {
-                        _vm.$set(_vm.cash_game, "end_time", $$v)
-                      },
-                      expression: "cash_game.end_time"
-                    }
-                  })
-                : _vm._e()
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass:
-                "col-span-6 md:col-span-2 flex md:flex-col justify-between bg-card border border-muted-dark rounded-lg p-3"
-            },
-            [
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
-                },
-                [_vm._v("Session Duration")]
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.editing
+                    ? _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.cash_game.variant_id,
+                              expression: "cash_game.variant_id"
+                            }
+                          ],
+                          staticClass: "p-1 text-lg",
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.cash_game,
+                                "variant_id",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        _vm._l(_vm.variants, function(variant) {
+                          return _c("option", {
+                            key: variant.id,
+                            domProps: {
+                              value: variant.id,
+                              textContent: _vm._s(variant.variant)
+                            }
+                          })
+                        }),
+                        0
+                      )
+                    : _vm._e()
+                ]
               ),
               _vm._v(" "),
-              _c("div", {
-                staticClass: "self-center",
-                domProps: { textContent: _vm._s(_vm.runTime) }
-              })
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+                [
+                  _c("i", { staticClass: "fas fa-user-friends mr-3" }),
+                  _vm._v(" "),
+                  !_vm.editing
+                    ? _c("span", {
+                        domProps: {
+                          textContent: _vm._s(
+                            _vm.cash_game.table_size.table_size
+                          )
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.editing
+                    ? _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.cash_game.table_size_id,
+                              expression: "cash_game.table_size_id"
+                            }
+                          ],
+                          staticClass: "p-1 text-lg",
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.cash_game,
+                                "table_size_id",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        _vm._l(_vm.table_sizes, function(table_size) {
+                          return _c("option", {
+                            key: table_size.id,
+                            domProps: {
+                              value: table_size.id,
+                              textContent: _vm._s(table_size.table_size)
+                            }
+                          })
+                        }),
+                        0
+                      )
+                    : _vm._e()
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+                [
+                  _c("i", { staticClass: "far fa-clock mr-3" }),
+                  _vm._v(" "),
+                  !_vm.editing
+                    ? _c("div", {
+                        staticClass: "self-center",
+                        domProps: {
+                          textContent: _vm._s(
+                            _vm.formatDate(_vm.cash_game.start_time)
+                          )
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.editing
+                    ? _c("datetime", {
+                        staticClass:
+                          "w-full bg-muted-light border border-muted-dark rounded border theme-green",
+                        class: _vm.errors.start_time
+                          ? "border-red-700"
+                          : "border-gray-400",
+                        attrs: {
+                          "input-id": "start_time",
+                          type: "datetime",
+                          "minute-step": 5,
+                          "input-class": "self-center p-1",
+                          auto: "",
+                          placeholder: "Start Date and Time",
+                          title: "Start Date and Time"
+                        },
+                        model: {
+                          value: _vm.cash_game.start_time,
+                          callback: function($$v) {
+                            _vm.$set(_vm.cash_game, "start_time", $$v)
+                          },
+                          expression: "cash_game.start_time"
+                        }
+                      })
+                    : _vm._e()
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+                [
+                  _c("i", { staticClass: "fas fa-clock mr-3" }),
+                  _vm._v(" "),
+                  !_vm.editing
+                    ? _c("div", {
+                        staticClass: "self-center",
+                        domProps: {
+                          textContent: _vm._s(
+                            _vm.formatDate(_vm.cash_game.end_time)
+                          )
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.editing
+                    ? _c("datetime", {
+                        staticClass:
+                          "w-full bg-muted-light border border-muted-dark rounded border theme-green",
+                        class: _vm.errors.end_time
+                          ? "border-red-700"
+                          : "border-gray-400",
+                        attrs: {
+                          "input-id": "end_time",
+                          type: "datetime",
+                          "minute-step": 5,
+                          "input-class": "self-center p-1",
+                          auto: "",
+                          placeholder: "End Date and Time",
+                          title: "End Date and Time"
+                        },
+                        model: {
+                          value: _vm.cash_game.end_time,
+                          callback: function($$v) {
+                            _vm.$set(_vm.cash_game, "end_time", $$v)
+                          },
+                          expression: "cash_game.end_time"
+                        }
+                      })
+                    : _vm._e()
+                ],
+                1
+              )
             ]
-          )
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "grid grid-cols-6 gap-2 md:gap-3 mt-2 md:mt-4" },
-        [
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "col-span-6 md:col-span-3 md:row-span-2 flex flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+            },
+            [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2"
+                },
+                [_vm._v("Stats")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "flex flex-col border border-muted-dark rounded-lg"
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "flex justify-between border border-muted-dark p-3"
+                    },
+                    [
+                      _c("span", [_vm._v("Duration")]),
+                      _vm._v(" "),
+                      _c("span", {
+                        staticClass: "text-lg font-semibold text-green-500",
+                        domProps: { textContent: _vm._s(_vm.runTime) }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "flex justify-between border border-muted-dark p-3"
+                    },
+                    [
+                      _c("span", [_vm._v("Profit")]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        { staticClass: "text-lg font-semibold text-green-500" },
+                        [
+                          _c("number", {
+                            ref: "stats-profit-session",
+                            attrs: {
+                              from: 0,
+                              to: _vm.profit,
+                              duration: 1,
+                              format: function(number) {
+                                return "£" + number.toLocaleString()
+                              },
+                              easing: "Power1.easeOut"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "flex justify-between border border-muted-dark p-3"
+                    },
+                    [
+                      _c("span", [_vm._v("Profit / hour")]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        { staticClass: "text-lg font-semibold text-green-500" },
+                        [
+                          _c("number", {
+                            ref: "stats-profit-session",
+                            attrs: {
+                              from: 0,
+                              to: _vm.profitPerHour,
+                              duration: 1,
+                              format: function(number) {
+                                return "£" + number.toLocaleString()
+                              },
+                              easing: "Power1.easeOut"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "flex justify-between border border-muted-dark p-3"
+                    },
+                    [
+                      _c("span", [_vm._v("ROI")]),
+                      _vm._v(" "),
+                      _c(
+                        "span",
+                        { staticClass: "text-lg font-semibold text-green-500" },
+                        [
+                          _c("number", {
+                            ref: "stats-average-roi",
+                            attrs: {
+                              from: 0,
+                              to: _vm.roi,
+                              duration: 1,
+                              format: function(number) {
+                                return number.toFixed(2) + "%"
+                              },
+                              easing: "Power1.easeOut"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ]
+                  )
+                ]
+              )
+            ]
+          ),
+          _vm._v(" "),
           (_vm.cash_game.buy_ins && _vm.cash_game.buy_ins.length > 0) ||
           _vm.editing
             ? _c(
@@ -67955,140 +68928,14 @@ var render = function() {
                   ])
                 ]
               )
-            : _vm._e()
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "grid grid-cols-2 gap-2 md:gap-3 mt-2 md:mt-4" },
-        [
-          _c(
-            "div",
-            {
-              staticClass:
-                "col-span-2 md:col-span-1 col-start-1 flex flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
-            },
-            [
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2"
-                },
-                [_vm._v("Stats")]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "flex flex-col border border-muted-dark rounded-lg"
-                },
-                [
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "flex justify-between border border-muted-dark p-3"
-                    },
-                    [
-                      _c("span", [_vm._v("Profit")]),
-                      _vm._v(" "),
-                      _c(
-                        "span",
-                        { staticClass: "text-lg font-semibold text-green-500" },
-                        [
-                          _c("number", {
-                            ref: "stats-profit-session",
-                            attrs: {
-                              from: 0,
-                              to: _vm.profit,
-                              duration: 1,
-                              format: function(number) {
-                                return "£" + number.toLocaleString()
-                              },
-                              easing: "Power1.easeOut"
-                            }
-                          })
-                        ],
-                        1
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "flex justify-between border border-muted-dark p-3"
-                    },
-                    [
-                      _c("span", [_vm._v("Profit / hour")]),
-                      _vm._v(" "),
-                      _c(
-                        "span",
-                        { staticClass: "text-lg font-semibold text-green-500" },
-                        [
-                          _c("number", {
-                            ref: "stats-profit-session",
-                            attrs: {
-                              from: 0,
-                              to: _vm.profitPerHour,
-                              duration: 1,
-                              format: function(number) {
-                                return "£" + number.toLocaleString()
-                              },
-                              easing: "Power1.easeOut"
-                            }
-                          })
-                        ],
-                        1
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "flex justify-between border border-muted-dark p-3"
-                    },
-                    [
-                      _c("span", [_vm._v("ROI")]),
-                      _vm._v(" "),
-                      _c(
-                        "span",
-                        { staticClass: "text-lg font-semibold text-green-500" },
-                        [
-                          _c("number", {
-                            ref: "stats-average-roi",
-                            attrs: {
-                              from: 0,
-                              to: _vm.roi,
-                              duration: 1,
-                              format: function(number) {
-                                return number.toFixed(2) + "%"
-                              },
-                              easing: "Power1.easeOut"
-                            }
-                          })
-                        ],
-                        1
-                      )
-                    ]
-                  )
-                ]
-              )
-            ]
-          ),
+            : _vm._e(),
           _vm._v(" "),
           _vm.cash_game.comments || _vm.editing
             ? _c(
                 "div",
                 {
                   staticClass:
-                    "col-span-2 md:col-span-1 flex flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                    "col-span-6 flex flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
                 },
                 [
                   _c(
@@ -68138,88 +68985,7 @@ var render = function() {
               )
             : _vm._e()
         ]
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "flex justify-between mt-4 mb-2" }, [
-        _c(
-          "button",
-          {
-            staticClass:
-              "bg-red-500 hover:bg-red-600 focus:bg-red-600 rounded text-white text-sm px-4 py-2",
-            attrs: { type: "button" },
-            on: {
-              click: function($event) {
-                $event.preventDefault()
-                return _vm.deleteSession($event)
-              }
-            }
-          },
-          [
-            _c("i", { staticClass: "fas fa-trash mr-3" }),
-            _c("span", [_vm._v("Delete")])
-          ]
-        ),
-        _vm._v(" "),
-        !_vm.editing
-          ? _c(
-              "button",
-              {
-                staticClass:
-                  "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    _vm.editing = true
-                  }
-                }
-              },
-              [
-                _c("i", { staticClass: "fas fa-edit mr-3" }),
-                _c("span", [_vm._v("Edit")])
-              ]
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.editing
-          ? _c("div", [
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "mr-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm px-4 py-2",
-                  attrs: { type: "button" },
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.cancelChanges($event)
-                    }
-                  }
-                },
-                [_c("span", [_vm._v("Cancel")])]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2",
-                  attrs: { type: "button" },
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.saveSession($event)
-                    }
-                  }
-                },
-                [
-                  _c("i", { staticClass: "fas fa-edit mr-3" }),
-                  _c("span", [_vm._v("Save Changes")])
-                ]
-              )
-            ])
-          : _vm._e()
-      ])
+      )
     ]
   )
 }
@@ -68262,23 +69028,51 @@ var render = function() {
         staticClass:
           "col-span-4 grid grid-cols-4 grid-2 md:gap-3 xxl:grid-4 bg-background rounded border border-card p-1 text-white"
       },
-      _vm._l(_vm.cash_games.cash_games, function(session) {
-        return _c(
-          "div",
+      [
+        _c(
+          "router-link",
           {
-            key: session.id,
-            staticClass: "col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0",
-            on: {
-              click: function($event) {
-                return _vm.showSessionDetails(session)
-              }
-            }
+            staticClass:
+              "col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0 flex flex-1",
+            attrs: { to: { name: "createsession" } }
           },
-          [_c("session-summary", { attrs: { session: session } })],
-          1
-        )
-      }),
-      0
+          [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "flex p-4 border border-muted-dark shadow bg-card hover:bg-muted-dark cursor-pointer justify-center items-center w-full"
+              },
+              [
+                _c("i", { staticClass: "fas fa-plus-circle fa-lgx mr-3" }),
+                _vm._v(" "),
+                _c("div", { staticClass: "text-white text-lg uppercase" }, [
+                  _vm._v("Add New Session")
+                ])
+              ]
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _vm._l(_vm.cash_games.cash_games, function(session) {
+          return _c(
+            "div",
+            {
+              key: session.id,
+              staticClass:
+                "col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0",
+              on: {
+                click: function($event) {
+                  return _vm.showSessionDetails(session)
+                }
+              }
+            },
+            [_c("session-summary", { attrs: { session: session } })],
+            1
+          )
+        })
+      ],
+      2
     )
   ])
 }
@@ -68306,7 +69100,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "w-full grid grid-cols-4 gap-4 text-white" },
+    { staticClass: "w-full grid grid-cols-4 gap-4 pb-4 text-white" },
     [
       _c(
         "div",
@@ -88095,14 +88889,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_js_toggle_button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-js-toggle-button */ "./node_modules/vue-js-toggle-button/dist/index.js");
 /* harmony import */ var vue_js_toggle_button__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(vue_js_toggle_button__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var v_show_slide__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! v-show-slide */ "./node_modules/v-show-slide/dist/v-show-slide.esm.js");
-/* harmony import */ var _components_LoginForm_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @components/LoginForm.vue */ "./resources/js/components/LoginForm.vue");
-/* harmony import */ var _components_RegisterForm_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @components/RegisterForm.vue */ "./resources/js/components/RegisterForm.vue");
-/* harmony import */ var _App_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @/App.vue */ "./resources/js/App.vue");
-/* harmony import */ var _NotFound_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @/NotFound.vue */ "./resources/js/NotFound.vue");
-/* harmony import */ var _routes_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @/routes.js */ "./resources/js/routes.js");
-/* harmony import */ var _store_store_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @store/store.js */ "./resources/js/store/store.js");
-/* harmony import */ var _fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @fortawesome/fontawesome-free/css/all.min.css */ "./node_modules/@fortawesome/fontawesome-free/css/all.min.css");
-/* harmony import */ var _fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(_fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var _App_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/App.vue */ "./resources/js/App.vue");
+/* harmony import */ var _NotFound_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/NotFound.vue */ "./resources/js/NotFound.vue");
+/* harmony import */ var _routes_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @/routes.js */ "./resources/js/routes.js");
+/* harmony import */ var _store_store_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @store/store.js */ "./resources/js/store/store.js");
+/* harmony import */ var _fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @fortawesome/fontawesome-free/css/all.min.css */ "./node_modules/@fortawesome/fontawesome-free/css/all.min.css");
+/* harmony import */ var _fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_fortawesome_fontawesome_free_css_all_min_css__WEBPACK_IMPORTED_MODULE_13__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -88165,11 +88957,9 @@ Vue.prototype.currency = new Intl.NumberFormat('en-GB', {
 
 
 
-
-
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
   mode: 'history',
-  routes: _routes_js__WEBPACK_IMPORTED_MODULE_13__["default"]
+  routes: _routes_js__WEBPACK_IMPORTED_MODULE_11__["default"]
 });
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -88180,13 +88970,11 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
 var app = new Vue({
   el: '#app',
   components: {
-    App: _App_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
-    LoginForm: _components_LoginForm_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
-    RegisterForm: _components_RegisterForm_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
-    NotFound: _NotFound_vue__WEBPACK_IMPORTED_MODULE_12__["default"]
+    App: _App_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
+    NotFound: _NotFound_vue__WEBPACK_IMPORTED_MODULE_10__["default"]
   },
   router: router,
-  store: _store_store_js__WEBPACK_IMPORTED_MODULE_14__["default"]
+  store: _store_store_js__WEBPACK_IMPORTED_MODULE_12__["default"]
 });
 
 /***/ }),
@@ -88517,144 +89305,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/LoginForm.vue":
-/*!***********************************************!*\
-  !*** ./resources/js/components/LoginForm.vue ***!
-  \***********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _LoginForm_vue_vue_type_template_id_12a98f72___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LoginForm.vue?vue&type=template&id=12a98f72& */ "./resources/js/components/LoginForm.vue?vue&type=template&id=12a98f72&");
-/* harmony import */ var _LoginForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LoginForm.vue?vue&type=script&lang=js& */ "./resources/js/components/LoginForm.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _LoginForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _LoginForm_vue_vue_type_template_id_12a98f72___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _LoginForm_vue_vue_type_template_id_12a98f72___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/LoginForm.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/components/LoginForm.vue?vue&type=script&lang=js&":
-/*!************************************************************************!*\
-  !*** ./resources/js/components/LoginForm.vue?vue&type=script&lang=js& ***!
-  \************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./LoginForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoginForm.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/LoginForm.vue?vue&type=template&id=12a98f72&":
-/*!******************************************************************************!*\
-  !*** ./resources/js/components/LoginForm.vue?vue&type=template&id=12a98f72& ***!
-  \******************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginForm_vue_vue_type_template_id_12a98f72___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./LoginForm.vue?vue&type=template&id=12a98f72& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoginForm.vue?vue&type=template&id=12a98f72&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginForm_vue_vue_type_template_id_12a98f72___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LoginForm_vue_vue_type_template_id_12a98f72___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./resources/js/components/RegisterForm.vue":
-/*!**************************************************!*\
-  !*** ./resources/js/components/RegisterForm.vue ***!
-  \**************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _RegisterForm_vue_vue_type_template_id_7942be72___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RegisterForm.vue?vue&type=template&id=7942be72& */ "./resources/js/components/RegisterForm.vue?vue&type=template&id=7942be72&");
-/* harmony import */ var _RegisterForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RegisterForm.vue?vue&type=script&lang=js& */ "./resources/js/components/RegisterForm.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _RegisterForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _RegisterForm_vue_vue_type_template_id_7942be72___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _RegisterForm_vue_vue_type_template_id_7942be72___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/RegisterForm.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/components/RegisterForm.vue?vue&type=script&lang=js&":
-/*!***************************************************************************!*\
-  !*** ./resources/js/components/RegisterForm.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RegisterForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./RegisterForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RegisterForm.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RegisterForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/RegisterForm.vue?vue&type=template&id=7942be72&":
-/*!*********************************************************************************!*\
-  !*** ./resources/js/components/RegisterForm.vue?vue&type=template&id=7942be72& ***!
-  \*********************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RegisterForm_vue_vue_type_template_id_7942be72___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./RegisterForm.vue?vue&type=template&id=7942be72& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/RegisterForm.vue?vue&type=template&id=7942be72&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RegisterForm_vue_vue_type_template_id_7942be72___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RegisterForm_vue_vue_type_template_id_7942be72___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
 /***/ "./resources/js/components/Session/CurrentCashGame.vue":
 /*!*************************************************************!*\
   !*** ./resources/js/components/Session/CurrentCashGame.vue ***!
@@ -88894,8 +89544,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _views_Sessions_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./views/Sessions.vue */ "./resources/js/views/Sessions.vue");
 /* harmony import */ var _views_LiveSession_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./views/LiveSession.vue */ "./resources/js/views/LiveSession.vue");
 /* harmony import */ var _views_Statistics_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./views/Statistics.vue */ "./resources/js/views/Statistics.vue");
-/* harmony import */ var _views_Session_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./views/Session.vue */ "./resources/js/views/Session.vue");
-/* harmony import */ var _NotFound_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./NotFound.vue */ "./resources/js/NotFound.vue");
+/* harmony import */ var _views_CreateSession_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./views/CreateSession.vue */ "./resources/js/views/CreateSession.vue");
+/* harmony import */ var _views_Session_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./views/Session.vue */ "./resources/js/views/Session.vue");
+/* harmony import */ var _NotFound_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./NotFound.vue */ "./resources/js/NotFound.vue");
+
 
 
 
@@ -88922,8 +89574,12 @@ var routes = [{
 }, {
   path: '/session',
   name: 'session',
-  component: _views_Session_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+  component: _views_Session_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
   props: true
+}, {
+  path: '/session/create',
+  name: 'createsession',
+  component: _views_CreateSession_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
 }, {
   path: '/live',
   name: 'live',
@@ -88931,7 +89587,7 @@ var routes = [{
 }, {
   path: '/whoops',
   name: 'NotFound',
-  component: _NotFound_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
+  component: _NotFound_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
 }, {
   path: '*',
   redirect: '/whoops'
@@ -89072,9 +89728,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     ASSIGN_CASH_GAMES: function ASSIGN_CASH_GAMES(state, cash_games) {
       state.cash_games = cash_games;
     },
-    // ADD_CASH_GAME(state, cash_game) {
-    //     state.cash_games.unshift(cash_game)
-    // },
+    ADD_CASH_GAME: function ADD_CASH_GAME(state, cash_game) {
+      state.cash_games.unshift(cash_game);
+    },
     UPDATE_CASH_GAME: function UPDATE_CASH_GAME(state, cash_game) {
       var index = state.cash_games.findIndex(function (cg) {
         return cg.id == cash_game.id;
@@ -89095,20 +89751,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         throw error;
       });
     },
-    // addCashGame({ commit }, cash_game) {
-    //     return axios.post('/api/cash/', {
-    //         amount: cash_game.amount,
-    //         comments: cash_game.comments
-    //     })
-    //     .then(response => {
-    //         commit('ADD_CASH_GAME', response.data.cash_game)
-    //     })
-    //     .catch(error => {
-    //         throw error
-    //     })
-    // },
-    updateCashGame: function updateCashGame(_ref2, cash_game) {
+    addCashGame: function addCashGame(_ref2, cash_game) {
       var commit = _ref2.commit;
+      return axios.post('/api/cash/', _objectSpread({}, cash_game, {
+        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.start_time).format("YYYY-MM-DD HH:mm:ss"),
+        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.end_time).format("YYYY-MM-DD HH:mm:ss")
+      })).then(function (response) {
+        commit('ADD_CASH_GAME', response.data.cash_game);
+      })["catch"](function (error) {
+        throw error;
+      });
+    },
+    updateCashGame: function updateCashGame(_ref3, cash_game) {
+      var commit = _ref3.commit;
       return axios.patch('/api/cash/' + cash_game.id, _objectSpread({}, cash_game, {
         start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.start_time).format("YYYY-MM-DD HH:mm:ss"),
         end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.end_time).format("YYYY-MM-DD HH:mm:ss")
@@ -89118,8 +89773,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         throw error;
       });
     },
-    deleteCashGame: function deleteCashGame(_ref3, cash_game) {
-      var commit = _ref3.commit;
+    deleteCashGame: function deleteCashGame(_ref4, cash_game) {
+      var commit = _ref4.commit;
       return axios["delete"]('/api/cash/' + cash_game.id).then(function (response) {
         commit('REMOVE_CASH_GAME', cash_game);
       })["catch"](function (error) {
@@ -89257,6 +89912,75 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   }
 });
 /* harmony default export */ __webpack_exports__["default"] = (store);
+
+/***/ }),
+
+/***/ "./resources/js/views/CreateSession.vue":
+/*!**********************************************!*\
+  !*** ./resources/js/views/CreateSession.vue ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CreateSession_vue_vue_type_template_id_ddd3532a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateSession.vue?vue&type=template&id=ddd3532a& */ "./resources/js/views/CreateSession.vue?vue&type=template&id=ddd3532a&");
+/* harmony import */ var _CreateSession_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CreateSession.vue?vue&type=script&lang=js& */ "./resources/js/views/CreateSession.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CreateSession_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CreateSession_vue_vue_type_template_id_ddd3532a___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CreateSession_vue_vue_type_template_id_ddd3532a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/views/CreateSession.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/CreateSession.vue?vue&type=script&lang=js&":
+/*!***********************************************************************!*\
+  !*** ./resources/js/views/CreateSession.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateSession_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./CreateSession.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/CreateSession.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateSession_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/CreateSession.vue?vue&type=template&id=ddd3532a&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/views/CreateSession.vue?vue&type=template&id=ddd3532a& ***!
+  \*****************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateSession_vue_vue_type_template_id_ddd3532a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./CreateSession.vue?vue&type=template&id=ddd3532a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/CreateSession.vue?vue&type=template&id=ddd3532a&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateSession_vue_vue_type_template_id_ddd3532a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateSession_vue_vue_type_template_id_ddd3532a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
@@ -90400,8 +91124,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /var/www/html/poker/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/html/poker/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /var/www/poker/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /var/www/poker/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

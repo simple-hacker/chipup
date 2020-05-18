@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full grid grid-cols-4 gap-4 text-white">
+    <div class="w-full grid grid-cols-4 gap-4 pb-4 text-white">
         <div class="col-span-4 md:col-span-2 p-2 md:p-4 bg-card border border-muted-dark rounded shadow">
             <h2 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-4 md:mb-3">Account Settings</h2>
             <div class="flex flex-col mb-6">

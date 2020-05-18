@@ -33215,7 +33215,7 @@ var app = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /var/www/html/poker/resources/js/setup.js */"./resources/js/setup.js");
+module.exports = __webpack_require__(/*! /var/www/poker/resources/js/setup.js */"./resources/js/setup.js");
 
 
 /***/ })

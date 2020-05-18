@@ -12,9 +12,9 @@ export default {
         ASSIGN_CASH_GAMES(state, cash_games) {
             state.cash_games = cash_games
         },
-        // ADD_CASH_GAME(state, cash_game) {
-        //     state.cash_games.unshift(cash_game)
-        // },
+        ADD_CASH_GAME(state, cash_game) {
+            state.cash_games.unshift(cash_game)
+        },
         UPDATE_CASH_GAME(state, cash_game) {
             const index = state.cash_games.findIndex(cg => cg.id == cash_game.id)
             state.cash_games.splice(index, 1, cash_game)
@@ -34,18 +34,19 @@ export default {
                 throw error
             })
         },
-        // addCashGame({ commit }, cash_game) {
-        //     return axios.post('/api/cash/', {
-        //         amount: cash_game.amount,
-        //         comments: cash_game.comments
-        //     })
-        //     .then(response => {
-        //         commit('ADD_CASH_GAME', response.data.cash_game)
-        //     })
-        //     .catch(error => {
-        //         throw error
-        //     })
-        // },
+        addCashGame({ commit }, cash_game) {
+            return axios.post('/api/cash/', {
+                ...cash_game,
+				start_time: moment(cash_game.start_time).format("YYYY-MM-DD HH:mm:ss"),
+				end_time: moment(cash_game.end_time).format("YYYY-MM-DD HH:mm:ss")
+            })
+            .then(response => {
+                commit('ADD_CASH_GAME', response.data.cash_game)
+            })
+            .catch(error => {
+                throw error
+            })
+        },
         updateCashGame({ commit }, cash_game) {
             return axios.patch('/api/cash/'+cash_game.id, {
                 ...cash_game,
