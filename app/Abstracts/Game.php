@@ -11,7 +11,11 @@ abstract class Game extends Model
 {
     protected $casts = [
         'user_id' => 'integer',
-        'profit' => 'float'
+        'profit' => 'float',
+    ];
+
+    protected $dates = [
+        'start_time', 'end_time'
     ];
 
     /**
@@ -23,6 +27,36 @@ abstract class Game extends Model
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+
+    /**
+    * Return the parent's variant model
+    * 
+    * @return belongsTo
+    */
+    public function variant()
+    {
+        return $this->belongsTo('App\Attributes\Variant');
+    }
+
+    /**
+    * Return the parent's limit model
+    * 
+    * @return belongsTo
+    */
+    public function limit()
+    {
+        return $this->belongsTo('App\Attributes\Limit');
+    }
+
+    /**
+    * Return the parent's table size model
+    * 
+    * @return belongsTo
+    */
+    public function table_size()
+    {
+        return $this->belongsTo('App\Attributes\TableSize');
     }
 
     /**
