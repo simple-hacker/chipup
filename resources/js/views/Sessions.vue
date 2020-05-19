@@ -6,7 +6,7 @@
         <div class="col-span-4 grid grid-cols-4 grid-2 md:gap-3 xxl:grid-4 bg-background rounded border border-card p-1 text-white">
 			<router-link
                     :to="{ name: 'createsession' }"
-                    class="col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0 flex flex-1"
+                    class="col-span-4 mb-2 md:mb-0 flex flex-1"
 			>
                 <div class="flex p-4 border border-muted-dark shadow bg-card hover:bg-muted-dark cursor-pointer justify-center items-center w-full">
 					<i class="fas fa-plus-circle fa-lgx mr-3"></i>
@@ -37,24 +37,10 @@ export default {
 	},
 	methods: {
 		showSessionDetails: function (session) {
-			// this.$modal.show(SessionDetails, {
-			// 	// Modal props
-			// 	session: session,
-			// }, {
-			// 	// Modal Options
-			// 	classes: 'bg-background text-white p-1 md:p-3 rounded-lg border border-muted-dark',
-			// 	minHeight: 150,
-			// 	height: 'auto',
-			// 	width: '95%',
-			// 	maxWidth: 900,
-			// 	maxHeight: 500,
-			// 	adaptive: true,
-			// 	scrollable: true,
-			// })
 			this.$router.push({
 				name: 'session',
 				params: {
-					session: session
+					id: session.id
 				}
 			})
 		}

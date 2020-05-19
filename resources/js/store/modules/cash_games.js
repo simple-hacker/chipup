@@ -6,7 +6,9 @@ export default {
         cash_games: [],
     },
     getters: {
-
+        getCashGameById: (state) => (id) => {
+            return state.cash_games.find(cash_game => cash_game.id === id)
+        }
     },
     mutations: {
         ASSIGN_CASH_GAMES(state, cash_games) {

@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col w-full text-white">
+	<div class="flex flex-col w-full xxl:w-2/3 xxl:mx-auto text-white">
 		<div class="text-center text-4xl lg:text-6xl font-bold text-green-500">
 			Create {{ game_type_label }}
 		</div>
@@ -8,12 +8,18 @@
 		</div>
 		<div class="grid grid-cols-6 gap-2 md:gap-3 mt-2 md:mt-4">
 			<div class="col-span-6 md:col-span-3 md:row-span-3 flex-col bg-card border border-muted-dark rounded-lg p-3 text-lg">
+				<!--
+					DETAILS
+				-->
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2">Details</div>
+				<!--
+					LOCATION
+				-->
 				<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
 					<div class="w-1/6">
 						<i class="fas fa-map-marker-alt"></i>
 					</div>
-					<div class="w-full">
+					<div class="flex flex-col w-full">
 						<input
 							type="text"
 							v-model="session.location"
@@ -25,12 +31,15 @@
 						<span v-if="errors.location" class="error-message">{{ errors.location[0] }}</span>
 					</div>
 				</div>
+				<!--
+					STAKE
+				-->
 				<div v-show-slide="game_type === 'cash_game'">
 					<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
 						<div class="w-1/6">
 							<i class="fas fa-coins"></i>
 						</div>
-						<div class="w-full">
+						<div class="flex flex-col w-full">
 							<select
 								v-model="cash_game.stake_id"
 								class="p-1 text-lg mr-1"
@@ -45,16 +54,19 @@
 								>
 								</option>
 							</select>
-							<span v-if="errors.stake_id" class="error-message">{{ errors.location[0] }}</span>
+							<span v-if="errors.stake_id" class="error-message">{{ errors.stake_id[0] }}</span>
 						</div>
 					</div>
 				</div>
+				<!--
+					LIMIT AND VARIANT
+				-->
 				<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
 					<div class="w-1/6">
 						<i class="fas fa-stream"></i>
 					</div>
 					<div class="flex w-full">
-						<div class="w-full">
+						<div class="flex flex-col w-full">
 							<select
 								v-model="session.limit_id"
 								class="p-1 text-lg mr-1"
@@ -71,7 +83,7 @@
 							</select>
 							<span v-if="errors.limit_id" class="error-message">{{ errors.limit_id[0] }}</span>
 						</div>
-						<div class="w-full">
+						<div class="flex flex-col w-full">
 							<select
 								v-model="session.variant_id"
 								class="p-1 text-lg"
@@ -90,11 +102,14 @@
 						</div>
 					</div>
 				</div>
+				<!--
+					TABLE SIZE
+				-->
 				<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
 					<div class="w-1/6">
 						<i class="fas fa-user-friends"></i>
 					</div>
-					<div class="w-full">
+					<div class="flex flex-col w-full">
 						<select
 							v-model="session.table_size_id"
 							class="p-1 text-lg"
@@ -112,12 +127,15 @@
 						<span v-if="errors.table_size_id" class="error-message">{{ errors.table_size_id[0] }}</span>
 					</div>
 				</div>
+				<!--
+					ENTRIES
+				-->
 				<div v-show-slide="game_type === 'tournament'">
 					<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
 						<div class="w-1/6">
 							<i class="fas fa-users"></i>
 						</div>
-						<div class="w-full">
+						<div class="flex flex-col w-full">
 							<input
 								type="number"
 								min="0"
@@ -131,11 +149,14 @@
 						</div>
 					</div>
 				</div>
+				<!--
+					START TIME
+				-->
 				<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
 					<div class="w-1/6">
 						<i class="far fa-clock"></i>
 					</div>
-					<div class="w-full">
+					<div class="flex flex-col w-full">
 						<datetime
 							v-model="session.start_time"
 							input-id="start_time"
@@ -151,11 +172,14 @@
 						<span v-if="errors.start_time" class="error-message">{{ errors.start_time[0] }}</span>
 					</div>
 				</div>
+				<!--
+					END TIME
+				-->
 				<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
 					<div class="w-1/6">
 						<i class="fas fa-clock"></i>
 					</div>
-					<div class="w-full">
+					<div class="flex flex-col w-full">
 						<datetime
 							v-model="session.end_time"
 							input-id="end_time"
@@ -208,15 +232,14 @@
 									>
 									<button v-if="index != 0" @click="cash_game.buy_ins.splice(index, 1)" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="fas fa-times"></i></button>
 								</div>
-								<div>
-									<span v-if="errors[`buy_ins.${index}.amount`]" class="error-message">{{ errors[`buy_ins.${index}.amount`][0] }}</span>
-								</div>
+								<span v-if="errors[`buy_ins.${index}.amount`]" class="error-message">{{ errors[`buy_ins.${index}.amount`][0] }}</span>
 							</div>
 						</div>
 						<div class="flex justify-center items-center">
 							<div
 								@click="cash_game.buy_ins.push({ amount: 0})"
-								class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer">
+								class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
+							>
 								<i class="fas fa-plus-circle mr-2"></i>
 								<span>Add Buy In</span>
 							</div>
@@ -266,17 +289,25 @@
 									:class="{'error-input' : errors[`expenses.${index}.amount`]}"
 									@input="delete errors[`expenses.${index}.amount`]"
 								>
+								<input
+									v-model="expense.comments"
+									type="text"
+									class="p-1 ml-1"
+									placeholder="Comments"
+									:class="{'error-input' : errors[`expenses.${index}.comments`]}"
+									@input="delete errors[`expenses.${index}.comments`]"
+								>
 								<button @click="session.expenses.splice(index, 1)" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="fas fa-times"></i></button>
 							</div>
-							<div>
-								<span v-if="errors[`expenses.${index}.amount`]" class="error-message">{{ errors[`expenses.${index}.amount`][0] }}</span>
-							</div>
+							<span v-if="errors[`expenses.${index}.amount`]" class="error-message">{{ errors[`expenses.${index}.amount`][0] }}</span>
+							<span v-if="errors[`expenses.${index}.comments`]" class="error-message">{{ errors[`expenses.${index}.comments`][0] }}</span>
 						</div>
 					</div>
 					<div class="flex justify-center items-center">
 						<div
-							@click="session.expenses.push({ amount: 0})"
-							class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer">
+							@click="session.expenses.push({ amount: 0, comments: ''})"
+							class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
+						>
 							<i class="fas fa-plus-circle mr-2"></i>
 							<span>Add Expense</span>
 						</div>
@@ -298,27 +329,26 @@
 							:key="index"
 							class="flex mb-2"
 						>
-						<div class="flex flex-col w-full">
-							<div class="flex">
-								<input
-									v-model="rebuy.amount"
-									type="number"
-									min="0"
-									class="p-1"
-									:class="{'error-input' : errors[`rebuys.${index}.amount`]}"
-									@input="delete errors[`rebuys.${index}.amount`]"
-								>
-								<button @click="tournament.rebuys.splice(index, 1)" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="fas fa-times"></i></button>
-							</div>
-							<div>
+							<div class="flex flex-col w-full">
+								<div class="flex">
+									<input
+										v-model="rebuy.amount"
+										type="number"
+										min="0"
+										class="p-1"
+										:class="{'error-input' : errors[`rebuys.${index}.amount`]}"
+										@input="delete errors[`rebuys.${index}.amount`]"
+									>
+									<button @click="tournament.rebuys.splice(index, 1)" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="fas fa-times"></i></button>
+								</div>
 								<span v-if="errors[`rebuys.${index}.amount`]" class="error-message">{{ errors[`rebuys.${index}.amount`][0] }}</span>
 							</div>
-						</div>
 						</div>
 						<div class="flex justify-center items-center">
 							<div
 								@click="tournament.rebuys.push({ amount: 0})"
-								class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer">
+								class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
+							>
 								<i class="fas fa-plus-circle mr-2"></i>
 								<span>Add Rebuy</span>
 							</div>
@@ -353,15 +383,14 @@
 									>
 									<button @click="tournament.add_ons.splice(index, 1)" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="fas fa-times"></i></button>
 								</div>
-								<div>
-									<span v-if="errors[`add_ons.${index}.amount`]" class="error-message">{{ errors[`add_ons.${index}.amount`][0] }}</span>
-								</div>
+								<span v-if="errors[`add_ons.${index}.amount`]" class="error-message">{{ errors[`add_ons.${index}.amount`][0] }}</span>
 							</div>
 						</div>
 						<div class="flex justify-center items-center">
 							<div
 								@click="tournament.add_ons.push({ amount: 0})"
-								class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer">
+								class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
+							>
 								<i class="fas fa-plus-circle mr-2"></i>
 								<span>Add Add On</span>
 							</div>

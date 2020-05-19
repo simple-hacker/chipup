@@ -3185,6 +3185,159 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3197,9 +3350,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         location: '',
         start_time: '',
         end_time: '',
-        variant_id: 1,
-        limit_id: 1,
-        table_size_id: 1,
+        variant_id: 0,
+        limit_id: 0,
+        table_size_id: 0,
         expenses: [],
         cash_out_model: {
           amount: 0
@@ -3207,7 +3360,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         comments: ''
       },
       cash_game: {
-        stake_id: 1,
+        stake_id: 0,
         buy_ins: [{
           amount: 0
         }]
@@ -3260,6 +3413,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           });
         })["catch"](function (error) {
           _this.$snotify.error('Error: ' + error.response.data.message);
+
+          _this.errors = error.response.data.errors;
         });
       } else if (this.game_type === 'tournament') {
         console.log('TOURNAMENT');
@@ -3715,47 +3870,227 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Session',
   props: {
-    session: Object,
     id: Number
   },
   data: function data() {
     return {
       editing: false,
-      cash_game: {},
       errors: {}
     };
   },
   created: function created() {
-    this.cash_game = JSON.parse(JSON.stringify(_objectSpread({}, this.session, {
-      start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.start_time).format(),
-      end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.end_time).format()
+    this.cash_game = JSON.parse(JSON.stringify(_objectSpread({}, this.stateCashGame, {
+      start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.start_time).format(),
+      end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.end_time).format()
     })));
-    this.cached_cash_game = _objectSpread({}, this.cash_game);
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes']), {
-    profit: function profit() {
-      return this.session.profit;
-    },
-    roi: function roi() {
-      var buyInTotal = this.buyInsTotal < 1 ? 1 : this.buyInsTotal;
-      return this.profit / buyInTotal;
-    },
-    buyInsTotal: function buyInsTotal() {
-      return this.cash_game.buy_ins.reduce(function (total, buy_in) {
-        return total + buy_in.amount;
-      }, 0);
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])('cash_games', ['getCashGameById']), {
+    stateCashGame: function stateCashGame() {
+      return this.getCashGameById(this.id);
     },
     formattedProfit: function formattedProfit() {
       return Vue.prototype.currency.format(this.profit);
     },
-    gameDetails: function gameDetails() {
-      return "£" + this.cash_game.stake.small_blind + "/£" + this.cash_game.stake.big_blind + " " + this.cash_game.limit.limit + " " + this.cash_game.variant.variant;
+    roi: function roi() {
+      var buy_inTotal = this.buy_insTotal < 1 ? 1 : this.buy_insTotal;
+      return this.profit / buy_inTotal;
+    },
+    profit: function profit() {
+      return this.cash_game.profit;
+    },
+    buy_insTotal: function buy_insTotal() {
+      return this.cash_game.buy_ins.reduce(function (total, buy_in) {
+        return total + buy_in.amount;
+      }, 0);
     },
     runTimeHours: function runTimeHours() {
       var end_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.cash_game.end_time);
@@ -3774,7 +4109,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])('cash_games', ['updateCashGame', 'deleteCashGame']), {
     cancelChanges: function cancelChanges() {
       this.editing = false;
-      this.cash_game = _objectSpread({}, this.cached_cash_game);
+      this.cash_game = JSON.parse(JSON.stringify(_objectSpread({}, this.stateCashGame, {
+        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.start_time).format(),
+        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.end_time).format()
+      })));
     },
     saveSession: function saveSession() {
       var _this = this;
@@ -3783,9 +4121,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this.$snotify.success('Changes saved.');
 
         _this.editing = false;
-        _this.cached_cash_game = _objectSpread({}, _this.cash_game);
       })["catch"](function (error) {
         _this.$snotify.error('Error: ' + error.response.data.message);
+
+        _this.errors = error.response.data.errors;
       });
     },
     deleteSession: function deleteSession() {
@@ -3802,7 +4141,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             _this2.deleteCashGame(_this2.cash_game).then(function (response) {
               _this2.$modal.hide('dialog');
 
-              _this2.$emit('close');
+              _this2.$router.push({
+                name: 'sessions'
+              });
 
               _this2.$snotify.warning('Successfully deleted cash game.');
             })["catch"](function (error) {
@@ -3818,6 +4159,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     formatDate: function formatDate(date) {
       return moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format("dddd Do MMMM, HH:mm");
+    },
+    stringifyCashGame: function stringifyCashGame(cash_game) {
+      return JSON.parse(JSON.stringify(_objectSpread({}, this.cash_game, {
+        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.cash_game.start_time).format(),
+        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.cash_game.end_time).format()
+      })));
     }
   })
 });
@@ -3880,24 +4227,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['cash_games'])),
   methods: {
     showSessionDetails: function showSessionDetails(session) {
-      // this.$modal.show(SessionDetails, {
-      // 	// Modal props
-      // 	session: session,
-      // }, {
-      // 	// Modal Options
-      // 	classes: 'bg-background text-white p-1 md:p-3 rounded-lg border border-muted-dark',
-      // 	minHeight: 150,
-      // 	height: 'auto',
-      // 	width: '95%',
-      // 	maxWidth: 900,
-      // 	maxHeight: 500,
-      // 	adaptive: true,
-      // 	scrollable: true,
-      // })
       this.$router.push({
         name: 'session',
         params: {
-          session: session
+          id: session.id
         }
       });
     }
@@ -66707,136 +67040,529 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "flex flex-col w-full text-white" }, [
-    _c(
-      "div",
-      {
-        staticClass: "text-center text-4xl lg:text-6xl font-bold text-green-500"
-      },
-      [_vm._v("\n\t\tCreate " + _vm._s(_vm.game_type_label) + "\n\t")]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass: "text-center font-bold text-green-500 p-3 cursor-pointer",
-        on: { click: _vm.switchGameType }
-      },
-      [
-        _c("span", { staticClass: "mr-3" }, [
-          _vm._v("Switch to " + _vm._s(_vm.game_type_label_inverse) + " Mode")
-        ])
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "grid grid-cols-6 gap-2 md:gap-3 mt-2 md:mt-4" }, [
+  return _c(
+    "div",
+    { staticClass: "flex flex-col w-full xxl:w-2/3 xxl:mx-auto text-white" },
+    [
       _c(
         "div",
         {
           staticClass:
-            "col-span-6 md:col-span-3 md:row-span-3 flex-col bg-card border border-muted-dark rounded-lg p-3 text-lg"
+            "text-center text-4xl lg:text-6xl font-bold text-green-500"
         },
+        [_vm._v("\n\t\tCreate " + _vm._s(_vm.game_type_label) + "\n\t")]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "text-center font-bold text-green-500 p-3 cursor-pointer",
+          on: { click: _vm.switchGameType }
+        },
+        [
+          _c("span", { staticClass: "mr-3" }, [
+            _vm._v("Switch to " + _vm._s(_vm.game_type_label_inverse) + " Mode")
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "grid grid-cols-6 gap-2 md:gap-3 mt-2 md:mt-4" },
         [
           _c(
             "div",
             {
               staticClass:
-                "font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2"
-            },
-            [_vm._v("Details")]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
-            [
-              _vm._m(0),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.session.location,
-                    expression: "session.location"
-                  }
-                ],
-                staticClass: "p-1 text-lg",
-                attrs: { type: "text", placeholder: "Location" },
-                domProps: { value: _vm.session.location },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.session, "location", $event.target.value)
-                  }
-                }
-              })
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show-slide",
-                  rawName: "v-show-slide",
-                  value: _vm.game_type === "cash_game",
-                  expression: "game_type === 'cash_game'"
-                }
-              ]
+                "col-span-6 md:col-span-3 md:row-span-3 flex-col bg-card border border-muted-dark rounded-lg p-3 text-lg"
             },
             [
               _c(
                 "div",
-                { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+                {
+                  staticClass:
+                    "font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2"
+                },
+                [_vm._v("Details")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
                 [
-                  _vm._m(1),
+                  _vm._m(0),
                   _vm._v(" "),
-                  _c(
-                    "select",
-                    {
+                  _c("div", { staticClass: "flex flex-col w-full" }, [
+                    _c("input", {
                       directives: [
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.cash_game.stake_id,
-                          expression: "cash_game.stake_id"
+                          value: _vm.session.location,
+                          expression: "session.location"
                         }
                       ],
-                      staticClass: "p-1 text-lg mr-1",
+                      staticClass: "p-1 text-lg",
+                      class: { "error-input": _vm.errors.location },
+                      attrs: { type: "text", placeholder: "Location" },
+                      domProps: { value: _vm.session.location },
                       on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.cash_game,
-                            "stake_id",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
+                        input: [
+                          function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.session,
+                              "location",
+                              $event.target.value
+                            )
+                          },
+                          function($event) {
+                            delete _vm.errors.location
+                          }
+                        ]
                       }
-                    },
-                    _vm._l(_vm.stakes, function(stake) {
-                      return _c("option", {
-                        key: stake.id,
-                        domProps: {
-                          value: stake.id,
-                          textContent: _vm._s(stake.stake)
-                        }
-                      })
                     }),
-                    0
+                    _vm._v(" "),
+                    _vm.errors.location
+                      ? _c("span", { staticClass: "error-message" }, [
+                          _vm._v(_vm._s(_vm.errors.location[0]))
+                        ])
+                      : _vm._e()
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show-slide",
+                      rawName: "v-show-slide",
+                      value: _vm.game_type === "cash_game",
+                      expression: "game_type === 'cash_game'"
+                    }
+                  ]
+                },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
+                    [
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "flex flex-col w-full" }, [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.cash_game.stake_id,
+                                expression: "cash_game.stake_id"
+                              }
+                            ],
+                            staticClass: "p-1 text-lg mr-1",
+                            class: { "error-input": _vm.errors.stake_id },
+                            on: {
+                              input: function($event) {
+                                delete _vm.errors.stake_id
+                              },
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.cash_game,
+                                  "stake_id",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          _vm._l(_vm.stakes, function(stake) {
+                            return _c("option", {
+                              key: stake.id,
+                              domProps: {
+                                value: stake.id,
+                                textContent: _vm._s(stake.stake)
+                              }
+                            })
+                          }),
+                          0
+                        ),
+                        _vm._v(" "),
+                        _vm.errors.stake_id
+                          ? _c("span", { staticClass: "error-message" }, [
+                              _vm._v(_vm._s(_vm.errors.stake_id[0]))
+                            ])
+                          : _vm._e()
+                      ])
+                    ]
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
+                [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "flex w-full" }, [
+                    _c("div", { staticClass: "flex flex-col w-full" }, [
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.session.limit_id,
+                              expression: "session.limit_id"
+                            }
+                          ],
+                          staticClass: "p-1 text-lg mr-1",
+                          class: { "error-input": _vm.errors.limit_id },
+                          on: {
+                            input: function($event) {
+                              delete _vm.errors.limit_id
+                            },
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.session,
+                                "limit_id",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        _vm._l(_vm.limits, function(limit) {
+                          return _c("option", {
+                            key: limit.id,
+                            domProps: {
+                              value: limit.id,
+                              textContent: _vm._s(limit.limit)
+                            }
+                          })
+                        }),
+                        0
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.limit_id
+                        ? _c("span", { staticClass: "error-message" }, [
+                            _vm._v(_vm._s(_vm.errors.limit_id[0]))
+                          ])
+                        : _vm._e()
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "flex flex-col w-full" }, [
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.session.variant_id,
+                              expression: "session.variant_id"
+                            }
+                          ],
+                          staticClass: "p-1 text-lg",
+                          class: { "error-input": _vm.errors.variant_id },
+                          on: {
+                            input: function($event) {
+                              delete _vm.errors.variant_id
+                            },
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.session,
+                                "variant_id",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        _vm._l(_vm.variants, function(variant) {
+                          return _c("option", {
+                            key: variant.id,
+                            domProps: {
+                              value: variant.id,
+                              textContent: _vm._s(variant.variant)
+                            }
+                          })
+                        }),
+                        0
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.variant_id
+                        ? _c("span", { staticClass: "error-message" }, [
+                            _vm._v(_vm._s(_vm.errors.variant_id[0]))
+                          ])
+                        : _vm._e()
+                    ])
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
+                [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "flex flex-col w-full" }, [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.session.table_size_id,
+                            expression: "session.table_size_id"
+                          }
+                        ],
+                        staticClass: "p-1 text-lg",
+                        class: { "error-input": _vm.errors.table_size_id },
+                        on: {
+                          input: function($event) {
+                            delete _vm.errors.table_size_id
+                          },
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.session,
+                              "table_size_id",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          }
+                        }
+                      },
+                      _vm._l(_vm.table_sizes, function(table_size) {
+                        return _c("option", {
+                          key: table_size.id,
+                          domProps: {
+                            value: table_size.id,
+                            textContent: _vm._s(table_size.table_size)
+                          }
+                        })
+                      }),
+                      0
+                    ),
+                    _vm._v(" "),
+                    _vm.errors.table_size_id
+                      ? _c("span", { staticClass: "error-message" }, [
+                          _vm._v(_vm._s(_vm.errors.table_size_id[0]))
+                        ])
+                      : _vm._e()
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show-slide",
+                      rawName: "v-show-slide",
+                      value: _vm.game_type === "tournament",
+                      expression: "game_type === 'tournament'"
+                    }
+                  ]
+                },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
+                    [
+                      _vm._m(4),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "flex flex-col w-full" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.tournament.entries,
+                              expression: "tournament.entries"
+                            }
+                          ],
+                          staticClass: "p-1 text-lg",
+                          class: { "error-input": _vm.errors.entries },
+                          attrs: {
+                            type: "number",
+                            min: "0",
+                            placeholder: "Number of entries"
+                          },
+                          domProps: { value: _vm.tournament.entries },
+                          on: {
+                            input: [
+                              function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.tournament,
+                                  "entries",
+                                  $event.target.value
+                                )
+                              },
+                              function($event) {
+                                delete _vm.errors.entries
+                              }
+                            ]
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.entries
+                          ? _c("span", { staticClass: "error-message" }, [
+                              _vm._v(_vm._s(_vm.errors.entries[0]))
+                            ])
+                          : _vm._e()
+                      ])
+                    ]
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
+                [
+                  _vm._m(5),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "flex flex-col w-full" },
+                    [
+                      _c("datetime", {
+                        staticClass:
+                          "w-full bg-muted-light border border-muted-dark rounded border theme-green",
+                        attrs: {
+                          "input-id": "start_time",
+                          type: "datetime",
+                          "minute-step": 5,
+                          auto: "",
+                          placeholder: "Start Date and Time",
+                          title: "Start Date and Time",
+                          "input-class": {
+                            "error-input": _vm.errors.start_time,
+                            "p-1": true
+                          }
+                        },
+                        on: {
+                          input: function($event) {
+                            delete _vm.errors.start_time
+                          }
+                        },
+                        model: {
+                          value: _vm.session.start_time,
+                          callback: function($$v) {
+                            _vm.$set(_vm.session, "start_time", $$v)
+                          },
+                          expression: "session.start_time"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.errors.start_time
+                        ? _c("span", { staticClass: "error-message" }, [
+                            _vm._v(_vm._s(_vm.errors.start_time[0]))
+                          ])
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
+                [
+                  _vm._m(6),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "flex flex-col w-full" },
+                    [
+                      _c("datetime", {
+                        staticClass:
+                          "w-full bg-muted-light border border-muted-dark rounded border theme-green",
+                        attrs: {
+                          "input-id": "end_time",
+                          type: "datetime",
+                          "minute-step": 5,
+                          auto: "",
+                          placeholder: "End Date and Time",
+                          title: "End Date and Time",
+                          "input-class": {
+                            "error-input": _vm.errors.end_time,
+                            "p-1": true
+                          }
+                        },
+                        on: {
+                          input: function($event) {
+                            delete _vm.errors.end_time
+                          }
+                        },
+                        model: {
+                          value: _vm.session.end_time,
+                          callback: function($$v) {
+                            _vm.$set(_vm.session, "end_time", $$v)
+                          },
+                          expression: "session.end_time"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.errors.end_time
+                        ? _c("span", { staticClass: "error-message" }, [
+                            _vm._v(_vm._s(_vm.errors.end_time[0]))
+                          ])
+                        : _vm._e()
+                    ],
+                    1
                   )
                 ]
               )
@@ -66845,150 +67571,438 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+            {
+              staticClass:
+                "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+            },
             [
-              _vm._m(2),
+              _c("div", {
+                staticClass:
+                  "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0",
+                domProps: {
+                  textContent: _vm._s(
+                    _vm.game_type === "cash_game" ? "Buy Ins" : "Buy In"
+                  )
+                }
+              }),
               _vm._v(" "),
-              _c("div", { staticClass: "flex w-full" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.session.limit_id,
-                        expression: "session.limit_id"
-                      }
-                    ],
-                    staticClass: "p-1 text-lg mr-1",
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.session,
-                          "limit_id",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
+              _c(
+                "div",
+                { staticClass: "flex flex-col justify-center flex-1" },
+                [
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show-slide",
+                          rawName: "v-show-slide",
+                          value: _vm.game_type === "tournament",
+                          expression: "game_type === 'tournament'"
+                        }
+                      ]
+                    },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.tournament.buy_in.amount,
+                            expression: "tournament.buy_in.amount"
+                          }
+                        ],
+                        staticClass: "p-1",
+                        class: { "error-input": _vm.errors["buy_in.amount"] },
+                        attrs: { type: "number", min: "0" },
+                        domProps: { value: _vm.tournament.buy_in.amount },
+                        on: {
+                          input: [
+                            function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.tournament.buy_in,
+                                "amount",
+                                $event.target.value
+                              )
+                            },
+                            function($event) {
+                              delete _vm.errors["buy_in.amount"]
+                            }
+                          ]
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.errors["buy_in.amount"]
+                        ? _c("span", { staticClass: "error-message" }, [
+                            _vm._v(_vm._s(_vm.errors["buy_in.amount"][0]))
+                          ])
+                        : _vm._e()
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show-slide",
+                          rawName: "v-show-slide",
+                          value: _vm.game_type === "cash_game",
+                          expression: "game_type === 'cash_game'"
+                        }
+                      ]
+                    },
+                    [
+                      _vm._l(_vm.cash_game.buy_ins, function(buy_in, index) {
+                        return _c(
+                          "div",
+                          { key: index, staticClass: "flex mb-2" },
+                          [
+                            _c("div", { staticClass: "flex flex-col w-full" }, [
+                              _c("div", { staticClass: "flex" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: buy_in.amount,
+                                      expression: "buy_in.amount"
+                                    }
+                                  ],
+                                  staticClass: "p-1",
+                                  class: {
+                                    "error-input":
+                                      _vm.errors["buy_ins." + index + ".amount"]
+                                  },
+                                  attrs: { type: "number", min: "0" },
+                                  domProps: { value: buy_in.amount },
+                                  on: {
+                                    input: [
+                                      function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          buy_in,
+                                          "amount",
+                                          $event.target.value
+                                        )
+                                      },
+                                      function($event) {
+                                        delete _vm.errors[
+                                          "buy_ins." + index + ".amount"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                }),
+                                _vm._v(" "),
+                                index != 0
+                                  ? _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.cash_game.buy_ins.splice(
+                                              index,
+                                              1
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [_c("i", { staticClass: "fas fa-times" })]
+                                    )
+                                  : _vm._e()
+                              ]),
+                              _vm._v(" "),
+                              _vm.errors["buy_ins." + index + ".amount"]
+                                ? _c("span", { staticClass: "error-message" }, [
+                                    _vm._v(
+                                      _vm._s(
+                                        _vm.errors[
+                                          "buy_ins." + index + ".amount"
+                                        ][0]
+                                      )
+                                    )
+                                  ])
+                                : _vm._e()
+                            ])
+                          ]
                         )
-                      }
-                    }
-                  },
-                  _vm._l(_vm.limits, function(limit) {
-                    return _c("option", {
-                      key: limit.id,
-                      domProps: {
-                        value: limit.id,
-                        textContent: _vm._s(limit.limit)
-                      }
-                    })
-                  }),
-                  0
-                ),
-                _vm._v(" "),
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.session.variant_id,
-                        expression: "session.variant_id"
-                      }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "flex justify-center items-center" },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                              on: {
+                                click: function($event) {
+                                  return _vm.cash_game.buy_ins.push({
+                                    amount: 0
+                                  })
+                                }
+                              }
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-plus-circle mr-2"
+                              }),
+                              _vm._v(" "),
+                              _c("span", [_vm._v("Add Buy In")])
+                            ]
+                          )
+                        ]
+                      )
                     ],
-                    staticClass: "p-1 text-lg",
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.session,
-                          "variant_id",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        )
-                      }
-                    }
-                  },
-                  _vm._l(_vm.variants, function(variant) {
-                    return _c("option", {
-                      key: variant.id,
-                      domProps: {
-                        value: variant.id,
-                        textContent: _vm._s(variant.variant)
-                      }
-                    })
-                  }),
-                  0
-                )
-              ])
+                    2
+                  )
+                ]
+              )
             ]
           ),
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+            {
+              staticClass:
+                "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+            },
             [
-              _vm._m(3),
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
+                },
+                [_vm._v("Cash Out")]
+              ),
               _vm._v(" "),
               _c(
-                "select",
+                "div",
+                { staticClass: "flex flex-col justify-center flex-1" },
+                [
+                  _c("div", { staticClass: "flex flex-col mb-2" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.session.cash_out_model.amount,
+                          expression: "session.cash_out_model.amount"
+                        }
+                      ],
+                      staticClass: "p-1",
+                      class: {
+                        "error-input": _vm.errors["cash_out_model.amount"]
+                      },
+                      attrs: { type: "number", min: "0" },
+                      domProps: { value: _vm.session.cash_out_model.amount },
+                      on: {
+                        input: [
+                          function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.session.cash_out_model,
+                              "amount",
+                              $event.target.value
+                            )
+                          },
+                          function($event) {
+                            delete _vm.errors["cash_out_model.amount"]
+                          }
+                        ]
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.errors["cash_out_model.amount"]
+                      ? _c("span", { staticClass: "error-message" }, [
+                          _vm._v(_vm._s(_vm.errors["cash_out_model.amount"][0]))
+                        ])
+                      : _vm._e()
+                  ])
+                ]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "col-span-6 md:col-span-3 flex md:flex-col justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+            },
+            [
+              _c(
+                "div",
                 {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.session.table_size_id,
-                      expression: "session.table_size_id"
-                    }
-                  ],
-                  staticClass: "p-1 text-lg",
-                  on: {
-                    change: function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.$set(
-                        _vm.session,
-                        "table_size_id",
-                        $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      )
-                    }
-                  }
+                  staticClass:
+                    "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
                 },
-                _vm._l(_vm.table_sizes, function(table_size) {
-                  return _c("option", {
-                    key: table_size.id,
-                    domProps: {
-                      value: table_size.id,
-                      textContent: _vm._s(table_size.table_size)
-                    }
-                  })
-                }),
-                0
+                [_vm._v("Expenses")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "flex flex-col justify-center flex-1" },
+                [
+                  _vm._l(_vm.session.expenses, function(expense, index) {
+                    return _c("div", { key: index, staticClass: "flex mb-2" }, [
+                      _c("div", { staticClass: "flex flex-col w-full" }, [
+                        _c("div", { staticClass: "flex" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: expense.amount,
+                                expression: "expense.amount"
+                              }
+                            ],
+                            staticClass: "p-1",
+                            class: {
+                              "error-input":
+                                _vm.errors["expenses." + index + ".amount"]
+                            },
+                            attrs: { type: "number", min: "0" },
+                            domProps: { value: expense.amount },
+                            on: {
+                              input: [
+                                function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    expense,
+                                    "amount",
+                                    $event.target.value
+                                  )
+                                },
+                                function($event) {
+                                  delete _vm.errors[
+                                    "expenses." + index + ".amount"
+                                  ]
+                                }
+                              ]
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: expense.comments,
+                                expression: "expense.comments"
+                              }
+                            ],
+                            staticClass: "p-1 ml-1",
+                            class: {
+                              "error-input":
+                                _vm.errors["expenses." + index + ".comments"]
+                            },
+                            attrs: { type: "text", placeholder: "Comments" },
+                            domProps: { value: expense.comments },
+                            on: {
+                              input: [
+                                function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    expense,
+                                    "comments",
+                                    $event.target.value
+                                  )
+                                },
+                                function($event) {
+                                  delete _vm.errors[
+                                    "expenses." + index + ".comments"
+                                  ]
+                                }
+                              ]
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass:
+                                "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                              on: {
+                                click: function($event) {
+                                  return _vm.session.expenses.splice(index, 1)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fas fa-times" })]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _vm.errors["expenses." + index + ".amount"]
+                          ? _c("span", { staticClass: "error-message" }, [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.errors["expenses." + index + ".amount"][0]
+                                )
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.errors["expenses." + index + ".comments"]
+                          ? _c("span", { staticClass: "error-message" }, [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.errors[
+                                    "expenses." + index + ".comments"
+                                  ][0]
+                                )
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ])
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "flex justify-center items-center" },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                          on: {
+                            click: function($event) {
+                              return _vm.session.expenses.push({
+                                amount: 0,
+                                comments: ""
+                              })
+                            }
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                          _vm._v(" "),
+                          _c("span", [_vm._v("Add Expense")])
+                        ]
+                      )
+                    ]
+                  )
+                ],
+                2
               )
             ]
           ),
@@ -67003,638 +68017,347 @@ var render = function() {
                   value: _vm.game_type === "tournament",
                   expression: "game_type === 'tournament'"
                 }
-              ]
+              ],
+              staticClass:
+                "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg"
             },
             [
-              _c(
-                "div",
-                { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
-                [
-                  _vm._m(4),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.tournament.entries,
-                        expression: "tournament.entries"
-                      }
-                    ],
-                    staticClass: "p-1 text-lg",
-                    attrs: {
-                      type: "number",
-                      min: "0",
-                      placeholder: "Number of entries"
-                    },
-                    domProps: { value: _vm.tournament.entries },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.tournament, "entries", $event.target.value)
-                      }
-                    }
-                  })
-                ]
-              )
+              _c("div", { staticClass: "p-3" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
+                  },
+                  [_vm._v("Rebuys")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "flex flex-col justify-center flex-1" },
+                  [
+                    _vm._l(_vm.tournament.rebuys, function(rebuy, index) {
+                      return _c(
+                        "div",
+                        { key: index, staticClass: "flex mb-2" },
+                        [
+                          _c("div", { staticClass: "flex flex-col w-full" }, [
+                            _c("div", { staticClass: "flex" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: rebuy.amount,
+                                    expression: "rebuy.amount"
+                                  }
+                                ],
+                                staticClass: "p-1",
+                                class: {
+                                  "error-input":
+                                    _vm.errors["rebuys." + index + ".amount"]
+                                },
+                                attrs: { type: "number", min: "0" },
+                                domProps: { value: rebuy.amount },
+                                on: {
+                                  input: [
+                                    function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        rebuy,
+                                        "amount",
+                                        $event.target.value
+                                      )
+                                    },
+                                    function($event) {
+                                      delete _vm.errors[
+                                        "rebuys." + index + ".amount"
+                                      ]
+                                    }
+                                  ]
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.tournament.rebuys.splice(
+                                        index,
+                                        1
+                                      )
+                                    }
+                                  }
+                                },
+                                [_c("i", { staticClass: "fas fa-times" })]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _vm.errors["rebuys." + index + ".amount"]
+                              ? _c("span", { staticClass: "error-message" }, [
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm.errors[
+                                        "rebuys." + index + ".amount"
+                                      ][0]
+                                    )
+                                  )
+                                ])
+                              : _vm._e()
+                          ])
+                        ]
+                      )
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "flex justify-center items-center" },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                            on: {
+                              click: function($event) {
+                                return _vm.tournament.rebuys.push({ amount: 0 })
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("Add Rebuy")])
+                          ]
+                        )
+                      ]
+                    )
+                  ],
+                  2
+                )
+              ])
             ]
           ),
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
-            [
-              _vm._m(5),
-              _vm._v(" "),
-              _c("datetime", {
-                staticClass:
-                  "w-full bg-muted-light border border-muted-dark rounded border theme-green",
-                class: _vm.errors.start_time
-                  ? "border-red-700"
-                  : "border-gray-400",
-                attrs: {
-                  "input-id": "start_time",
-                  type: "datetime",
-                  "minute-step": 5,
-                  value: "2019-12-25T11:11:11Z",
-                  "input-class": "self-center p-1",
-                  auto: "",
-                  placeholder: "Start Date and Time",
-                  title: "Start Date and Time"
-                },
-                model: {
-                  value: _vm.session.start_time,
-                  callback: function($$v) {
-                    _vm.$set(_vm.session, "start_time", $$v)
-                  },
-                  expression: "session.start_time"
+            {
+              directives: [
+                {
+                  name: "show-slide",
+                  rawName: "v-show-slide",
+                  value: _vm.game_type === "tournament",
+                  expression: "game_type === 'tournament'"
                 }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
-            [
-              _vm._m(6),
-              _vm._v(" "),
-              _c("datetime", {
-                staticClass:
-                  "w-full bg-muted-light border border-muted-dark rounded border theme-green",
-                class: _vm.errors.end_time
-                  ? "border-red-700"
-                  : "border-gray-400",
-                attrs: {
-                  "input-id": "end_time",
-                  type: "datetime",
-                  "minute-step": 5,
-                  "input-class": "self-center p-1",
-                  auto: "",
-                  placeholder: "End Date and Time",
-                  title: "End Date and Time"
-                },
-                model: {
-                  value: _vm.session.end_time,
-                  callback: function($$v) {
-                    _vm.$set(_vm.session, "end_time", $$v)
-                  },
-                  expression: "session.end_time"
-                }
-              })
-            ],
-            1
-          )
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass:
-            "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
-        },
-        [
-          _c("div", {
-            staticClass:
-              "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0",
-            domProps: {
-              textContent: _vm._s(
-                _vm.game_type === "cash_game" ? "Buy Ins" : "Buy In"
-              )
-            }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "flex flex-col justify-center flex-1" }, [
-            _c(
-              "div",
-              {
-                directives: [
-                  {
-                    name: "show-slide",
-                    rawName: "v-show-slide",
-                    value: _vm.game_type === "tournament",
-                    expression: "game_type === 'tournament'"
-                  }
-                ]
-              },
-              [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.tournament.buy_in.amount,
-                      expression: "tournament.buy_in.amount"
-                    }
-                  ],
-                  staticClass: "p-1",
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.tournament.buy_in.amount },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(
-                        _vm.tournament.buy_in,
-                        "amount",
-                        $event.target.value
-                      )
-                    }
-                  }
-                })
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                directives: [
-                  {
-                    name: "show-slide",
-                    rawName: "v-show-slide",
-                    value: _vm.game_type === "cash_game",
-                    expression: "game_type === 'cash_game'"
-                  }
-                ]
-              },
-              [
-                _vm._l(_vm.cash_game.buy_ins, function(buy_in, index) {
-                  return _c("div", { key: index, staticClass: "flex mb-2" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: buy_in.amount,
-                          expression: "buy_in.amount"
-                        }
-                      ],
-                      staticClass: "p-1",
-                      attrs: { type: "text" },
-                      domProps: { value: buy_in.amount },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(buy_in, "amount", $event.target.value)
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    index != 0
-                      ? _c(
-                          "button",
-                          {
-                            staticClass:
-                              "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                            on: {
-                              click: function($event) {
-                                return _vm.cash_game.buy_ins.splice(index, 1)
-                              }
-                            }
-                          },
-                          [_c("i", { staticClass: "fas fa-times" })]
-                        )
-                      : _vm._e()
-                  ])
-                }),
-                _vm._v(" "),
-                _c("div", { staticClass: "flex justify-center items-center" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
-                      on: {
-                        click: function($event) {
-                          return _vm.cash_game.buy_ins.push({ amount: 0 })
-                        }
-                      }
-                    },
-                    [
-                      _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
-                      _vm._v(" "),
-                      _c("span", [_vm._v("Add Buy In")])
-                    ]
-                  )
-                ])
               ],
-              2
-            )
-          ])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass:
-            "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
-        },
-        [
-          _c(
-            "div",
-            {
               staticClass:
-                "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
+                "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg"
             },
-            [_vm._v("Cash Out")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "flex flex-col justify-center flex-1" }, [
-            _c("div", { staticClass: "flex mb-2" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.session.cash_out_model.amount,
-                    expression: "session.cash_out_model.amount"
-                  }
-                ],
-                staticClass: "p-1",
-                attrs: { type: "text" },
-                domProps: { value: _vm.session.cash_out_model.amount },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(
-                      _vm.session.cash_out_model,
-                      "amount",
-                      $event.target.value
-                    )
-                  }
-                }
-              })
-            ])
-          ])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass:
-            "col-span-6 md:col-span-3 flex md:flex-col justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3"
-        },
-        [
-          _c(
-            "div",
-            {
-              staticClass:
-                "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
-            },
-            [_vm._v("Expenses")]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "flex flex-col justify-center flex-1" },
             [
-              _vm._l(_vm.session.expenses, function(expense, index) {
-                return _c("div", { key: index, staticClass: "flex mb-2" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: expense.amount,
-                        expression: "expense.amount"
-                      }
-                    ],
-                    staticClass: "p-1",
-                    attrs: { type: "text" },
-                    domProps: { value: expense.amount },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(expense, "amount", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass:
-                        "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                      on: {
-                        click: function($event) {
-                          return _vm.session.expenses.splice(index, 1)
-                        }
-                      }
-                    },
-                    [_c("i", { staticClass: "fas fa-times" })]
-                  )
-                ])
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "flex justify-center items-center" }, [
+              _c("div", { staticClass: "p-3" }, [
                 _c(
                   "div",
                   {
                     staticClass:
-                      "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
-                    on: {
-                      click: function($event) {
-                        return _vm.session.expenses.push({ amount: 0 })
-                      }
-                    }
+                      "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
                   },
+                  [_vm._v("Add Ons")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "flex flex-col justify-center flex-1" },
                   [
-                    _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                    _vm._l(_vm.tournament.add_ons, function(add_on, index) {
+                      return _c(
+                        "div",
+                        { key: index, staticClass: "flex mb-2" },
+                        [
+                          _c("div", { staticClass: "flex flex-col w-full" }, [
+                            _c("div", { staticClass: "flex" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: add_on.amount,
+                                    expression: "add_on.amount"
+                                  }
+                                ],
+                                staticClass: "p-1",
+                                class: {
+                                  "error-input":
+                                    _vm.errors["add_ons." + index + ".amount"]
+                                },
+                                attrs: { type: "number", min: "0" },
+                                domProps: { value: add_on.amount },
+                                on: {
+                                  input: [
+                                    function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        add_on,
+                                        "amount",
+                                        $event.target.value
+                                      )
+                                    },
+                                    function($event) {
+                                      delete _vm.errors[
+                                        "add_ons." + index + ".amount"
+                                      ]
+                                    }
+                                  ]
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.tournament.add_ons.splice(
+                                        index,
+                                        1
+                                      )
+                                    }
+                                  }
+                                },
+                                [_c("i", { staticClass: "fas fa-times" })]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _vm.errors["add_ons." + index + ".amount"]
+                              ? _c("span", { staticClass: "error-message" }, [
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm.errors[
+                                        "add_ons." + index + ".amount"
+                                      ][0]
+                                    )
+                                  )
+                                ])
+                              : _vm._e()
+                          ])
+                        ]
+                      )
+                    }),
                     _vm._v(" "),
-                    _c("span", [_vm._v("Add Expense")])
-                  ]
+                    _c(
+                      "div",
+                      { staticClass: "flex justify-center items-center" },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                            on: {
+                              click: function($event) {
+                                return _vm.tournament.add_ons.push({
+                                  amount: 0
+                                })
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("Add Add On")])
+                          ]
+                        )
+                      ]
+                    )
+                  ],
+                  2
                 )
               ])
-            ],
-            2
-          )
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show-slide",
-              rawName: "v-show-slide",
-              value: _vm.game_type === "tournament",
-              expression: "game_type === 'tournament'"
-            }
-          ],
-          staticClass:
-            "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg"
-        },
-        [
-          _c("div", { staticClass: "p-3" }, [
-            _c(
-              "div",
-              {
-                staticClass:
-                  "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
-              },
-              [_vm._v("Rebuys")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "flex flex-col justify-center flex-1" },
-              [
-                _vm._l(_vm.tournament.rebuys, function(rebuy, index) {
-                  return _c("div", { key: index, staticClass: "flex mb-2" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: rebuy.amount,
-                          expression: "rebuy.amount"
-                        }
-                      ],
-                      staticClass: "p-1",
-                      attrs: { type: "text" },
-                      domProps: { value: rebuy.amount },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(rebuy, "amount", $event.target.value)
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass:
-                          "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                        on: {
-                          click: function($event) {
-                            return _vm.tournament.rebuys.splice(index, 1)
-                          }
-                        }
-                      },
-                      [_c("i", { staticClass: "fas fa-times" })]
-                    )
-                  ])
-                }),
-                _vm._v(" "),
-                _c("div", { staticClass: "flex justify-center items-center" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
-                      on: {
-                        click: function($event) {
-                          return _vm.tournament.rebuys.push({ amount: 0 })
-                        }
-                      }
-                    },
-                    [
-                      _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
-                      _vm._v(" "),
-                      _c("span", [_vm._v("Add Rebuy")])
-                    ]
-                  )
-                ])
-              ],
-              2
-            )
-          ])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show-slide",
-              rawName: "v-show-slide",
-              value: _vm.game_type === "tournament",
-              expression: "game_type === 'tournament'"
-            }
-          ],
-          staticClass:
-            "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg"
-        },
-        [
-          _c("div", { staticClass: "p-3" }, [
-            _c(
-              "div",
-              {
-                staticClass:
-                  "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
-              },
-              [_vm._v("Add Ons")]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "flex flex-col justify-center flex-1" },
-              [
-                _vm._l(_vm.tournament.add_ons, function(add_on, index) {
-                  return _c("div", { key: index, staticClass: "flex mb-2" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: add_on.amount,
-                          expression: "add_on.amount"
-                        }
-                      ],
-                      staticClass: "p-1",
-                      attrs: { type: "text" },
-                      domProps: { value: add_on.amount },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(add_on, "amount", $event.target.value)
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass:
-                          "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                        on: {
-                          click: function($event) {
-                            return _vm.tournament.add_ons.splice(index, 1)
-                          }
-                        }
-                      },
-                      [_c("i", { staticClass: "fas fa-times" })]
-                    )
-                  ])
-                }),
-                _vm._v(" "),
-                _c("div", { staticClass: "flex justify-center items-center" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
-                      on: {
-                        click: function($event) {
-                          return _vm.tournament.add_ons.push({ amount: 0 })
-                        }
-                      }
-                    },
-                    [
-                      _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
-                      _vm._v(" "),
-                      _c("span", [_vm._v("Add Add On")])
-                    ]
-                  )
-                ])
-              ],
-              2
-            )
-          ])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass:
-            "col-span-6 flex flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
-        },
-        [
+            ]
+          ),
+          _vm._v(" "),
           _c(
             "div",
             {
               staticClass:
-                "font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2"
+                "col-span-6 flex flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
             },
-            [_vm._v("Comments")]
-          ),
-          _vm._v(" "),
-          _c("textarea", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.session.comments,
-                expression: "session.comments"
-              }
-            ],
-            attrs: { name: "comments", cols: "30", rows: "5" },
-            domProps: { value: _vm.session.comments },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+            [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2"
+                },
+                [_vm._v("Comments")]
+              ),
+              _vm._v(" "),
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.session.comments,
+                    expression: "session.comments"
+                  }
+                ],
+                class: { "error-input": _vm.errors.comments },
+                attrs: { name: "comments", cols: "30", rows: "5" },
+                domProps: { value: _vm.session.comments },
+                on: {
+                  input: [
+                    function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.session, "comments", $event.target.value)
+                    },
+                    function($event) {
+                      delete _vm.errors.comments
+                    }
+                  ]
                 }
-                _vm.$set(_vm.session, "comments", $event.target.value)
+              }),
+              _vm._v(" "),
+              _vm.errors.comments
+                ? _c("span", { staticClass: "error-message" }, [
+                    _vm._v(_vm._s(_vm.errors.comments[0]))
+                  ])
+                : _vm._e()
+            ]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "flex my-3" }, [
+        _c(
+          "button",
+          {
+            staticClass:
+              "w-full p-4 bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white uppercase",
+            attrs: { type: "button" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.saveSession($event)
               }
             }
-          })
-        ]
-      )
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "flex my-3" }, [
-      _c(
-        "button",
-        {
-          staticClass:
-            "w-full p-4 bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white uppercase",
-          attrs: { type: "button" },
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.saveSession($event)
-            }
-          }
-        },
-        [
-          _c("i", { staticClass: "fas fa-edit mr-3" }),
-          _c("span", [_vm._v("Save " + _vm._s(_vm.game_type_label) + " ")])
-        ]
-      )
-    ])
-  ])
+          },
+          [
+            _c("i", { staticClass: "fas fa-edit mr-3" }),
+            _c("span", [_vm._v("Save " + _vm._s(_vm.game_type_label) + " ")])
+          ]
+        )
+      ])
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
@@ -67813,70 +68536,8 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "flex flex-col w-full relative text-white" },
+    { staticClass: "flex flex-col xxl:w-2/3 xxl:mx-auto w-full text-white" },
     [
-      _c("div", { staticClass: "absolute top-5 right-5 w-full" }, [
-        !_vm.editing
-          ? _c(
-              "button",
-              {
-                staticClass:
-                  "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    _vm.editing = true
-                  }
-                }
-              },
-              [
-                _c("i", { staticClass: "fas fa-edit mr-3" }),
-                _c("span", [_vm._v("Edit")])
-              ]
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.editing
-          ? _c("div", [
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2",
-                  attrs: { type: "button" },
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.saveSession($event)
-                    }
-                  }
-                },
-                [
-                  _c("i", { staticClass: "fas fa-edit mr-3" }),
-                  _c("span", [_vm._v("Save Changes")])
-                ]
-              )
-            ])
-          : _vm._e(),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass:
-              "bg-red-500 hover:bg-red-600 focus:bg-red-600 rounded text-white text-sm px-4 py-2",
-            attrs: { type: "button" },
-            on: {
-              click: function($event) {
-                $event.preventDefault()
-                return _vm.deleteSession($event)
-              }
-            }
-          },
-          [_c("i", { staticClass: "fas fa-trash" })]
-        )
-      ]),
-      _vm._v(" "),
       _c(
         "div",
         {
@@ -67894,7 +68555,7 @@ var render = function() {
             "div",
             {
               staticClass:
-                "col-span-6 md:col-span-3 md:row-span-2 flex-col bg-card border border-muted-dark rounded-lg p-3 text-lg"
+                "col-span-6 md:col-span-3 md:row-span-3 flex-col bg-card border border-muted-dark rounded-lg p-3 text-lg"
             },
             [
               _c(
@@ -67908,363 +68569,1342 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "div",
-                { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
                 [
-                  _c("i", { staticClass: "fas fa-map-marker-alt mr-3" }),
+                  _vm._m(0),
                   _vm._v(" "),
-                  !_vm.editing
-                    ? _c("span", {
-                        domProps: {
-                          textContent: _vm._s(_vm.cash_game.location)
-                        }
-                      })
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.editing
-                    ? _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.cash_game.location,
-                            expression: "cash_game.location"
+                  _c("div", { staticClass: "w-full" }, [
+                    !_vm.editing
+                      ? _c("span", {
+                          domProps: {
+                            textContent: _vm._s(_vm.cash_game.location)
                           }
-                        ],
-                        staticClass: "p-1 text-lg",
-                        attrs: { type: "text", placeholder: "Location" },
-                        domProps: { value: _vm.cash_game.location },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editing
+                      ? _c("div", { staticClass: "flex flex-col" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.cash_game.location,
+                                expression: "cash_game.location"
+                              }
+                            ],
+                            staticClass: "p-1 text-lg",
+                            class: { "error-input": _vm.errors.location },
+                            attrs: { type: "text", placeholder: "Location" },
+                            domProps: { value: _vm.cash_game.location },
+                            on: {
+                              input: [
+                                function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.cash_game,
+                                    "location",
+                                    $event.target.value
+                                  )
+                                },
+                                function($event) {
+                                  delete _vm.errors.location
+                                }
+                              ]
                             }
-                            _vm.$set(
-                              _vm.cash_game,
-                              "location",
-                              $event.target.value
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.location
+                            ? _c("span", { staticClass: "error-message" }, [
+                                _vm._v(_vm._s(_vm.errors.location[0]))
+                              ])
+                            : _vm._e()
+                        ])
+                      : _vm._e()
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "w-full" }, [
+                    !_vm.editing
+                      ? _c("span", {
+                          domProps: {
+                            textContent: _vm._s(_vm.cash_game.stake.stake)
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editing
+                      ? _c("div", { staticClass: "flex flex-col" }, [
+                          _c(
+                            "select",
+                            {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.cash_game.stake_id,
+                                  expression: "cash_game.stake_id"
+                                }
+                              ],
+                              staticClass: "p-1 text-lg mr-1",
+                              class: { "error-input": _vm.errors.stake_id },
+                              on: {
+                                input: function($event) {
+                                  delete _vm.errors.stake_id
+                                },
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.$set(
+                                    _vm.cash_game,
+                                    "stake_id",
+                                    $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  )
+                                }
+                              }
+                            },
+                            _vm._l(_vm.stakes, function(stake) {
+                              return _c("option", {
+                                key: stake.id,
+                                domProps: {
+                                  value: stake.id,
+                                  textContent: _vm._s(stake.stake)
+                                }
+                              })
+                            }),
+                            0
+                          ),
+                          _vm._v(" "),
+                          _vm.errors.stake_id
+                            ? _c("span", { staticClass: "error-message" }, [
+                                _vm._v(_vm._s(_vm.errors.stake_id[0]))
+                              ])
+                            : _vm._e()
+                        ])
+                      : _vm._e()
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
+                [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "w-full" }, [
+                    !_vm.editing
+                      ? _c("span", {
+                          domProps: {
+                            textContent: _vm._s(
+                              _vm.cash_game.limit.limit +
+                                " " +
+                                _vm.cash_game.variant.variant
                             )
                           }
-                        }
-                      })
-                    : _vm._e()
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editing
+                      ? _c("div", { staticClass: "flex w-full" }, [
+                          _c("div", { staticClass: "flex flex-1 flex-col" }, [
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.cash_game.limit_id,
+                                    expression: "cash_game.limit_id"
+                                  }
+                                ],
+                                staticClass: "p-1 text-lg mr-1",
+                                class: { "error-input": _vm.errors.limit_id },
+                                on: {
+                                  input: function($event) {
+                                    delete _vm.errors.limit_id
+                                  },
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.cash_game,
+                                      "limit_id",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              _vm._l(_vm.limits, function(limit) {
+                                return _c("option", {
+                                  key: limit.id,
+                                  domProps: {
+                                    value: limit.id,
+                                    textContent: _vm._s(limit.limit)
+                                  }
+                                })
+                              }),
+                              0
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.limit_id
+                              ? _c("span", { staticClass: "error-message" }, [
+                                  _vm._v(_vm._s(_vm.errors.limit_id[0]))
+                                ])
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "flex flex-1 flex-col" }, [
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.cash_game.variant_id,
+                                    expression: "cash_game.variant_id"
+                                  }
+                                ],
+                                staticClass: "p-1 text-lg",
+                                class: { "error-input": _vm.errors.variant_id },
+                                on: {
+                                  input: function($event) {
+                                    delete _vm.errors.variant_id
+                                  },
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.cash_game,
+                                      "variant_id",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              _vm._l(_vm.variants, function(variant) {
+                                return _c("option", {
+                                  key: variant.id,
+                                  domProps: {
+                                    value: variant.id,
+                                    textContent: _vm._s(variant.variant)
+                                  }
+                                })
+                              }),
+                              0
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.variant_id
+                              ? _c("span", { staticClass: "error-message" }, [
+                                  _vm._v(_vm._s(_vm.errors.variant_id[0]))
+                                ])
+                              : _vm._e()
+                          ])
+                        ])
+                      : _vm._e()
+                  ])
                 ]
               ),
               _vm._v(" "),
               _c(
                 "div",
-                { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
                 [
-                  _c("i", { staticClass: "fas fa-stream mr-3" }),
+                  _vm._m(3),
                   _vm._v(" "),
-                  !_vm.editing
-                    ? _c("span", {
-                        domProps: { textContent: _vm._s(_vm.gameDetails) }
-                      })
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.editing
-                    ? _c(
-                        "select",
-                        {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.cash_game.stake_id,
-                              expression: "cash_game.stake_id"
-                            }
-                          ],
-                          staticClass: "p-1 text-lg mr-1",
-                          on: {
-                            change: function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.$set(
-                                _vm.cash_game,
-                                "stake_id",
-                                $event.target.multiple
-                                  ? $$selectedVal
-                                  : $$selectedVal[0]
-                              )
-                            }
+                  _c("div", { staticClass: "w-full" }, [
+                    !_vm.editing
+                      ? _c("span", {
+                          domProps: {
+                            textContent: _vm._s(
+                              _vm.cash_game.table_size.table_size
+                            )
                           }
-                        },
-                        _vm._l(_vm.stakes, function(stake) {
-                          return _c("option", {
-                            key: stake.id,
-                            domProps: {
-                              value: stake.id,
-                              textContent: _vm._s(stake.stake)
-                            }
-                          })
-                        }),
-                        0
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.editing
-                    ? _c(
-                        "select",
-                        {
-                          directives: [
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editing
+                      ? _c("div", { staticClass: "flex flex-col" }, [
+                          _c(
+                            "select",
                             {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.cash_game.limit_id,
-                              expression: "cash_game.limit_id"
-                            }
-                          ],
-                          staticClass: "p-1 text-lg mr-1",
-                          on: {
-                            change: function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.$set(
-                                _vm.cash_game,
-                                "limit_id",
-                                $event.target.multiple
-                                  ? $$selectedVal
-                                  : $$selectedVal[0]
-                              )
-                            }
-                          }
-                        },
-                        _vm._l(_vm.limits, function(limit) {
-                          return _c("option", {
-                            key: limit.id,
-                            domProps: {
-                              value: limit.id,
-                              textContent: _vm._s(limit.limit)
-                            }
-                          })
-                        }),
-                        0
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.editing
-                    ? _c(
-                        "select",
-                        {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.cash_game.variant_id,
-                              expression: "cash_game.variant_id"
-                            }
-                          ],
-                          staticClass: "p-1 text-lg",
-                          on: {
-                            change: function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.$set(
-                                _vm.cash_game,
-                                "variant_id",
-                                $event.target.multiple
-                                  ? $$selectedVal
-                                  : $$selectedVal[0]
-                              )
-                            }
-                          }
-                        },
-                        _vm._l(_vm.variants, function(variant) {
-                          return _c("option", {
-                            key: variant.id,
-                            domProps: {
-                              value: variant.id,
-                              textContent: _vm._s(variant.variant)
-                            }
-                          })
-                        }),
-                        0
-                      )
-                    : _vm._e()
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.cash_game.table_size_id,
+                                  expression: "cash_game.table_size_id"
+                                }
+                              ],
+                              staticClass: "p-1 text-lg mr-1",
+                              class: {
+                                "error-input": _vm.errors.table_size_id
+                              },
+                              on: {
+                                input: function($event) {
+                                  delete _vm.errors.table_size_id
+                                },
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.$set(
+                                    _vm.cash_game,
+                                    "table_size_id",
+                                    $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  )
+                                }
+                              }
+                            },
+                            _vm._l(_vm.table_sizes, function(table_size) {
+                              return _c("option", {
+                                key: table_size.id,
+                                domProps: {
+                                  value: table_size.id,
+                                  textContent: _vm._s(table_size.table_size)
+                                }
+                              })
+                            }),
+                            0
+                          ),
+                          _vm._v(" "),
+                          _vm.errors.table_size_id
+                            ? _c("span", { staticClass: "error-message" }, [
+                                _vm._v(_vm._s(_vm.errors.table_size_id[0]))
+                              ])
+                            : _vm._e()
+                        ])
+                      : _vm._e()
+                  ])
                 ]
               ),
               _vm._v(" "),
               _c(
                 "div",
-                { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
                 [
-                  _c("i", { staticClass: "fas fa-user-friends mr-3" }),
+                  _vm._m(4),
                   _vm._v(" "),
-                  !_vm.editing
-                    ? _c("span", {
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.cash_game.table_size.table_size
-                          )
-                        }
-                      })
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.editing
-                    ? _c(
-                        "select",
-                        {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.cash_game.table_size_id,
-                              expression: "cash_game.table_size_id"
-                            }
-                          ],
-                          staticClass: "p-1 text-lg",
-                          on: {
-                            change: function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.$set(
-                                _vm.cash_game,
-                                "table_size_id",
-                                $event.target.multiple
-                                  ? $$selectedVal
-                                  : $$selectedVal[0]
-                              )
-                            }
+                  _c("div", { staticClass: "w-full" }, [
+                    !_vm.editing
+                      ? _c("span", {
+                          domProps: {
+                            textContent: _vm._s(
+                              _vm.formatDate(_vm.cash_game.start_time)
+                            )
                           }
-                        },
-                        _vm._l(_vm.table_sizes, function(table_size) {
-                          return _c("option", {
-                            key: table_size.id,
-                            domProps: {
-                              value: table_size.id,
-                              textContent: _vm._s(table_size.table_size)
-                            }
-                          })
-                        }),
-                        0
-                      )
-                    : _vm._e()
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editing
+                      ? _c(
+                          "div",
+                          { staticClass: "flex flex-col" },
+                          [
+                            _c("datetime", {
+                              staticClass:
+                                "w-full bg-muted-light border border-muted-dark rounded border theme-green",
+                              attrs: {
+                                "input-id": "start_time",
+                                type: "datetime",
+                                "minute-step": 5,
+                                auto: "",
+                                placeholder: "Start Date and Time",
+                                title: "Start Date and Time",
+                                "input-class": {
+                                  "error-input": _vm.errors.start_time,
+                                  "p-1": true
+                                }
+                              },
+                              on: {
+                                input: function($event) {
+                                  delete _vm.errors.start_time
+                                }
+                              },
+                              model: {
+                                value: _vm.cash_game.start_time,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.cash_game, "start_time", $$v)
+                                },
+                                expression: "cash_game.start_time"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.errors.start_time
+                              ? _c("span", { staticClass: "error-message" }, [
+                                  _vm._v(_vm._s(_vm.errors.start_time[0]))
+                                ])
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      : _vm._e()
+                  ])
                 ]
               ),
               _vm._v(" "),
               _c(
                 "div",
-                { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
                 [
-                  _c("i", { staticClass: "far fa-clock mr-3" }),
+                  _vm._m(5),
                   _vm._v(" "),
-                  !_vm.editing
-                    ? _c("div", {
-                        staticClass: "self-center",
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.formatDate(_vm.cash_game.start_time)
-                          )
-                        }
-                      })
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.editing
-                    ? _c("datetime", {
-                        staticClass:
-                          "w-full bg-muted-light border border-muted-dark rounded border theme-green",
-                        class: _vm.errors.start_time
-                          ? "border-red-700"
-                          : "border-gray-400",
-                        attrs: {
-                          "input-id": "start_time",
-                          type: "datetime",
-                          "minute-step": 5,
-                          "input-class": "self-center p-1",
-                          auto: "",
-                          placeholder: "Start Date and Time",
-                          title: "Start Date and Time"
-                        },
-                        model: {
-                          value: _vm.cash_game.start_time,
-                          callback: function($$v) {
-                            _vm.$set(_vm.cash_game, "start_time", $$v)
-                          },
-                          expression: "cash_game.start_time"
-                        }
-                      })
-                    : _vm._e()
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "mb-2 md:mb-0 flex items-center p-0 md:p-2" },
-                [
-                  _c("i", { staticClass: "fas fa-clock mr-3" }),
-                  _vm._v(" "),
-                  !_vm.editing
-                    ? _c("div", {
-                        staticClass: "self-center",
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.formatDate(_vm.cash_game.end_time)
-                          )
-                        }
-                      })
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.editing
-                    ? _c("datetime", {
-                        staticClass:
-                          "w-full bg-muted-light border border-muted-dark rounded border theme-green",
-                        class: _vm.errors.end_time
-                          ? "border-red-700"
-                          : "border-gray-400",
-                        attrs: {
-                          "input-id": "end_time",
-                          type: "datetime",
-                          "minute-step": 5,
-                          "input-class": "self-center p-1",
-                          auto: "",
-                          placeholder: "End Date and Time",
-                          title: "End Date and Time"
-                        },
-                        model: {
-                          value: _vm.cash_game.end_time,
-                          callback: function($$v) {
-                            _vm.$set(_vm.cash_game, "end_time", $$v)
-                          },
-                          expression: "cash_game.end_time"
-                        }
-                      })
-                    : _vm._e()
-                ],
-                1
+                  _c("div", { staticClass: "w-full" }, [
+                    !_vm.editing
+                      ? _c("span", {
+                          domProps: {
+                            textContent: _vm._s(
+                              _vm.formatDate(_vm.cash_game.end_time)
+                            )
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editing
+                      ? _c(
+                          "div",
+                          { staticClass: "flex flex-col" },
+                          [
+                            _c("datetime", {
+                              staticClass:
+                                "w-full bg-muted-light border border-muted-dark rounded border theme-green",
+                              attrs: {
+                                "input-id": "end_time",
+                                type: "datetime",
+                                "minute-step": 5,
+                                auto: "",
+                                placeholder: "End Date and Time",
+                                title: "End Date and Time",
+                                "input-class": {
+                                  "error-input": _vm.errors.end_time,
+                                  "p-1": true
+                                }
+                              },
+                              on: {
+                                input: function($event) {
+                                  delete _vm.errors.end_time
+                                }
+                              },
+                              model: {
+                                value: _vm.cash_game.end_time,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.cash_game, "end_time", $$v)
+                                },
+                                expression: "cash_game.end_time"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.errors.end_time
+                              ? _c("span", { staticClass: "error-message" }, [
+                                  _vm._v(_vm._s(_vm.errors.end_time[0]))
+                                ])
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      : _vm._e()
+                  ])
+                ]
               )
             ]
           ),
+          _vm._v(" "),
+          (_vm.cash_game.buy_ins && _vm.cash_game.buy_ins.length > 0) ||
+          _vm.editing
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "col-span-6 md:col-span-3 flex md:flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
+                    },
+                    [_vm._v("Buy Ins")]
+                  ),
+                  _vm._v(" "),
+                  !_vm.editing
+                    ? _c(
+                        "div",
+                        { staticClass: "self-center" },
+                        _vm._l(_vm.cash_game.buy_ins, function(buy_in) {
+                          return _c("div", {
+                            key: buy_in.id,
+                            staticClass: "p-1 text-lg",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.formatCurrency(buy_in.amount)
+                              )
+                            }
+                          })
+                        }),
+                        0
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.editing
+                    ? _c(
+                        "div",
+                        [
+                          _vm._l(_vm.cash_game.buy_ins, function(
+                            buy_in,
+                            index
+                          ) {
+                            return _c(
+                              "div",
+                              { key: buy_in.id, staticClass: "flex mb-1" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "flex flex-col w-full" },
+                                  [
+                                    _c("div", { staticClass: "flex" }, [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: buy_in.amount,
+                                            expression: "buy_in.amount"
+                                          }
+                                        ],
+                                        staticClass: "p-1",
+                                        class: {
+                                          "error-input":
+                                            _vm.errors[
+                                              "buy_ins." + index + ".amount"
+                                            ]
+                                        },
+                                        attrs: { type: "number", min: "0" },
+                                        domProps: { value: buy_in.amount },
+                                        on: {
+                                          input: [
+                                            function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                buy_in,
+                                                "amount",
+                                                $event.target.value
+                                              )
+                                            },
+                                            function($event) {
+                                              delete _vm.errors[
+                                                "buy_ins." + index + ".amount"
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass:
+                                            "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.alert("delete")
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass: "far fa-trash-alt"
+                                          })
+                                        ]
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _vm.errors["buy_ins." + index + ".amount"]
+                                      ? _c(
+                                          "span",
+                                          { staticClass: "error-message" },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.errors[
+                                                  "buy_ins." + index + ".amount"
+                                                ][0]
+                                              )
+                                            )
+                                          ]
+                                        )
+                                      : _vm._e()
+                                  ]
+                                )
+                              ]
+                            )
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "flex justify-center" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.cash_game.buy_ins.push({
+                                      amount: 0
+                                    })
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "fas fa-plus-circle mr-2"
+                                }),
+                                _vm._v(" "),
+                                _c("span", [_vm._v("Add Buy In")])
+                              ]
+                            )
+                          ])
+                        ],
+                        2
+                      )
+                    : _vm._e()
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.cash_game.cash_out_model || _vm.editing
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "col-span-6 md:col-span-3 flex md:flex-col order-4 md:order-3 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
+                    },
+                    [_vm._v("Cash Out")]
+                  ),
+                  _vm._v(" "),
+                  !_vm.editing
+                    ? _c("div", {
+                        staticClass: "p-1 text-lg self-center",
+                        domProps: {
+                          textContent: _vm._s(
+                            _vm.formatCurrency(
+                              _vm.cash_game.cash_out_model.amount
+                            )
+                          )
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.editing
+                    ? _c("div", { staticClass: "flex mb-1 w-full" }, [
+                        _c("div", { staticClass: "flex flex-col w-full" }, [
+                          _c("div", { staticClass: "flex" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.cash_game.cash_out_model.amount,
+                                  expression: "cash_game.cash_out_model.amount"
+                                }
+                              ],
+                              staticClass: "p-1",
+                              class: {
+                                "error-input":
+                                  _vm.errors["cash_out_model.amount"]
+                              },
+                              attrs: { type: "number", min: "0" },
+                              domProps: {
+                                value: _vm.cash_game.cash_out_model.amount
+                              },
+                              on: {
+                                input: [
+                                  function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.cash_game.cash_out_model,
+                                      "amount",
+                                      $event.target.value
+                                    )
+                                  },
+                                  function($event) {
+                                    delete _vm.errors["cash_out_model.amount"]
+                                  }
+                                ]
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.alert("delete")
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "far fa-trash-alt" })]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _vm.errors["cash_out_model.amount"]
+                            ? _c("span", { staticClass: "error-message" }, [
+                                _vm._v(
+                                  _vm._s(_vm.errors["cash_out_model.amount"][0])
+                                )
+                              ])
+                            : _vm._e()
+                        ])
+                      ])
+                    : _vm._e()
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          (_vm.cash_game.expenses && _vm.cash_game.expenses.length > 0) ||
+          _vm.editing
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "col-span-6 md:col-span-3 flex md:flex-col order-5 md:order-4 justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
+                    },
+                    [_vm._v("Expenses")]
+                  ),
+                  _vm._v(" "),
+                  !_vm.editing
+                    ? _c(
+                        "div",
+                        { staticClass: "flex flex-col self-center w-full" },
+                        _vm._l(_vm.cash_game.expenses, function(expense) {
+                          return _c(
+                            "div",
+                            {
+                              key: expense.id,
+                              staticClass:
+                                "flex mb-1 p-1 text-lg justify-end md:justify-around"
+                            },
+                            [
+                              _c("div", {
+                                staticClass: "order-last md:order-first",
+                                domProps: {
+                                  textContent: _vm._s(
+                                    _vm.formatCurrency(expense.amount)
+                                  )
+                                }
+                              }),
+                              _vm._v(" "),
+                              expense.comments
+                                ? _c(
+                                    "div",
+                                    {
+                                      staticClass: "mr-3 md:mr-0",
+                                      domProps: {
+                                        textContent: _vm._s(expense.comments)
+                                      }
+                                    },
+                                    [_vm._v("Comments")]
+                                  )
+                                : _vm._e()
+                            ]
+                          )
+                        }),
+                        0
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.editing
+                    ? _c(
+                        "div",
+                        [
+                          _vm._l(_vm.cash_game.expenses, function(
+                            expense,
+                            index
+                          ) {
+                            return _c(
+                              "div",
+                              { key: expense.id, staticClass: "flex mb-1" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "flex flex-col w-full" },
+                                  [
+                                    _c("div", { staticClass: "flex" }, [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: expense.amount,
+                                            expression: "expense.amount"
+                                          }
+                                        ],
+                                        staticClass: "p-1",
+                                        class: {
+                                          "error-input":
+                                            _vm.errors[
+                                              "expenses." + index + ".amount"
+                                            ]
+                                        },
+                                        attrs: { type: "number", min: "0" },
+                                        domProps: { value: expense.amount },
+                                        on: {
+                                          input: [
+                                            function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                expense,
+                                                "amount",
+                                                $event.target.value
+                                              )
+                                            },
+                                            function($event) {
+                                              delete _vm.errors[
+                                                "expenses." + index + ".amount"
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: expense.comments,
+                                            expression: "expense.comments"
+                                          }
+                                        ],
+                                        staticClass: "p-1 ml-1",
+                                        class: {
+                                          "error-input":
+                                            _vm.errors[
+                                              "expenses." + index + ".comments"
+                                            ]
+                                        },
+                                        attrs: {
+                                          type: "text",
+                                          placeholder: "Comments"
+                                        },
+                                        domProps: { value: expense.comments },
+                                        on: {
+                                          input: [
+                                            function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                expense,
+                                                "comments",
+                                                $event.target.value
+                                              )
+                                            },
+                                            function($event) {
+                                              delete _vm.errors[
+                                                "expenses." +
+                                                  index +
+                                                  ".comments"
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass:
+                                            "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.session.expenses.splice(
+                                                index,
+                                                1
+                                              )
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass: "fas fa-times"
+                                          })
+                                        ]
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _vm.errors["expenses." + index + ".amount"]
+                                      ? _c(
+                                          "span",
+                                          { staticClass: "error-message" },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.errors[
+                                                  "expenses." +
+                                                    index +
+                                                    ".amount"
+                                                ][0]
+                                              )
+                                            )
+                                          ]
+                                        )
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    _vm.errors[
+                                      "expenses." + index + ".comments"
+                                    ]
+                                      ? _c(
+                                          "span",
+                                          { staticClass: "error-message" },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.errors[
+                                                  "expenses." +
+                                                    index +
+                                                    ".comments"
+                                                ][0]
+                                              )
+                                            )
+                                          ]
+                                        )
+                                      : _vm._e()
+                                  ]
+                                )
+                              ]
+                            )
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "flex justify-center" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.cash_game.expenses.push({
+                                      amount: 0,
+                                      comments: ""
+                                    })
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "fas fa-plus-circle mr-2"
+                                }),
+                                _vm._v(" "),
+                                _c("span", [_vm._v("Add Expense")])
+                              ]
+                            )
+                          ])
+                        ],
+                        2
+                      )
+                    : _vm._e()
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          (_vm.cash_game.rebuys && _vm.cash_game.rebuys.length > 0) ||
+          _vm.editing
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "col-span-6 md:col-span-3 flex md:flex-col order-6 md:order-5 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
+                    },
+                    [_vm._v("Rebuys")]
+                  ),
+                  _vm._v(" "),
+                  !_vm.editing
+                    ? _c(
+                        "div",
+                        { staticClass: "self-center" },
+                        _vm._l(_vm.cash_game.rebuys, function(rebuy) {
+                          return _c("div", {
+                            key: rebuy.id,
+                            staticClass: "p-1 text-lg",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.formatCurrency(rebuy.amount)
+                              )
+                            }
+                          })
+                        }),
+                        0
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.editing
+                    ? _c(
+                        "div",
+                        [
+                          _vm._l(_vm.cash_game.rebuys, function(rebuy, index) {
+                            return _c(
+                              "div",
+                              { key: rebuy.id, staticClass: "flex mb-1" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "flex flex-col w-full" },
+                                  [
+                                    _c("div", { staticClass: "flex" }, [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: rebuy.amount,
+                                            expression: "rebuy.amount"
+                                          }
+                                        ],
+                                        staticClass: "p-1",
+                                        class: {
+                                          "error-input":
+                                            _vm.errors[
+                                              "rebuys." + index + ".amount"
+                                            ]
+                                        },
+                                        attrs: { type: "number", min: "0" },
+                                        domProps: { value: rebuy.amount },
+                                        on: {
+                                          input: [
+                                            function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                rebuy,
+                                                "amount",
+                                                $event.target.value
+                                              )
+                                            },
+                                            function($event) {
+                                              delete _vm.errors[
+                                                "rebuys." + index + ".amount"
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass:
+                                            "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.alert("delete")
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass: "far fa-trash-alt"
+                                          })
+                                        ]
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _vm.errors["rebuys." + index + ".amount"]
+                                      ? _c(
+                                          "span",
+                                          { staticClass: "error-message" },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.errors[
+                                                  "rebuys." + index + ".amount"
+                                                ][0]
+                                              )
+                                            )
+                                          ]
+                                        )
+                                      : _vm._e()
+                                  ]
+                                )
+                              ]
+                            )
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "flex justify-center" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.cash_game.rebuys.push({
+                                      amount: 0
+                                    })
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "fas fa-plus-circle mr-2"
+                                }),
+                                _vm._v(" "),
+                                _c("span", [_vm._v("Add Rebuy")])
+                              ]
+                            )
+                          ])
+                        ],
+                        2
+                      )
+                    : _vm._e()
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          (_vm.cash_game.add_ons && _vm.cash_game.add_ons.length > 0) ||
+          _vm.editing
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "col-span-6 md:col-span-3 flex md:flex-col order-7 md:order-6 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
+                    },
+                    [_vm._v("Add Ons")]
+                  ),
+                  _vm._v(" "),
+                  !_vm.editing
+                    ? _c(
+                        "div",
+                        { staticClass: "self-center" },
+                        _vm._l(_vm.cash_game.add_ons, function(add_on) {
+                          return _c("div", {
+                            key: add_on.id,
+                            staticClass: "p-1 text-lg",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.formatCurrency(add_on.amount)
+                              )
+                            }
+                          })
+                        }),
+                        0
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.editing
+                    ? _c(
+                        "div",
+                        [
+                          _vm._l(_vm.cash_game.add_ons, function(
+                            add_on,
+                            index
+                          ) {
+                            return _c(
+                              "div",
+                              { key: add_on.id, staticClass: "flex mb-1" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "flex flex-col w-full" },
+                                  [
+                                    _c("div", { staticClass: "flex" }, [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: add_on.amount,
+                                            expression: "add_on.amount"
+                                          }
+                                        ],
+                                        staticClass: "p-1",
+                                        class: {
+                                          "error-input":
+                                            _vm.errors[
+                                              "add_ons." + index + ".amount"
+                                            ]
+                                        },
+                                        attrs: { type: "number", min: "0" },
+                                        domProps: { value: add_on.amount },
+                                        on: {
+                                          input: [
+                                            function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                add_on,
+                                                "amount",
+                                                $event.target.value
+                                              )
+                                            },
+                                            function($event) {
+                                              delete _vm.errors[
+                                                "add_ons." + index + ".amount"
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass:
+                                            "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.alert("delete")
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass: "far fa-trash-alt"
+                                          })
+                                        ]
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _vm.errors["add_ons." + index + ".amount"]
+                                      ? _c(
+                                          "span",
+                                          { staticClass: "error-message" },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.errors[
+                                                  "add_ons." + index + ".amount"
+                                                ][0]
+                                              )
+                                            )
+                                          ]
+                                        )
+                                      : _vm._e()
+                                  ]
+                                )
+                              ]
+                            )
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "flex justify-center" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.cash_game.add_ons.push({
+                                      amount: 0
+                                    })
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "fas fa-plus-circle mr-2"
+                                }),
+                                _vm._v(" "),
+                                _c("span", [_vm._v("Add Add On")])
+                              ]
+                            )
+                          ])
+                        ],
+                        2
+                      )
+                    : _vm._e()
+                ]
+              )
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "div",
             {
               staticClass:
-                "col-span-6 md:col-span-3 md:row-span-2 flex flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                "col-span-6 md:col-span-3 md:row-span-1 order-2 md:order-7 flex flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
             },
             [
               _c(
@@ -68396,546 +70036,12 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          (_vm.cash_game.buy_ins && _vm.cash_game.buy_ins.length > 0) ||
-          _vm.editing
-            ? _c(
-                "div",
-                {
-                  staticClass:
-                    "col-span-6 md:col-span-2 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
-                },
-                [
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
-                    },
-                    [_vm._v("Buy Ins")]
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "flex flex-col self-center" }, [
-                    !_vm.editing
-                      ? _c(
-                          "div",
-                          _vm._l(_vm.cash_game.buy_ins, function(buyIn) {
-                            return _c("div", {
-                              key: buyIn.id,
-                              domProps: {
-                                textContent: _vm._s(
-                                  _vm.formatCurrency(buyIn.amount)
-                                )
-                              }
-                            })
-                          }),
-                          0
-                        )
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.editing
-                      ? _c(
-                          "div",
-                          [
-                            _vm._l(_vm.cash_game.buy_ins, function(buyIn) {
-                              return _c(
-                                "div",
-                                { key: buyIn.id, staticClass: "flex mb-1" },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: buyIn.amount,
-                                        expression: "buyIn.amount"
-                                      }
-                                    ],
-                                    staticClass: "p-1",
-                                    attrs: { type: "text" },
-                                    domProps: { value: buyIn.amount },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          buyIn,
-                                          "amount",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.alert("delete")
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "far fa-trash-alt"
-                                      })
-                                    ]
-                                  )
-                                ]
-                              )
-                            }),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "flex justify-center" }, [
-                              _c(
-                                "div",
-                                {
-                                  staticClass:
-                                    "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.cash_game.buy_ins.push({
-                                        amount: 0
-                                      })
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("i", {
-                                    staticClass: "fas fa-plus-circle mr-2"
-                                  }),
-                                  _vm._v(" "),
-                                  _c("span", [_vm._v("Add Buy In")])
-                                ]
-                              )
-                            ])
-                          ],
-                          2
-                        )
-                      : _vm._e()
-                  ])
-                ]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.cash_game.cash_out_model || _vm.editing
-            ? _c(
-                "div",
-                {
-                  staticClass:
-                    "col-span-6 md:col-span-2 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
-                },
-                [
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
-                    },
-                    [_vm._v("Cash Out")]
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "flex flex-col self-center" }, [
-                    !_vm.editing
-                      ? _c("div", {
-                          domProps: {
-                            textContent: _vm._s(
-                              _vm.formatCurrency(
-                                _vm.cash_game.cash_out_model.amount
-                              )
-                            )
-                          }
-                        })
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.editing
-                      ? _c("div", { staticClass: "flex mb-1" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.cash_game.cash_out_model.amount,
-                                expression: "cash_game.cash_out_model.amount"
-                              }
-                            ],
-                            staticClass: "p-1",
-                            attrs: { type: "text" },
-                            domProps: {
-                              value: _vm.cash_game.cash_out_model.amount
-                            },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.cash_game.cash_out_model,
-                                  "amount",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "button",
-                            {
-                              staticClass:
-                                "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                              on: {
-                                click: function($event) {
-                                  return _vm.alert("delete")
-                                }
-                              }
-                            },
-                            [_c("i", { staticClass: "far fa-trash-alt" })]
-                          )
-                        ])
-                      : _vm._e()
-                  ])
-                ]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          (_vm.cash_game.expenses && _vm.cash_game.expenses.length > 0) ||
-          _vm.editing
-            ? _c(
-                "div",
-                {
-                  staticClass:
-                    "col-span-6 md:col-span-2 flex md:flex-col justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3"
-                },
-                [
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
-                    },
-                    [_vm._v("Expenses")]
-                  ),
-                  _vm._v(" "),
-                  !_vm.editing
-                    ? _c(
-                        "div",
-                        { staticClass: "flex flex-col self-center w-full" },
-                        _vm._l(_vm.cash_game.expenses, function(expense) {
-                          return _c(
-                            "div",
-                            {
-                              key: expense.id,
-                              staticClass:
-                                "flex mb- 1justify-end md:justify-around"
-                            },
-                            [
-                              _c("div", {
-                                staticClass: "order-last md:order-first",
-                                domProps: {
-                                  textContent: _vm._s(
-                                    _vm.formatCurrency(expense.amount)
-                                  )
-                                }
-                              }),
-                              _vm._v(" "),
-                              expense.comments
-                                ? _c(
-                                    "div",
-                                    {
-                                      staticClass: "mr-3 md:mr-0",
-                                      domProps: {
-                                        textContent: _vm._s(expense.comments)
-                                      }
-                                    },
-                                    [_vm._v("Comments")]
-                                  )
-                                : _vm._e()
-                            ]
-                          )
-                        }),
-                        0
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.editing
-                    ? _c(
-                        "div",
-                        [
-                          _vm._l(_vm.cash_game.expenses, function(expense) {
-                            return _c(
-                              "div",
-                              { key: expense.id, staticClass: "flex mb-1" },
-                              [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: expense.amount,
-                                      expression: "expense.amount"
-                                    }
-                                  ],
-                                  staticClass: "p-1",
-                                  attrs: { type: "text" },
-                                  domProps: { value: expense.amount },
-                                  on: {
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        expense,
-                                        "amount",
-                                        $event.target.value
-                                      )
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass:
-                                      "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.alert("delete")
-                                      }
-                                    }
-                                  },
-                                  [_c("i", { staticClass: "far fa-trash-alt" })]
-                                )
-                              ]
-                            )
-                          }),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "flex justify-center" }, [
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.cash_game.expenses.push({
-                                      amount: 0
-                                    })
-                                  }
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "fas fa-plus-circle mr-2"
-                                }),
-                                _vm._v(" "),
-                                _c("span", [_vm._v("Add Expense")])
-                              ]
-                            )
-                          ])
-                        ],
-                        2
-                      )
-                    : _vm._e()
-                ]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          (_vm.cash_game.rebuys && _vm.cash_game.rebuys.length > 0) ||
-          _vm.editing
-            ? _c(
-                "div",
-                {
-                  staticClass:
-                    "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
-                },
-                [
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
-                    },
-                    [_vm._v("Rebuys")]
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "flex flex-col self-center" }, [
-                    !_vm.editing
-                      ? _c(
-                          "div",
-                          _vm._l(_vm.cash_game.rebuys, function(rebuy) {
-                            return _c("div", {
-                              key: rebuy.id,
-                              domProps: {
-                                textContent: _vm._s(
-                                  _vm.formatCurrency(rebuy.amount)
-                                )
-                              }
-                            })
-                          }),
-                          0
-                        )
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.editing
-                      ? _c(
-                          "div",
-                          _vm._l(_vm.cash_game.rebuys, function(rebuy) {
-                            return _c(
-                              "div",
-                              { key: rebuy.id, staticClass: "flex mb-1" },
-                              [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: rebuy.amount,
-                                      expression: "rebuy.amount"
-                                    }
-                                  ],
-                                  staticClass: "p-1",
-                                  attrs: { type: "text" },
-                                  domProps: { value: rebuy.amount },
-                                  on: {
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        rebuy,
-                                        "amount",
-                                        $event.target.value
-                                      )
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass:
-                                      "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.alert("delete")
-                                      }
-                                    }
-                                  },
-                                  [_c("i", { staticClass: "far fa-trash-alt" })]
-                                )
-                              ]
-                            )
-                          }),
-                          0
-                        )
-                      : _vm._e()
-                  ])
-                ]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          (_vm.cash_game.add_ons && _vm.cash_game.add_ons.length > 0) ||
-          _vm.editing
-            ? _c(
-                "div",
-                {
-                  staticClass:
-                    "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
-                },
-                [
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
-                    },
-                    [_vm._v("Add Ons")]
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "flex flex-col self-center" }, [
-                    !_vm.editing
-                      ? _c(
-                          "div",
-                          _vm._l(_vm.cash_game.add_ons, function(addOn) {
-                            return _c("div", {
-                              key: addOn.id,
-                              domProps: {
-                                textContent: _vm._s(
-                                  _vm.formatCurrency(addOn.amount)
-                                )
-                              }
-                            })
-                          }),
-                          0
-                        )
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.editing
-                      ? _c(
-                          "div",
-                          _vm._l(_vm.cash_game.add_ons, function(addOn) {
-                            return _c(
-                              "div",
-                              { key: addOn.id, staticClass: "flex mb-1" },
-                              [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: addOn.amount,
-                                      expression: "addOn.amount"
-                                    }
-                                  ],
-                                  staticClass: "p-1",
-                                  attrs: { type: "text" },
-                                  domProps: { value: addOn.amount },
-                                  on: {
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        addOn,
-                                        "amount",
-                                        $event.target.value
-                                      )
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass:
-                                      "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.alert("delete")
-                                      }
-                                    }
-                                  },
-                                  [_c("i", { staticClass: "far fa-trash-alt" })]
-                                )
-                              ]
-                            )
-                          }),
-                          0
-                        )
-                      : _vm._e()
-                  ])
-                ]
-              )
-            : _vm._e(),
-          _vm._v(" "),
           _vm.cash_game.comments || _vm.editing
             ? _c(
                 "div",
                 {
                   staticClass:
-                    "col-span-6 flex flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                    "col-span-6 md:col-span-3 row-span-1 flex flex-col order-8 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
                 },
                 [
                   _c(
@@ -68965,31 +70071,154 @@ var render = function() {
                             expression: "cash_game.comments"
                           }
                         ],
+                        class: { "error-input": _vm.errors.comments },
                         attrs: { name: "comments", cols: "30", rows: "5" },
                         domProps: { value: _vm.cash_game.comments },
                         on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                          input: [
+                            function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.cash_game,
+                                "comments",
+                                $event.target.value
+                              )
+                            },
+                            function($event) {
+                              delete _vm.errors.comments
                             }
-                            _vm.$set(
-                              _vm.cash_game,
-                              "comments",
-                              $event.target.value
-                            )
-                          }
+                          ]
                         }
                       })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.errors.comments
+                    ? _c("span", { staticClass: "error-message" }, [
+                        _vm._v(_vm._s(_vm.errors.comments[0]))
+                      ])
                     : _vm._e()
                 ]
               )
             : _vm._e()
         ]
-      )
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "flex my-3" }, [
+        !_vm.editing
+          ? _c(
+              "button",
+              {
+                staticClass:
+                  "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2 mr-3",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    _vm.editing = true
+                  }
+                }
+              },
+              [
+                _c("i", { staticClass: "fas fa-edit mr-3" }),
+                _c("span", [_vm._v("Edit")])
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.editing
+          ? _c("div", [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2 mr-3",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.saveSession($event)
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-edit mr-3" }),
+                  _c("span", [_vm._v("Save Changes")])
+                ]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass:
+              "bg-red-500 hover:bg-red-600 focus:bg-red-600 rounded text-white text-sm px-4 py-2",
+            attrs: { type: "button" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.deleteSession($event)
+              }
+            }
+          },
+          [_c("i", { staticClass: "fas fa-trash" })]
+        )
+      ])
     ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-map-marker-alt" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-coins" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-stream" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-user-friends" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "far fa-clock" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-clock" })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -69032,8 +70261,7 @@ var render = function() {
         _c(
           "router-link",
           {
-            staticClass:
-              "col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0 flex flex-1",
+            staticClass: "col-span-4 mb-2 md:mb-0 flex flex-1",
             attrs: { to: { name: "createsession" } }
           },
           [
@@ -69134,7 +70362,7 @@ var render = function() {
                       expression: "email"
                     }
                   ],
-                  class: { "border-red-700": _vm.errors.email },
+                  class: { "error-input": _vm.errors.email },
                   attrs: { type: "text", placeholder: "Enter email" },
                   domProps: { value: _vm.email },
                   on: {
@@ -69148,7 +70376,7 @@ var render = function() {
                 }),
                 _vm._v(" "),
                 _vm.errors.email
-                  ? _c("span", { staticClass: "error" }, [
+                  ? _c("span", { staticClass: "error-message" }, [
                       _vm._v(_vm._s(_vm.errors.email))
                     ])
                   : _vm._e()
@@ -69158,7 +70386,7 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass: "btn-green self-end mt-3",
+                staticClass: "w-full md:w-1/2 btn-green self-end mt-3",
                 attrs: { type: "button" }
               },
               [_vm._v("Change email")]
@@ -69184,7 +70412,7 @@ var render = function() {
                         expression: "current_password"
                       }
                     ],
-                    class: { "border-red-700": _vm.errors.current_password },
+                    class: { "error-input": _vm.errors.current_password },
                     attrs: {
                       type: "password",
                       placeholder: "Current password"
@@ -69201,7 +70429,7 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _vm.errors.current_password
-                    ? _c("span", { staticClass: "error" }, [
+                    ? _c("span", { staticClass: "error-message" }, [
                         _vm._v(_vm._s(_vm.errors.current_password))
                       ])
                     : _vm._e()
@@ -69227,7 +70455,7 @@ var render = function() {
                         expression: "new_password"
                       }
                     ],
-                    class: { "border-red-700": _vm.errors.new_password },
+                    class: { "error-input": _vm.errors.new_password },
                     attrs: { type: "password", placeholder: "New password" },
                     domProps: { value: _vm.new_password },
                     on: {
@@ -69241,7 +70469,7 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _vm.errors.new_password
-                    ? _c("span", { staticClass: "error" }, [
+                    ? _c("span", { staticClass: "error-message" }, [
                         _vm._v(_vm._s(_vm.errors.new_password))
                       ])
                     : _vm._e()
@@ -69265,7 +70493,7 @@ var render = function() {
                     }
                   ],
                   class: {
-                    "border-red-700": _vm.errors.new_password_confirmation
+                    "error-input": _vm.errors.new_password_confirmation
                   },
                   attrs: {
                     type: "password",
@@ -69283,7 +70511,7 @@ var render = function() {
                 }),
                 _vm._v(" "),
                 _vm.errors.new_password_confirmation
-                  ? _c("span", { staticClass: "error" }, [
+                  ? _c("span", { staticClass: "error-message" }, [
                       _vm._v(_vm._s(_vm.errors.new_password_confirmation))
                     ])
                   : _vm._e()
@@ -69293,7 +70521,7 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass: "btn-green self-end mt-3",
+                staticClass: "w-full md:w-1/2 btn-green self-end mt-3",
                 attrs: { type: "button" }
               },
               [_vm._v("Change Password")]
@@ -69339,7 +70567,7 @@ var render = function() {
                           expression: "stake"
                         }
                       ],
-                      class: { "border-red-700": _vm.errors.stake_id },
+                      class: { "error-input": _vm.errors.stake_id },
                       on: {
                         change: function($event) {
                           var $$selectedVal = Array.prototype.filter
@@ -69367,7 +70595,7 @@ var render = function() {
                   ),
                   _vm._v(" "),
                   _vm.errors.stake
-                    ? _c("span", { staticClass: "error" }, [
+                    ? _c("span", { staticClass: "error-message" }, [
                         _vm._v(_vm._s(_vm.errors.stake))
                       ])
                     : _vm._e()
@@ -69395,7 +70623,7 @@ var render = function() {
                           expression: "limit"
                         }
                       ],
-                      class: { "border-red-700": _vm.errors.limit_id },
+                      class: { "error-input": _vm.errors.limit_id },
                       on: {
                         change: function($event) {
                           var $$selectedVal = Array.prototype.filter
@@ -69423,7 +70651,7 @@ var render = function() {
                   ),
                   _vm._v(" "),
                   _vm.errors.limit
-                    ? _c("span", { staticClass: "error" }, [
+                    ? _c("span", { staticClass: "error-message" }, [
                         _vm._v(_vm._s(_vm.errors.limit))
                       ])
                     : _vm._e()
@@ -69451,7 +70679,7 @@ var render = function() {
                           expression: "variant"
                         }
                       ],
-                      class: { "border-red-700": _vm.errors.variant_id },
+                      class: { "error-input": _vm.errors.variant_id },
                       on: {
                         change: function($event) {
                           var $$selectedVal = Array.prototype.filter
@@ -69479,7 +70707,7 @@ var render = function() {
                   ),
                   _vm._v(" "),
                   _vm.errors.variant
-                    ? _c("span", { staticClass: "error" }, [
+                    ? _c("span", { staticClass: "error-message" }, [
                         _vm._v(_vm._s(_vm.errors.variant))
                       ])
                     : _vm._e()
@@ -69507,7 +70735,7 @@ var render = function() {
                           expression: "table_size"
                         }
                       ],
-                      class: { "border-red-700": _vm.errors.table_size_id },
+                      class: { "error-input": _vm.errors.table_size_id },
                       on: {
                         change: function($event) {
                           var $$selectedVal = Array.prototype.filter
@@ -69538,7 +70766,7 @@ var render = function() {
                   ),
                   _vm._v(" "),
                   _vm.errors.table_size
-                    ? _c("span", { staticClass: "error" }, [
+                    ? _c("span", { staticClass: "error-message" }, [
                         _vm._v(_vm._s(_vm.errors.table_size))
                       ])
                     : _vm._e()
@@ -69561,7 +70789,7 @@ var render = function() {
                       expression: "location"
                     }
                   ],
-                  class: { "border-red-700": _vm.errors.location },
+                  class: { "error-input": _vm.errors.location },
                   attrs: { type: "password", placeholder: "Location" },
                   domProps: { value: _vm.location },
                   on: {
@@ -69575,7 +70803,7 @@ var render = function() {
                 }),
                 _vm._v(" "),
                 _vm.errors.location
-                  ? _c("span", { staticClass: "error" }, [
+                  ? _c("span", { staticClass: "error-message" }, [
                       _vm._v(_vm._s(_vm.errors.location))
                     ])
                   : _vm._e()
@@ -69586,7 +70814,7 @@ var render = function() {
           _c(
             "button",
             {
-              staticClass: "btn-green self-end mt-3",
+              staticClass: "w-full md:w-1/2 btn-green self-end mt-3",
               attrs: { type: "button" }
             },
             [_vm._v("Save default values")]
@@ -89666,7 +90894,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     addBankrollTransaction: function addBankrollTransaction(_ref2, transaction) {
       var commit = _ref2.commit;
-      return axios.post('/api/bankroll/create', {
+      return axios.post('/api/bankroll/', {
         amount: transaction.amount,
         comments: transaction.comments
       }).then(function (response) {
@@ -89723,7 +90951,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   state: {
     cash_games: []
   },
-  getters: {},
+  getters: {
+    getCashGameById: function getCashGameById(state) {
+      return function (id) {
+        return state.cash_games.find(function (cash_game) {
+          return cash_game.id === id;
+        });
+      };
+    }
+  },
   mutations: {
     ASSIGN_CASH_GAMES: function ASSIGN_CASH_GAMES(state, cash_games) {
       state.cash_games = cash_games;
