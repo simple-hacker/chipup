@@ -47,7 +47,7 @@ export default {
             })
         },
         addBankrollTransaction({ commit }, transaction) {
-            return axios.post('/api/bankroll/create', {
+            return axios.post('/api/bankroll/', {
                 amount: transaction.amount,
                 comments: transaction.comments
             })
