@@ -415,7 +415,7 @@ export default {
                             this.deleteCashGame(this.cash_game)
                             .then(response => {
                                 this.$modal.hide('dialog');
-                                this.$emit('close');
+                                this.$router.push({ name: 'sessions' })
                                 this.$snotify.warning('Successfully deleted cash game.');
                             })
                             .catch(error => {

@@ -10,8 +10,12 @@
     @apply bg-green-700;
 }
 
-.error {
-    @apply text-xs text-red-700 mt-2 mb-2;
+.error-message {
+    @apply text-sm text-red-700 my-1;
+}
+
+.error-input {
+    @apply border-red-700 border-2
 }
 
 input, select, textarea {

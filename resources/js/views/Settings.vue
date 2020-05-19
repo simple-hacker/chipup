@@ -6,8 +6,8 @@
                 <div class="flex justify-between items-center">
                     <h3 class="hidden md:block font-medium">Change Email</h3>
                     <div class="flex flex-col w-full md:w-1/2">
-                        <input v-model="email" type="text" placeholder="Enter email" :class="{'border-red-700' : errors.email}"/>
-                        <span v-if="errors.email" class="error">{{ errors.email }}</span>
+                        <input v-model="email" type="text" placeholder="Enter email" :class="{'error-input' : errors.email}"/>
+                        <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
                     </div>
                 </div>
                 <button type="button" class="btn-green self-end mt-3">Change email</button>
@@ -16,22 +16,22 @@
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="hidden md:block font-medium">Current Password</h3>
                     <div class="flex flex-col w-full md:w-1/2">
-                        <input v-model="current_password" type="password" placeholder="Current password" :class="{'border-red-700' : errors.current_password}"/>
-                        <span v-if="errors.current_password" class="error">{{ errors.current_password }}</span>
+                        <input v-model="current_password" type="password" placeholder="Current password" :class="{'error-input' : errors.current_password}"/>
+                        <span v-if="errors.current_password" class="error-message">{{ errors.current_password }}</span>
                     </div>
                 </div>
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="hidden md:block font-medium">New Password</h3>
                     <div class="flex flex-col w-full md:w-1/2">
-                        <input v-model="new_password" type="password" placeholder="New password" :class="{'border-red-700' : errors.new_password}"/>
-                        <span v-if="errors.new_password" class="error">{{ errors.new_password }}</span>
+                        <input v-model="new_password" type="password" placeholder="New password" :class="{'error-input' : errors.new_password}"/>
+                        <span v-if="errors.new_password" class="error-message">{{ errors.new_password }}</span>
                     </div>
                 </div>
                 <div class="flex justify-between items-center">
                     <h3 class="hidden md:block font-medium">Confirm New Password</h3>
                     <div class="flex flex-col w-full md:w-1/2">
-                        <input v-model="new_password_confirmation" type="password" placeholder="Confirm new password" :class="{'border-red-700' : errors.new_password_confirmation}"/>
-                    <span v-if="errors.new_password_confirmation" class="error">{{ errors.new_password_confirmation }}</span>
+                        <input v-model="new_password_confirmation" type="password" placeholder="Confirm new password" :class="{'error-input' : errors.new_password_confirmation}"/>
+                    <span v-if="errors.new_password_confirmation" class="error-message">{{ errors.new_password_confirmation }}</span>
                     </div>
                 </div>
                 <button type="button" class="btn-green self-end mt-3">Change Password</button>
@@ -43,44 +43,44 @@
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="hidden md:block font-medium">Stake</h3>
                     <div class="flex flex-col w-full md:w-1/2">
-                        <select v-model="stake" :class="{ 'border-red-700' : errors.stake_id }">
+                        <select v-model="stake" :class="{ 'error-input' : errors.stake_id }">
                             <option v-for="stake in stakes" :key="stake.id" :value="stake.id">{{ stake.stake }}</option>
                         </select>
-                    <span v-if="errors.stake" class="error">{{ errors.stake }}</span>
+                    <span v-if="errors.stake" class="error-message">{{ errors.stake }}</span>
                     </div>
                 </div>
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="hidden md:block font-medium">Limit</h3>
                     <div class="flex flex-col w-full md:w-1/2">
-                        <select v-model="limit" :class="{ 'border-red-700' : errors.limit_id }">
+                        <select v-model="limit" :class="{ 'error-input' : errors.limit_id }">
                             <option v-for="limit in limits" :key="limit.id" :value="limit.id">{{ limit.limit }}</option>
                         </select>
-                    <span v-if="errors.limit" class="error">{{ errors.limit }}</span>
+                    <span v-if="errors.limit" class="error-message">{{ errors.limit }}</span>
                     </div>
                 </div>
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="hidden md:block font-medium">Variant</h3>
                     <div class="flex flex-col w-full md:w-1/2">
-                        <select v-model="variant" :class="{ 'border-red-700' : errors.variant_id }">
+                        <select v-model="variant" :class="{ 'error-input' : errors.variant_id }">
                             <option v-for="variant in variants" :key="variant.id" :value="variant.id">{{ variant.variant }}</option>
                         </select>
-                    <span v-if="errors.variant" class="error">{{ errors.variant }}</span>
+                    <span v-if="errors.variant" class="error-message">{{ errors.variant }}</span>
                     </div>
                 </div>
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="hidden md:block font-medium">Table Size</h3>
                     <div class="flex flex-col w-full md:w-1/2">
-                        <select v-model="table_size" :class="{ 'border-red-700' : errors.table_size_id }">
+                        <select v-model="table_size" :class="{ 'error-input' : errors.table_size_id }">
                             <option v-for="table_size in table_sizes" :key="table_size.id" :value="table_size.id">{{ table_size.table_size }}</option>
                         </select>
-                    <span v-if="errors.table_size" class="error">{{ errors.table_size }}</span>
+                    <span v-if="errors.table_size" class="error-message">{{ errors.table_size }}</span>
                     </div>
                 </div>
                 <div class="flex justify-between items-center">
                     <h3 class="hidden md:block font-medium">Location</h3>
                     <div class="flex flex-col w-full md:w-1/2">
-                        <input v-model="location" type="password" placeholder="Location" :class="{'border-red-700' : errors.location}"/>
-                    <span v-if="errors.location" class="error">{{ errors.location }}</span>
+                        <input v-model="location" type="password" placeholder="Location" :class="{'error-input' : errors.location}"/>
+                    <span v-if="errors.location" class="error-message">{{ errors.location }}</span>
                     </div>
                 </div>
             </div>
