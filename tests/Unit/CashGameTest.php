@@ -17,8 +17,9 @@ class CashGameTest extends TestCase
 
     public function testACashGameBelongsToAUser()
     {
-        $cash_game = factory('App\CashGame')->create();
-
+        $user = factory('App\User')->create();
+        $cash_game = factory('App\CashGame')->create(['user_id' => $user->id]);
+        
         $this->assertInstanceOf(User::class, $cash_game->user);
     }
 
