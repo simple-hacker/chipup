@@ -15,7 +15,6 @@
 			</router-link>
             <div v-for="session in cash_games.cash_games"
 				:key="session.id"
-				@click="showSessionDetails(session)"
 				class="col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0"
 			>
                 <session-summary :session="session"></session-summary>
@@ -35,16 +34,6 @@ export default {
 	computed: {
 		...mapState(['cash_games'])
 	},
-	methods: {
-		showSessionDetails: function (session) {
-			this.$router.push({
-				name: 'session',
-				params: {
-					id: session.id
-				}
-			})
-		}
-	}
 }
 </script>
 

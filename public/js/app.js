@@ -2211,7 +2211,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'App',
+  data: function data() {
+    return {
+      sessionsScrollTo: 0
+    };
+  },
   created: function created() {
+    var _this = this;
+
+    // App uses main-content ref=scroll as a scrollable div for main content, where as vue-router uses window.scrollTop for scrollBehaviour
+    // which is always at 0,0 because it's fixed and overflow is hidden.
+    // Code found on https://github.com/vuejs/vue-router/issues/1187
+    // I only want to save the scroll position from sessions->session so that if the user clicks back (session->sessions)
+    // they will be in the same scroll position with the list of sessions.
+    this.$router.afterEach(function (to, from) {
+      var scrollTo = 0; // If sessions->session then save current scroll position but continue to scroll to 0 on session
+
+      if (from.name === 'sessions' && to.name === 'session') {
+        _this.sessionsScrollTo = _this.$refs.scroll.scrollTop;
+      } // If session->sessions then load saved sessions scroll position
+
+
+      if (from.name === 'session' && to.name === 'sessions') {
+        scrollTo = _this.sessionsScrollTo;
+      }
+
+      _this.$nextTick(function () {
+        _this.$refs.scroll.scrollTop = scrollTo;
+      });
+    });
     this.$store.dispatch('bankroll/getBankrollTransactions');
     this.$store.dispatch('cash_games/getCashGames');
   }
@@ -2691,6 +2719,15 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
 //
 //
 //
@@ -2707,6 +2744,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'SessionSummary',
   props: {
@@ -2722,7 +2760,23 @@ __webpack_require__.r(__webpack_exports__);
     date: function date() {
       return moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.start_time).format("dddd, Do MMMM YYYY");
     }
-  }
+  },
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('cash_games', ['viewCashGame']), {
+    showSessionDetails: function showSessionDetails() {
+      // Will need to update to viewSession to include Tournaments
+      // Save CashGame in to state and then go to sessions route.
+      // This is because I don't want /session/:id as the ids could be in the thousands and non consecutive because
+      // they're consecutive for all users and don't want the user to type random numbers in the URL
+      // even though viewing other user's is protected server side.
+      this.viewCashGame(this.session.id);
+      this.$router.push({
+        name: 'session',
+        params: {
+          id: this.session.id
+        }
+      });
+    }
+  })
 });
 
 /***/ }),
@@ -4063,19 +4117,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   data: function data() {
     return {
+      cash_game: {},
       editing: false,
       errors: {}
     };
   },
   created: function created() {
-    this.cash_game = JSON.parse(JSON.stringify(_objectSpread({}, this.stateCashGame, {
-      start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.start_time).format(),
-      end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.end_time).format()
-    })));
+    // If no id provided or user visits /session then redirect to sessions
+    if (!this.id) {
+      this.$router.push({
+        name: 'sessions'
+      });
+    } else {
+      this.cash_game = JSON.parse(JSON.stringify(_objectSpread({}, this.stateCashGame, {
+        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.start_time).format(),
+        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.end_time).format()
+      })));
+    }
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])('cash_games', ['getCashGameById']), {
     stateCashGame: function stateCashGame() {
       return this.getCashGameById(this.id);
+    },
+    profit: function profit() {
+      return this.stateCashGame.profit;
     },
     formattedProfit: function formattedProfit() {
       return Vue.prototype.currency.format(this.profit);
@@ -4084,22 +4149,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var buy_inTotal = this.buy_insTotal < 1 ? 1 : this.buy_insTotal;
       return this.profit / buy_inTotal;
     },
-    profit: function profit() {
-      return this.cash_game.profit;
-    },
     buy_insTotal: function buy_insTotal() {
-      return this.cash_game.buy_ins.reduce(function (total, buy_in) {
+      return this.stateCashGame.buy_ins.reduce(function (total, buy_in) {
         return total + buy_in.amount;
       }, 0);
     },
     runTimeHours: function runTimeHours() {
-      var end_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.cash_game.end_time);
-      var start_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.cash_game.start_time);
+      var end_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.end_time);
+      var start_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.start_time);
       return end_time.diff(start_time, 'hours', true);
     },
     runTime: function runTime() {
-      var end_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.cash_game.end_time);
-      var start_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.cash_game.start_time);
+      var end_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.end_time);
+      var start_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.start_time);
       return moment__WEBPACK_IMPORTED_MODULE_0___default.a.duration(this.runTimeHours, 'hours').format("h [hours] m [mins]");
     },
     profitPerHour: function profitPerHour() {
@@ -4109,18 +4171,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])('cash_games', ['updateCashGame', 'deleteCashGame']), {
     cancelChanges: function cancelChanges() {
       this.editing = false;
-      this.cash_game = JSON.parse(JSON.stringify(_objectSpread({}, this.stateCashGame, {
-        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.start_time).format(),
-        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.end_time).format()
-      })));
+      this.cash_game = this.stringifyCashGame(this.stateCashGame);
     },
     saveSession: function saveSession() {
       var _this = this;
 
       this.updateCashGame(this.cash_game).then(function (response) {
-        _this.$snotify.success('Changes saved.');
+        _this.$snotify.success('Saved changes.');
 
         _this.editing = false;
+        _this.cash_game = _this.stringifyCashGame(stateCashGame);
+        console.log(_this.cash_game);
       })["catch"](function (error) {
         _this.$snotify.error('Error: ' + error.response.data.message);
 
@@ -4214,7 +4275,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
 
 
 
@@ -4224,17 +4284,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     Filters: _components_Filters__WEBPACK_IMPORTED_MODULE_1__["default"],
     SessionSummary: _components_Session_SessionSummary__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['cash_games'])),
-  methods: {
-    showSessionDetails: function showSessionDetails(session) {
-      this.$router.push({
-        name: 'session',
-        params: {
-          id: session.id
-        }
-      });
-    }
-  }
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['cash_games']))
 });
 
 /***/ }),
@@ -4725,7 +4775,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -4733,31 +4782,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   components: {
     SessionSummary: _components_Session_SessionSummary__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['cash_games'])),
-  methods: {
-    showSessionDetails: function showSessionDetails(session) {
-      // this.$modal.show(SessionDetails, {
-      // 	// Modal props
-      // 	session: session,
-      // }, {
-      // 	// Modal Options
-      // 	classes: 'bg-background text-white p-1 md:p-3 rounded-lg border border-muted-dark',
-      // 	minHeight: 150,
-      // 	height: 'auto',
-      // 	width: '95%',
-      // 	maxWidth: 900,
-      // 	maxHeight: 500,
-      // 	adaptive: true,
-      // 	scrollable: true,
-      // })
-      this.$router.push({
-        name: 'session',
-        params: {
-          session: session
-        }
-      });
-    }
-  }
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['cash_games']))
 });
 
 /***/ }),
@@ -65449,6 +65474,7 @@ var render = function() {
           _c(
             "div",
             {
+              ref: "scroll",
               staticClass:
                 "flex-1 justify-center pt-4 px-2 w-full lg:px-4 lg:order-last overflow-y-auto scrolling-touch"
             },
@@ -66514,7 +66540,12 @@ var render = function() {
     "div",
     {
       staticClass:
-        "flex justify-between p-4 border border-muted-dark shadow bg-card hover:bg-muted-dark cursor-pointer text-white"
+        "flex justify-between p-4 border border-muted-dark shadow bg-card hover:bg-muted-dark cursor-pointer text-white",
+      on: {
+        click: function($event) {
+          return _vm.showSessionDetails()
+        }
+      }
     },
     [
       _c("div", { staticClass: "flex flex-col" }, [
@@ -68542,7 +68573,8 @@ var render = function() {
         "div",
         {
           staticClass: "text-center text-6xl font-bold",
-          class: _vm.cash_game.profit > 0 ? "text-green-500" : "text-red-500"
+          class:
+            _vm.stateCashGame.profit > 0 ? "text-green-500" : "text-red-500"
         },
         [_vm._v("\n\t\t" + _vm._s(_vm.formattedProfit) + "\n\t")]
       ),
@@ -70288,12 +70320,7 @@ var render = function() {
             {
               key: session.id,
               staticClass:
-                "col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0",
-              on: {
-                click: function($event) {
-                  return _vm.showSessionDetails(session)
-                }
-              }
+                "col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0"
             },
             [_c("session-summary", { attrs: { session: session } })],
             1
@@ -71132,18 +71159,10 @@ var render = function() {
     "div",
     { staticClass: "flex flex-col" },
     [
-      _vm._l(_vm.cash_games.cash_games, function(session) {
+      _vm._l(_vm.cash_games.cash_games.slice(0, 5), function(session) {
         return _c(
           "div",
-          {
-            key: session.id,
-            staticClass: "mb-2",
-            on: {
-              click: function($event) {
-                return _vm.showSessionDetails(session)
-              }
-            }
-          },
+          { key: session.id, staticClass: "mb-2" },
           [_c("session-summary", { attrs: { session: session } })],
           1
         )
@@ -90949,7 +90968,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: {
-    cash_games: []
+    cash_games: [],
+    view_cash_game: {}
   },
   getters: {
     getCashGameById: function getCashGameById(state) {
@@ -90964,31 +90984,43 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     ASSIGN_CASH_GAMES: function ASSIGN_CASH_GAMES(state, cash_games) {
       state.cash_games = cash_games;
     },
+    VIEW_CASH_GAME: function VIEW_CASH_GAME(state, id) {
+      var index = state.cash_games.findIndex(function (cg) {
+        return cg.id === id;
+      });
+      state.view_cash_game = state.cash_games[index];
+    },
     ADD_CASH_GAME: function ADD_CASH_GAME(state, cash_game) {
       state.cash_games.unshift(cash_game);
     },
     UPDATE_CASH_GAME: function UPDATE_CASH_GAME(state, cash_game) {
       var index = state.cash_games.findIndex(function (cg) {
-        return cg.id == cash_game.id;
+        return cg.id === cash_game.id;
       });
       state.cash_games.splice(index, 1, cash_game);
     },
     REMOVE_CASH_GAME: function REMOVE_CASH_GAME(state, cash_game) {
-      var index = state.cash_games.indexOf(cash_game);
+      var index = state.cash_games.findIndex(function (cg) {
+        return cg.id === cash_game.id;
+      });
       state.cash_games.splice(index, 1);
     }
   },
   actions: {
-    getCashGames: function getCashGames(_ref) {
+    viewCashGame: function viewCashGame(_ref, cash_game_id) {
       var commit = _ref.commit;
+      commit('VIEW_CASH_GAME', cash_game_id);
+    },
+    getCashGames: function getCashGames(_ref2) {
+      var commit = _ref2.commit;
       return axios.get('/api/cash/').then(function (response) {
         commit('ASSIGN_CASH_GAMES', response.data.cash_games);
       })["catch"](function (error) {
         throw error;
       });
     },
-    addCashGame: function addCashGame(_ref2, cash_game) {
-      var commit = _ref2.commit;
+    addCashGame: function addCashGame(_ref3, cash_game) {
+      var commit = _ref3.commit;
       return axios.post('/api/cash/', _objectSpread({}, cash_game, {
         start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.start_time).format("YYYY-MM-DD HH:mm:ss"),
         end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.end_time).format("YYYY-MM-DD HH:mm:ss")
@@ -90998,8 +91030,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         throw error;
       });
     },
-    updateCashGame: function updateCashGame(_ref3, cash_game) {
-      var commit = _ref3.commit;
+    updateCashGame: function updateCashGame(_ref4, cash_game) {
+      var commit = _ref4.commit;
       return axios.patch('/api/cash/' + cash_game.id, _objectSpread({}, cash_game, {
         start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.start_time).format("YYYY-MM-DD HH:mm:ss"),
         end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.end_time).format("YYYY-MM-DD HH:mm:ss")
@@ -91009,8 +91041,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         throw error;
       });
     },
-    deleteCashGame: function deleteCashGame(_ref4, cash_game) {
-      var commit = _ref4.commit;
+    deleteCashGame: function deleteCashGame(_ref5, cash_game) {
+      var commit = _ref5.commit;
       return axios["delete"]('/api/cash/' + cash_game.id).then(function (response) {
         commit('REMOVE_CASH_GAME', cash_game);
       })["catch"](function (error) {

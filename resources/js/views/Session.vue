@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col xxl:w-2/3 xxl:mx-auto w-full text-white">
 		<div class="text-center text-6xl font-bold"
-			:class="(cash_game.profit > 0) ? 'text-green-500' : 'text-red-500'"
+			:class="(stateCashGame.profit > 0) ? 'text-green-500' : 'text-red-500'"
 		>
 			{{ formattedProfit }}
 		</div>
@@ -521,22 +521,31 @@ export default {
 	},
 	data() {
 		return {
+			cash_game: {},
 			editing: false,
 			errors: {}
 		}
 	},
 	created() {
-		this.cash_game = JSON.parse(JSON.stringify({
-				...this.stateCashGame,
-				start_time: moment(this.stateCashGame.start_time).format(),
-				end_time: moment(this.stateCashGame.end_time).format()
+		// If no id provided or user visits /session then redirect to sessions
+		if (! this.id) {
+			this.$router.push({ name: 'sessions' })
+		} else {
+			this.cash_game = JSON.parse(JSON.stringify({
+					...this.stateCashGame,
+					start_time: moment(this.stateCashGame.start_time).format(),
+					end_time: moment(this.stateCashGame.end_time).format()
 			}))
+		}
 	},
 	computed: {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
 		...mapGetters('cash_games', ['getCashGameById']),
 		stateCashGame() {
 			return this.getCashGameById(this.id)
+		},
+		profit() {
+			return this.stateCashGame.profit
 		},
 		formattedProfit() {
 			return Vue.prototype.currency.format(this.profit);
@@ -545,20 +554,17 @@ export default {
 			const buy_inTotal = (this.buy_insTotal < 1) ? 1 : this.buy_insTotal
 			return this.profit / buy_inTotal
 		},
-		profit() {
-			return this.cash_game.profit
-		},
 		buy_insTotal() {
-			return this.cash_game.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0)
+			return this.stateCashGame.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0)
 		},
 		runTimeHours() {
-			const end_time = moment(this.cash_game.end_time)
-			const start_time = moment(this.cash_game.start_time)
+			const end_time = moment(this.stateCashGame.end_time)
+			const start_time = moment(this.stateCashGame.start_time)
 			return end_time.diff(start_time, 'hours', true)
 		},
 		runTime() {
-			const end_time = moment(this.cash_game.end_time)
-			const start_time = moment(this.cash_game.start_time)
+			const end_time = moment(this.stateCashGame.end_time)
+			const start_time = moment(this.stateCashGame.start_time)
 			return moment.duration(this.runTimeHours, 'hours').format("h [hours] m [mins]")
 		},
 		profitPerHour() {
@@ -569,17 +575,15 @@ export default {
 		...mapActions('cash_games', ['updateCashGame', 'deleteCashGame']),
 		cancelChanges() {
 			this.editing = false
-			this.cash_game = JSON.parse(JSON.stringify({
-				...this.stateCashGame,
-				start_time: moment(this.stateCashGame.start_time).format(),
-				end_time: moment(this.stateCashGame.end_time).format()
-			}))
+			this.cash_game = this.stringifyCashGame(this.stateCashGame)
 		},
 		saveSession() {
 			this.updateCashGame(this.cash_game)
 			.then(response => {
-				this.$snotify.success('Changes saved.');
+				this.$snotify.success('Saved changes.')
 				this.editing = false
+				this.cash_game = this.stringifyCashGame(stateCashGame)
+				console.log(this.cash_game)
 			})
 			.catch(error => {
 				this.$snotify.error('Error: '+error.response.data.message)
@@ -601,10 +605,10 @@ export default {
                             .then(response => {
                                 this.$modal.hide('dialog');
                                 this.$router.push({ name: 'sessions' })
-                                this.$snotify.warning('Successfully deleted cash game.');
+                                this.$snotify.warning('Successfully deleted cash game.')
                             })
                             .catch(error => {
-                                this.$snotify.error('Error: '+error.response.data.message);
+                                this.$snotify.error('Error: '+error.response.data.message)
                             })
 						},
 						class: 'bg-red-500 text-white'

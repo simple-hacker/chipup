@@ -20,7 +20,7 @@
         </nav>
 
         <div class="flex flex-1 flex-col lg:flex-row lg:relative overflow-hidden">
-            <div class="flex-1 justify-center pt-4 px-2 w-full lg:px-4 lg:order-last overflow-y-auto scrolling-touch">
+            <div ref="scroll" class="flex-1 justify-center pt-4 px-2 w-full lg:px-4 lg:order-last overflow-y-auto scrolling-touch">
                 <transition name="fade" mode="out-in">
                     <router-view></router-view>
                 </transition>
@@ -79,7 +79,37 @@
 <script>
 export default {
     name: 'App',
+    data(){
+        return {
+            sessionsScrollTo: 0,
+        }
+    },
     created() {
+        // App uses main-content ref=scroll as a scrollable div for main content, where as vue-router uses window.scrollTop for scrollBehaviour
+        // which is always at 0,0 because it's fixed and overflow is hidden.
+        // Code found on https://github.com/vuejs/vue-router/issues/1187
+        // I only want to save the scroll position from sessions->session so that if the user clicks back (session->sessions)
+        // they will be in the same scroll position with the list of sessions.
+
+        this.$router.afterEach( (to, from) => {
+
+            let scrollTo = 0;
+            
+            // If sessions->session then save current scroll position but continue to scroll to 0 on session
+            if (from.name === 'sessions' && to.name === 'session') {
+                this.sessionsScrollTo = this.$refs.scroll.scrollTop
+            }
+
+            // If session->sessions then load saved sessions scroll position
+            if (from.name === 'session' && to.name === 'sessions') {
+                scrollTo = this.sessionsScrollTo
+            }
+
+            this.$nextTick(()=>{
+                this.$refs.scroll.scrollTop = scrollTo
+            });
+        });
+
         this.$store.dispatch('bankroll/getBankrollTransactions')
         this.$store.dispatch('cash_games/getCashGames')
     },

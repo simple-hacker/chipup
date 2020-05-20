@@ -1,5 +1,7 @@
 <template>
-	<div class="flex justify-between p-4 border border-muted-dark shadow bg-card hover:bg-muted-dark cursor-pointer text-white">
+	<div 
+		@click="showSessionDetails()"
+		class="flex justify-between p-4 border border-muted-dark shadow bg-card hover:bg-muted-dark cursor-pointer text-white">
 		<div class="flex flex-col">
 			<div class="uppercase">{{ date }}</div>
 			<div class="text-sm text-gray-600">{{ session.location }}</div>
@@ -15,6 +17,7 @@
 
 <script>
 import moment from 'moment'
+import { mapActions } from 'vuex'
 
 export default {
 	name: 'SessionSummary',
@@ -30,6 +33,23 @@ export default {
 		},
 		date() {
 			return moment(this.session.start_time).format("dddd, Do MMMM YYYY")
+		}
+	},
+	methods: {
+		...mapActions('cash_games', ['viewCashGame']),
+		showSessionDetails: function () {
+			// Will need to update to viewSession to include Tournaments
+			// Save CashGame in to state and then go to sessions route.
+			// This is because I don't want /session/:id as the ids could be in the thousands and non consecutive because
+			// they're consecutive for all users and don't want the user to type random numbers in the URL
+			// even though viewing other user's is protected server side.
+			this.viewCashGame(this.session.id)
+			this.$router.push({
+				name: 'session',
+				params: {
+					id: this.session.id
+				}
+			})
 		}
 	}
 }

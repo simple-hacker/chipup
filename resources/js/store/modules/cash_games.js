@@ -4,6 +4,7 @@ export default {
     namespaced: true,
     state: {
         cash_games: [],
+        view_cash_game: {},
     },
     getters: {
         getCashGameById: (state) => (id) => {
@@ -14,19 +15,26 @@ export default {
         ASSIGN_CASH_GAMES(state, cash_games) {
             state.cash_games = cash_games
         },
+        VIEW_CASH_GAME(state, id) {
+            const index = state.cash_games.findIndex(cg => cg.id === id)
+            state.view_cash_game = state.cash_games[index]
+        },
         ADD_CASH_GAME(state, cash_game) {
             state.cash_games.unshift(cash_game)
         },
         UPDATE_CASH_GAME(state, cash_game) {
-            const index = state.cash_games.findIndex(cg => cg.id == cash_game.id)
+            const index = state.cash_games.findIndex(cg => cg.id === cash_game.id)
             state.cash_games.splice(index, 1, cash_game)
         },
         REMOVE_CASH_GAME(state, cash_game) {
-            const index = state.cash_games.indexOf(cash_game)
+            const index = state.cash_games.findIndex(cg => cg.id === cash_game.id)
             state.cash_games.splice(index, 1)
         }
     },
     actions: {
+        viewCashGame({ commit }, cash_game_id) {
+            commit('VIEW_CASH_GAME',  cash_game_id)
+        },
         getCashGames({ commit }) {
             return axios.get('/api/cash/')
             .then(response => {
