@@ -15777,6 +15777,20 @@ input, select, textarea {
   left: 5px;
 }
 
+.inset-10 {
+  top: 10px;
+  right: 10px;
+  bottom: 10px;
+  left: 10px;
+}
+
+.inset-20 {
+  top: 20px;
+  right: 20px;
+  bottom: 20px;
+  left: 20px;
+}
+
 .inset-auto {
   top: auto;
   right: auto;
@@ -15802,6 +15816,26 @@ input, select, textarea {
 .inset-x-5 {
   right: 5px;
   left: 5px;
+}
+
+.inset-y-10 {
+  top: 10px;
+  bottom: 10px;
+}
+
+.inset-x-10 {
+  right: 10px;
+  left: 10px;
+}
+
+.inset-y-20 {
+  top: 20px;
+  bottom: 20px;
+}
+
+.inset-x-20 {
+  right: 20px;
+  left: 20px;
 }
 
 .inset-y-auto {
@@ -15844,6 +15878,38 @@ input, select, textarea {
 
 .left-5 {
   left: 5px;
+}
+
+.top-10 {
+  top: 10px;
+}
+
+.right-10 {
+  right: 10px;
+}
+
+.bottom-10 {
+  bottom: 10px;
+}
+
+.left-10 {
+  left: 10px;
+}
+
+.top-20 {
+  top: 20px;
+}
+
+.right-20 {
+  right: 20px;
+}
+
+.bottom-20 {
+  bottom: 20px;
+}
+
+.left-20 {
+  left: 20px;
 }
 
 .top-auto {
@@ -37188,6 +37254,20 @@ input, select, textarea {
     left: 5px;
   }
 
+  .sm\:inset-10 {
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .sm\:inset-20 {
+    top: 20px;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+  }
+
   .sm\:inset-auto {
     top: auto;
     right: auto;
@@ -37213,6 +37293,26 @@ input, select, textarea {
   .sm\:inset-x-5 {
     right: 5px;
     left: 5px;
+  }
+
+  .sm\:inset-y-10 {
+    top: 10px;
+    bottom: 10px;
+  }
+
+  .sm\:inset-x-10 {
+    right: 10px;
+    left: 10px;
+  }
+
+  .sm\:inset-y-20 {
+    top: 20px;
+    bottom: 20px;
+  }
+
+  .sm\:inset-x-20 {
+    right: 20px;
+    left: 20px;
   }
 
   .sm\:inset-y-auto {
@@ -37255,6 +37355,38 @@ input, select, textarea {
 
   .sm\:left-5 {
     left: 5px;
+  }
+
+  .sm\:top-10 {
+    top: 10px;
+  }
+
+  .sm\:right-10 {
+    right: 10px;
+  }
+
+  .sm\:bottom-10 {
+    bottom: 10px;
+  }
+
+  .sm\:left-10 {
+    left: 10px;
+  }
+
+  .sm\:top-20 {
+    top: 20px;
+  }
+
+  .sm\:right-20 {
+    right: 20px;
+  }
+
+  .sm\:bottom-20 {
+    bottom: 20px;
+  }
+
+  .sm\:left-20 {
+    left: 20px;
   }
 
   .sm\:top-auto {
@@ -57617,6 +57749,20 @@ input, select, textarea {
     left: 5px;
   }
 
+  .md\:inset-10 {
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .md\:inset-20 {
+    top: 20px;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+  }
+
   .md\:inset-auto {
     top: auto;
     right: auto;
@@ -57642,6 +57788,26 @@ input, select, textarea {
   .md\:inset-x-5 {
     right: 5px;
     left: 5px;
+  }
+
+  .md\:inset-y-10 {
+    top: 10px;
+    bottom: 10px;
+  }
+
+  .md\:inset-x-10 {
+    right: 10px;
+    left: 10px;
+  }
+
+  .md\:inset-y-20 {
+    top: 20px;
+    bottom: 20px;
+  }
+
+  .md\:inset-x-20 {
+    right: 20px;
+    left: 20px;
   }
 
   .md\:inset-y-auto {
@@ -57684,6 +57850,38 @@ input, select, textarea {
 
   .md\:left-5 {
     left: 5px;
+  }
+
+  .md\:top-10 {
+    top: 10px;
+  }
+
+  .md\:right-10 {
+    right: 10px;
+  }
+
+  .md\:bottom-10 {
+    bottom: 10px;
+  }
+
+  .md\:left-10 {
+    left: 10px;
+  }
+
+  .md\:top-20 {
+    top: 20px;
+  }
+
+  .md\:right-20 {
+    right: 20px;
+  }
+
+  .md\:bottom-20 {
+    bottom: 20px;
+  }
+
+  .md\:left-20 {
+    left: 20px;
   }
 
   .md\:top-auto {
@@ -78046,6 +78244,20 @@ input, select, textarea {
     left: 5px;
   }
 
+  .lg\:inset-10 {
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .lg\:inset-20 {
+    top: 20px;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+  }
+
   .lg\:inset-auto {
     top: auto;
     right: auto;
@@ -78071,6 +78283,26 @@ input, select, textarea {
   .lg\:inset-x-5 {
     right: 5px;
     left: 5px;
+  }
+
+  .lg\:inset-y-10 {
+    top: 10px;
+    bottom: 10px;
+  }
+
+  .lg\:inset-x-10 {
+    right: 10px;
+    left: 10px;
+  }
+
+  .lg\:inset-y-20 {
+    top: 20px;
+    bottom: 20px;
+  }
+
+  .lg\:inset-x-20 {
+    right: 20px;
+    left: 20px;
   }
 
   .lg\:inset-y-auto {
@@ -78113,6 +78345,38 @@ input, select, textarea {
 
   .lg\:left-5 {
     left: 5px;
+  }
+
+  .lg\:top-10 {
+    top: 10px;
+  }
+
+  .lg\:right-10 {
+    right: 10px;
+  }
+
+  .lg\:bottom-10 {
+    bottom: 10px;
+  }
+
+  .lg\:left-10 {
+    left: 10px;
+  }
+
+  .lg\:top-20 {
+    top: 20px;
+  }
+
+  .lg\:right-20 {
+    right: 20px;
+  }
+
+  .lg\:bottom-20 {
+    bottom: 20px;
+  }
+
+  .lg\:left-20 {
+    left: 20px;
   }
 
   .lg\:top-auto {
@@ -98475,6 +98739,20 @@ input, select, textarea {
     left: 5px;
   }
 
+  .xl\:inset-10 {
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .xl\:inset-20 {
+    top: 20px;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+  }
+
   .xl\:inset-auto {
     top: auto;
     right: auto;
@@ -98500,6 +98778,26 @@ input, select, textarea {
   .xl\:inset-x-5 {
     right: 5px;
     left: 5px;
+  }
+
+  .xl\:inset-y-10 {
+    top: 10px;
+    bottom: 10px;
+  }
+
+  .xl\:inset-x-10 {
+    right: 10px;
+    left: 10px;
+  }
+
+  .xl\:inset-y-20 {
+    top: 20px;
+    bottom: 20px;
+  }
+
+  .xl\:inset-x-20 {
+    right: 20px;
+    left: 20px;
   }
 
   .xl\:inset-y-auto {
@@ -98542,6 +98840,38 @@ input, select, textarea {
 
   .xl\:left-5 {
     left: 5px;
+  }
+
+  .xl\:top-10 {
+    top: 10px;
+  }
+
+  .xl\:right-10 {
+    right: 10px;
+  }
+
+  .xl\:bottom-10 {
+    bottom: 10px;
+  }
+
+  .xl\:left-10 {
+    left: 10px;
+  }
+
+  .xl\:top-20 {
+    top: 20px;
+  }
+
+  .xl\:right-20 {
+    right: 20px;
+  }
+
+  .xl\:bottom-20 {
+    bottom: 20px;
+  }
+
+  .xl\:left-20 {
+    left: 20px;
   }
 
   .xl\:top-auto {
@@ -118904,6 +119234,20 @@ input, select, textarea {
     left: 5px;
   }
 
+  .xxl\:inset-10 {
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .xxl\:inset-20 {
+    top: 20px;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+  }
+
   .xxl\:inset-auto {
     top: auto;
     right: auto;
@@ -118929,6 +119273,26 @@ input, select, textarea {
   .xxl\:inset-x-5 {
     right: 5px;
     left: 5px;
+  }
+
+  .xxl\:inset-y-10 {
+    top: 10px;
+    bottom: 10px;
+  }
+
+  .xxl\:inset-x-10 {
+    right: 10px;
+    left: 10px;
+  }
+
+  .xxl\:inset-y-20 {
+    top: 20px;
+    bottom: 20px;
+  }
+
+  .xxl\:inset-x-20 {
+    right: 20px;
+    left: 20px;
   }
 
   .xxl\:inset-y-auto {
@@ -118971,6 +119335,38 @@ input, select, textarea {
 
   .xxl\:left-5 {
     left: 5px;
+  }
+
+  .xxl\:top-10 {
+    top: 10px;
+  }
+
+  .xxl\:right-10 {
+    right: 10px;
+  }
+
+  .xxl\:bottom-10 {
+    bottom: 10px;
+  }
+
+  .xxl\:left-10 {
+    left: 10px;
+  }
+
+  .xxl\:top-20 {
+    top: 20px;
+  }
+
+  .xxl\:right-20 {
+    right: 20px;
+  }
+
+  .xxl\:bottom-20 {
+    bottom: 20px;
+  }
+
+  .xxl\:left-20 {
+    left: 20px;
   }
 
   .xxl\:top-auto {

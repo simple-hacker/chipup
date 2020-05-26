@@ -54,8 +54,6 @@ export default {
                 commit('ADD_CASH_GAME', response.data.cash_game)
             })
             .catch(error => {
-                console.timeEnd()
-                console.log('error', error)
                 throw error
             })
         },

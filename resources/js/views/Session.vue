@@ -199,45 +199,26 @@
 			-->
 			<div
 				v-if="(stateCashGame.buy_ins && stateCashGame.buy_ins.length > 0) || editing" 
-				class="col-span-6 md:col-span-3 flex md:flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3">
+				class="col-span-6 md:col-span-3 flex md:flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+			>
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Buy Ins</div>
-				<div v-if="!editing" class="self-center">
-					<div
-						v-for="buy_in in stateCashGame.buy_ins"
-						:key="buy_in.id"
-						v-text="formatCurrency(buy_in.amount)"
-						class="p-1 text-lg"
-					></div>
+				<div
+					v-for="buy_in in stateCashGame.buy_ins"
+					:key="buy_in.id"
+					class="mb-1"
+				>
+					<transaction-summary :transaction="buy_in" :transaction-type="'buyin'" :game-id="stateCashGame.id"></transaction-summary>
 				</div>
-				<div v-if="editing">
+				<div
+					v-if="editing"
+					class="flex justify-center"
+				>
 					<div
-						v-for="(buy_in, index) in cash_game.buy_ins"
-						:key="buy_in.id"
-						class="flex mb-1"
+						@click="addTransaction('buyin', { amount: 0 })"
+						class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
 					>
-						<div class="flex flex-col w-full">
-							<div class="flex">
-								<input
-									v-model="buy_in.amount"
-									type="number"
-									min="0"
-									class="p-1"
-									:class="{'error-input' : errors[`buy_ins.${index}.amount`]}"
-									@input="delete errors[`buy_ins.${index}.amount`]"
-								>
-								<button @click="alert('delete')" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="far fa-trash-alt"></i></button>
-							</div>
-							<span v-if="errors[`buy_ins.${index}.amount`]" class="error-message">{{ errors[`buy_ins.${index}.amount`][0] }}</span>
-						</div>
-					</div>
-					<div class="flex justify-center">
-						<div
-							@click="cash_game.buy_ins.push({ amount: 0})"
-							class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
-						>
-							<i class="fas fa-plus-circle mr-2"></i>
-							<span>Add Buy In</span>
-						</div>
+						<i class="fas fa-plus-circle mr-2"></i>
+						<span>Add Buy In</span>
 					</div>
 				</div>
 			</div>
@@ -246,31 +227,20 @@
 			-->
 			<div
 				v-if="stateCashGame.cash_out_model || editing"
-				class="col-span-6 md:col-span-3 flex md:flex-col order-4 md:order-3 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3">
+				class="col-span-6 md:col-span-3 flex md:flex-col order-4 md:order-3 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+			>
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Cash Out</div>
+				<transaction-summary v-if="stateCashGame.cash_out_model" :transaction="stateCashGame.cash_out_model" :transaction-type="'cashout'" :game-id="stateCashGame.id"></transaction-summary>
 				<div
-					v-if="!editing"
-					v-text="formatCurrency(stateCashGame.cash_out_model.amount)"
-					class="p-1 text-lg self-center"
+					v-if="editing && !stateCashGame.cash_out_model"
+					class="flex justify-center"
 				>
-				</div>
-				<div
-					v-if="editing"
-					class="flex mb-1 w-full"
-				>
-					<div class="flex flex-col w-full">
-						<div class="flex">
-							<input
-								v-model="cash_game.cash_out_model.amount"
-								type="number"
-								min="0"
-								class="p-1"
-								:class="{'error-input' : errors['cash_out_model.amount']}"
-								@input="delete errors['cash_out_model.amount']"
-							>
-							<button @click="alert('delete')" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="far fa-trash-alt"></i></button>
-						</div>
-						<span v-if="errors['cash_out_model.amount']" class="error-message">{{ errors['cash_out_model.amount'][0] }}</span>
+					<div
+						@click="addTransaction('cashout', { amount: 0 })"
+						class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
+					>
+						<i class="fas fa-plus-circle mr-2"></i>
+						<span>Add Cash Out</span>
 					</div>
 				</div>
 			</div>
@@ -279,56 +249,26 @@
 			-->
 			<div
 				v-if="(stateCashGame.expenses && stateCashGame.expenses.length > 0) || editing" 
-				class="col-span-6 md:col-span-3 flex md:flex-col order-5 md:order-4 justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3">
+				class="col-span-6 md:col-span-3 flex md:flex-col order-5 md:order-4 justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+			>
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Expenses</div>
 				<div
-					v-if="!editing"
-					class="flex flex-col self-center w-full">
-					<div
-						v-for="expense in stateCashGame.expenses"
-						:key="expense.id"
-						class="flex mb-1 p-1 text-lg justify-end md:justify-around">
-						<div class="order-last md:order-first" v-text="formatCurrency(expense.amount)"></div>
-						<div class="mr-3 md:mr-0" v-if="expense.comments" v-text="expense.comments">Comments</div>
-					</div>
+					v-for="expense in stateCashGame.expenses"
+					:key="expense.id"
+					class="mb-1"
+				>
+					<transaction-summary :transaction="expense" :transaction-type="'expense'" :game-id="stateCashGame.id"></transaction-summary>
 				</div>
-				<div v-if="editing">
+				<div
+					v-if="editing"
+					class="flex justify-center"
+				>
 					<div
-						v-for="(expense, index) in cash_game.expenses"
-						:key="expense.id"
-						class="flex mb-1"
+						@click="addTransaction('expense', { amount: 0, comments: '' })"
+						class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
 					>
-						<div class="flex flex-col w-full">
-							<div class="flex">
-								<input
-									v-model="expense.amount"
-									type="number"
-									min="0"
-									class="p-1"
-									:class="{'error-input' : errors[`expenses.${index}.amount`]}"
-									@input="delete errors[`expenses.${index}.amount`]"
-								>
-								<input
-									v-model="expense.comments"
-									type="text"
-									class="p-1 ml-1"
-									placeholder="Comments"
-									:class="{'error-input' : errors[`expenses.${index}.comments`]}"
-									@input="delete errors[`expenses.${index}.comments`]"
-								>
-								<button @click="cash_game.expenses.splice(index, 1)" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="fas fa-times"></i></button>
-							</div>
-							<span v-if="errors[`expenses.${index}.amount`]" class="error-message">{{ errors[`expenses.${index}.amount`][0] }}</span>
-							<span v-if="errors[`expenses.${index}.comments`]" class="error-message">{{ errors[`expenses.${index}.comments`][0] }}</span>
-						</div>
-					</div>
-					<div class="flex justify-center">
-						<div
-							@click="cash_game.expenses.push({ amount: 0, comments: ''})"
-							class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer">
-							<i class="fas fa-plus-circle mr-2"></i>
-							<span>Add Expense</span>
-						</div>
+						<i class="fas fa-plus-circle mr-2"></i>
+						<span>Add Expense</span>
 					</div>
 				</div>
 			</div>
@@ -337,45 +277,26 @@
 			-->
 			<div
 				v-if="(stateCashGame.rebuys && stateCashGame.rebuys.length > 0) || editing" 
-				class="col-span-6 md:col-span-3 flex md:flex-col order-6 md:order-5 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3">
+				class="col-span-6 md:col-span-3 flex md:flex-col order-6 md:order-5 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+			>
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Rebuys</div>
-				<div v-if="!editing" class="self-center">
-					<div
-						v-for="rebuy in stateCashGame.rebuys"
-						:key="rebuy.id"
-						v-text="formatCurrency(rebuy.amount)"
-						class="p-1 text-lg"
-					></div>
+				<div
+					v-for="rebuy in stateCashGame.rebuys"
+					:key="rebuy.id"
+					class="mb-1"
+				>
+					<transaction-summary :transaction="rebuy" :transaction-type="'rebuy'" :game-id="stateCashGame.id"></transaction-summary>
 				</div>
-				<div v-if="editing">
+				<div
+					v-if="editing"
+					class="flex justify-center"
+				>
 					<div
-						v-for="(rebuy, index) in cash_game.rebuys"
-						:key="rebuy.id"
-						class="flex mb-1"
+						@click="addTransaction('rebuy', { amount: 0 })"
+						class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
 					>
-						<div class="flex flex-col w-full">
-							<div class="flex">
-								<input
-									v-model="rebuy.amount"
-									type="number"
-									min="0"
-									class="p-1"
-									:class="{'error-input' : errors[`rebuys.${index}.amount`]}"
-									@input="delete errors[`rebuys.${index}.amount`]"
-								>
-								<button @click="alert('delete')" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="far fa-trash-alt"></i></button>
-							</div>
-							<span v-if="errors[`rebuys.${index}.amount`]" class="error-message">{{ errors[`rebuys.${index}.amount`][0] }}</span>
-						</div>
-					</div>
-					<div class="flex justify-center">
-						<div
-							@click="cash_game.rebuys.push({ amount: 0})"
-							class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
-						>
-							<i class="fas fa-plus-circle mr-2"></i>
-							<span>Add Rebuy</span>
-						</div>
+						<i class="fas fa-plus-circle mr-2"></i>
+						<span>Add Rebuy</span>
 					</div>
 				</div>
 			</div>
@@ -384,45 +305,26 @@
 			-->
 			<div
 				v-if="(stateCashGame.add_ons && stateCashGame.add_ons.length > 0) || editing" 
-				class="col-span-6 md:col-span-3 flex md:flex-col order-7 md:order-6 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3">
+				class="col-span-6 md:col-span-3 flex md:flex-col order-7 md:order-6 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+			>
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Add Ons</div>
-				<div v-if="!editing" class="self-center">
-					<div
-						v-for="add_on in stateCashGame.add_ons"
-						:key="add_on.id"
-						v-text="formatCurrency(add_on.amount)"
-						class="p-1 text-lg"
-					></div>
+				<div
+					v-for="add_on in stateCashGame.add_ons"
+					:key="add_on.id"
+					class="mb-1"
+				>
+					<transaction-summary :transaction="add_on" :transaction-type="'addon'" :game-id="stateCashGame.id"></transaction-summary>
 				</div>
-				<div v-if="editing">
+				<div
+					v-if="editing"
+					class="flex justify-center"
+				>
 					<div
-						v-for="(add_on, index) in cash_game.add_ons"
-						:key="add_on.id"
-						class="flex mb-1"
+						@click="addTransaction('addon', { amount: 0 })"
+						class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
 					>
-						<div class="flex flex-col w-full">
-							<div class="flex">
-								<input
-									v-model="add_on.amount"
-									type="number"
-									min="0"
-									class="p-1"
-									:class="{'error-input' : errors[`add_ons.${index}.amount`]}"
-									@input="delete errors[`add_ons.${index}.amount`]"
-								>
-								<button @click="alert('delete')" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="far fa-trash-alt"></i></button>
-							</div>
-							<span v-if="errors[`add_ons.${index}.amount`]" class="error-message">{{ errors[`add_ons.${index}.amount`][0] }}</span>
-						</div>
-					</div>
-					<div class="flex justify-center">
-						<div
-							@click="cash_game.add_ons.push({ amount: 0})"
-							class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
-						>
-							<i class="fas fa-plus-circle mr-2"></i>
-							<span>Add Add On</span>
-						</div>
+						<i class="fas fa-plus-circle mr-2"></i>
+						<span>Add Add On</span>
 					</div>
 				</div>
 			</div>
@@ -514,8 +416,12 @@ import moment from 'moment'
 import 'moment-duration-format'
 import { mapState, mapActions, mapGetters } from 'vuex'
 
+import TransactionSummary from '@components/Transaction/TransactionSummary'
+import TransactionDetails from '@components/Transaction/TransactionDetails'
+
 export default {
 	name: 'Session',
+	components: { TransactionSummary, TransactionDetails },
 	props: {
 		id: Number
 	},
@@ -531,11 +437,17 @@ export default {
 		if (! this.id) {
 			this.$router.push({ name: 'sessions' })
 		} else {
-			this.cash_game = JSON.parse(JSON.stringify({
-					...this.stateCashGame,
+			this.cash_game = {
+					id: this.stateCashGame.id,
+					location: this.stateCashGame.location,
+					stake_id: this.stateCashGame.stake_id,
+					limit_id: this.stateCashGame.limit_id,
+					variant_id: this.stateCashGame.variant_id,
+					table_size_id: this.stateCashGame.table_size_id,
 					start_time: moment(this.stateCashGame.start_time).format(),
-					end_time: moment(this.stateCashGame.end_time).format()
-			}))
+					end_time: moment(this.stateCashGame.end_time).format(),
+					comments: this.stateCashGame.comments,
+			}
 		}
 	},
 	computed: {
@@ -583,6 +495,7 @@ export default {
 				this.$snotify.success('Changes saved.')
 				this.editing = false
 				this.cash_game = this.stringifyCashGame(this.stateCashGame)
+				// TODO: ^^ Edit line above
 			})
 			.catch(error => {
 				this.$snotify.error('Error: '+error.response.data.message)
@@ -628,6 +541,21 @@ export default {
 				start_time: moment(this.cash_game.start_time).format(),
 				end_time: moment(this.cash_game.end_time).format()
 			}))
+		},
+		addTransaction(transactionType, transaction) {
+			this.$modal.show(TransactionDetails, {
+                // Modal props
+                transaction,
+				transactionType,
+				gameId: this.stateCashGame.id,
+                gameType: 'cash_game'
+            }, {
+                // Modal Options
+                classes: 'bg-background text-white p-1 md:p-3 rounded-lg border border-muted-dark',
+                height: 'auto',
+                width: '95%',
+                maxWidth: 600,
+            })
 		}
 	}
 }

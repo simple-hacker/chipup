@@ -45,7 +45,7 @@ export default {
 				comments: this.comments
 			})
 			.then(response =>{
-				this.$emit('close');
+				this.$emit('close')
 				if (amount < 0) {
 					this.$snotify.warning(`Withdrew £`+(amount * -1).toLocaleString()+' from your bankroll.')
 				} else {

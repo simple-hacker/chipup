@@ -2951,6 +2951,218 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Transaction/TransactionDetails.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Transaction/TransactionDetails.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'TransactionDetails',
+  props: {
+    transaction: Object,
+    transactionType: String,
+    gameId: Number,
+    gameType: String
+  },
+  computed: {
+    title: function title() {
+      var mode = this.transaction.id ? 'Edit' : 'Add';
+      return "".concat(mode, " ").concat(this.transactionType);
+    }
+  },
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('transactions', ['createTransaction', 'updateTransaction', 'deleteTransaction']), {
+    saveTransaction: function saveTransaction() {
+      var _this = this;
+
+      if (this.transaction.id) {
+        // Update Transaction
+        this.$store.dispatch('transactions/updateTransaction', {
+          transaction: this.transaction,
+          transactionType: this.transactionType
+        }).then(function (response) {
+          _this.$modal.hide('dialog');
+
+          _this.$emit('close');
+
+          _this.$snotify.success("Successfully updated ".concat(_this.transactionType, "."));
+        })["catch"](function (error) {
+          _this.$snotify.error('Error: ' + error.response.data.message);
+        });
+      } else {
+        // Create Transaction
+        this.$store.dispatch('transactions/createTransaction', {
+          transaction: this.transaction,
+          transactionType: this.transactionType,
+          game_id: this.gameId,
+          game_type: this.gameType
+        }).then(function (response) {
+          _this.$modal.hide('dialog');
+
+          _this.$emit('close');
+
+          _this.$snotify.success("Successfully created ".concat(_this.transactionType, "."));
+        })["catch"](function (error) {
+          _this.$snotify.error('Error: ' + error.response.data.message);
+        });
+      }
+    },
+    deleteTransaction: function deleteTransaction() {
+      var _this2 = this;
+
+      this.$modal.show('dialog', {
+        title: 'Are you sure?',
+        text: 'Are you sure you want to delete this transaction?  This action cannot be undone.',
+        buttons: [{
+          title: 'Cancel'
+        }, {
+          title: 'Yes, delete.',
+          handler: function handler() {
+            _this2.$store.dispatch('transactions/deleteTransaction', {
+              transaction: _this2.transaction,
+              transactionType: _this2.transactionType
+            }).then(function (response) {
+              _this2.$modal.hide('dialog');
+
+              _this2.$emit('close');
+
+              _this2.$snotify.warning('Successfully deleted transaction.');
+            })["catch"](function (error) {
+              _this2.$snotify.error('Error: ' + error.response.data.message);
+            });
+          },
+          "class": 'bg-red-500 text-white'
+        }]
+      });
+    }
+  })
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Transaction/TransactionSummary.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Transaction/TransactionSummary.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_Transaction_TransactionDetails__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @components/Transaction/TransactionDetails */ "./resources/js/components/Transaction/TransactionDetails.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'TransactionSummary',
+  components: {
+    TransactionDetails: _components_Transaction_TransactionDetails__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  props: {
+    transaction: Object,
+    transactionType: String,
+    gameId: Number
+  },
+  data: function data() {
+    return {
+      showEdit: false
+    };
+  },
+  methods: {
+    showTransactionDetails: function showTransactionDetails(transaction) {
+      this.$modal.show(_components_Transaction_TransactionDetails__WEBPACK_IMPORTED_MODULE_0__["default"], {
+        // Modal props
+        transaction: JSON.parse(JSON.stringify(this.transaction)),
+        transactionType: this.transactionType,
+        gameId: this.gameId,
+        gameType: 'cash_game'
+      }, {
+        // Modal Options
+        classes: 'bg-background text-white p-1 md:p-3 rounded-lg border border-muted-dark',
+        height: 'auto',
+        width: '95%',
+        maxWidth: 600
+      });
+    },
+    formatCurrency: function formatCurrency(amount) {
+      return Vue.prototype.currency.format(amount);
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/CreateSession.vue?vue&type=script&lang=js&":
 /*!*******************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/CreateSession.vue?vue&type=script&lang=js& ***!
@@ -3590,6 +3802,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment_duration_format__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment-duration-format */ "./node_modules/moment-duration-format/lib/moment-duration-format.js");
 /* harmony import */ var moment_duration_format__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment_duration_format__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _components_Transaction_TransactionSummary__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @components/Transaction/TransactionSummary */ "./resources/js/components/Transaction/TransactionSummary.vue");
+/* harmony import */ var _components_Transaction_TransactionDetails__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @components/Transaction/TransactionDetails */ "./resources/js/components/Transaction/TransactionDetails.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -4009,109 +4223,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Session',
+  components: {
+    TransactionSummary: _components_Transaction_TransactionSummary__WEBPACK_IMPORTED_MODULE_3__["default"],
+    TransactionDetails: _components_Transaction_TransactionDetails__WEBPACK_IMPORTED_MODULE_4__["default"]
+  },
   props: {
     id: Number
   },
@@ -4129,10 +4251,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         name: 'sessions'
       });
     } else {
-      this.cash_game = JSON.parse(JSON.stringify(_objectSpread({}, this.stateCashGame, {
+      this.cash_game = {
+        id: this.stateCashGame.id,
+        location: this.stateCashGame.location,
+        stake_id: this.stateCashGame.stake_id,
+        limit_id: this.stateCashGame.limit_id,
+        variant_id: this.stateCashGame.variant_id,
+        table_size_id: this.stateCashGame.table_size_id,
         start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.start_time).format(),
-        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.end_time).format()
-      })));
+        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.end_time).format(),
+        comments: this.stateCashGame.comments
+      };
     }
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])('cash_games', ['getCashGameById']), {
@@ -4180,7 +4309,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this.$snotify.success('Changes saved.');
 
         _this.editing = false;
-        _this.cash_game = _this.stringifyCashGame(_this.stateCashGame);
+        _this.cash_game = _this.stringifyCashGame(_this.stateCashGame); // TODO: ^^ Edit line above
       })["catch"](function (error) {
         _this.$snotify.error('Error: ' + error.response.data.message);
 
@@ -4225,6 +4354,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.cash_game.start_time).format(),
         end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.cash_game.end_time).format()
       })));
+    },
+    addTransaction: function addTransaction(transactionType, transaction) {
+      this.$modal.show(_components_Transaction_TransactionDetails__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        // Modal props
+        transaction: transaction,
+        transactionType: transactionType,
+        gameId: this.stateCashGame.id,
+        gameType: 'cash_game'
+      }, {
+        // Modal Options
+        classes: 'bg-background text-white p-1 md:p-3 rounded-lg border border-muted-dark',
+        height: 'auto',
+        width: '95%',
+        maxWidth: 600
+      });
     }
   })
 });
@@ -67055,6 +67199,180 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Transaction/TransactionDetails.vue?vue&type=template&id=65648720&":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Transaction/TransactionDetails.vue?vue&type=template&id=65648720& ***!
+  \*********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "flex flex-col" }, [
+    _c("div", {
+      staticClass: "text-2xl capitalize mb-5 border-b border-muted-light",
+      domProps: { textContent: _vm._s(_vm.title) }
+    }),
+    _vm._v(" "),
+    _c("div", { staticClass: "w-2/3 mx-auto" }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.transaction.amount,
+            expression: "transaction.amount"
+          }
+        ],
+        attrs: { type: "number", min: "0" },
+        domProps: { value: _vm.transaction.amount },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.transaction, "amount", $event.target.value)
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _vm.transaction.hasOwnProperty("comments")
+      ? _c("div", { staticClass: "w-2/3 mx-auto mt-3" }, [
+          _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.transaction.comments,
+                expression: "transaction.comments"
+              }
+            ],
+            staticClass: "rounded border border-muted-dark p-2",
+            attrs: { row: "4", placeholder: "Add comments" },
+            domProps: { value: _vm.transaction.comments },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.transaction, "comments", $event.target.value)
+              }
+            }
+          })
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _c("div", { staticClass: "flex justify-between mt-3 p-2" }, [
+      _vm.transaction.id
+        ? _c(
+            "button",
+            {
+              staticClass:
+                "bg-red-500 hover:bg-red-600 focus:bg-red-600 rounded text-white text-sm px-4 py-2",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.deleteTransaction($event)
+                }
+              }
+            },
+            [
+              _c("i", { staticClass: "fas fa-trash mr-3" }),
+              _c("span", [_vm._v("Delete")])
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2",
+          attrs: { type: "button" },
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.saveTransaction($event)
+            }
+          }
+        },
+        [
+          _c("i", { staticClass: "fas fa-check mr-3" }),
+          _c("span", [_vm._v("Save Changes")])
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Transaction/TransactionSummary.vue?vue&type=template&id=d11e2af8&":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Transaction/TransactionSummary.vue?vue&type=template&id=d11e2af8& ***!
+  \*********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "flex relative p-3 border border-muted-dark shadow bg-card hover:bg-muted-dark cursor-pointer text-white mb-1 justify-center text-lg group",
+      on: {
+        click: function($event) {
+          return _vm.showTransactionDetails(_vm.transaction)
+        },
+        mouseover: function($event) {
+          _vm.showEdit = true
+        },
+        mouseleave: function($event) {
+          _vm.showEdit = false
+        }
+      }
+    },
+    [
+      _c("div", {
+        domProps: {
+          textContent: _vm._s(_vm.formatCurrency(_vm.transaction.amount))
+        }
+      }),
+      _vm._v(" "),
+      _vm.showEdit
+        ? _c("div", { staticClass: "absolute right-20" }, [
+            _c("i", { staticClass: "fas fa-edit" })
+          ])
+        : _vm._e()
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/CreateSession.vue?vue&type=template&id=ddd3532a&":
 /*!***********************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/CreateSession.vue?vue&type=template&id=ddd3532a& ***!
@@ -69104,149 +69422,48 @@ var render = function() {
                     [_vm._v("Buy Ins")]
                   ),
                   _vm._v(" "),
-                  !_vm.editing
-                    ? _c(
-                        "div",
-                        { staticClass: "self-center" },
-                        _vm._l(_vm.stateCashGame.buy_ins, function(buy_in) {
-                          return _c("div", {
-                            key: buy_in.id,
-                            staticClass: "p-1 text-lg",
-                            domProps: {
-                              textContent: _vm._s(
-                                _vm.formatCurrency(buy_in.amount)
-                              )
-                            }
-                          })
-                        }),
-                        0
-                      )
-                    : _vm._e(),
+                  _vm._l(_vm.stateCashGame.buy_ins, function(buy_in) {
+                    return _c(
+                      "div",
+                      { key: buy_in.id, staticClass: "mb-1" },
+                      [
+                        _c("transaction-summary", {
+                          attrs: {
+                            transaction: buy_in,
+                            "transaction-type": "buyin",
+                            "game-id": _vm.stateCashGame.id
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  }),
                   _vm._v(" "),
                   _vm.editing
-                    ? _c(
-                        "div",
-                        [
-                          _vm._l(_vm.cash_game.buy_ins, function(
-                            buy_in,
-                            index
-                          ) {
-                            return _c(
-                              "div",
-                              { key: buy_in.id, staticClass: "flex mb-1" },
-                              [
-                                _c(
-                                  "div",
-                                  { staticClass: "flex flex-col w-full" },
-                                  [
-                                    _c("div", { staticClass: "flex" }, [
-                                      _c("input", {
-                                        directives: [
-                                          {
-                                            name: "model",
-                                            rawName: "v-model",
-                                            value: buy_in.amount,
-                                            expression: "buy_in.amount"
-                                          }
-                                        ],
-                                        staticClass: "p-1",
-                                        class: {
-                                          "error-input":
-                                            _vm.errors[
-                                              "buy_ins." + index + ".amount"
-                                            ]
-                                        },
-                                        attrs: { type: "number", min: "0" },
-                                        domProps: { value: buy_in.amount },
-                                        on: {
-                                          input: [
-                                            function($event) {
-                                              if ($event.target.composing) {
-                                                return
-                                              }
-                                              _vm.$set(
-                                                buy_in,
-                                                "amount",
-                                                $event.target.value
-                                              )
-                                            },
-                                            function($event) {
-                                              delete _vm.errors[
-                                                "buy_ins." + index + ".amount"
-                                              ]
-                                            }
-                                          ]
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass:
-                                            "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.alert("delete")
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c("i", {
-                                            staticClass: "far fa-trash-alt"
-                                          })
-                                        ]
-                                      )
-                                    ]),
-                                    _vm._v(" "),
-                                    _vm.errors["buy_ins." + index + ".amount"]
-                                      ? _c(
-                                          "span",
-                                          { staticClass: "error-message" },
-                                          [
-                                            _vm._v(
-                                              _vm._s(
-                                                _vm.errors[
-                                                  "buy_ins." + index + ".amount"
-                                                ][0]
-                                              )
-                                            )
-                                          ]
-                                        )
-                                      : _vm._e()
-                                  ]
-                                )
-                              ]
-                            )
-                          }),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "flex justify-center" }, [
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.cash_game.buy_ins.push({
-                                      amount: 0
-                                    })
-                                  }
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "fas fa-plus-circle mr-2"
-                                }),
-                                _vm._v(" "),
-                                _c("span", [_vm._v("Add Buy In")])
-                              ]
-                            )
-                          ])
-                        ],
-                        2
-                      )
+                    ? _c("div", { staticClass: "flex justify-center" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                            on: {
+                              click: function($event) {
+                                return _vm.addTransaction("buyin", {
+                                  amount: 0
+                                })
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("Add Buy In")])
+                          ]
+                        )
+                      ])
                     : _vm._e()
-                ]
+                ],
+                2
               )
             : _vm._e(),
           _vm._v(" "),
@@ -69267,86 +69484,41 @@ var render = function() {
                     [_vm._v("Cash Out")]
                   ),
                   _vm._v(" "),
-                  !_vm.editing
-                    ? _c("div", {
-                        staticClass: "p-1 text-lg self-center",
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.formatCurrency(
-                              _vm.stateCashGame.cash_out_model.amount
-                            )
-                          )
+                  _vm.stateCashGame.cash_out_model
+                    ? _c("transaction-summary", {
+                        attrs: {
+                          transaction: _vm.stateCashGame.cash_out_model,
+                          "transaction-type": "cashout",
+                          "game-id": _vm.stateCashGame.id
                         }
                       })
                     : _vm._e(),
                   _vm._v(" "),
-                  _vm.editing
-                    ? _c("div", { staticClass: "flex mb-1 w-full" }, [
-                        _c("div", { staticClass: "flex flex-col w-full" }, [
-                          _c("div", { staticClass: "flex" }, [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.cash_game.cash_out_model.amount,
-                                  expression: "cash_game.cash_out_model.amount"
-                                }
-                              ],
-                              staticClass: "p-1",
-                              class: {
-                                "error-input":
-                                  _vm.errors["cash_out_model.amount"]
-                              },
-                              attrs: { type: "number", min: "0" },
-                              domProps: {
-                                value: _vm.cash_game.cash_out_model.amount
-                              },
-                              on: {
-                                input: [
-                                  function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.cash_game.cash_out_model,
-                                      "amount",
-                                      $event.target.value
-                                    )
-                                  },
-                                  function($event) {
-                                    delete _vm.errors["cash_out_model.amount"]
-                                  }
-                                ]
+                  _vm.editing && !_vm.stateCashGame.cash_out_model
+                    ? _c("div", { staticClass: "flex justify-center" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                            on: {
+                              click: function($event) {
+                                return _vm.addTransaction("cashout", {
+                                  amount: 0
+                                })
                               }
-                            }),
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
                             _vm._v(" "),
-                            _c(
-                              "button",
-                              {
-                                staticClass:
-                                  "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.alert("delete")
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "far fa-trash-alt" })]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _vm.errors["cash_out_model.amount"]
-                            ? _c("span", { staticClass: "error-message" }, [
-                                _vm._v(
-                                  _vm._s(_vm.errors["cash_out_model.amount"][0])
-                                )
-                              ])
-                            : _vm._e()
-                        ])
+                            _c("span", [_vm._v("Add Cash Out")])
+                          ]
+                        )
                       ])
                     : _vm._e()
-                ]
+                ],
+                1
               )
             : _vm._e(),
           _vm._v(" "),
@@ -69369,241 +69541,49 @@ var render = function() {
                     [_vm._v("Expenses")]
                   ),
                   _vm._v(" "),
-                  !_vm.editing
-                    ? _c(
-                        "div",
-                        { staticClass: "flex flex-col self-center w-full" },
-                        _vm._l(_vm.stateCashGame.expenses, function(expense) {
-                          return _c(
-                            "div",
-                            {
-                              key: expense.id,
-                              staticClass:
-                                "flex mb-1 p-1 text-lg justify-end md:justify-around"
-                            },
-                            [
-                              _c("div", {
-                                staticClass: "order-last md:order-first",
-                                domProps: {
-                                  textContent: _vm._s(
-                                    _vm.formatCurrency(expense.amount)
-                                  )
-                                }
-                              }),
-                              _vm._v(" "),
-                              expense.comments
-                                ? _c(
-                                    "div",
-                                    {
-                                      staticClass: "mr-3 md:mr-0",
-                                      domProps: {
-                                        textContent: _vm._s(expense.comments)
-                                      }
-                                    },
-                                    [_vm._v("Comments")]
-                                  )
-                                : _vm._e()
-                            ]
-                          )
-                        }),
-                        0
-                      )
-                    : _vm._e(),
+                  _vm._l(_vm.stateCashGame.expenses, function(expense) {
+                    return _c(
+                      "div",
+                      { key: expense.id, staticClass: "mb-1" },
+                      [
+                        _c("transaction-summary", {
+                          attrs: {
+                            transaction: expense,
+                            "transaction-type": "expense",
+                            "game-id": _vm.stateCashGame.id
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  }),
                   _vm._v(" "),
                   _vm.editing
-                    ? _c(
-                        "div",
-                        [
-                          _vm._l(_vm.cash_game.expenses, function(
-                            expense,
-                            index
-                          ) {
-                            return _c(
-                              "div",
-                              { key: expense.id, staticClass: "flex mb-1" },
-                              [
-                                _c(
-                                  "div",
-                                  { staticClass: "flex flex-col w-full" },
-                                  [
-                                    _c("div", { staticClass: "flex" }, [
-                                      _c("input", {
-                                        directives: [
-                                          {
-                                            name: "model",
-                                            rawName: "v-model",
-                                            value: expense.amount,
-                                            expression: "expense.amount"
-                                          }
-                                        ],
-                                        staticClass: "p-1",
-                                        class: {
-                                          "error-input":
-                                            _vm.errors[
-                                              "expenses." + index + ".amount"
-                                            ]
-                                        },
-                                        attrs: { type: "number", min: "0" },
-                                        domProps: { value: expense.amount },
-                                        on: {
-                                          input: [
-                                            function($event) {
-                                              if ($event.target.composing) {
-                                                return
-                                              }
-                                              _vm.$set(
-                                                expense,
-                                                "amount",
-                                                $event.target.value
-                                              )
-                                            },
-                                            function($event) {
-                                              delete _vm.errors[
-                                                "expenses." + index + ".amount"
-                                              ]
-                                            }
-                                          ]
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c("input", {
-                                        directives: [
-                                          {
-                                            name: "model",
-                                            rawName: "v-model",
-                                            value: expense.comments,
-                                            expression: "expense.comments"
-                                          }
-                                        ],
-                                        staticClass: "p-1 ml-1",
-                                        class: {
-                                          "error-input":
-                                            _vm.errors[
-                                              "expenses." + index + ".comments"
-                                            ]
-                                        },
-                                        attrs: {
-                                          type: "text",
-                                          placeholder: "Comments"
-                                        },
-                                        domProps: { value: expense.comments },
-                                        on: {
-                                          input: [
-                                            function($event) {
-                                              if ($event.target.composing) {
-                                                return
-                                              }
-                                              _vm.$set(
-                                                expense,
-                                                "comments",
-                                                $event.target.value
-                                              )
-                                            },
-                                            function($event) {
-                                              delete _vm.errors[
-                                                "expenses." +
-                                                  index +
-                                                  ".comments"
-                                              ]
-                                            }
-                                          ]
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass:
-                                            "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.cash_game.expenses.splice(
-                                                index,
-                                                1
-                                              )
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c("i", {
-                                            staticClass: "fas fa-times"
-                                          })
-                                        ]
-                                      )
-                                    ]),
-                                    _vm._v(" "),
-                                    _vm.errors["expenses." + index + ".amount"]
-                                      ? _c(
-                                          "span",
-                                          { staticClass: "error-message" },
-                                          [
-                                            _vm._v(
-                                              _vm._s(
-                                                _vm.errors[
-                                                  "expenses." +
-                                                    index +
-                                                    ".amount"
-                                                ][0]
-                                              )
-                                            )
-                                          ]
-                                        )
-                                      : _vm._e(),
-                                    _vm._v(" "),
-                                    _vm.errors[
-                                      "expenses." + index + ".comments"
-                                    ]
-                                      ? _c(
-                                          "span",
-                                          { staticClass: "error-message" },
-                                          [
-                                            _vm._v(
-                                              _vm._s(
-                                                _vm.errors[
-                                                  "expenses." +
-                                                    index +
-                                                    ".comments"
-                                                ][0]
-                                              )
-                                            )
-                                          ]
-                                        )
-                                      : _vm._e()
-                                  ]
-                                )
-                              ]
-                            )
-                          }),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "flex justify-center" }, [
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.cash_game.expenses.push({
-                                      amount: 0,
-                                      comments: ""
-                                    })
-                                  }
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "fas fa-plus-circle mr-2"
-                                }),
-                                _vm._v(" "),
-                                _c("span", [_vm._v("Add Expense")])
-                              ]
-                            )
-                          ])
-                        ],
-                        2
-                      )
+                    ? _c("div", { staticClass: "flex justify-center" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                            on: {
+                              click: function($event) {
+                                return _vm.addTransaction("expense", {
+                                  amount: 0,
+                                  comments: ""
+                                })
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("Add Expense")])
+                          ]
+                        )
+                      ])
                     : _vm._e()
-                ]
+                ],
+                2
               )
             : _vm._e(),
           _vm._v(" "),
@@ -69625,146 +69605,48 @@ var render = function() {
                     [_vm._v("Rebuys")]
                   ),
                   _vm._v(" "),
-                  !_vm.editing
-                    ? _c(
-                        "div",
-                        { staticClass: "self-center" },
-                        _vm._l(_vm.stateCashGame.rebuys, function(rebuy) {
-                          return _c("div", {
-                            key: rebuy.id,
-                            staticClass: "p-1 text-lg",
-                            domProps: {
-                              textContent: _vm._s(
-                                _vm.formatCurrency(rebuy.amount)
-                              )
-                            }
-                          })
-                        }),
-                        0
-                      )
-                    : _vm._e(),
+                  _vm._l(_vm.stateCashGame.rebuys, function(rebuy) {
+                    return _c(
+                      "div",
+                      { key: rebuy.id, staticClass: "mb-1" },
+                      [
+                        _c("transaction-summary", {
+                          attrs: {
+                            transaction: rebuy,
+                            "transaction-type": "rebuy",
+                            "game-id": _vm.stateCashGame.id
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  }),
                   _vm._v(" "),
                   _vm.editing
-                    ? _c(
-                        "div",
-                        [
-                          _vm._l(_vm.cash_game.rebuys, function(rebuy, index) {
-                            return _c(
-                              "div",
-                              { key: rebuy.id, staticClass: "flex mb-1" },
-                              [
-                                _c(
-                                  "div",
-                                  { staticClass: "flex flex-col w-full" },
-                                  [
-                                    _c("div", { staticClass: "flex" }, [
-                                      _c("input", {
-                                        directives: [
-                                          {
-                                            name: "model",
-                                            rawName: "v-model",
-                                            value: rebuy.amount,
-                                            expression: "rebuy.amount"
-                                          }
-                                        ],
-                                        staticClass: "p-1",
-                                        class: {
-                                          "error-input":
-                                            _vm.errors[
-                                              "rebuys." + index + ".amount"
-                                            ]
-                                        },
-                                        attrs: { type: "number", min: "0" },
-                                        domProps: { value: rebuy.amount },
-                                        on: {
-                                          input: [
-                                            function($event) {
-                                              if ($event.target.composing) {
-                                                return
-                                              }
-                                              _vm.$set(
-                                                rebuy,
-                                                "amount",
-                                                $event.target.value
-                                              )
-                                            },
-                                            function($event) {
-                                              delete _vm.errors[
-                                                "rebuys." + index + ".amount"
-                                              ]
-                                            }
-                                          ]
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass:
-                                            "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.alert("delete")
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c("i", {
-                                            staticClass: "far fa-trash-alt"
-                                          })
-                                        ]
-                                      )
-                                    ]),
-                                    _vm._v(" "),
-                                    _vm.errors["rebuys." + index + ".amount"]
-                                      ? _c(
-                                          "span",
-                                          { staticClass: "error-message" },
-                                          [
-                                            _vm._v(
-                                              _vm._s(
-                                                _vm.errors[
-                                                  "rebuys." + index + ".amount"
-                                                ][0]
-                                              )
-                                            )
-                                          ]
-                                        )
-                                      : _vm._e()
-                                  ]
-                                )
-                              ]
-                            )
-                          }),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "flex justify-center" }, [
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.cash_game.rebuys.push({
-                                      amount: 0
-                                    })
-                                  }
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "fas fa-plus-circle mr-2"
-                                }),
-                                _vm._v(" "),
-                                _c("span", [_vm._v("Add Rebuy")])
-                              ]
-                            )
-                          ])
-                        ],
-                        2
-                      )
+                    ? _c("div", { staticClass: "flex justify-center" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                            on: {
+                              click: function($event) {
+                                return _vm.addTransaction("rebuy", {
+                                  amount: 0
+                                })
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("Add Rebuy")])
+                          ]
+                        )
+                      ])
                     : _vm._e()
-                ]
+                ],
+                2
               )
             : _vm._e(),
           _vm._v(" "),
@@ -69786,149 +69668,48 @@ var render = function() {
                     [_vm._v("Add Ons")]
                   ),
                   _vm._v(" "),
-                  !_vm.editing
-                    ? _c(
-                        "div",
-                        { staticClass: "self-center" },
-                        _vm._l(_vm.stateCashGame.add_ons, function(add_on) {
-                          return _c("div", {
-                            key: add_on.id,
-                            staticClass: "p-1 text-lg",
-                            domProps: {
-                              textContent: _vm._s(
-                                _vm.formatCurrency(add_on.amount)
-                              )
-                            }
-                          })
-                        }),
-                        0
-                      )
-                    : _vm._e(),
+                  _vm._l(_vm.stateCashGame.add_ons, function(add_on) {
+                    return _c(
+                      "div",
+                      { key: add_on.id, staticClass: "mb-1" },
+                      [
+                        _c("transaction-summary", {
+                          attrs: {
+                            transaction: add_on,
+                            "transaction-type": "addon",
+                            "game-id": _vm.stateCashGame.id
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  }),
                   _vm._v(" "),
                   _vm.editing
-                    ? _c(
-                        "div",
-                        [
-                          _vm._l(_vm.cash_game.add_ons, function(
-                            add_on,
-                            index
-                          ) {
-                            return _c(
-                              "div",
-                              { key: add_on.id, staticClass: "flex mb-1" },
-                              [
-                                _c(
-                                  "div",
-                                  { staticClass: "flex flex-col w-full" },
-                                  [
-                                    _c("div", { staticClass: "flex" }, [
-                                      _c("input", {
-                                        directives: [
-                                          {
-                                            name: "model",
-                                            rawName: "v-model",
-                                            value: add_on.amount,
-                                            expression: "add_on.amount"
-                                          }
-                                        ],
-                                        staticClass: "p-1",
-                                        class: {
-                                          "error-input":
-                                            _vm.errors[
-                                              "add_ons." + index + ".amount"
-                                            ]
-                                        },
-                                        attrs: { type: "number", min: "0" },
-                                        domProps: { value: add_on.amount },
-                                        on: {
-                                          input: [
-                                            function($event) {
-                                              if ($event.target.composing) {
-                                                return
-                                              }
-                                              _vm.$set(
-                                                add_on,
-                                                "amount",
-                                                $event.target.value
-                                              )
-                                            },
-                                            function($event) {
-                                              delete _vm.errors[
-                                                "add_ons." + index + ".amount"
-                                              ]
-                                            }
-                                          ]
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass:
-                                            "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.alert("delete")
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c("i", {
-                                            staticClass: "far fa-trash-alt"
-                                          })
-                                        ]
-                                      )
-                                    ]),
-                                    _vm._v(" "),
-                                    _vm.errors["add_ons." + index + ".amount"]
-                                      ? _c(
-                                          "span",
-                                          { staticClass: "error-message" },
-                                          [
-                                            _vm._v(
-                                              _vm._s(
-                                                _vm.errors[
-                                                  "add_ons." + index + ".amount"
-                                                ][0]
-                                              )
-                                            )
-                                          ]
-                                        )
-                                      : _vm._e()
-                                  ]
-                                )
-                              ]
-                            )
-                          }),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "flex justify-center" }, [
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.cash_game.add_ons.push({
-                                      amount: 0
-                                    })
-                                  }
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "fas fa-plus-circle mr-2"
-                                }),
-                                _vm._v(" "),
-                                _c("span", [_vm._v("Add Add On")])
-                              ]
-                            )
-                          ])
-                        ],
-                        2
-                      )
+                    ? _c("div", { staticClass: "flex justify-center" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                            on: {
+                              click: function($event) {
+                                return _vm.addTransaction("addon", {
+                                  amount: 0
+                                })
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("Add Add On")])
+                          ]
+                        )
+                      ])
                     : _vm._e()
-                ]
+                ],
+                2
               )
             : _vm._e(),
           _vm._v(" "),
@@ -90777,6 +90558,144 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Transaction/TransactionDetails.vue":
+/*!********************************************************************!*\
+  !*** ./resources/js/components/Transaction/TransactionDetails.vue ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TransactionDetails_vue_vue_type_template_id_65648720___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TransactionDetails.vue?vue&type=template&id=65648720& */ "./resources/js/components/Transaction/TransactionDetails.vue?vue&type=template&id=65648720&");
+/* harmony import */ var _TransactionDetails_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TransactionDetails.vue?vue&type=script&lang=js& */ "./resources/js/components/Transaction/TransactionDetails.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TransactionDetails_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TransactionDetails_vue_vue_type_template_id_65648720___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TransactionDetails_vue_vue_type_template_id_65648720___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Transaction/TransactionDetails.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Transaction/TransactionDetails.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/Transaction/TransactionDetails.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TransactionDetails_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TransactionDetails.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Transaction/TransactionDetails.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TransactionDetails_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Transaction/TransactionDetails.vue?vue&type=template&id=65648720&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/components/Transaction/TransactionDetails.vue?vue&type=template&id=65648720& ***!
+  \***************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TransactionDetails_vue_vue_type_template_id_65648720___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TransactionDetails.vue?vue&type=template&id=65648720& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Transaction/TransactionDetails.vue?vue&type=template&id=65648720&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TransactionDetails_vue_vue_type_template_id_65648720___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TransactionDetails_vue_vue_type_template_id_65648720___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Transaction/TransactionSummary.vue":
+/*!********************************************************************!*\
+  !*** ./resources/js/components/Transaction/TransactionSummary.vue ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TransactionSummary_vue_vue_type_template_id_d11e2af8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TransactionSummary.vue?vue&type=template&id=d11e2af8& */ "./resources/js/components/Transaction/TransactionSummary.vue?vue&type=template&id=d11e2af8&");
+/* harmony import */ var _TransactionSummary_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TransactionSummary.vue?vue&type=script&lang=js& */ "./resources/js/components/Transaction/TransactionSummary.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TransactionSummary_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TransactionSummary_vue_vue_type_template_id_d11e2af8___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TransactionSummary_vue_vue_type_template_id_d11e2af8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Transaction/TransactionSummary.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Transaction/TransactionSummary.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/Transaction/TransactionSummary.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TransactionSummary_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TransactionSummary.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Transaction/TransactionSummary.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TransactionSummary_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Transaction/TransactionSummary.vue?vue&type=template&id=d11e2af8&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/components/Transaction/TransactionSummary.vue?vue&type=template&id=d11e2af8& ***!
+  \***************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TransactionSummary_vue_vue_type_template_id_d11e2af8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TransactionSummary.vue?vue&type=template&id=d11e2af8& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Transaction/TransactionSummary.vue?vue&type=template&id=d11e2af8&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TransactionSummary_vue_vue_type_template_id_d11e2af8___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TransactionSummary_vue_vue_type_template_id_d11e2af8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/routes.js":
 /*!********************************!*\
   !*** ./resources/js/routes.js ***!
@@ -91027,8 +90946,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       })).then(function (response) {
         commit('ADD_CASH_GAME', response.data.cash_game);
       })["catch"](function (error) {
-        console.timeEnd();
-        console.log('error', error);
         throw error;
       });
     },
@@ -91056,6 +90973,70 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /***/ }),
 
+/***/ "./resources/js/store/modules/transactions.js":
+/*!****************************************************!*\
+  !*** ./resources/js/store/modules/transactions.js ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+// Currently the GameTransactionController returns a fresh copy of the Game (as well as all it's transactions)
+// so we just replace the entire Game in the store even though we've only updated one of it's transactions.
+// This is another DB call we can remove in the future.
+// This is because we use Game.profit but this value isn't returned when we update a transaction.
+// TODO: Calculate and display profit client side by adding/subtracting all of it's transaction amounts
+// and then when updating/creating a transaction we can replace just the transaction in the store.
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: {},
+  mutations: {},
+  actions: {
+    createTransaction: function createTransaction(_ref, payload) {
+      var commit = _ref.commit;
+      return axios.post("/api/".concat(payload.transactionType), _objectSpread({}, payload.transaction, {
+        game_id: payload.game_id,
+        game_type: payload.game_type
+      })).then(function (response) {
+        commit('cash_games/UPDATE_CASH_GAME', response.data.game, {
+          root: true
+        });
+      })["catch"](function (error) {
+        throw error;
+      });
+    },
+    updateTransaction: function updateTransaction(_ref2, payload) {
+      var commit = _ref2.commit;
+      return axios.patch("/api/".concat(payload.transactionType, "/").concat(payload.transaction.id), payload.transaction).then(function (response) {
+        commit('cash_games/UPDATE_CASH_GAME', response.data.game, {
+          root: true
+        });
+      })["catch"](function (error) {
+        throw error;
+      });
+    },
+    deleteTransaction: function deleteTransaction(_ref3, payload) {
+      var commit = _ref3.commit;
+      return axios["delete"]("/api/".concat(payload.transactionType, "/").concat(payload.transaction.id)).then(function (response) {
+        commit('cash_games/UPDATE_CASH_GAME', response.data.game, {
+          root: true
+        });
+      })["catch"](function (error) {
+        throw error;
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/store/store.js":
 /*!*************************************!*\
   !*** ./resources/js/store/store.js ***!
@@ -91070,7 +91051,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _modules_bankroll__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @modules/bankroll */ "./resources/js/store/modules/bankroll.js");
 /* harmony import */ var _modules_cash_games__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @modules/cash_games */ "./resources/js/store/modules/cash_games.js");
+/* harmony import */ var _modules_transactions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @modules/transactions */ "./resources/js/store/modules/transactions.js");
 // vuex
+
 
 
 
@@ -91080,7 +91063,8 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   strict: true,
   modules: {
     bankroll: _modules_bankroll__WEBPACK_IMPORTED_MODULE_2__["default"],
-    cash_games: _modules_cash_games__WEBPACK_IMPORTED_MODULE_3__["default"]
+    cash_games: _modules_cash_games__WEBPACK_IMPORTED_MODULE_3__["default"],
+    transactions: _modules_transactions__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
   state: {
     user: {
