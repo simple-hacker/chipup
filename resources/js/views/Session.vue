@@ -199,9 +199,9 @@
 			-->
 			<div
 				v-if="(stateCashGame.buy_ins && stateCashGame.buy_ins.length > 0) || editing" 
-				class="col-span-6 md:col-span-3 flex md:flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+				class="col-span-6 md:col-span-3 flex flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 			>
-				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Buy Ins</div>
+				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Buy Ins</div>
 				<div
 					v-for="buy_in in stateCashGame.buy_ins"
 					:key="buy_in.id"
@@ -211,11 +211,10 @@
 				</div>
 				<div
 					v-if="editing"
-					class="flex justify-center"
 				>
 					<div
 						@click="addTransaction('buyin', { amount: 0 })"
-						class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
+						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
 						<i class="fas fa-plus-circle mr-2"></i>
 						<span>Add Buy In</span>
@@ -227,17 +226,16 @@
 			-->
 			<div
 				v-if="stateCashGame.cash_out_model || editing"
-				class="col-span-6 md:col-span-3 flex md:flex-col order-4 md:order-3 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+				class="col-span-6 md:col-span-3 flex flex-col order-4 md:order-3 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 			>
-				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Cash Out</div>
+				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Cash Out</div>
 				<transaction-summary v-if="stateCashGame.cash_out_model" :transaction="stateCashGame.cash_out_model" :transaction-type="'cashout'" :game-id="stateCashGame.id"></transaction-summary>
 				<div
 					v-if="editing && !stateCashGame.cash_out_model"
-					class="flex justify-center"
 				>
 					<div
 						@click="addTransaction('cashout', { amount: 0 })"
-						class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
+						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
 						<i class="fas fa-plus-circle mr-2"></i>
 						<span>Add Cash Out</span>
@@ -249,9 +247,9 @@
 			-->
 			<div
 				v-if="(stateCashGame.expenses && stateCashGame.expenses.length > 0) || editing" 
-				class="col-span-6 md:col-span-3 flex md:flex-col order-5 md:order-4 justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+				class="col-span-6 md:col-span-3 flex flex-col order-5 md:order-4 justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 			>
-				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Expenses</div>
+				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Expenses</div>
 				<div
 					v-for="expense in stateCashGame.expenses"
 					:key="expense.id"
@@ -261,11 +259,10 @@
 				</div>
 				<div
 					v-if="editing"
-					class="flex justify-center"
 				>
 					<div
 						@click="addTransaction('expense', { amount: 0, comments: '' })"
-						class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
+						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
 						<i class="fas fa-plus-circle mr-2"></i>
 						<span>Add Expense</span>
@@ -277,9 +274,9 @@
 			-->
 			<div
 				v-if="(stateCashGame.rebuys && stateCashGame.rebuys.length > 0) || editing" 
-				class="col-span-6 md:col-span-3 flex md:flex-col order-6 md:order-5 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+				class="col-span-6 md:col-span-3 flex flex-col order-6 md:order-5 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 			>
-				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Rebuys</div>
+				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Rebuys</div>
 				<div
 					v-for="rebuy in stateCashGame.rebuys"
 					:key="rebuy.id"
@@ -289,11 +286,10 @@
 				</div>
 				<div
 					v-if="editing"
-					class="flex justify-center"
 				>
 					<div
 						@click="addTransaction('rebuy', { amount: 0 })"
-						class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
+						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
 						<i class="fas fa-plus-circle mr-2"></i>
 						<span>Add Rebuy</span>
@@ -305,9 +301,9 @@
 			-->
 			<div
 				v-if="(stateCashGame.add_ons && stateCashGame.add_ons.length > 0) || editing" 
-				class="col-span-6 md:col-span-3 flex md:flex-col order-7 md:order-6 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+				class="col-span-6 md:col-span-3 flex flex-col order-7 md:order-6 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 			>
-				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Add Ons</div>
+				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Add Ons</div>
 				<div
 					v-for="add_on in stateCashGame.add_ons"
 					:key="add_on.id"
@@ -317,11 +313,10 @@
 				</div>
 				<div
 					v-if="editing"
-					class="flex justify-center"
 				>
 					<div
 						@click="addTransaction('addon', { amount: 0 })"
-						class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
+						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
 						<i class="fas fa-plus-circle mr-2"></i>
 						<span>Add Add On</span>

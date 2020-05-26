@@ -4216,11 +4216,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
 
 
 
@@ -69432,14 +69427,14 @@ var render = function() {
                 "div",
                 {
                   staticClass:
-                    "col-span-6 md:col-span-3 flex md:flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                    "col-span-6 md:col-span-3 flex flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
                 },
                 [
                   _c(
                     "div",
                     {
                       staticClass:
-                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
+                        "font-semibold md:border-b md:border-muted-dark md:p-1 mb-2"
                     },
                     [_vm._v("Buy Ins")]
                   ),
@@ -69462,12 +69457,12 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _vm.editing
-                    ? _c("div", { staticClass: "flex justify-center" }, [
+                    ? _c("div", [
                         _c(
                           "div",
                           {
                             staticClass:
-                              "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                              "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
                             on: {
                               click: function($event) {
                                 return _vm.addTransaction("buyin", {
@@ -69494,14 +69489,14 @@ var render = function() {
                 "div",
                 {
                   staticClass:
-                    "col-span-6 md:col-span-3 flex md:flex-col order-4 md:order-3 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                    "col-span-6 md:col-span-3 flex flex-col order-4 md:order-3 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
                 },
                 [
                   _c(
                     "div",
                     {
                       staticClass:
-                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
+                        "font-semibold md:border-b md:border-muted-dark md:p-1 mb-2"
                     },
                     [_vm._v("Cash Out")]
                   ),
@@ -69517,12 +69512,12 @@ var render = function() {
                     : _vm._e(),
                   _vm._v(" "),
                   _vm.editing && !_vm.stateCashGame.cash_out_model
-                    ? _c("div", { staticClass: "flex justify-center" }, [
+                    ? _c("div", [
                         _c(
                           "div",
                           {
                             staticClass:
-                              "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                              "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
                             on: {
                               click: function($event) {
                                 return _vm.addTransaction("cashout", {
@@ -69551,14 +69546,14 @@ var render = function() {
                 "div",
                 {
                   staticClass:
-                    "col-span-6 md:col-span-3 flex md:flex-col order-5 md:order-4 justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                    "col-span-6 md:col-span-3 flex flex-col order-5 md:order-4 justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3"
                 },
                 [
                   _c(
                     "div",
                     {
                       staticClass:
-                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
+                        "font-semibold md:border-b md:border-muted-dark md:p-1 mb-2"
                     },
                     [_vm._v("Expenses")]
                   ),
@@ -69581,12 +69576,12 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _vm.editing
-                    ? _c("div", { staticClass: "flex justify-center" }, [
+                    ? _c("div", [
                         _c(
                           "div",
                           {
                             staticClass:
-                              "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                              "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
                             on: {
                               click: function($event) {
                                 return _vm.addTransaction("expense", {
@@ -69615,14 +69610,14 @@ var render = function() {
                 "div",
                 {
                   staticClass:
-                    "col-span-6 md:col-span-3 flex md:flex-col order-6 md:order-5 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                    "col-span-6 md:col-span-3 flex flex-col order-6 md:order-5 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
                 },
                 [
                   _c(
                     "div",
                     {
                       staticClass:
-                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
+                        "font-semibold md:border-b md:border-muted-dark md:p-1 mb-2"
                     },
                     [_vm._v("Rebuys")]
                   ),
@@ -69645,12 +69640,12 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _vm.editing
-                    ? _c("div", { staticClass: "flex justify-center" }, [
+                    ? _c("div", [
                         _c(
                           "div",
                           {
                             staticClass:
-                              "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                              "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
                             on: {
                               click: function($event) {
                                 return _vm.addTransaction("rebuy", {
@@ -69678,14 +69673,14 @@ var render = function() {
                 "div",
                 {
                   staticClass:
-                    "col-span-6 md:col-span-3 flex md:flex-col order-7 md:order-6 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                    "col-span-6 md:col-span-3 flex flex-col order-7 md:order-6 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
                 },
                 [
                   _c(
                     "div",
                     {
                       staticClass:
-                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2"
+                        "font-semibold md:border-b md:border-muted-dark md:p-1 mb-2"
                     },
                     [_vm._v("Add Ons")]
                   ),
@@ -69708,12 +69703,12 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _vm.editing
-                    ? _c("div", { staticClass: "flex justify-center" }, [
+                    ? _c("div", [
                         _c(
                           "div",
                           {
                             staticClass:
-                              "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                              "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
                             on: {
                               click: function($event) {
                                 return _vm.addTransaction("addon", {
