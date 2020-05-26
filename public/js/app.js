@@ -3010,6 +3010,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'TransactionDetails',
@@ -3018,6 +3024,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     transactionType: String,
     gameId: Number,
     gameType: String
+  },
+  data: function data() {
+    return {
+      errors: {}
+    };
   },
   computed: {
     title: function title() {
@@ -3029,37 +3040,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     saveTransaction: function saveTransaction() {
       var _this = this;
 
-      if (this.transaction.id) {
-        // Update Transaction
-        this.$store.dispatch('transactions/updateTransaction', {
-          transaction: this.transaction,
-          transactionType: this.transactionType
-        }).then(function (response) {
-          _this.$modal.hide('dialog');
+      // If id is present then update, else create.
+      var action = this.transaction.id ? 'transactions/updateTransaction' : 'transactions/createTransaction';
+      this.$store.dispatch(action, {
+        transaction: this.transaction,
+        transactionType: this.transactionType,
+        game_id: this.gameId,
+        game_type: this.gameType
+      }).then(function (response) {
+        _this.$modal.hide('dialog');
 
-          _this.$emit('close');
+        _this.$emit('close');
 
-          _this.$snotify.success("Successfully updated ".concat(_this.transactionType, "."));
-        })["catch"](function (error) {
-          _this.$snotify.error('Error: ' + error.response.data.message);
-        });
-      } else {
-        // Create Transaction
-        this.$store.dispatch('transactions/createTransaction', {
-          transaction: this.transaction,
-          transactionType: this.transactionType,
-          game_id: this.gameId,
-          game_type: this.gameType
-        }).then(function (response) {
-          _this.$modal.hide('dialog');
+        _this.$snotify.success("Saved ".concat(_this.transactionType, "."));
+      })["catch"](function (error) {
+        _this.$snotify.error('Error: ' + error.response.data.message);
 
-          _this.$emit('close');
-
-          _this.$snotify.success("Successfully created ".concat(_this.transactionType, "."));
-        })["catch"](function (error) {
-          _this.$snotify.error('Error: ' + error.response.data.message);
-        });
-      }
+        _this.errors = error.response.data.errors;
+      });
     },
     deleteTransaction: function deleteTransaction() {
       var _this2 = this;
@@ -67230,17 +67228,29 @@ var render = function() {
             expression: "transaction.amount"
           }
         ],
+        class: { "error-input": _vm.errors.amount },
         attrs: { type: "number", min: "0" },
         domProps: { value: _vm.transaction.amount },
         on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
+          input: [
+            function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.transaction, "amount", $event.target.value)
+            },
+            function($event) {
+              delete _vm.errors.amount
             }
-            _vm.$set(_vm.transaction, "amount", $event.target.value)
-          }
+          ]
         }
-      })
+      }),
+      _vm._v(" "),
+      _vm.errors.amount
+        ? _c("span", { staticClass: "error-message" }, [
+            _vm._v(_vm._s(_vm.errors.amount[0]))
+          ])
+        : _vm._e()
     ]),
     _vm._v(" "),
     _vm.transaction.hasOwnProperty("comments")
@@ -67255,17 +67265,29 @@ var render = function() {
               }
             ],
             staticClass: "rounded border border-muted-dark p-2",
+            class: { "error-input": _vm.errors.comments },
             attrs: { row: "4", placeholder: "Add comments" },
             domProps: { value: _vm.transaction.comments },
             on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+              input: [
+                function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.transaction, "comments", $event.target.value)
+                },
+                function($event) {
+                  delete _vm.errors.comments
                 }
-                _vm.$set(_vm.transaction, "comments", $event.target.value)
-              }
+              ]
             }
-          })
+          }),
+          _vm._v(" "),
+          _vm.errors.comments
+            ? _c("span", { staticClass: "error-message" }, [
+                _vm._v(_vm._s(_vm.errors.comments[0]))
+              ])
+            : _vm._e()
         ])
       : _vm._e(),
     _vm._v(" "),

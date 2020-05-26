@@ -7,7 +7,10 @@
                 v-model="transaction.amount"
                 type="number"
                 min=0
+                :class="{'error-input' : errors.amount}"
+                @input="delete errors.amount"
             >
+            <span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
         </div>
         <div
             v-if="transaction.hasOwnProperty('comments')"
@@ -18,8 +21,11 @@
                 row=4
                 placeholder="Add comments"
                 class="rounded border border-muted-dark p-2"
+                :class="{'error-input' : errors.comments}"
+                @input="delete errors.comments"
             >
             </textarea>
+            <span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
         </div>
         <div class="flex justify-between mt-3 p-2">
 			<button
@@ -52,6 +58,11 @@ export default {
         gameId: Number,
         gameType: String,
     },
+    data() {
+        return {
+            errors: {},
+        }
+    },
     computed: {
         title() {
             let mode = (this.transaction.id) ? 'Edit' : 'Add'
@@ -61,37 +72,24 @@ export default {
     methods: {
         ...mapActions('transactions', ['createTransaction', 'updateTransaction', 'deleteTransaction']),
         saveTransaction() {
-            if (this.transaction.id) {
-                // Update Transaction
-                this.$store.dispatch('transactions/updateTransaction', {
-                    transaction: this.transaction,
-                    transactionType: this.transactionType
-                })
-                .then(response => {
-                    this.$modal.hide('dialog')
-                    this.$emit('close')
-                    this.$snotify.success(`Successfully updated ${this.transactionType}.`)
-                })
-                .catch(error => {
-                    this.$snotify.error('Error: '+error.response.data.message)
-                })
-            } else {
-                // Create Transaction
-                this.$store.dispatch('transactions/createTransaction', {
-                    transaction: this.transaction,
-                    transactionType: this.transactionType,
-                    game_id: this.gameId,
-                    game_type: this.gameType
-                })
-                .then(response => {
-                    this.$modal.hide('dialog')
-                    this.$emit('close')
-                    this.$snotify.success(`Successfully created ${this.transactionType}.`)
-                })
-                .catch(error => {
-                    this.$snotify.error('Error: '+error.response.data.message)
-                })
-            }
+            // If id is present then update, else create.
+            let action = (this.transaction.id) ? 'transactions/updateTransaction' : 'transactions/createTransaction'
+
+            this.$store.dispatch(action, {
+                transaction: this.transaction,
+                transactionType: this.transactionType,
+                game_id: this.gameId,
+                game_type: this.gameType
+            })
+            .then(response => {
+                this.$modal.hide('dialog')
+                this.$emit('close')
+                this.$snotify.success(`Saved ${this.transactionType}.`)
+            })
+            .catch(error => {
+                this.$snotify.error('Error: '+error.response.data.message)
+                this.errors = error.response.data.errors
+            })
         },
         deleteTransaction() {
 			this.$modal.show('dialog', {
