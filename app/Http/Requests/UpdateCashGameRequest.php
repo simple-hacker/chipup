@@ -22,15 +22,6 @@ class UpdateCashGameRequest extends FormRequest
             'location' => 'sometimes|string',
             'comments' => 'sometimes|nullable|string',
             'end_time' => 'sometimes|nullable|date|before_or_equal:now',
-
-            'buy_ins.*.id' => 'sometimes|exists:buy_ins',
-            'buy_ins.*.amount' => 'required|numeric|min:0',
-
-            'expenses.*.id' => 'sometimes|exists:expenses',
-            'expenses.*.amount' => 'required|numeric|min:0',
-            'expenses.*.comments' => 'sometimes|nullable|string',
-
-            'cash_out_model.amount' => 'sometimes|numeric|min:0'
         ];
 
         // If both start_time and end_time are present then start_time must be before end_time

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\CashGame;
 use App\Tournament;
 use App\Abstracts\GameTransaction;
-use App\Http\Requests\AddGameTransactionRequest;
+use App\Http\Requests\CreateGameTransactionRequest;
 use App\Http\Requests\UpdateGameTransactionRequest;
 
 abstract class GameTransactionController extends Controller
@@ -14,12 +14,12 @@ abstract class GameTransactionController extends Controller
     protected $transaction_relationship;
 
     /**
-    * Add a buy in to the CashGame
+    * Create a transaction to the CashGame
     * 
-    * @param AddGameTransactionRequest $request
+    * @param CreateGameTransactionRequest $request
     * @return json
     */
-    public function add(AddGameTransactionRequest $request)
+    public function create(CreateGameTransactionRequest $request)
     {
         // Get the model for the correct GameType
         switch ($request->game_type) {
@@ -35,8 +35,6 @@ abstract class GameTransactionController extends Controller
 
         // Authorize that the user can manage the game_type
         $this->authorize('manage', $game_type);
-
-        // dd($request->validated());
 
         try {
             $game_transaction = $game_type->addTransaction($this->transaction_type, $request->amount);
@@ -59,8 +57,8 @@ abstract class GameTransactionController extends Controller
     }
 
     /**
-    * Retrieve the Buy In
-    * Make sure it belongs to the correct cash_game
+    * Retrieve the Transaction
+    * Make sure it belongs to the correct game_type
     * 
     * @param GameTransaction $game_transaction
     * @return json
@@ -84,8 +82,6 @@ abstract class GameTransactionController extends Controller
     */
     public function update(GameTransaction $game_transaction, UpdateGameTransactionRequest $request)
     {
-        // dd($request->validated());
-
         $this->authorize('manage', $game_transaction);
 
         // Only updated the validated request data.
@@ -99,7 +95,7 @@ abstract class GameTransactionController extends Controller
     }
 
     /**
-    * Destroy the Buy In
+    * Destroy the Transaction
     * 
     * @param GameTransaction $game_transaction
     * @return json

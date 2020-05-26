@@ -15,7 +15,7 @@ class AddOnTest extends TestCase
         $user = factory('App\User')->create();
         $tournament = $user->startTournament($this->getTournamentAttributes());
 
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
                     'id' => $tournament->game_type,
                     'game_type' => 'tournament',
                     'amount' => 500
@@ -27,7 +27,7 @@ class AddOnTest extends TestCase
     {
         $tournament = $this->startLiveTournament();
 
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
                     'id' => $tournament->id,
                     'game_type' => $tournament->game_type,
                     'amount' => 500
@@ -44,7 +44,7 @@ class AddOnTest extends TestCase
         $this->signIn();
 
         // ID 500 does not exist, assert 404
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
                     'id' => 99,
                     'game_type' => 'tournament',
                     'amount' => 500
@@ -58,12 +58,12 @@ class AddOnTest extends TestCase
     {
         $tournament = $this->startLiveTournament();
 
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
             'id' => $tournament->id,
             'game_type' => $tournament->game_type,
             'amount' => 500
         ]);
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
             'id' => $tournament->id,
             'game_type' => $tournament->game_type,
             'amount' => 1000
@@ -77,7 +77,7 @@ class AddOnTest extends TestCase
     {
         $tournament = $this->startLiveTournament();
 
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
             'id' => $tournament->id,
             'game_type' => $tournament->game_type,
             'amount' => 500
@@ -96,7 +96,7 @@ class AddOnTest extends TestCase
     {
         $tournament = $this->startLiveTournament();
 
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
             'id' => $tournament->id,
             'game_type' => $tournament->game_type,
             'amount' => 500
@@ -119,7 +119,7 @@ class AddOnTest extends TestCase
     {
         $tournament = $this->startLiveTournament();
 
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
             'id' => $tournament->id,
             'game_type' => $tournament->game_type,
             'amount' => 500
@@ -143,7 +143,7 @@ class AddOnTest extends TestCase
         $tournament = $this->startLiveTournament();
 
         // Test not sending amount
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
                     'id' => $tournament->id,
                     'game_type' => $tournament->game_type,
                 ])
@@ -151,7 +151,7 @@ class AddOnTest extends TestCase
 
         // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
                     'id' => $tournament->id,
                     'game_type' => $tournament->game_type,
                     'amount' => 55.52
@@ -159,7 +159,7 @@ class AddOnTest extends TestCase
                 ->assertOk();
                 
         // Test negative numbers
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
                     'id' => $tournament->id,
                     'game_type' => $tournament->game_type,
                     'amount' => -10
@@ -167,7 +167,7 @@ class AddOnTest extends TestCase
                 ->assertStatus(422);
 
         // Test string
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
                     'id' => $tournament->id,
                     'game_type' => $tournament->game_type,
                     'amount' => 'Invalid'
@@ -175,7 +175,7 @@ class AddOnTest extends TestCase
                 ->assertStatus(422);
 
         // Zero should be okay
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
                     'id' => $tournament->id,
                     'game_type' => $tournament->game_type,
                     'amount' => 0
@@ -187,7 +187,7 @@ class AddOnTest extends TestCase
     {
         $tournament = $this->startLiveTournament();
 
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
             'id' => $tournament->id,
             'game_type' => $tournament->game_type,
             'amount' => 500
@@ -216,7 +216,7 @@ class AddOnTest extends TestCase
         // User1 creates a Tournament and adds a AddOn
         $user1 = $this->signIn();
         $tournament = $user1->startTournament($this->getTournamentAttributes());
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
             'id' => $tournament->id,
             'game_type' => $tournament->game_type,
             'amount' => 500
@@ -227,7 +227,7 @@ class AddOnTest extends TestCase
         $user2 = $this->signIn();
 
         // User2 tries to Add AddOn to User1's Tournament
-        $this->postJson(route('addon.add'), [
+        $this->postJson(route('addon.create'), [
                     'id' => $tournament->id,
                     'game_type' => $tournament->game_type,
                     'amount' => 1000
