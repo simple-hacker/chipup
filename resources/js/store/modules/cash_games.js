@@ -54,6 +54,8 @@ export default {
                 commit('ADD_CASH_GAME', response.data.cash_game)
             })
             .catch(error => {
+                console.timeEnd()
+                console.log('error', error)
                 throw error
             })
         },
@@ -73,7 +75,7 @@ export default {
         deleteCashGame({ commit }, cash_game) {
             return axios.delete('/api/cash/'+cash_game.id)
             .then(response => {
-                commit('REMOVE_CASH_GAME', cash_game)
+                commit('REMOVE_CASH_GAME', cash_game)          
             })
             .catch(error => {
                 throw error

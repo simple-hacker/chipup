@@ -4177,11 +4177,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       this.updateCashGame(this.cash_game).then(function (response) {
-        _this.$snotify.success('Saved changes.');
+        _this.$snotify.success('Changes saved.');
 
         _this.editing = false;
-        _this.cash_game = _this.stringifyCashGame(stateCashGame);
-        console.log(_this.cash_game);
+        _this.cash_game = _this.stringifyCashGame(_this.stateCashGame);
       })["catch"](function (error) {
         _this.$snotify.error('Error: ' + error.response.data.message);
 
@@ -68609,7 +68608,7 @@ var render = function() {
                     !_vm.editing
                       ? _c("span", {
                           domProps: {
-                            textContent: _vm._s(_vm.cash_game.location)
+                            textContent: _vm._s(_vm.stateCashGame.location)
                           }
                         })
                       : _vm._e(),
@@ -68669,7 +68668,7 @@ var render = function() {
                     !_vm.editing
                       ? _c("span", {
                           domProps: {
-                            textContent: _vm._s(_vm.cash_game.stake.stake)
+                            textContent: _vm._s(_vm.stateCashGame.stake.stake)
                           }
                         })
                       : _vm._e(),
@@ -68747,9 +68746,9 @@ var render = function() {
                       ? _c("span", {
                           domProps: {
                             textContent: _vm._s(
-                              _vm.cash_game.limit.limit +
+                              _vm.stateCashGame.limit.limit +
                                 " " +
-                                _vm.cash_game.variant.variant
+                                _vm.stateCashGame.variant.variant
                             )
                           }
                         })
@@ -68887,7 +68886,7 @@ var render = function() {
                       ? _c("span", {
                           domProps: {
                             textContent: _vm._s(
-                              _vm.cash_game.table_size.table_size
+                              _vm.stateCashGame.table_size.table_size
                             )
                           }
                         })
@@ -68968,7 +68967,7 @@ var render = function() {
                       ? _c("span", {
                           domProps: {
                             textContent: _vm._s(
-                              _vm.formatDate(_vm.cash_game.start_time)
+                              _vm.formatDate(_vm.stateCashGame.start_time)
                             )
                           }
                         })
@@ -69032,7 +69031,7 @@ var render = function() {
                       ? _c("span", {
                           domProps: {
                             textContent: _vm._s(
-                              _vm.formatDate(_vm.cash_game.end_time)
+                              _vm.formatDate(_vm.stateCashGame.end_time)
                             )
                           }
                         })
@@ -69087,7 +69086,7 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          (_vm.cash_game.buy_ins && _vm.cash_game.buy_ins.length > 0) ||
+          (_vm.stateCashGame.buy_ins && _vm.stateCashGame.buy_ins.length > 0) ||
           _vm.editing
             ? _c(
                 "div",
@@ -69109,7 +69108,7 @@ var render = function() {
                     ? _c(
                         "div",
                         { staticClass: "self-center" },
-                        _vm._l(_vm.cash_game.buy_ins, function(buy_in) {
+                        _vm._l(_vm.stateCashGame.buy_ins, function(buy_in) {
                           return _c("div", {
                             key: buy_in.id,
                             staticClass: "p-1 text-lg",
@@ -69251,7 +69250,7 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          _vm.cash_game.cash_out_model || _vm.editing
+          _vm.stateCashGame.cash_out_model || _vm.editing
             ? _c(
                 "div",
                 {
@@ -69274,7 +69273,7 @@ var render = function() {
                         domProps: {
                           textContent: _vm._s(
                             _vm.formatCurrency(
-                              _vm.cash_game.cash_out_model.amount
+                              _vm.stateCashGame.cash_out_model.amount
                             )
                           )
                         }
@@ -69351,7 +69350,8 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          (_vm.cash_game.expenses && _vm.cash_game.expenses.length > 0) ||
+          (_vm.stateCashGame.expenses &&
+            _vm.stateCashGame.expenses.length > 0) ||
           _vm.editing
             ? _c(
                 "div",
@@ -69373,7 +69373,7 @@ var render = function() {
                     ? _c(
                         "div",
                         { staticClass: "flex flex-col self-center w-full" },
-                        _vm._l(_vm.cash_game.expenses, function(expense) {
+                        _vm._l(_vm.stateCashGame.expenses, function(expense) {
                           return _c(
                             "div",
                             {
@@ -69517,7 +69517,7 @@ var render = function() {
                                             "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
                                           on: {
                                             click: function($event) {
-                                              return _vm.session.expenses.splice(
+                                              return _vm.cash_game.expenses.splice(
                                                 index,
                                                 1
                                               )
@@ -69607,7 +69607,7 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          (_vm.cash_game.rebuys && _vm.cash_game.rebuys.length > 0) ||
+          (_vm.stateCashGame.rebuys && _vm.stateCashGame.rebuys.length > 0) ||
           _vm.editing
             ? _c(
                 "div",
@@ -69629,7 +69629,7 @@ var render = function() {
                     ? _c(
                         "div",
                         { staticClass: "self-center" },
-                        _vm._l(_vm.cash_game.rebuys, function(rebuy) {
+                        _vm._l(_vm.stateCashGame.rebuys, function(rebuy) {
                           return _c("div", {
                             key: rebuy.id,
                             staticClass: "p-1 text-lg",
@@ -69768,7 +69768,7 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          (_vm.cash_game.add_ons && _vm.cash_game.add_ons.length > 0) ||
+          (_vm.stateCashGame.add_ons && _vm.stateCashGame.add_ons.length > 0) ||
           _vm.editing
             ? _c(
                 "div",
@@ -69790,7 +69790,7 @@ var render = function() {
                     ? _c(
                         "div",
                         { staticClass: "self-center" },
-                        _vm._l(_vm.cash_game.add_ons, function(add_on) {
+                        _vm._l(_vm.stateCashGame.add_ons, function(add_on) {
                           return _c("div", {
                             key: add_on.id,
                             staticClass: "p-1 text-lg",
@@ -91027,6 +91027,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       })).then(function (response) {
         commit('ADD_CASH_GAME', response.data.cash_game);
       })["catch"](function (error) {
+        console.timeEnd();
+        console.log('error', error);
         throw error;
       });
     },

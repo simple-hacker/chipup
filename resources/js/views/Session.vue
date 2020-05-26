@@ -19,7 +19,7 @@
 						<i class="fas fa-map-marker-alt"></i>
 					</div>
 					<div class="w-full">
-						<span v-if="!editing" v-text="cash_game.location"></span>
+						<span v-if="!editing" v-text="stateCashGame.location"></span>
 						<div v-if="editing" class="flex flex-col">
 							<input
 								type="text"
@@ -42,7 +42,7 @@
 							<i class="fas fa-coins"></i>
 						</div>
 						<div class="w-full">
-							<span v-if="!editing" v-text="cash_game.stake.stake"></span>
+							<span v-if="!editing" v-text="stateCashGame.stake.stake"></span>
 							<div v-if="editing" class="flex flex-col">
 								<select
 									v-model="cash_game.stake_id"
@@ -71,7 +71,7 @@
 						<i class="fas fa-stream"></i>
 					</div>
 					<div class="w-full">
-						<span v-if="!editing" v-text="`${cash_game.limit.limit} ${cash_game.variant.variant}`"></span>
+						<span v-if="!editing" v-text="`${stateCashGame.limit.limit} ${stateCashGame.variant.variant}`"></span>
 						<div v-if="editing" class="flex w-full">
 							<div class="flex flex-1 flex-col">
 								<select
@@ -118,7 +118,7 @@
 						<i class="fas fa-user-friends"></i>
 					</div>
 					<div class="w-full">
-						<span v-if="!editing" v-text="cash_game.table_size.table_size"></span>
+						<span v-if="!editing" v-text="stateCashGame.table_size.table_size"></span>
 						<div v-if="editing" class="flex flex-col">
 							<select
 								v-model="cash_game.table_size_id"
@@ -149,7 +149,7 @@
 						<i class="far fa-clock"></i>
 					</div>
 					<div class="w-full">
-						<span v-if="!editing" v-text="formatDate(cash_game.start_time)"></span>
+						<span v-if="!editing" v-text="formatDate(stateCashGame.start_time)"></span>
 						<div v-if="editing" class="flex flex-col">
 							<datetime
 								v-model="cash_game.start_time"
@@ -175,7 +175,7 @@
 						<i class="fas fa-clock"></i>
 					</div>
 					<div class="w-full">
-						<span v-if="!editing" v-text="formatDate(cash_game.end_time)"></span>
+						<span v-if="!editing" v-text="formatDate(stateCashGame.end_time)"></span>
 						<div v-if="editing" class="flex flex-col">
 							<datetime
 								v-model="cash_game.end_time"
@@ -198,12 +198,12 @@
 				BUY INS
 			-->
 			<div
-				v-if="(cash_game.buy_ins && cash_game.buy_ins.length > 0) || editing" 
+				v-if="(stateCashGame.buy_ins && stateCashGame.buy_ins.length > 0) || editing" 
 				class="col-span-6 md:col-span-3 flex md:flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3">
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Buy Ins</div>
 				<div v-if="!editing" class="self-center">
 					<div
-						v-for="buy_in in cash_game.buy_ins"
+						v-for="buy_in in stateCashGame.buy_ins"
 						:key="buy_in.id"
 						v-text="formatCurrency(buy_in.amount)"
 						class="p-1 text-lg"
@@ -245,12 +245,12 @@
 				CASH OUT
 			-->
 			<div
-				v-if="cash_game.cash_out_model || editing"
+				v-if="stateCashGame.cash_out_model || editing"
 				class="col-span-6 md:col-span-3 flex md:flex-col order-4 md:order-3 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3">
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Cash Out</div>
 				<div
 					v-if="!editing"
-					v-text="formatCurrency(cash_game.cash_out_model.amount)"
+					v-text="formatCurrency(stateCashGame.cash_out_model.amount)"
 					class="p-1 text-lg self-center"
 				>
 				</div>
@@ -278,14 +278,14 @@
 				EXPENSES
 			-->
 			<div
-				v-if="(cash_game.expenses && cash_game.expenses.length > 0) || editing" 
+				v-if="(stateCashGame.expenses && stateCashGame.expenses.length > 0) || editing" 
 				class="col-span-6 md:col-span-3 flex md:flex-col order-5 md:order-4 justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3">
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Expenses</div>
 				<div
 					v-if="!editing"
 					class="flex flex-col self-center w-full">
 					<div
-						v-for="expense in cash_game.expenses"
+						v-for="expense in stateCashGame.expenses"
 						:key="expense.id"
 						class="flex mb-1 p-1 text-lg justify-end md:justify-around">
 						<div class="order-last md:order-first" v-text="formatCurrency(expense.amount)"></div>
@@ -316,7 +316,7 @@
 									:class="{'error-input' : errors[`expenses.${index}.comments`]}"
 									@input="delete errors[`expenses.${index}.comments`]"
 								>
-								<button @click="session.expenses.splice(index, 1)" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="fas fa-times"></i></button>
+								<button @click="cash_game.expenses.splice(index, 1)" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="fas fa-times"></i></button>
 							</div>
 							<span v-if="errors[`expenses.${index}.amount`]" class="error-message">{{ errors[`expenses.${index}.amount`][0] }}</span>
 							<span v-if="errors[`expenses.${index}.comments`]" class="error-message">{{ errors[`expenses.${index}.comments`][0] }}</span>
@@ -336,12 +336,12 @@
 				REBUYS
 			-->
 			<div
-				v-if="(cash_game.rebuys && cash_game.rebuys.length > 0) || editing" 
+				v-if="(stateCashGame.rebuys && stateCashGame.rebuys.length > 0) || editing" 
 				class="col-span-6 md:col-span-3 flex md:flex-col order-6 md:order-5 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3">
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Rebuys</div>
 				<div v-if="!editing" class="self-center">
 					<div
-						v-for="rebuy in cash_game.rebuys"
+						v-for="rebuy in stateCashGame.rebuys"
 						:key="rebuy.id"
 						v-text="formatCurrency(rebuy.amount)"
 						class="p-1 text-lg"
@@ -383,12 +383,12 @@
 				ADD ONS
 			-->
 			<div
-				v-if="(cash_game.add_ons && cash_game.add_ons.length > 0) || editing" 
+				v-if="(stateCashGame.add_ons && stateCashGame.add_ons.length > 0) || editing" 
 				class="col-span-6 md:col-span-3 flex md:flex-col order-7 md:order-6 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3">
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2">Add Ons</div>
 				<div v-if="!editing" class="self-center">
 					<div
-						v-for="add_on in cash_game.add_ons"
+						v-for="add_on in stateCashGame.add_ons"
 						:key="add_on.id"
 						v-text="formatCurrency(add_on.amount)"
 						class="p-1 text-lg"
@@ -580,10 +580,9 @@ export default {
 		saveSession() {
 			this.updateCashGame(this.cash_game)
 			.then(response => {
-				this.$snotify.success('Saved changes.')
+				this.$snotify.success('Changes saved.')
 				this.editing = false
-				this.cash_game = this.stringifyCashGame(stateCashGame)
-				console.log(this.cash_game)
+				this.cash_game = this.stringifyCashGame(this.stateCashGame)
 			})
 			.catch(error => {
 				this.$snotify.error('Error: '+error.response.data.message)
@@ -603,8 +602,8 @@ export default {
 						handler: () => { 
                             this.deleteCashGame(this.cash_game)
                             .then(response => {
-                                this.$modal.hide('dialog');
-                                this.$router.push({ name: 'sessions' })
+								this.$modal.hide('dialog')
+								this.$router.push({ name: 'sessions' })
                                 this.$snotify.warning('Successfully deleted cash game.')
                             })
                             .catch(error => {
