@@ -16,7 +16,7 @@ class CashOutTest extends TestCase
         $cash_game = $user->startCashGame();
 
         $this->postJson(route('cashout.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 500
                 ])
@@ -28,7 +28,7 @@ class CashOutTest extends TestCase
         $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('cashout.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 500
                 ])
@@ -45,7 +45,7 @@ class CashOutTest extends TestCase
 
         // ID 500 does not exist, assert 404
         $this->postJson(route('cashout.create', ['cash_game' => 500]), [
-                    'id' => 99,
+                    'game_id' => 99,
                     'game_type' => 'tournament',
                     'amount' => 500
                 ])
@@ -60,14 +60,14 @@ class CashOutTest extends TestCase
 
         // Cash Out should be Ok
         $this->postJson(route('cashout.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 500
                 ])->assertOk();
 
         // Assert 422 to CashOut a second time.
         $this->postJson(route('cashout.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 1000
                 ])->assertStatus(422);
@@ -83,7 +83,7 @@ class CashOutTest extends TestCase
         $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('cashout.create'), [
-            'id' => $cash_game->id,
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
@@ -102,7 +102,7 @@ class CashOutTest extends TestCase
         $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('cashout.create'), [
-            'id' => $cash_game->id,
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
@@ -125,7 +125,7 @@ class CashOutTest extends TestCase
         $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('cashout.create'), [
-            'id' => $cash_game->id,
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
@@ -150,7 +150,7 @@ class CashOutTest extends TestCase
 
         // Test not sending amount
         $this->postJson(route('cashout.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                 ])
                 ->assertStatus(422);
@@ -158,7 +158,7 @@ class CashOutTest extends TestCase
         // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
         $this->postJson(route('cashout.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 55.52
                 ])
@@ -166,7 +166,7 @@ class CashOutTest extends TestCase
                 
         // Test negative numbers
         $this->postJson(route('cashout.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => -10
                 ])
@@ -174,7 +174,7 @@ class CashOutTest extends TestCase
 
         // Test string
         $this->postJson(route('cashout.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 'Invalid'
                 ])
@@ -185,7 +185,7 @@ class CashOutTest extends TestCase
         $cash_game->cashOutModel->delete();
         // Zero should be okay
         $this->postJson(route('cashout.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 0
                 ])
@@ -197,7 +197,7 @@ class CashOutTest extends TestCase
         $cash_game = $this->signIn()->startCashGame();
 
         $this->postJson(route('cashout.create'), [
-            'id' => $cash_game->id,
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
@@ -226,7 +226,7 @@ class CashOutTest extends TestCase
         $user1 = $this->signIn();
         $cash_game = $user1->startCashGame();
         $this->postJson(route('cashout.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,    
                     'amount' => 500
                 ]);
@@ -237,7 +237,7 @@ class CashOutTest extends TestCase
 
         // User2 tries to Add CashOut to User1's CashGame
         $this->postJson(route('cashout.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 1000
                 ])

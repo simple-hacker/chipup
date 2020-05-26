@@ -16,7 +16,7 @@ class BuyInTest extends TestCase
         $cash_game = $user->startCashGame();
 
         $this->postJson(route('buyin.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 500
                 ])
@@ -28,7 +28,7 @@ class BuyInTest extends TestCase
         $cash_game = $this->startLiveCashGame();
 
         $this->postJson(route('buyin.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 500
                 ])
@@ -45,7 +45,7 @@ class BuyInTest extends TestCase
 
         // ID 500 does not exist, assert 404
         $this->postJson(route('buyin.create', ['cash_game' => 500]), [
-                    'id' => 99,
+                    'game_id' => 99,
                     'game_type' => 'cash_game',
                     'amount' => 500
                 ])
@@ -59,12 +59,12 @@ class BuyInTest extends TestCase
         $cash_game = $this->startLiveCashGame();
 
         $this->postJson(route('buyin.create'), [
-            'id' => $cash_game->id,
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
         $this->postJson(route('buyin.create'), [
-            'id' => $cash_game->id,
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 1000
         ]);
@@ -78,7 +78,7 @@ class BuyInTest extends TestCase
         $cash_game = $this->startLiveCashGame();
 
         $this->postJson(route('buyin.create'), [
-            'id' => $cash_game->id,
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
@@ -97,7 +97,7 @@ class BuyInTest extends TestCase
         $cash_game = $this->startLiveCashGame();
 
         $this->postJson(route('buyin.create'), [
-            'id' => $cash_game->id,
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
@@ -120,7 +120,7 @@ class BuyInTest extends TestCase
         $cash_game = $this->startLiveCashGame();
 
         $this->postJson(route('buyin.create'), [
-            'id' => $cash_game->id,
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
@@ -144,7 +144,7 @@ class BuyInTest extends TestCase
 
         // Test not sending amount
         $this->postJson(route('buyin.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                 ])
                 ->assertStatus(422);
@@ -152,7 +152,7 @@ class BuyInTest extends TestCase
         // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
         $this->postJson(route('buyin.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 55.52
                 ])
@@ -160,7 +160,7 @@ class BuyInTest extends TestCase
                 
         // Test negative numbers
         $this->postJson(route('buyin.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => -10
                 ])
@@ -168,7 +168,7 @@ class BuyInTest extends TestCase
 
         // Test string
         $this->postJson(route('buyin.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 'Invalid'
                 ])
@@ -176,7 +176,7 @@ class BuyInTest extends TestCase
 
         // Zero should be okay
         $this->postJson(route('buyin.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 0
                 ])
@@ -188,7 +188,7 @@ class BuyInTest extends TestCase
         $cash_game = $this->startLiveCashGame();
 
         $this->postJson(route('buyin.create'), [
-            'id' => $cash_game->id,
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
@@ -217,7 +217,7 @@ class BuyInTest extends TestCase
         $user1 = $this->signIn();
         $cash_game = $user1->startCashGame();
         $this->postJson(route('buyin.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 500
                 ]);
@@ -228,7 +228,7 @@ class BuyInTest extends TestCase
 
         // User2 tries to Add BuyIn to User1's CashGame
         $this->postJson(route('buyin.create'), [
-                    'id' => $cash_game->id,
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 1000
                 ])

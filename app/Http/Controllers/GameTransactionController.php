@@ -24,20 +24,20 @@ abstract class GameTransactionController extends Controller
         // Get the model for the correct GameType
         switch ($request->game_type) {
             case 'cash_game':
-                $game_type = CashGame::findOrFail($request->id);
+                $game = CashGame::findOrFail($request->game_id);
                 break;
             case 'tournament':
-                $game_type = Tournament::findOrFail($request->id);
+                $game = Tournament::findOrFail($request->game_id);
                 break;
             default:
                 abort(422, 'Invalid GameType was supplied');
         }
 
-        // Authorize that the user can manage the game_type
-        $this->authorize('manage', $game_type);
+        // Authorize that the user can manage the game
+        $this->authorize('manage', $game);
 
         try {
-            $game_transaction = $game_type->addTransaction($this->transaction_type, $request->amount);
+            $game_transaction = $game->addTransaction($this->transaction_type, $request->amount);
 
             // Add Comments
             if ($request->comments) {
@@ -46,7 +46,8 @@ abstract class GameTransactionController extends Controller
 
             return response()->json([
                 'success' => true,
-                'transaction' => $game_transaction
+                'transaction' => $game_transaction,
+                'game' => $game->fresh(),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -90,7 +91,8 @@ abstract class GameTransactionController extends Controller
 
         return response()->json([
             'success' => true,
-            'transaction' => $game_transaction
+            'transaction' => $game_transaction,
+            'game' => $game_transaction->game->fresh(),
         ]);
     }
 
@@ -107,7 +109,8 @@ abstract class GameTransactionController extends Controller
         $success = $game_transaction->delete();
 
         return response()->json([
-            'success' => $success
+            'success' => $success,
+            'game' => $game_transaction->game->fresh(),
         ]);
     }
 }
