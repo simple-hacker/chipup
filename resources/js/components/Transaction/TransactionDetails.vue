@@ -28,21 +28,25 @@
             <span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
         </div>
         <div class="flex justify-between mt-3 p-2">
-			<button
-                v-if="transaction.id"
-                @click.prevent="deleteTransaction"
-                type="button"
-                class="bg-red-500 hover:bg-red-600 focus:bg-red-600 rounded text-white text-sm px-4 py-2"
-            >
-                <i class="fas fa-trash mr-3"></i><span>Delete</span>
-            </button>
-			<button
-                @click.prevent="saveTransaction"
-                type="button"
-                class="bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2"
-            >
-                <i class="fas fa-check mr-3"></i><span>Save Changes</span>
-            </button>
+            <div>
+                <button
+                    v-if="transaction.id"
+                    @click.prevent="deleteTransaction"
+                    type="button"
+                    class="bg-red-500 hover:bg-red-600 focus:bg-red-600 rounded text-white text-sm px-4 py-2"
+                >
+                    <i class="fas fa-trash mr-3"></i><span>Delete</span>
+                </button>
+            </div>
+            <div>
+                <button
+                    @click.prevent="saveTransaction"
+                    type="button"
+                    class="bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2"
+                >
+                    <i class="fas fa-check mr-3"></i><span>Save Changes</span>
+                </button>
+            </div>
 		</div>
     </div>
 </template>

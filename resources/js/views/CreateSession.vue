@@ -238,7 +238,7 @@
 						<div class="flex justify-center items-center">
 							<div
 								@click="cash_game.buy_ins.push({ amount: 0})"
-								class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
+								class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 							>
 								<i class="fas fa-plus-circle mr-2"></i>
 								<span>Add Buy In</span>
@@ -271,7 +271,7 @@
 				EXPENSES
 			-->
 			<div
-				class="col-span-6 md:col-span-3 flex md:flex-col justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3">
+				class="col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3">
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0">Expenses</div>
 				<div class="flex flex-col justify-center flex-1">
 					<div
@@ -306,7 +306,7 @@
 					<div class="flex justify-center items-center">
 						<div
 							@click="session.expenses.push({ amount: 0, comments: ''})"
-							class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
+							class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 						>
 							<i class="fas fa-plus-circle mr-2"></i>
 							<span>Add Expense</span>
@@ -318,40 +318,38 @@
 				REBUYS
 			-->
 			<div
-				v-show-slide="game_type === 'tournament'"
-				class="col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg"
+				v-if="game_type === 'tournament'"
+				class="col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 			>
-				<div class="p-3">
-					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0">Rebuys</div>
-					<div class="flex flex-col justify-center flex-1">
-						<div
-							v-for="(rebuy, index) in tournament.rebuys"
-							:key="index"
-							class="flex mb-2"
-						>
-							<div class="flex flex-col w-full">
-								<div class="flex">
-									<input
-										v-model="rebuy.amount"
-										type="number"
-										min="0"
-										class="p-1"
-										:class="{'error-input' : errors[`rebuys.${index}.amount`]}"
-										@input="delete errors[`rebuys.${index}.amount`]"
-									>
-									<button @click="tournament.rebuys.splice(index, 1)" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="fas fa-times"></i></button>
-								</div>
-								<span v-if="errors[`rebuys.${index}.amount`]" class="error-message">{{ errors[`rebuys.${index}.amount`][0] }}</span>
+				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0">Rebuys</div>
+				<div class="flex flex-col justify-center flex-1">
+					<div
+						v-for="(rebuy, index) in tournament.rebuys"
+						:key="index"
+						class="flex mb-2"
+					>
+						<div class="flex flex-col w-full">
+							<div class="flex">
+								<input
+									v-model="rebuy.amount"
+									type="number"
+									min="0"
+									class="p-1"
+									:class="{'error-input' : errors[`rebuys.${index}.amount`]}"
+									@input="delete errors[`rebuys.${index}.amount`]"
+								>
+								<button @click="tournament.rebuys.splice(index, 1)" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="fas fa-times"></i></button>
 							</div>
+							<span v-if="errors[`rebuys.${index}.amount`]" class="error-message">{{ errors[`rebuys.${index}.amount`][0] }}</span>
 						</div>
-						<div class="flex justify-center items-center">
-							<div
-								@click="tournament.rebuys.push({ amount: 0})"
-								class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
-							>
-								<i class="fas fa-plus-circle mr-2"></i>
-								<span>Add Rebuy</span>
-							</div>
+					</div>
+					<div class="flex justify-center items-center">
+						<div
+							@click="tournament.rebuys.push({ amount: 0})"
+							class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
+						>
+							<i class="fas fa-plus-circle mr-2"></i>
+							<span>Add Rebuy</span>
 						</div>
 					</div>
 				</div>
@@ -360,40 +358,38 @@
 				ADD ONS
 			-->
 			<div
-				v-show-slide="game_type === 'tournament'"
-				class="col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg"
+				v-if="game_type === 'tournament'"
+				class="col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 			>
-				<div class="p-3">
-					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0">Add Ons</div>
-					<div class="flex flex-col justify-center flex-1">
-						<div
-							v-for="(add_on, index) in tournament.add_ons"
-							:key="index"
-							class="flex mb-2"
-						>
-							<div class="flex flex-col w-full">
-								<div class="flex">
-									<input
-										v-model="add_on.amount"
-										type="number"
-										min="0"
-										class="p-1"
-										:class="{'error-input' : errors[`add_ons.${index}.amount`]}"
-										@input="delete errors[`add_ons.${index}.amount`]"
-									>
-									<button @click="tournament.add_ons.splice(index, 1)" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="fas fa-times"></i></button>
-								</div>
-								<span v-if="errors[`add_ons.${index}.amount`]" class="error-message">{{ errors[`add_ons.${index}.amount`][0] }}</span>
+				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0">Add Ons</div>
+				<div class="flex flex-col justify-center flex-1">
+					<div
+						v-for="(add_on, index) in tournament.add_ons"
+						:key="index"
+						class="flex mb-2"
+					>
+						<div class="flex flex-col w-full">
+							<div class="flex">
+								<input
+									v-model="add_on.amount"
+									type="number"
+									min="0"
+									class="p-1"
+									:class="{'error-input' : errors[`add_ons.${index}.amount`]}"
+									@input="delete errors[`add_ons.${index}.amount`]"
+								>
+								<button @click="tournament.add_ons.splice(index, 1)" class="ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2"><i class="fas fa-times"></i></button>
 							</div>
+							<span v-if="errors[`add_ons.${index}.amount`]" class="error-message">{{ errors[`add_ons.${index}.amount`][0] }}</span>
 						</div>
-						<div class="flex justify-center items-center">
-							<div
-								@click="tournament.add_ons.push({ amount: 0})"
-								class="rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer"
-							>
-								<i class="fas fa-plus-circle mr-2"></i>
-								<span>Add Add On</span>
-							</div>
+					</div>
+					<div class="flex justify-center items-center">
+						<div
+							@click="tournament.add_ons.push({ amount: 0})"
+							class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
+						>
+							<i class="fas fa-plus-circle mr-2"></i>
+							<span>Add Add On</span>
 						</div>
 					</div>
 				</div>
