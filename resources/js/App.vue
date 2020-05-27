@@ -12,10 +12,12 @@
                 </router-link>
             </h1>
             <router-link
-				:to="{ name: 'session' }"
-				class="btn-green"
+				:to="{ name: 'live' }"
+				class="btn btn-green"
+                :class="!sessionInProgress ? 'btn btn-green' : 'btn-red'"
 			>
-			Start Session
+                <div v-if="!sessionInProgress">Start Session</div>
+                <div v-if="sessionInProgress"><i class="fas fa-circle-notch fa-spin mr-2"></i>In Progress</div>
 			</router-link>
         </nav>
 
@@ -77,12 +79,22 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'App',
     data(){
         return {
             sessionsScrollTo: 0,
         }
+    },
+    computed: {
+        ...mapGetters('live', ['sessionInProgress']),
+    },
+    beforeCreate() {
+        this.$store.dispatch('bankroll/getBankrollTransactions')
+        this.$store.dispatch('cash_games/getCashGames')
+        this.$store.dispatch('live/retrieveLiveSession')
     },
     created() {
         // App uses main-content ref=scroll as a scrollable div for main content, where as vue-router uses window.scrollTop for scrollBehaviour
@@ -109,9 +121,6 @@ export default {
                 this.$refs.scroll.scrollTop = scrollTo
             });
         });
-
-        this.$store.dispatch('bankroll/getBankrollTransactions')
-        this.$store.dispatch('cash_games/getCashGames')
     },
 }
 </script>

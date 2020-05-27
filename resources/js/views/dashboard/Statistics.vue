@@ -69,7 +69,7 @@
 		<div class="mt-4 flex justify-end">
 			<router-link
 				:to="{ name: 'statistics' }"
-				class="btn-green"
+				class="btn btn-green"
 			>
 			View more statistics
 			</router-link>

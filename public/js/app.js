@@ -2131,6 +2131,13 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2209,12 +2216,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'App',
   data: function data() {
     return {
       sessionsScrollTo: 0
     };
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('live', ['sessionInProgress'])),
+  beforeCreate: function beforeCreate() {
+    this.$store.dispatch('bankroll/getBankrollTransactions');
+    this.$store.dispatch('cash_games/getCashGames');
+    this.$store.dispatch('live/retrieveLiveSession');
   },
   created: function created() {
     var _this = this;
@@ -2240,8 +2256,6 @@ __webpack_require__.r(__webpack_exports__);
         _this.$refs.scroll.scrollTop = scrollTo;
       });
     });
-    this.$store.dispatch('bankroll/getBankrollTransactions');
-    this.$store.dispatch('cash_games/getCashGames');
   }
 });
 
@@ -2698,12 +2712,59 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var moment_duration_format__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment-duration-format */ "./node_modules/moment-duration-format/lib/moment-duration-format.js");
+/* harmony import */ var moment_duration_format__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment_duration_format__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _components_Transaction_TransactionSummary__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @components/Transaction/TransactionSummary */ "./resources/js/components/Transaction/TransactionSummary.vue");
+/* harmony import */ var _components_Transaction_TransactionDetails__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @components/Transaction/TransactionDetails */ "./resources/js/components/Transaction/TransactionDetails.vue");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
 //
+//
+//
+
+
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'CurrentCashGame'
+  name: 'Session',
+  components: {
+    TransactionSummary: _components_Transaction_TransactionSummary__WEBPACK_IMPORTED_MODULE_3__["default"],
+    TransactionDetails: _components_Transaction_TransactionDetails__WEBPACK_IMPORTED_MODULE_4__["default"]
+  },
+  data: function data() {
+    return {
+      editLiveSession: {},
+      editing: false,
+      errors: {}
+    };
+  },
+  created: function created() {
+    // If no id provided or user visits /session then redirect to sessions
+    this.editLiveSession = {
+      id: this.liveSession.id,
+      location: this.liveSession.location,
+      stake_id: this.liveSession.stake_id,
+      limit_id: this.liveSession.limit_id,
+      variant_id: this.liveSession.variant_id,
+      table_size_id: this.liveSession.table_size_id,
+      start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.liveSession.start_time).format(),
+      end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.liveSession.end_time).format(),
+      comments: this.liveSession.comments
+    };
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])('live', ['liveSession'])),
+  methods: {}
 });
 
 /***/ }),
@@ -2790,6 +2851,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2842,111 +2910,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'StartCashGame',
   data: function data() {
     return {
-      live: false,
-      start_time: '',
-      end_time: '',
-      buyin: 0,
       errors: {},
-      stake: 1,
-      limit: 1,
-      variant: 1,
-      table_size: 1,
-      location: '',
-      stakes: [{
-        id: 1,
-        stake: '1/1'
-      }, {
-        id: 2,
-        stake: '1/2'
-      }, {
-        id: 3,
-        stake: '2/4'
-      }],
-      limits: [{
-        id: 1,
-        limit: 'No Limit'
-      }, {
-        id: 2,
-        limit: 'Pot Limit'
-      }, {
-        id: 3,
-        limit: 'Limit'
-      }],
-      variants: [{
-        id: 1,
-        variant: 'Holdem'
-      }, {
-        id: 2,
-        variant: 'Omaha'
-      }, {
-        id: 3,
-        variant: 'Stud8'
-      }],
-      table_sizes: [{
-        id: 1,
-        table_size: 'Full-Ring'
-      }, {
-        id: 2,
-        table_size: 'Mixed'
-      }, {
-        id: 3,
-        table_size: 'Heads Up'
-      }]
+      session: {
+        stake: 1,
+        limit: 1,
+        variant: 1,
+        table_size: 1,
+        location: '',
+        buyin: 0,
+        start_time: ''
+      }
     };
   },
-  methods: {
-    startCashGame: function startCashGame() {
-      alert('Starting new cash game');
-    }
-  }
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes'])),
+  methods: {}
 });
 
 /***/ }),
@@ -2967,6 +2949,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
 //
 //
 //
@@ -3598,10 +3584,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
 
 
 
@@ -3757,6 +3739,13 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Session_StartCashGame__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @components/Session/StartCashGame */ "./resources/js/components/Session/StartCashGame.vue");
 /* harmony import */ var _components_Session_CurrentCashGame__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @components/Session/CurrentCashGame */ "./resources/js/components/Session/CurrentCashGame.vue");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -3764,6 +3753,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3772,16 +3762,7 @@ __webpack_require__.r(__webpack_exports__);
     'start-cash-game': _components_Session_StartCashGame__WEBPACK_IMPORTED_MODULE_0__["default"],
     'current-cash-game': _components_Session_CurrentCashGame__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  data: function data() {
-    return {
-      currentCashGame: {}
-    };
-  },
-  computed: {
-    showCurrentCashGame: function showCurrentCashGame() {
-      return Object.keys(this.currentCashGame).length > 0;
-    }
-  }
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])('live', ['liveSession']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])('live', ['sessionInProgress']))
 });
 
 /***/ }),
@@ -3808,18 +3789,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -4244,46 +4213,46 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         name: 'sessions'
       });
     } else {
-      this.cash_game = {
-        id: this.stateCashGame.id,
-        location: this.stateCashGame.location,
-        stake_id: this.stateCashGame.stake_id,
-        limit_id: this.stateCashGame.limit_id,
-        variant_id: this.stateCashGame.variant_id,
-        table_size_id: this.stateCashGame.table_size_id,
-        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.start_time).format(),
-        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.end_time).format(),
-        comments: this.stateCashGame.comments
-      };
+      this.editSession = this.editStateSession();
     }
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])('cash_games', ['getCashGameById']), {
-    stateCashGame: function stateCashGame() {
+    session: function session() {
       return this.getCashGameById(this.id);
     },
     profit: function profit() {
-      return this.stateCashGame.profit;
+      return this.session.profit;
     },
     formattedProfit: function formattedProfit() {
       return Vue.prototype.currency.format(this.profit);
     },
     roi: function roi() {
-      var buy_inTotal = this.buy_insTotal < 1 ? 1 : this.buy_insTotal;
+      var buy_inTotal = this.buyInsTotal < 1 ? 1 : this.buyInsTotal;
       return this.profit / buy_inTotal;
     },
-    buy_insTotal: function buy_insTotal() {
-      return this.stateCashGame.buy_ins.reduce(function (total, buy_in) {
+    buyInsTotal: function buyInsTotal() {
+      var buyInTotal = this.session.buy_ins ? this.session.buy_ins.reduce(function (total, buy_in) {
         return total + buy_in.amount;
-      }, 0);
+      }, 0) : 0;
+      var addOnTotal = this.session.add_ons ? this.session.add_ons.reduce(function (total, add_ons) {
+        return total + add_ons.amount;
+      }, 0) : 0;
+      var rebuyTotal = this.session.rebuys ? this.session.rebuys.reduce(function (total, rebuys) {
+        return total + rebuys.amount;
+      }, 0) : 0;
+      var expenseTotal = this.session.expenses ? this.session.expenses.reduce(function (total, expenses) {
+        return total + expenses.amount;
+      }, 0) : 0;
+      return buyInTotal + addOnTotal + rebuyTotal + expenseTotal;
     },
     runTimeHours: function runTimeHours() {
-      var end_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.end_time);
-      var start_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.start_time);
+      var end_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.end_time);
+      var start_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.start_time);
       return end_time.diff(start_time, 'hours', true);
     },
     runTime: function runTime() {
-      var end_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.end_time);
-      var start_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.stateCashGame.start_time);
+      var end_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.end_time);
+      var start_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.start_time);
       return moment__WEBPACK_IMPORTED_MODULE_0___default.a.duration(this.runTimeHours, 'hours').format("h [hours] m [mins]");
     },
     profitPerHour: function profitPerHour() {
@@ -4291,18 +4260,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   }),
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])('cash_games', ['updateCashGame', 'deleteCashGame']), {
+    editStateSession: function editStateSession() {
+      return {
+        id: this.session.id,
+        location: this.session.location,
+        stake_id: this.session.stake_id,
+        limit_id: this.session.limit_id,
+        variant_id: this.session.variant_id,
+        table_size_id: this.session.table_size_id,
+        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.start_time).format(),
+        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.end_time).format(),
+        comments: this.session.comments
+      };
+    },
     cancelChanges: function cancelChanges() {
       this.editing = false;
-      this.cash_game = this.stringifyCashGame(this.stateCashGame);
+      this.editSession = this.editStateSession();
     },
     saveSession: function saveSession() {
       var _this = this;
 
-      this.updateCashGame(this.cash_game).then(function (response) {
+      this.updateCashGame(this.editSession).then(function (response) {
         _this.$snotify.success('Changes saved.');
 
         _this.editing = false;
-        _this.cash_game = _this.stringifyCashGame(_this.stateCashGame); // TODO: ^^ Edit line above
       })["catch"](function (error) {
         _this.$snotify.error('Error: ' + error.response.data.message);
 
@@ -4320,7 +4301,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }, {
           title: 'Yes, delete.',
           handler: function handler() {
-            _this2.deleteCashGame(_this2.cash_game).then(function (response) {
+            _this2.deleteCashGame(_this2.editSession).then(function (response) {
               _this2.$modal.hide('dialog');
 
               _this2.$router.push({
@@ -4342,18 +4323,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     formatDate: function formatDate(date) {
       return moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format("dddd Do MMMM, HH:mm");
     },
-    stringifyCashGame: function stringifyCashGame(cash_game) {
-      return JSON.parse(JSON.stringify(_objectSpread({}, this.cash_game, {
-        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.cash_game.start_time).format(),
-        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.cash_game.end_time).format()
-      })));
-    },
     addTransaction: function addTransaction(transactionType, transaction) {
       this.$modal.show(_components_Transaction_TransactionDetails__WEBPACK_IMPORTED_MODULE_4__["default"], {
         // Modal props
         transaction: transaction,
         transactionType: transactionType,
-        gameId: this.stateCashGame.id,
+        gameId: this.session.id,
         gameType: 'cash_game'
       }, {
         // Modal Options
@@ -65593,8 +65568,25 @@ var render = function() {
           _vm._v(" "),
           _c(
             "router-link",
-            { staticClass: "btn-green", attrs: { to: { name: "session" } } },
-            [_vm._v("\n\t\t\tStart Session\n\t\t\t")]
+            {
+              staticClass: "btn btn-green",
+              class: !_vm.sessionInProgress ? "btn btn-green" : "btn-red",
+              attrs: { to: { name: "live" } }
+            },
+            [
+              !_vm.sessionInProgress
+                ? _c("div", [_vm._v("Start Session")])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.sessionInProgress
+                ? _c("div", [
+                    _c("i", {
+                      staticClass: "fas fa-circle-notch fa-spin mr-2"
+                    }),
+                    _vm._v("In Progress")
+                  ])
+                : _vm._e()
+            ]
           )
         ],
         1
@@ -66580,7 +66572,7 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass: "btn-green",
+                staticClass: "btn btn-green",
                 attrs: { type: "button" },
                 on: {
                   click: function($event) {
@@ -66646,9 +66638,9 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("h1", { staticClass: "text-2xl bg-red-500" }, [
-    _vm._v("Current Cash Game")
-  ])
+  return _c("div", {
+    staticClass: "flex flex-col xxl:w-2/3 xxl:mx-auto w-full text-white"
+  })
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -66732,460 +66724,307 @@ var render = function() {
     _vm._v(" "),
     _c("hr", { staticClass: "mb-4 border border-muted-dark" }),
     _vm._v(" "),
-    _c(
-      "form",
-      {
-        attrs: { action: "" },
-        on: {
-          submit: function($event) {
-            $event.preventDefault()
-            return _vm.startCashGame($event)
-          }
-        }
-      },
-      [
-        _c(
-          "div",
-          { staticClass: "flex flex-col" },
-          [
-            _c("div", [
-              _c("p", { staticClass: "text-base md:text-lg mb-2" }, [
-                _vm._v("What are you playing?")
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "flex flex-wrap" }, [
-                _c("div", { staticClass: "w-1/2 lg:w-1/4 p-1" }, [
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.stake,
-                          expression: "stake"
-                        }
-                      ],
-                      class: { "border-red-700": _vm.errors.stake_id },
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.stake = $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        }
-                      }
-                    },
-                    _vm._l(_vm.stakes, function(stake) {
-                      return _c(
-                        "option",
-                        { key: stake.id, domProps: { value: stake.id } },
-                        [_vm._v(_vm._s(stake.stake))]
-                      )
-                    }),
-                    0
-                  ),
-                  _vm._v(" "),
-                  _vm.errors.stake_id
-                    ? _c(
-                        "span",
-                        { staticClass: "text-xs text-red-700 mt-1 mb-2" },
-                        [_vm._v(_vm._s(_vm.errors.stake_id[0]))]
-                      )
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "w-1/2 lg:w-1/4 p-1" }, [
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.limit,
-                          expression: "limit"
-                        }
-                      ],
-                      class: { "border-red-700": _vm.errors.limit_id },
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.limit = $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        }
-                      }
-                    },
-                    _vm._l(_vm.limits, function(limit) {
-                      return _c(
-                        "option",
-                        { key: limit.id, domProps: { value: limit.id } },
-                        [_vm._v(_vm._s(limit.limit))]
-                      )
-                    }),
-                    0
-                  ),
-                  _vm._v(" "),
-                  _vm.errors.limit_id
-                    ? _c(
-                        "span",
-                        { staticClass: "text-xs text-red-700 mt-1 mb-2" },
-                        [_vm._v(_vm._s(_vm.errors.limit_id[0]))]
-                      )
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "w-1/2 lg:w-1/4 p-1" }, [
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.variant,
-                          expression: "variant"
-                        }
-                      ],
-                      class: { "border-red-700": _vm.errors.variant_id },
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.variant = $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        }
-                      }
-                    },
-                    _vm._l(_vm.variants, function(variant) {
-                      return _c(
-                        "option",
-                        { key: variant.id, domProps: { value: variant.id } },
-                        [_vm._v(_vm._s(variant.variant))]
-                      )
-                    }),
-                    0
-                  ),
-                  _vm._v(" "),
-                  _vm.errors.variant_id
-                    ? _c(
-                        "span",
-                        { staticClass: "text-xs text-red-700 mt-1 mb-2" },
-                        [_vm._v(_vm._s(_vm.errors.variant_id[0]))]
-                      )
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "w-1/2 lg:w-1/4 p-1" }, [
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.table_size,
-                          expression: "table_size"
-                        }
-                      ],
-                      class: { "border-red-700": _vm.errors.table_size_id },
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.table_size = $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        }
-                      }
-                    },
-                    _vm._l(_vm.table_sizes, function(table_size) {
-                      return _c(
-                        "option",
-                        {
-                          key: table_size.id,
-                          domProps: { value: table_size.id }
-                        },
-                        [_vm._v(_vm._s(table_size.table_size))]
-                      )
-                    }),
-                    0
-                  ),
-                  _vm._v(" "),
-                  _vm.errors.table_size_id
-                    ? _c(
-                        "span",
-                        { staticClass: "text-xs text-red-700 mt-1 mb-2" },
-                        [_vm._v(_vm._s(_vm.errors.table_size_id[0]))]
-                      )
-                    : _vm._e()
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "mt-3" }, [
-              _c("p", { staticClass: "text-base md:text-lg mb-2" }, [
-                _vm._v("Where are you playing?")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.location,
-                    expression: "location"
-                  }
-                ],
-                class: { "border-red-700": _vm.errors.location },
-                attrs: { type: "text", placeholder: "Enter location" },
-                domProps: { value: _vm.location },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.location = $event.target.value
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _vm.errors.location
-                ? _c("span", { staticClass: "text-xs text-red-700" }, [
-                    _vm._v(_vm._s(_vm.errors.location[0]))
-                  ])
-                : _vm._e()
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "mt-3" }, [
-              _c("p", { staticClass: "text-base md:text-lg mb-2" }, [
-                _vm._v("What's your buyin?")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.buyin,
-                    expression: "buyin"
-                  }
-                ],
-                class: { "border-red-700": _vm.errors.buyin },
-                attrs: { type: "number", step: "0.01", min: "0" },
-                domProps: { value: _vm.buyin },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.buyin = $event.target.value
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _vm.errors.buyin
-                ? _c("span", { staticClass: "text-xs text-red-700" }, [
-                    _vm._v(_vm._s(_vm.errors.buyin[0]))
-                  ])
-                : _vm._e()
-            ]),
-            _vm._v(" "),
+    _c("div", { staticClass: "flex flex-col" }, [
+      _c("div", [
+        _c("p", { staticClass: "text-base md:text-lg mb-2" }, [
+          _vm._v("What are you playing?")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "flex flex-wrap" }, [
+          _c("div", { staticClass: "w-1/2 lg:w-1/4 p-1" }, [
             _c(
-              "transition",
-              { attrs: { name: "fade-slide", mode: "out-in" } },
-              [
-                _vm.live
-                  ? _c("div", { key: "live" }, [
-                      _c("div", { staticClass: "mt-4" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass:
-                              "w-full bg-green-600 border border-green-700 hover:bg-green-700 p-4 uppercase text-white font-bold text-center",
-                            attrs: { type: "button" }
-                          },
-                          [_vm._v("Start Live Cash Game")]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "mt-8 flex justify-center" }, [
-                        _c(
-                          "a",
-                          {
-                            staticClass:
-                              "text-green-700 hover:text-green-800 text-sm font-bold",
-                            attrs: { href: "#" },
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                _vm.live = false
-                              }
-                            }
-                          },
-                          [_vm._v("Switch to non live mode")]
-                        )
-                      ])
-                    ])
-                  : _c("div", { key: "notLive" }, [
-                      _c(
-                        "div",
-                        { staticClass: "mt-4" },
-                        [
-                          _c(
-                            "p",
-                            { staticClass: "text-base md:text-lg mb-2" },
-                            [_vm._v("When did this cash game start?")]
-                          ),
-                          _vm._v(" "),
-                          _c("datetime", {
-                            staticClass:
-                              "w-full bg-muted-light border border-muted-dark rounded border theme-green",
-                            class: _vm.errors.start_time
-                              ? "border-red-700"
-                              : "border-gray-400",
-                            attrs: {
-                              type: "datetime",
-                              "input-class": "w-full p-3",
-                              "minute-step": 5,
-                              auto: "",
-                              title: "Session start date and time"
-                            },
-                            model: {
-                              value: _vm.start_time,
-                              callback: function($$v) {
-                                _vm.start_time = $$v
-                              },
-                              expression: "start_time"
-                            }
-                          }),
-                          _vm._v(" "),
-                          _vm.errors.start_time
-                            ? _c(
-                                "span",
-                                {
-                                  staticClass: "text-xs text-red-700 mt-1 mb-2"
-                                },
-                                [_vm._v(_vm._s(_vm.errors.start_time[0]))]
-                              )
-                            : _vm._e()
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "mt-4" },
-                        [
-                          _c(
-                            "p",
-                            { staticClass: "text-base md:text-lg mb-2" },
-                            [_vm._v("When did this cash game end?")]
-                          ),
-                          _vm._v(" "),
-                          _c("datetime", {
-                            staticClass:
-                              "w-full bg-muted-light border border-muted-dark rounded border theme-green",
-                            class: _vm.errors.end_time
-                              ? "border-red-700"
-                              : "border-gray-400",
-                            attrs: {
-                              type: "datetime",
-                              "input-class": "w-full p-3",
-                              "minute-step": 5,
-                              auto: "",
-                              title: "Session end date and time"
-                            },
-                            model: {
-                              value: _vm.end_time,
-                              callback: function($$v) {
-                                _vm.end_time = $$v
-                              },
-                              expression: "end_time"
-                            }
-                          }),
-                          _vm._v(" "),
-                          _vm.errors.end_time
-                            ? _c(
-                                "span",
-                                {
-                                  staticClass: "text-xs text-red-700 mt-1 mb-2"
-                                },
-                                [_vm._v(_vm._s(_vm.errors.end_time[0]))]
-                              )
-                            : _vm._e()
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "mt-4" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass:
-                              "w-full bg-green-500 border border-green-700 hover:bg-green-700 p-4 uppercase text-white font-bold text-center",
-                            attrs: { type: "button" }
-                          },
-                          [_vm._v("Save cash game")]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "mt-8 flex justify-center" }, [
-                        _c(
-                          "a",
-                          {
-                            staticClass:
-                              "text-green-500 hover:text-green-600 text-sm font-bold",
-                            attrs: { href: "#" },
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                _vm.live = true
-                              }
-                            }
-                          },
-                          [_vm._v("Switch to live mode")]
-                        )
-                      ])
-                    ])
-              ]
-            )
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.session.stake,
+                    expression: "session.stake"
+                  }
+                ],
+                class: { "border-red-700": _vm.errors.stake_id },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.$set(
+                      _vm.session,
+                      "stake",
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
+                  }
+                }
+              },
+              _vm._l(_vm.stakes, function(stake) {
+                return _c(
+                  "option",
+                  { key: stake.id, domProps: { value: stake.id } },
+                  [_vm._v(_vm._s(stake.stake))]
+                )
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _vm.errors.stake_id
+              ? _c("span", { staticClass: "text-xs text-red-700 mt-1 mb-2" }, [
+                  _vm._v(_vm._s(_vm.errors.stake_id[0]))
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "w-1/2 lg:w-1/4 p-1" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.session.limit,
+                    expression: "session.limit"
+                  }
+                ],
+                class: { "border-red-700": _vm.errors.limit_id },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.$set(
+                      _vm.session,
+                      "limit",
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
+                  }
+                }
+              },
+              _vm._l(_vm.limits, function(limit) {
+                return _c(
+                  "option",
+                  { key: limit.id, domProps: { value: limit.id } },
+                  [_vm._v(_vm._s(limit.limit))]
+                )
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _vm.errors.limit_id
+              ? _c("span", { staticClass: "text-xs text-red-700 mt-1 mb-2" }, [
+                  _vm._v(_vm._s(_vm.errors.limit_id[0]))
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "w-1/2 lg:w-1/4 p-1" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.session.variant,
+                    expression: "session.variant"
+                  }
+                ],
+                class: { "border-red-700": _vm.errors.variant_id },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.$set(
+                      _vm.session,
+                      "variant",
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
+                  }
+                }
+              },
+              _vm._l(_vm.variants, function(variant) {
+                return _c(
+                  "option",
+                  { key: variant.id, domProps: { value: variant.id } },
+                  [_vm._v(_vm._s(variant.variant))]
+                )
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _vm.errors.variant_id
+              ? _c("span", { staticClass: "text-xs text-red-700 mt-1 mb-2" }, [
+                  _vm._v(_vm._s(_vm.errors.variant_id[0]))
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "w-1/2 lg:w-1/4 p-1" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.session.table_size,
+                    expression: "session.table_size"
+                  }
+                ],
+                class: { "border-red-700": _vm.errors.table_size_id },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.$set(
+                      _vm.session,
+                      "table_size",
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
+                  }
+                }
+              },
+              _vm._l(_vm.table_sizes, function(table_size) {
+                return _c(
+                  "option",
+                  { key: table_size.id, domProps: { value: table_size.id } },
+                  [_vm._v(_vm._s(table_size.table_size))]
+                )
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _vm.errors.table_size_id
+              ? _c("span", { staticClass: "text-xs text-red-700 mt-1 mb-2" }, [
+                  _vm._v(_vm._s(_vm.errors.table_size_id[0]))
+                ])
+              : _vm._e()
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "mt-3" }, [
+        _c("p", { staticClass: "text-base md:text-lg mb-2" }, [
+          _vm._v("Where are you playing?")
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.session.location,
+              expression: "session.location"
+            }
           ],
-          1
-        )
-      ]
-    )
+          class: { "border-red-700": _vm.errors.location },
+          attrs: { type: "text", placeholder: "Enter location" },
+          domProps: { value: _vm.session.location },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.session, "location", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _vm.errors.location
+          ? _c("span", { staticClass: "text-xs text-red-700" }, [
+              _vm._v(_vm._s(_vm.errors.location[0]))
+            ])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "mt-3" }, [
+        _c("p", { staticClass: "text-base md:text-lg mb-2" }, [
+          _vm._v("What's your buyin?")
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.session.buyin,
+              expression: "session.buyin"
+            }
+          ],
+          class: { "border-red-700": _vm.errors.buyin },
+          attrs: { type: "number", step: "0.01", min: "0" },
+          domProps: { value: _vm.session.buyin },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.session, "buyin", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _vm.errors.buyin
+          ? _c("span", { staticClass: "text-xs text-red-700" }, [
+              _vm._v(_vm._s(_vm.errors.buyin[0]))
+            ])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _vm._m(0)
+    ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "flex mt-4" }, [
+      _c(
+        "button",
+        {
+          staticClass:
+            "w-full bg-green-700 border border-green-800 hover:bg-green-800 p-4 uppercase text-white font-bold text-center mr-1",
+          attrs: { type: "button" }
+        },
+        [_vm._v("Start At")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "w-full bg-green-600 border border-green-700 hover:bg-green-700 p-4 uppercase text-white font-bold text-center ml-1",
+          attrs: { type: "button" }
+        },
+        [_vm._v("Start Now")]
+      )
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -67287,45 +67126,49 @@ var render = function() {
       : _vm._e(),
     _vm._v(" "),
     _c("div", { staticClass: "flex justify-between mt-3 p-2" }, [
-      _vm.transaction.id
-        ? _c(
-            "button",
-            {
-              staticClass:
-                "bg-red-500 hover:bg-red-600 focus:bg-red-600 rounded text-white text-sm px-4 py-2",
-              attrs: { type: "button" },
-              on: {
-                click: function($event) {
-                  $event.preventDefault()
-                  return _vm.deleteTransaction($event)
+      _c("div", [
+        _vm.transaction.id
+          ? _c(
+              "button",
+              {
+                staticClass:
+                  "bg-red-500 hover:bg-red-600 focus:bg-red-600 rounded text-white text-sm px-4 py-2",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.deleteTransaction($event)
+                  }
                 }
-              }
-            },
-            [
-              _c("i", { staticClass: "fas fa-trash mr-3" }),
-              _c("span", [_vm._v("Delete")])
-            ]
-          )
-        : _vm._e(),
+              },
+              [
+                _c("i", { staticClass: "fas fa-trash mr-3" }),
+                _c("span", [_vm._v("Delete")])
+              ]
+            )
+          : _vm._e()
+      ]),
       _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass:
-            "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2",
-          attrs: { type: "button" },
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.saveTransaction($event)
+      _c("div", [
+        _c(
+          "button",
+          {
+            staticClass:
+              "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2",
+            attrs: { type: "button" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.saveTransaction($event)
+              }
             }
-          }
-        },
-        [
-          _c("i", { staticClass: "fas fa-check mr-3" }),
-          _c("span", [_vm._v("Save Changes")])
-        ]
-      )
+          },
+          [
+            _c("i", { staticClass: "fas fa-check mr-3" }),
+            _c("span", [_vm._v("Save Changes")])
+          ]
+        )
+      ])
     ])
   ])
 }
@@ -68109,7 +67952,7 @@ var render = function() {
                             "div",
                             {
                               staticClass:
-                                "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                                "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
                               on: {
                                 click: function($event) {
                                   return _vm.cash_game.buy_ins.push({
@@ -68206,7 +68049,7 @@ var render = function() {
             "div",
             {
               staticClass:
-                "col-span-6 md:col-span-3 flex md:flex-col justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
             },
             [
               _c(
@@ -68348,7 +68191,7 @@ var render = function() {
                         "div",
                         {
                           staticClass:
-                            "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
+                            "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
                           on: {
                             click: function($event) {
                               return _vm.session.expenses.push({
@@ -68372,281 +68215,271 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
+          _vm.game_type === "tournament"
+            ? _c(
+                "div",
                 {
-                  name: "show-slide",
-                  rawName: "v-show-slide",
-                  value: _vm.game_type === "tournament",
-                  expression: "game_type === 'tournament'"
-                }
-              ],
-              staticClass:
-                "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg"
-            },
-            [
-              _c("div", { staticClass: "p-3" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass:
-                      "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
-                  },
-                  [_vm._v("Rebuys")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "flex flex-col justify-center flex-1" },
-                  [
-                    _vm._l(_vm.tournament.rebuys, function(rebuy, index) {
-                      return _c(
-                        "div",
-                        { key: index, staticClass: "flex mb-2" },
-                        [
-                          _c("div", { staticClass: "flex flex-col w-full" }, [
-                            _c("div", { staticClass: "flex" }, [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: rebuy.amount,
-                                    expression: "rebuy.amount"
-                                  }
-                                ],
-                                staticClass: "p-1",
-                                class: {
-                                  "error-input":
-                                    _vm.errors["rebuys." + index + ".amount"]
-                                },
-                                attrs: { type: "number", min: "0" },
-                                domProps: { value: rebuy.amount },
-                                on: {
-                                  input: [
-                                    function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        rebuy,
-                                        "amount",
-                                        $event.target.value
-                                      )
-                                    },
-                                    function($event) {
-                                      delete _vm.errors[
-                                        "rebuys." + index + ".amount"
-                                      ]
-                                    }
-                                  ]
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c(
-                                "button",
-                                {
-                                  staticClass:
-                                    "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.tournament.rebuys.splice(
-                                        index,
-                                        1
-                                      )
-                                    }
-                                  }
-                                },
-                                [_c("i", { staticClass: "fas fa-times" })]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _vm.errors["rebuys." + index + ".amount"]
-                              ? _c("span", { staticClass: "error-message" }, [
-                                  _vm._v(
-                                    _vm._s(
-                                      _vm.errors[
-                                        "rebuys." + index + ".amount"
-                                      ][0]
-                                    )
-                                  )
-                                ])
-                              : _vm._e()
-                          ])
-                        ]
-                      )
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "flex justify-center items-center" },
-                      [
-                        _c(
+                  staticClass:
+                    "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
+                    },
+                    [_vm._v("Rebuys")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "flex flex-col justify-center flex-1" },
+                    [
+                      _vm._l(_vm.tournament.rebuys, function(rebuy, index) {
+                        return _c(
                           "div",
-                          {
-                            staticClass:
-                              "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
-                            on: {
-                              click: function($event) {
-                                return _vm.tournament.rebuys.push({ amount: 0 })
-                              }
-                            }
-                          },
+                          { key: index, staticClass: "flex mb-2" },
                           [
-                            _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
-                            _vm._v(" "),
-                            _c("span", [_vm._v("Add Rebuy")])
+                            _c("div", { staticClass: "flex flex-col w-full" }, [
+                              _c("div", { staticClass: "flex" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: rebuy.amount,
+                                      expression: "rebuy.amount"
+                                    }
+                                  ],
+                                  staticClass: "p-1",
+                                  class: {
+                                    "error-input":
+                                      _vm.errors["rebuys." + index + ".amount"]
+                                  },
+                                  attrs: { type: "number", min: "0" },
+                                  domProps: { value: rebuy.amount },
+                                  on: {
+                                    input: [
+                                      function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          rebuy,
+                                          "amount",
+                                          $event.target.value
+                                        )
+                                      },
+                                      function($event) {
+                                        delete _vm.errors[
+                                          "rebuys." + index + ".amount"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.tournament.rebuys.splice(
+                                          index,
+                                          1
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fas fa-times" })]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _vm.errors["rebuys." + index + ".amount"]
+                                ? _c("span", { staticClass: "error-message" }, [
+                                    _vm._v(
+                                      _vm._s(
+                                        _vm.errors[
+                                          "rebuys." + index + ".amount"
+                                        ][0]
+                                      )
+                                    )
+                                  ])
+                                : _vm._e()
+                            ])
                           ]
                         )
-                      ]
-                    )
-                  ],
-                  2
-                )
-              ])
-            ]
-          ),
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "flex justify-center items-center" },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
+                              on: {
+                                click: function($event) {
+                                  return _vm.tournament.rebuys.push({
+                                    amount: 0
+                                  })
+                                }
+                              }
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-plus-circle mr-2"
+                              }),
+                              _vm._v(" "),
+                              _c("span", [_vm._v("Add Rebuy")])
+                            ]
+                          )
+                        ]
+                      )
+                    ],
+                    2
+                  )
+                ]
+              )
+            : _vm._e(),
           _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
+          _vm.game_type === "tournament"
+            ? _c(
+                "div",
                 {
-                  name: "show-slide",
-                  rawName: "v-show-slide",
-                  value: _vm.game_type === "tournament",
-                  expression: "game_type === 'tournament'"
-                }
-              ],
-              staticClass:
-                "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg"
-            },
-            [
-              _c("div", { staticClass: "p-3" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass:
-                      "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
-                  },
-                  [_vm._v("Add Ons")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "flex flex-col justify-center flex-1" },
-                  [
-                    _vm._l(_vm.tournament.add_ons, function(add_on, index) {
-                      return _c(
-                        "div",
-                        { key: index, staticClass: "flex mb-2" },
-                        [
-                          _c("div", { staticClass: "flex flex-col w-full" }, [
-                            _c("div", { staticClass: "flex" }, [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: add_on.amount,
-                                    expression: "add_on.amount"
-                                  }
-                                ],
-                                staticClass: "p-1",
-                                class: {
-                                  "error-input":
-                                    _vm.errors["add_ons." + index + ".amount"]
-                                },
-                                attrs: { type: "number", min: "0" },
-                                domProps: { value: add_on.amount },
-                                on: {
-                                  input: [
-                                    function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        add_on,
-                                        "amount",
-                                        $event.target.value
-                                      )
-                                    },
-                                    function($event) {
-                                      delete _vm.errors[
-                                        "add_ons." + index + ".amount"
-                                      ]
-                                    }
-                                  ]
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c(
-                                "button",
-                                {
-                                  staticClass:
-                                    "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.tournament.add_ons.splice(
-                                        index,
-                                        1
-                                      )
-                                    }
-                                  }
-                                },
-                                [_c("i", { staticClass: "fas fa-times" })]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _vm.errors["add_ons." + index + ".amount"]
-                              ? _c("span", { staticClass: "error-message" }, [
-                                  _vm._v(
-                                    _vm._s(
-                                      _vm.errors[
-                                        "add_ons." + index + ".amount"
-                                      ][0]
-                                    )
-                                  )
-                                ])
-                              : _vm._e()
-                          ])
-                        ]
-                      )
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "flex justify-center items-center" },
-                      [
-                        _c(
+                  staticClass:
+                    "col-span-6 md:col-span-3 flex md:flex-col justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "font-semibold md:border-b md:border-muted-dark md:p-1 md:mb-2 w-1/4 md:w-auto mr-2 md:mr-0"
+                    },
+                    [_vm._v("Add Ons")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "flex flex-col justify-center flex-1" },
+                    [
+                      _vm._l(_vm.tournament.add_ons, function(add_on, index) {
+                        return _c(
                           "div",
-                          {
-                            staticClass:
-                              "rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 cursor-pointer",
-                            on: {
-                              click: function($event) {
-                                return _vm.tournament.add_ons.push({
-                                  amount: 0
-                                })
-                              }
-                            }
-                          },
+                          { key: index, staticClass: "flex mb-2" },
                           [
-                            _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
-                            _vm._v(" "),
-                            _c("span", [_vm._v("Add Add On")])
+                            _c("div", { staticClass: "flex flex-col w-full" }, [
+                              _c("div", { staticClass: "flex" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: add_on.amount,
+                                      expression: "add_on.amount"
+                                    }
+                                  ],
+                                  staticClass: "p-1",
+                                  class: {
+                                    "error-input":
+                                      _vm.errors["add_ons." + index + ".amount"]
+                                  },
+                                  attrs: { type: "number", min: "0" },
+                                  domProps: { value: add_on.amount },
+                                  on: {
+                                    input: [
+                                      function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          add_on,
+                                          "amount",
+                                          $event.target.value
+                                        )
+                                      },
+                                      function($event) {
+                                        delete _vm.errors[
+                                          "add_ons." + index + ".amount"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "ml-2 rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.tournament.add_ons.splice(
+                                          index,
+                                          1
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fas fa-times" })]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _vm.errors["add_ons." + index + ".amount"]
+                                ? _c("span", { staticClass: "error-message" }, [
+                                    _vm._v(
+                                      _vm._s(
+                                        _vm.errors[
+                                          "add_ons." + index + ".amount"
+                                        ][0]
+                                      )
+                                    )
+                                  ])
+                                : _vm._e()
+                            ])
                           ]
                         )
-                      ]
-                    )
-                  ],
-                  2
-                )
-              ])
-            ]
-          ),
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "flex justify-center items-center" },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
+                              on: {
+                                click: function($event) {
+                                  return _vm.tournament.add_ons.push({
+                                    amount: 0
+                                  })
+                                }
+                              }
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-plus-circle mr-2"
+                              }),
+                              _vm._v(" "),
+                              _c("span", [_vm._v("Add Add On")])
+                            ]
+                          )
+                        ]
+                      )
+                    ],
+                    2
+                  )
+                ]
+              )
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "div",
@@ -68873,7 +68706,7 @@ var render = function() {
       staticClass:
         "w-full md:w-5/6 mx-auto bg-card rounded border border-muted-dark p-4 text-white"
     },
-    [_vm.showCurrentCashGame ? _c("current-cash-game") : _c("start-cash-game")],
+    [_vm.sessionInProgress ? _c("current-cash-game") : _c("start-cash-game")],
     1
   )
 }
@@ -68907,11 +68740,20 @@ var render = function() {
         "div",
         {
           staticClass: "text-center text-6xl font-bold",
-          class:
-            _vm.stateCashGame.profit > 0 ? "text-green-500" : "text-red-500"
+          class: _vm.session.profit > 0 ? "text-green-500" : "text-red-500"
         },
         [_vm._v("\n\t\t" + _vm._s(_vm.formattedProfit) + "\n\t")]
       ),
+      _vm._v(" "),
+      _c("div", { staticClass: "text-center text-lg font-bold" }, [
+        _vm._v(
+          "\n\t\tin for " +
+            _vm._s(_vm.formatCurrency(_vm.buyInsTotal)) +
+            " and out for " +
+            _vm._s(_vm.formatCurrency(_vm.session.cash_out_model.amount)) +
+            "\n\t"
+        )
+      ]),
       _vm._v(" "),
       _c(
         "div",
@@ -68943,7 +68785,7 @@ var render = function() {
                     !_vm.editing
                       ? _c("span", {
                           domProps: {
-                            textContent: _vm._s(_vm.stateCashGame.location)
+                            textContent: _vm._s(_vm.session.location)
                           }
                         })
                       : _vm._e(),
@@ -68955,14 +68797,14 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.cash_game.location,
-                                expression: "cash_game.location"
+                                value: _vm.editSession.location,
+                                expression: "editSession.location"
                               }
                             ],
                             staticClass: "p-1 text-lg",
                             class: { "error-input": _vm.errors.location },
                             attrs: { type: "text", placeholder: "Location" },
-                            domProps: { value: _vm.cash_game.location },
+                            domProps: { value: _vm.editSession.location },
                             on: {
                               input: [
                                 function($event) {
@@ -68970,7 +68812,7 @@ var render = function() {
                                     return
                                   }
                                   _vm.$set(
-                                    _vm.cash_game,
+                                    _vm.editSession,
                                     "location",
                                     $event.target.value
                                   )
@@ -69003,7 +68845,7 @@ var render = function() {
                     !_vm.editing
                       ? _c("span", {
                           domProps: {
-                            textContent: _vm._s(_vm.stateCashGame.stake.stake)
+                            textContent: _vm._s(_vm.session.stake.stake)
                           }
                         })
                       : _vm._e(),
@@ -69017,8 +68859,8 @@ var render = function() {
                                 {
                                   name: "model",
                                   rawName: "v-model",
-                                  value: _vm.cash_game.stake_id,
-                                  expression: "cash_game.stake_id"
+                                  value: _vm.editSession.stake_id,
+                                  expression: "editSession.stake_id"
                                 }
                               ],
                               staticClass: "p-1 text-lg mr-1",
@@ -69038,7 +68880,7 @@ var render = function() {
                                       return val
                                     })
                                   _vm.$set(
-                                    _vm.cash_game,
+                                    _vm.editSession,
                                     "stake_id",
                                     $event.target.multiple
                                       ? $$selectedVal
@@ -69081,9 +68923,9 @@ var render = function() {
                       ? _c("span", {
                           domProps: {
                             textContent: _vm._s(
-                              _vm.stateCashGame.limit.limit +
+                              _vm.session.limit.limit +
                                 " " +
-                                _vm.stateCashGame.variant.variant
+                                _vm.session.variant.variant
                             )
                           }
                         })
@@ -69099,8 +68941,8 @@ var render = function() {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: _vm.cash_game.limit_id,
-                                    expression: "cash_game.limit_id"
+                                    value: _vm.editSession.limit_id,
+                                    expression: "editSession.limit_id"
                                   }
                                 ],
                                 staticClass: "p-1 text-lg mr-1",
@@ -69120,7 +68962,7 @@ var render = function() {
                                         return val
                                       })
                                     _vm.$set(
-                                      _vm.cash_game,
+                                      _vm.editSession,
                                       "limit_id",
                                       $event.target.multiple
                                         ? $$selectedVal
@@ -69156,8 +68998,8 @@ var render = function() {
                                   {
                                     name: "model",
                                     rawName: "v-model",
-                                    value: _vm.cash_game.variant_id,
-                                    expression: "cash_game.variant_id"
+                                    value: _vm.editSession.variant_id,
+                                    expression: "editSession.variant_id"
                                   }
                                 ],
                                 staticClass: "p-1 text-lg",
@@ -69177,7 +69019,7 @@ var render = function() {
                                         return val
                                       })
                                     _vm.$set(
-                                      _vm.cash_game,
+                                      _vm.editSession,
                                       "variant_id",
                                       $event.target.multiple
                                         ? $$selectedVal
@@ -69221,7 +69063,7 @@ var render = function() {
                       ? _c("span", {
                           domProps: {
                             textContent: _vm._s(
-                              _vm.stateCashGame.table_size.table_size
+                              _vm.session.table_size.table_size
                             )
                           }
                         })
@@ -69236,8 +69078,8 @@ var render = function() {
                                 {
                                   name: "model",
                                   rawName: "v-model",
-                                  value: _vm.cash_game.table_size_id,
-                                  expression: "cash_game.table_size_id"
+                                  value: _vm.editSession.table_size_id,
+                                  expression: "editSession.table_size_id"
                                 }
                               ],
                               staticClass: "p-1 text-lg mr-1",
@@ -69259,7 +69101,7 @@ var render = function() {
                                       return val
                                     })
                                   _vm.$set(
-                                    _vm.cash_game,
+                                    _vm.editSession,
                                     "table_size_id",
                                     $event.target.multiple
                                       ? $$selectedVal
@@ -69302,7 +69144,7 @@ var render = function() {
                       ? _c("span", {
                           domProps: {
                             textContent: _vm._s(
-                              _vm.formatDate(_vm.stateCashGame.start_time)
+                              _vm.formatDate(_vm.session.start_time)
                             )
                           }
                         })
@@ -69334,11 +69176,11 @@ var render = function() {
                                 }
                               },
                               model: {
-                                value: _vm.cash_game.start_time,
+                                value: _vm.editSession.start_time,
                                 callback: function($$v) {
-                                  _vm.$set(_vm.cash_game, "start_time", $$v)
+                                  _vm.$set(_vm.editSession, "start_time", $$v)
                                 },
-                                expression: "cash_game.start_time"
+                                expression: "editSession.start_time"
                               }
                             }),
                             _vm._v(" "),
@@ -69366,7 +69208,7 @@ var render = function() {
                       ? _c("span", {
                           domProps: {
                             textContent: _vm._s(
-                              _vm.formatDate(_vm.stateCashGame.end_time)
+                              _vm.formatDate(_vm.session.end_time)
                             )
                           }
                         })
@@ -69398,11 +69240,11 @@ var render = function() {
                                 }
                               },
                               model: {
-                                value: _vm.cash_game.end_time,
+                                value: _vm.editSession.end_time,
                                 callback: function($$v) {
-                                  _vm.$set(_vm.cash_game, "end_time", $$v)
+                                  _vm.$set(_vm.editSession, "end_time", $$v)
                                 },
-                                expression: "cash_game.end_time"
+                                expression: "editSession.end_time"
                               }
                             }),
                             _vm._v(" "),
@@ -69421,8 +69263,7 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          (_vm.stateCashGame.buy_ins && _vm.stateCashGame.buy_ins.length > 0) ||
-          _vm.editing
+          (_vm.session.buy_ins && _vm.session.buy_ins.length > 0) || _vm.editing
             ? _c(
                 "div",
                 {
@@ -69439,7 +69280,7 @@ var render = function() {
                     [_vm._v("Buy Ins")]
                   ),
                   _vm._v(" "),
-                  _vm._l(_vm.stateCashGame.buy_ins, function(buy_in) {
+                  _vm._l(_vm.session.buy_ins, function(buy_in) {
                     return _c(
                       "div",
                       { key: buy_in.id, staticClass: "mb-1" },
@@ -69448,7 +69289,7 @@ var render = function() {
                           attrs: {
                             transaction: buy_in,
                             "transaction-type": "buyin",
-                            "game-id": _vm.stateCashGame.id
+                            "game-id": _vm.session.id
                           }
                         })
                       ],
@@ -69456,35 +69297,29 @@ var render = function() {
                     )
                   }),
                   _vm._v(" "),
-                  _vm.editing
-                    ? _c("div", [
-                        _c(
-                          "div",
-                          {
-                            staticClass:
-                              "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
-                            on: {
-                              click: function($event) {
-                                return _vm.addTransaction("buyin", {
-                                  amount: 0
-                                })
-                              }
-                            }
-                          },
-                          [
-                            _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
-                            _vm._v(" "),
-                            _c("span", [_vm._v("Add Buy In")])
-                          ]
-                        )
-                      ])
-                    : _vm._e()
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
+                      on: {
+                        click: function($event) {
+                          return _vm.addTransaction("buyin", { amount: 0 })
+                        }
+                      }
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                      _vm._v(" "),
+                      _c("span", [_vm._v("Add Buy In")])
+                    ]
+                  )
                 ],
                 2
               )
             : _vm._e(),
           _vm._v(" "),
-          _vm.stateCashGame.cash_out_model || _vm.editing
+          _vm.session.cash_out_model || _vm.editing
             ? _c(
                 "div",
                 {
@@ -69501,17 +69336,17 @@ var render = function() {
                     [_vm._v("Cash Out")]
                   ),
                   _vm._v(" "),
-                  _vm.stateCashGame.cash_out_model
+                  _vm.session.cash_out_model
                     ? _c("transaction-summary", {
                         attrs: {
-                          transaction: _vm.stateCashGame.cash_out_model,
+                          transaction: _vm.session.cash_out_model,
                           "transaction-type": "cashout",
-                          "game-id": _vm.stateCashGame.id
+                          "game-id": _vm.session.id
                         }
                       })
                     : _vm._e(),
                   _vm._v(" "),
-                  _vm.editing && !_vm.stateCashGame.cash_out_model
+                  _vm.editing && !_vm.session.cash_out_model
                     ? _c("div", [
                         _c(
                           "div",
@@ -69539,8 +69374,7 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          (_vm.stateCashGame.expenses &&
-            _vm.stateCashGame.expenses.length > 0) ||
+          (_vm.session.expenses && _vm.session.expenses.length > 0) ||
           _vm.editing
             ? _c(
                 "div",
@@ -69558,7 +69392,7 @@ var render = function() {
                     [_vm._v("Expenses")]
                   ),
                   _vm._v(" "),
-                  _vm._l(_vm.stateCashGame.expenses, function(expense) {
+                  _vm._l(_vm.session.expenses, function(expense) {
                     return _c(
                       "div",
                       { key: expense.id, staticClass: "mb-1" },
@@ -69567,7 +69401,7 @@ var render = function() {
                           attrs: {
                             transaction: expense,
                             "transaction-type": "expense",
-                            "game-id": _vm.stateCashGame.id
+                            "game-id": _vm.session.id
                           }
                         })
                       ],
@@ -69575,37 +69409,32 @@ var render = function() {
                     )
                   }),
                   _vm._v(" "),
-                  _vm.editing
-                    ? _c("div", [
-                        _c(
-                          "div",
-                          {
-                            staticClass:
-                              "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
-                            on: {
-                              click: function($event) {
-                                return _vm.addTransaction("expense", {
-                                  amount: 0,
-                                  comments: ""
-                                })
-                              }
-                            }
-                          },
-                          [
-                            _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
-                            _vm._v(" "),
-                            _c("span", [_vm._v("Add Expense")])
-                          ]
-                        )
-                      ])
-                    : _vm._e()
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
+                      on: {
+                        click: function($event) {
+                          return _vm.addTransaction("expense", {
+                            amount: 0,
+                            comments: ""
+                          })
+                        }
+                      }
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                      _vm._v(" "),
+                      _c("span", [_vm._v("Add Expense")])
+                    ]
+                  )
                 ],
                 2
               )
             : _vm._e(),
           _vm._v(" "),
-          (_vm.stateCashGame.rebuys && _vm.stateCashGame.rebuys.length > 0) ||
-          _vm.editing
+          (_vm.session.rebuys && _vm.session.rebuys.length > 0) || _vm.editing
             ? _c(
                 "div",
                 {
@@ -69622,7 +69451,7 @@ var render = function() {
                     [_vm._v("Rebuys")]
                   ),
                   _vm._v(" "),
-                  _vm._l(_vm.stateCashGame.rebuys, function(rebuy) {
+                  _vm._l(_vm.session.rebuys, function(rebuy) {
                     return _c(
                       "div",
                       { key: rebuy.id, staticClass: "mb-1" },
@@ -69631,7 +69460,7 @@ var render = function() {
                           attrs: {
                             transaction: rebuy,
                             "transaction-type": "rebuy",
-                            "game-id": _vm.stateCashGame.id
+                            "game-id": _vm.session.id
                           }
                         })
                       ],
@@ -69639,36 +69468,29 @@ var render = function() {
                     )
                   }),
                   _vm._v(" "),
-                  _vm.editing
-                    ? _c("div", [
-                        _c(
-                          "div",
-                          {
-                            staticClass:
-                              "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
-                            on: {
-                              click: function($event) {
-                                return _vm.addTransaction("rebuy", {
-                                  amount: 0
-                                })
-                              }
-                            }
-                          },
-                          [
-                            _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
-                            _vm._v(" "),
-                            _c("span", [_vm._v("Add Rebuy")])
-                          ]
-                        )
-                      ])
-                    : _vm._e()
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
+                      on: {
+                        click: function($event) {
+                          return _vm.addTransaction("rebuy", { amount: 0 })
+                        }
+                      }
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                      _vm._v(" "),
+                      _c("span", [_vm._v("Add Rebuy")])
+                    ]
+                  )
                 ],
                 2
               )
             : _vm._e(),
           _vm._v(" "),
-          (_vm.stateCashGame.add_ons && _vm.stateCashGame.add_ons.length > 0) ||
-          _vm.editing
+          (_vm.session.add_ons && _vm.session.add_ons.length > 0) || _vm.editing
             ? _c(
                 "div",
                 {
@@ -69685,7 +69507,7 @@ var render = function() {
                     [_vm._v("Add Ons")]
                   ),
                   _vm._v(" "),
-                  _vm._l(_vm.stateCashGame.add_ons, function(add_on) {
+                  _vm._l(_vm.session.add_ons, function(add_on) {
                     return _c(
                       "div",
                       { key: add_on.id, staticClass: "mb-1" },
@@ -69694,7 +69516,7 @@ var render = function() {
                           attrs: {
                             transaction: add_on,
                             "transaction-type": "addon",
-                            "game-id": _vm.stateCashGame.id
+                            "game-id": _vm.session.id
                           }
                         })
                       ],
@@ -69702,29 +69524,23 @@ var render = function() {
                     )
                   }),
                   _vm._v(" "),
-                  _vm.editing
-                    ? _c("div", [
-                        _c(
-                          "div",
-                          {
-                            staticClass:
-                              "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
-                            on: {
-                              click: function($event) {
-                                return _vm.addTransaction("addon", {
-                                  amount: 0
-                                })
-                              }
-                            }
-                          },
-                          [
-                            _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
-                            _vm._v(" "),
-                            _c("span", [_vm._v("Add Add On")])
-                          ]
-                        )
-                      ])
-                    : _vm._e()
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
+                      on: {
+                        click: function($event) {
+                          return _vm.addTransaction("addon", { amount: 0 })
+                        }
+                      }
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                      _vm._v(" "),
+                      _c("span", [_vm._v("Add Add On")])
+                    ]
+                  )
                 ],
                 2
               )
@@ -69866,7 +69682,7 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _vm.cash_game.comments || _vm.editing
+          _vm.session.comments || _vm.editing
             ? _c(
                 "div",
                 {
@@ -69886,7 +69702,7 @@ var render = function() {
                   !_vm.editing
                     ? _c("div", {
                         domProps: {
-                          textContent: _vm._s(_vm.cash_game.comments)
+                          textContent: _vm._s(_vm.editSession.comments)
                         }
                       })
                     : _vm._e(),
@@ -69897,13 +69713,13 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.cash_game.comments,
-                            expression: "cash_game.comments"
+                            value: _vm.editSession.comments,
+                            expression: "editSession.comments"
                           }
                         ],
                         class: { "error-input": _vm.errors.comments },
                         attrs: { name: "comments", cols: "30", rows: "5" },
-                        domProps: { value: _vm.cash_game.comments },
+                        domProps: { value: _vm.editSession.comments },
                         on: {
                           input: [
                             function($event) {
@@ -69911,7 +69727,7 @@ var render = function() {
                                 return
                               }
                               _vm.$set(
-                                _vm.cash_game,
+                                _vm.editSession,
                                 "comments",
                                 $event.target.value
                               )
@@ -69936,12 +69752,28 @@ var render = function() {
       ),
       _vm._v(" "),
       _c("div", { staticClass: "flex my-3" }, [
+        _c(
+          "button",
+          {
+            staticClass:
+              "bg-red-500 hover:bg-red-600 focus:bg-red-600 rounded text-white text-sm px-4 py-2 mr-3",
+            attrs: { type: "button" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.deleteSession($event)
+              }
+            }
+          },
+          [_c("i", { staticClass: "fas fa-trash" })]
+        ),
+        _vm._v(" "),
         !_vm.editing
           ? _c(
               "button",
               {
                 staticClass:
-                  "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2 mr-3",
+                  "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2",
                 attrs: { type: "button" },
                 on: {
                   click: function($event) {
@@ -69958,7 +69790,7 @@ var render = function() {
           : _vm._e(),
         _vm._v(" "),
         _vm.editing
-          ? _c("div", [
+          ? _c("div", { staticClass: "flex" }, [
               _c(
                 "button",
                 {
@@ -69976,25 +69808,24 @@ var render = function() {
                   _c("i", { staticClass: "fas fa-edit mr-3" }),
                   _c("span", [_vm._v("Save Changes")])
                 ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "border border-muted-light hover:border-muted-dark hover:text-muted-light rounded text-sm px-4 py-2 cursor-pointer",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.cancelChanges($event)
+                    }
+                  }
+                },
+                [_vm._v("Cancel")]
               )
             ])
-          : _vm._e(),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass:
-              "bg-red-500 hover:bg-red-600 focus:bg-red-600 rounded text-white text-sm px-4 py-2",
-            attrs: { type: "button" },
-            on: {
-              click: function($event) {
-                $event.preventDefault()
-                return _vm.deleteSession($event)
-              }
-            }
-          },
-          [_c("i", { staticClass: "fas fa-trash" })]
-        )
+          : _vm._e()
       ])
     ]
   )
@@ -70211,7 +70042,7 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass: "w-full md:w-1/2 btn-green self-end mt-3",
+                staticClass: "w-full md:w-1/2 btn btn-green self-end mt-3",
                 attrs: { type: "button" }
               },
               [_vm._v("Change email")]
@@ -70346,7 +70177,7 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass: "w-full md:w-1/2 btn-green self-end mt-3",
+                staticClass: "w-full md:w-1/2 btn btn-green self-end mt-3",
                 attrs: { type: "button" }
               },
               [_vm._v("Change Password")]
@@ -70639,7 +70470,7 @@ var render = function() {
           _c(
             "button",
             {
-              staticClass: "w-full md:w-1/2 btn-green self-end mt-3",
+              staticClass: "w-full md:w-1/2 btn btn-green self-end mt-3",
               attrs: { type: "button" }
             },
             [_vm._v("Save default values")]
@@ -70880,7 +70711,7 @@ var render = function() {
       _c(
         "button",
         {
-          staticClass: "btn-green",
+          staticClass: "btn btn-green",
           on: {
             click: function($event) {
               $event.preventDefault()
@@ -70972,7 +70803,10 @@ var render = function() {
         [
           _c(
             "router-link",
-            { staticClass: "btn-green", attrs: { to: { name: "sessions" } } },
+            {
+              staticClass: "btn btn-green",
+              attrs: { to: { name: "sessions" } }
+            },
             [_vm._v("\n\t\tView all sessions\n\t\t")]
           )
         ],
@@ -71131,7 +70965,10 @@ var render = function() {
       [
         _c(
           "router-link",
-          { staticClass: "btn-green", attrs: { to: { name: "statistics" } } },
+          {
+            staticClass: "btn btn-green",
+            attrs: { to: { name: "statistics" } }
+          },
           [_vm._v("\n\t\tView more statistics\n\t\t")]
         )
       ],
@@ -90990,6 +90827,78 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /***/ }),
 
+/***/ "./resources/js/store/modules/live.js":
+/*!********************************************!*\
+  !*** ./resources/js/store/modules/live.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: {
+    liveSession: {}
+  },
+  getters: {
+    sessionInProgress: function sessionInProgress(state) {
+      return Object.keys(state.liveSession).length > 0;
+    }
+  },
+  mutations: {
+    ASSIGN_LIVE_SESSION: function ASSIGN_LIVE_SESSION(state, session) {
+      state.liveSession = session;
+    },
+    END_LIVE_SESSION: function END_LIVE_SESSION(state, session) {
+      state.liveSession = {};
+    },
+    UPDATE_LIVE_SESSION: function UPDATE_LIVE_SESSION(state, session) {
+      state.liveSession = session;
+    }
+  },
+  actions: {
+    startLiveSession: function startLiveSession(_ref, session) {
+      var commit = _ref.commit;
+      return axios.get('/api/cash/live/start', session).then(function (response) {
+        commit('ASSIGN_LIVE_SESSION', response.data.cash_game);
+      })["catch"](function (error) {
+        throw error;
+      });
+    },
+    retrieveLiveSession: function retrieveLiveSession(_ref2) {
+      var commit = _ref2.commit;
+      return axios.get('/api/cash/live/current').then(function (response) {
+        if (response.data.success === true) {
+          commit('ASSIGN_LIVE_SESSION', response.data.cash_game);
+        } else {
+          commit('ASSIGN_LIVE_SESSION', {});
+        }
+      })["catch"](function (error) {
+        throw error;
+      });
+    },
+    endLiveSession: function endLiveSession(_ref3) {
+      var commit = _ref3.commit;
+      return axios.get('/api/cash/live/end').then(function (response) {
+        commit('END_LIVE_SESSION');
+      })["catch"](function (error) {
+        throw error;
+      });
+    },
+    updateLiveSession: function updateLiveSession(_ref4, session) {
+      var commit = _ref4.commit;
+      return axios.get('/api/cash/live/start', session).then(function (response) {
+        commit('UPDATE_LIVE_SESSION', response.data.cash_game);
+      })["catch"](function (error) {
+        throw error;
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/store/modules/transactions.js":
 /*!****************************************************!*\
   !*** ./resources/js/store/modules/transactions.js ***!
@@ -91069,7 +90978,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_bankroll__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @modules/bankroll */ "./resources/js/store/modules/bankroll.js");
 /* harmony import */ var _modules_cash_games__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @modules/cash_games */ "./resources/js/store/modules/cash_games.js");
 /* harmony import */ var _modules_transactions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @modules/transactions */ "./resources/js/store/modules/transactions.js");
+/* harmony import */ var _modules_live__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @modules/live */ "./resources/js/store/modules/live.js");
 // vuex
+
 
 
 
@@ -91081,7 +90992,8 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
     bankroll: _modules_bankroll__WEBPACK_IMPORTED_MODULE_2__["default"],
     cash_games: _modules_cash_games__WEBPACK_IMPORTED_MODULE_3__["default"],
-    transactions: _modules_transactions__WEBPACK_IMPORTED_MODULE_4__["default"]
+    transactions: _modules_transactions__WEBPACK_IMPORTED_MODULE_4__["default"],
+    live: _modules_live__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   state: {
     user: {

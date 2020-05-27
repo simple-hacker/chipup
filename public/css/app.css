@@ -629,14 +629,7 @@ video {
   }
 }
 
-.btn-green {
-  --bg-opacity: 1;
-  background-color: #38a169;
-  background-color: rgba(56, 161, 105, var(--bg-opacity));
-  border-width: 1px;
-  --border-opacity: 1;
-  border-color: #2f855a;
-  border-color: rgba(47, 133, 90, var(--border-opacity));
+.btn {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   padding-left: 1rem;
@@ -649,10 +642,36 @@ video {
   text-align: center;
 }
 
+.btn-green {
+  --bg-opacity: 1;
+  background-color: #38a169;
+  background-color: rgba(56, 161, 105, var(--bg-opacity));
+  border-width: 1px;
+  --border-opacity: 1;
+  border-color: #2f855a;
+  border-color: rgba(47, 133, 90, var(--border-opacity));
+}
+
 .btn-green:hover {
   --bg-opacity: 1;
   background-color: #2f855a;
   background-color: rgba(47, 133, 90, var(--bg-opacity));
+}
+
+.btn-red {
+  --bg-opacity: 1;
+  background-color: #e53e3e;
+  background-color: rgba(229, 62, 62, var(--bg-opacity));
+  border-width: 1px;
+  --border-opacity: 1;
+  border-color: #c53030;
+  border-color: rgba(197, 48, 48, var(--border-opacity));
+}
+
+.btn-red:hover {
+  --bg-opacity: 1;
+  background-color: #c53030;
+  background-color: rgba(197, 48, 48, var(--bg-opacity));
 }
 
 .error-message {

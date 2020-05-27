@@ -10,7 +10,7 @@
                         <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
                     </div>
                 </div>
-                <button type="button" class="w-full md:w-1/2 btn-green self-end mt-3">Change email</button>
+                <button type="button" class="w-full md:w-1/2 btn btn-green self-end mt-3">Change email</button>
             </div>
             <div class="flex flex-col">
                 <div class="flex justify-between items-center mb-2">
@@ -34,7 +34,7 @@
                     <span v-if="errors.new_password_confirmation" class="error-message">{{ errors.new_password_confirmation }}</span>
                     </div>
                 </div>
-                <button type="button" class="w-full md:w-1/2 btn-green self-end mt-3">Change Password</button>
+                <button type="button" class="w-full md:w-1/2 btn btn-green self-end mt-3">Change Password</button>
             </div>
         </div>
         <div class="col-span-4 md:col-span-2 flex flex-col p-2 md:p-4 bg-card border border-muted-dark rounded shadow">
@@ -84,7 +84,7 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="w-full md:w-1/2 btn-green self-end mt-3">Save default values</button>
+            <button type="button" class="w-full md:w-1/2 btn btn-green self-end mt-3">Save default values</button>
         </div>
         <div class="col-span-4 p-2 bg-card border border-muted-dark rounded shadow">
             <h2 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3">Bankroll</h2>

@@ -103,7 +103,7 @@
 				</div>
 			</div>
 			<div class="col-span-4 border border-muted-dark p-1 md:p-3 flex justify-end">
-				<button @click.prevent="showFilters = false" type="button" class="btn-green">Apply Filters</button>
+				<button @click.prevent="showFilters = false" type="button" class="btn btn-green">Apply Filters</button>
 			</div>
 		</div>
 	</div>

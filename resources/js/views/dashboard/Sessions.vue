@@ -8,7 +8,7 @@
 		<div class="mt-4 flex justify-end">
 			<router-link
 				:to="{ name: 'sessions' }"
-				class="btn-green"
+				class="btn btn-green"
 			>
 			View all sessions
 			</router-link>

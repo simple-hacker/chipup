@@ -14,7 +14,7 @@
 			<apexchart type="bar" width="100%" height="200px" :options="options" :series="series"></apexchart>
 		</div>
 		<div class="flex w-full mt-3 justify-end">
-			<button @click.prevent="bankrollTransactionModal" class="btn-green">Manage Bankroll</button>
+			<button @click.prevent="bankrollTransactionModal" class="btn btn-green">Manage Bankroll</button>
 		</div>
 	</div>
 </template>
