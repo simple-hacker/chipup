@@ -22,9 +22,8 @@ class LiveCashGameController extends Controller
         try {
             $cash_game = auth()->user()->startCashGame($request->validated());
 
-            if ($request->amount) {
-                $cash_game->addBuyIn($request->amount);
-            }
+            // request->amount is required
+            $cash_game->addBuyIn($request->amount);
 
             return [
                 'success' => true,
@@ -57,7 +56,7 @@ class LiveCashGameController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'You currently don\'t have a Cash Game in progress'
-            ], 422);
+            ]);
         }
     }
 
