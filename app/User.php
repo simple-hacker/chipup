@@ -73,7 +73,6 @@ class User extends Authenticatable
         // return $this->bankroll;
     }
 
-
     /**
     * Add amount to bankroll.
     * This updates the user's bankroll and creates and Bankroll.
@@ -101,7 +100,6 @@ class User extends Authenticatable
         return $this->hasMany('App\Transactions\Bankroll')->orderByDesc('date');
     }
 
-
     /**
     * Returns a collection of the user's CashGames
     * Unable to prepare route [api/user] for serialization. Uses Closure.Unable to prepare route [api/user] for serialization. Uses Closure.
@@ -127,8 +125,8 @@ class User extends Authenticatable
             throw new CashGameInProgress('A Cash Game is already in progress.');
         }
 
-        // TODO:  Maybe don't use default attributes??
-
+        // All default values attributes are required in the StartCashGameRequest
+        // Using defaults if not set in case mistakes have been made elsewhere in app.
         return $this->cashGames()->create([
             'start_time' => (isset($attributes['start_time'])) ? Carbon::create($attributes['start_time']) : now(),
             'stake_id' => $attributes['stake_id'] ?? $this->default_stake_id,
@@ -142,7 +140,6 @@ class User extends Authenticatable
 
     /**
     * Return the latest Cash Game without an end_time.
-    * NOTE: We should only ever have one live session so need to check.
     * This check is performed in startCashGame
     * 
     * @return \App\CashGame
@@ -213,7 +210,6 @@ class User extends Authenticatable
 
     /**
     * Return the latest Tournament without an end_time.
-    * NOTE: We should only ever have one live tournament so need to check.
     * This check is performed in startTournament
     * 
     * @return \App\Tournament
@@ -283,7 +279,7 @@ class User extends Authenticatable
     /**
     * Mutate bankroll in to currency
     *
-    * @param  Integer $bankroll
+    * @param Integer $bankroll
     * @return void
     */
     public function getBankrollAttribute($bankroll)
@@ -294,7 +290,7 @@ class User extends Authenticatable
     /**
     * Mutate bankroll in to lowest denomination
     *
-    * @param  Float $bankroll
+    * @param Float $bankroll
     * @return void
     */
     public function setBankrollAttribute($bankroll)
