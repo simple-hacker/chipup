@@ -27,7 +27,14 @@
 }
 
 .error-input {
-    @apply border-red-700 border-2
+    @apply border-red-700 border-2;
+}
+
+.modal {
+    @apply bg-background text-white p-1 rounded-lg border border-muted-dark;
+    @screen md {
+        @apply p-3;
+    }
 }
 
 input, select, textarea {

@@ -1,4 +1,3 @@
-<!-- TODO:  ERROR CHECKING -->
 <template>
     <div class="flex flex-col">
         <div v-text="title" class="text-2xl capitalize mb-5 border-b border-muted-light"></div>

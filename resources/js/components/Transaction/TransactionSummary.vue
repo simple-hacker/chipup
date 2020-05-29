@@ -43,7 +43,7 @@ export default {
                 gameType: 'cash_game'
             }, {
                 // Modal Options
-                classes: 'bg-background text-white p-1 md:p-3 rounded-lg border border-muted-dark',
+                classes: 'modal',
                 height: 'auto',
                 width: '95%',
                 maxWidth: 600,
