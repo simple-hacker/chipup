@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 import bankroll from '@modules/bankroll'
 import cash_games from '@modules/cash_games'
 import transactions from '@modules/transactions'
+import live from '@modules/live'
 
 Vue.use(Vuex)
 
@@ -14,6 +15,7 @@ const store = new Vuex.Store({
         bankroll,
         cash_games,
         transactions,
+        live,
     },
     state: {
         user: {

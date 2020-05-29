@@ -94,7 +94,7 @@ export default {
     beforeCreate() {
         this.$store.dispatch('bankroll/getBankrollTransactions')
         this.$store.dispatch('cash_games/getCashGames')
-        this.$store.dispatch('live/retrieveLiveSession')
+        this.$store.dispatch('live/currentLiveSession')
     },
     created() {
         // App uses main-content ref=scroll as a scrollable div for main content, where as vue-router uses window.scrollTop for scrollBehaviour

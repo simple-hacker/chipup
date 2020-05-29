@@ -36,7 +36,7 @@ export default {
             commit('VIEW_CASH_GAME',  cash_game_id)
         },
         getCashGames({ commit }) {
-            return axios.get('/api/cash/')
+            return axios.get('/api/cash')
             .then(response => {
                 commit('ASSIGN_CASH_GAMES', response.data.cash_games)
             })
@@ -45,7 +45,7 @@ export default {
             })
         },
         addCashGame({ commit }, cash_game) {
-            return axios.post('/api/cash/', {
+            return axios.post('/api/cash', {
                 ...cash_game,
 				start_time: moment(cash_game.start_time).format("YYYY-MM-DD HH:mm:ss"),
 				end_time: moment(cash_game.end_time).format("YYYY-MM-DD HH:mm:ss")

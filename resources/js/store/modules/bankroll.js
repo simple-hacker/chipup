@@ -38,7 +38,7 @@ export default {
     },
     actions: {
         getBankrollTransactions({ commit }) {
-            return axios.get('/api/bankroll/')
+            return axios.get('/api/bankroll')
             .then(response => {
                 commit('ASSIGN_BANKROLL_TRANSACTIONS', response.data.bankrollTransactions)
             })
@@ -47,7 +47,7 @@ export default {
             })
         },
         addBankrollTransaction({ commit }, transaction) {
-            return axios.post('/api/bankroll/', {
+            return axios.post('/api/bankroll', {
                 amount: transaction.amount,
                 comments: transaction.comments
             })

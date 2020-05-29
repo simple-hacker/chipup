@@ -22092,11 +22092,6 @@ input, select, textarea {
   color: #FFFFFF;
 }
 
-.theme-green .vdatetime-input {
-  background: #505155;
-  border-radius: 0.25rem;
-}
-
 .theme-green .vdatetime-calendar__month__day:hover > span > span {
   background: #38393D;
 }

@@ -2230,7 +2230,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   beforeCreate: function beforeCreate() {
     this.$store.dispatch('bankroll/getBankrollTransactions');
     this.$store.dispatch('cash_games/getCashGames');
-    this.$store.dispatch('live/retrieveLiveSession');
+    this.$store.dispatch('live/currentLiveSession');
   },
   created: function created() {
     var _this = this;
@@ -2731,6 +2731,372 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2746,11 +3112,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       editLiveSession: {},
       editing: false,
-      errors: {}
+      errors: {},
+      end_time: ''
     };
   },
   created: function created() {
-    // If no id provided or user visits /session then redirect to sessions
     this.editLiveSession = {
       id: this.liveSession.id,
       location: this.liveSession.location,
@@ -2762,9 +3128,69 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.liveSession.end_time).format(),
       comments: this.liveSession.comments
     };
+    console.log(this.liveSession);
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])('live', ['liveSession'])),
-  methods: {}
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])('live', ['liveSession']), {
+    buyInsTotal: function buyInsTotal() {
+      var buyInTotal = this.liveSession.buy_ins ? this.liveSession.buy_ins.reduce(function (total, buy_in) {
+        return total + buy_in.amount;
+      }, 0) : 0;
+      var addOnTotal = this.liveSession.add_ons ? this.liveSession.add_ons.reduce(function (total, add_ons) {
+        return total + add_ons.amount;
+      }, 0) : 0;
+      var rebuyTotal = this.liveSession.rebuys ? this.liveSession.rebuys.reduce(function (total, rebuys) {
+        return total + rebuys.amount;
+      }, 0) : 0;
+      var expenseTotal = this.liveSession.expenses ? this.liveSession.expenses.reduce(function (total, expenses) {
+        return total + expenses.amount;
+      }, 0) : 0;
+      return buyInTotal + addOnTotal + rebuyTotal + expenseTotal;
+    },
+    formattedBuyIns: function formattedBuyIns() {
+      return this.formatCurrency(this.buyInsTotal * -1);
+    }
+  }),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])('live', ['endLiveSession']), {
+    cashOutNow: function cashOutNow() {
+      var _this = this;
+
+      this.endLiveSession(this.session).then(function (response) {
+        _this.$snotify.success('Successfully cashed out.');
+      })["catch"](function (error) {
+        _this.$snotify.error('Error: ' + error.response.data.message);
+
+        _this.errors = error.response.data.errors;
+      });
+    },
+    cashOutAt: function cashOutAt() {
+      var _this2 = this;
+
+      // NOTE: setTimeout is horrible, but vue-datetime does not provide a callback feature
+      // Had to replace the Ok button with my own in the template which triggers this function on click
+      // But this function is fired before vue-datetime has updated the v-model
+      // Adding a slight delay so that start_time is correct, but this is dodgy
+      // TODO:  Look in to creating a callback feature and submitting a pull request to the open source project.
+      // Looks okay enough to do, need to edit Datetime.vue confirm and cancel methods to trigger a callback provided
+      // Don't know how to do the tests though
+      setTimeout(function () {
+        _this2.endLiveSession(_objectSpread({}, _this2.session, {
+          end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(_this2.end_time).format("YYYY-MM-DD HH:mm:ss")
+        })).then(function (response) {
+          _this2.$snotify.success('Successfully cashed out.');
+        })["catch"](function (error) {
+          _this2.$snotify.error('Error: ' + error.response.data.message);
+
+          _this2.errors = error.response.data.errors;
+        });
+      }, 100);
+    },
+    formatCurrency: function formatCurrency(amount) {
+      return Vue.prototype.currency.format(amount);
+    },
+    formatDate: function formatDate(date) {
+      return moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format("dddd Do MMMM, HH:mm");
+    }
+  })
 });
 
 /***/ }),
@@ -2852,6 +3278,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -2910,6 +3338,67 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'StartCashGame',
@@ -2917,18 +3406,52 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       errors: {},
       session: {
-        stake: 1,
-        limit: 1,
-        variant: 1,
-        table_size: 1,
+        stake_id: 1,
+        limit_id: 1,
+        variant_id: 1,
+        table_size_id: 1,
         location: '',
-        buyin: 0,
-        start_time: ''
-      }
+        amount: 0
+      },
+      start_time: ''
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes'])),
-  methods: {}
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('live', ['startLiveSession']), {
+    startSessionNow: function startSessionNow() {
+      var _this = this;
+
+      this.startLiveSession(this.session).then(function (response) {
+        _this.$snotify.success('Started live cash game.');
+      })["catch"](function (error) {
+        _this.$snotify.error('Error: ' + error.response.data.message);
+
+        _this.errors = error.response.data.errors;
+      });
+    },
+    startSessionAt: function startSessionAt() {
+      var _this2 = this;
+
+      // NOTE: setTimeout is horrible, but vue-datetime does not provide a callback feature
+      // Had to replace the Ok button with my own in the template which triggers this function on click
+      // But this function is fired before vue-datetime has updated the v-model
+      // Adding a slight delay so that start_time is correct, but this is dodgy
+      // TODO:  Look in to creating a callback feature and submitting a pull request to the open source project.
+      // Looks okay enough to do, need to edit Datetime.vue confirm and cancel methods to trigger a callback provided
+      // Don't know how to do the tests though
+      setTimeout(function () {
+        _this2.startLiveSession(_objectSpread({}, _this2.session, {
+          start_time: moment__WEBPACK_IMPORTED_MODULE_1___default()(_this2.start_time).format("YYYY-MM-DD HH:mm:ss")
+        })).then(function (response) {
+          _this2.$snotify.success('Started live cash game.');
+        })["catch"](function (error) {
+          _this2.$snotify.error('Error: ' + error.response.data.message);
+
+          _this2.errors = error.response.data.errors;
+        });
+      }, 100);
+    }
+  })
 });
 
 /***/ }),
@@ -5437,25 +5960,6 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 // module
 exports.push([module.i, ".fade-enter-active[data-v-5515685a], .fade-leave-active[data-v-5515685a] {\n  transition: background-color 0.25s ease-out;\n}\n.fade-enter[data-v-5515685a], .fade-leave-to[data-v-5515685a] {\n  background-color: 0;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Session/StartCashGame.vue?vue&type=style&index=0&id=52066013&scoped=true&lang=css&":
-/*!***************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Session/StartCashGame.vue?vue&type=style&index=0&id=52066013&scoped=true&lang=css& ***!
-  \***************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, ".fade-slide-enter-active[data-v-52066013],\n.fade-slide-leave-active[data-v-52066013] {\n  transition-duration: 0.30s;\n  transition-property: all;\n  transition-timing-function: ease;\n}\n.fade-slide-enter[data-v-52066013],\n.fade-slide-leave-active[data-v-52066013] {\n  opacity: 0;\n  transform: translateY(20px);\n}\n", ""]);
 
 // exports
 
@@ -62566,36 +63070,6 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Session/StartCashGame.vue?vue&type=style&index=0&id=52066013&scoped=true&lang=css&":
-/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Session/StartCashGame.vue?vue&type=style&index=0&id=52066013&scoped=true&lang=css& ***!
-  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./StartCashGame.vue?vue&type=style&index=0&id=52066013&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Session/StartCashGame.vue?vue&type=style&index=0&id=52066013&scoped=true&lang=css&");
-
-if(typeof content === 'string') content = [[module.i, content, '']];
-
-var transform;
-var insertInto;
-
-
-
-var options = {"hmr":true}
-
-options.transform = transform
-options.insertInto = undefined;
-
-var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
-
-if(content.locals) module.exports = content.locals;
-
-if(false) {}
-
-/***/ }),
-
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Statistics.vue?vue&type=style&index=0&id=52bb2602&scoped=true&lang=css&":
 /*!***************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/Statistics.vue?vue&type=style&index=0&id=52bb2602&scoped=true&lang=css& ***!
@@ -66638,11 +67112,936 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", {
-    staticClass: "flex flex-col xxl:w-2/3 xxl:mx-auto w-full text-white"
-  })
+  return _c(
+    "div",
+    { staticClass: "flex flex-col xxl:w-2/3 xxl:mx-auto w-full text-white" },
+    [
+      _c("div", {
+        staticClass: "text-center text-6xl font-bold text-red-500",
+        domProps: { textContent: _vm._s(_vm.formattedBuyIns) }
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "grid grid-cols-6 gap-2 md:gap-3 mt-2 md:mt-4" },
+        [
+          _c(
+            "div",
+            {
+              staticClass:
+                "col-span-6 md:col-span-3 md:row-span-2 flex-col bg-card border border-muted-dark rounded-lg p-3 text-lg"
+            },
+            [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2"
+                },
+                [_vm._v("Details")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
+                [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "w-full" }, [
+                    !_vm.editing
+                      ? _c("span", {
+                          domProps: {
+                            textContent: _vm._s(_vm.liveSession.location)
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editing
+                      ? _c("div", { staticClass: "flex flex-col" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.editLiveSession.location,
+                                expression: "editLiveSession.location"
+                              }
+                            ],
+                            staticClass: "p-1 text-lg",
+                            class: { "error-input": _vm.errors.location },
+                            attrs: { type: "text", placeholder: "Location" },
+                            domProps: { value: _vm.editLiveSession.location },
+                            on: {
+                              input: [
+                                function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.editLiveSession,
+                                    "location",
+                                    $event.target.value
+                                  )
+                                },
+                                function($event) {
+                                  delete _vm.errors.location
+                                }
+                              ]
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.location
+                            ? _c("span", { staticClass: "error-message" }, [
+                                _vm._v(_vm._s(_vm.errors.location[0]))
+                              ])
+                            : _vm._e()
+                        ])
+                      : _vm._e()
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "w-full" }, [
+                    !_vm.editing
+                      ? _c("span", {
+                          domProps: {
+                            textContent: _vm._s(_vm.liveSession.stake.stake)
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editing
+                      ? _c("div", { staticClass: "flex flex-col" }, [
+                          _c(
+                            "select",
+                            {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.editLiveSession.stake_id,
+                                  expression: "editLiveSession.stake_id"
+                                }
+                              ],
+                              staticClass: "p-1 text-lg mr-1",
+                              class: { "error-input": _vm.errors.stake_id },
+                              on: {
+                                input: function($event) {
+                                  delete _vm.errors.stake_id
+                                },
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.$set(
+                                    _vm.editLiveSession,
+                                    "stake_id",
+                                    $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  )
+                                }
+                              }
+                            },
+                            _vm._l(_vm.stakes, function(stake) {
+                              return _c("option", {
+                                key: stake.id,
+                                domProps: {
+                                  value: stake.id,
+                                  textContent: _vm._s(stake.stake)
+                                }
+                              })
+                            }),
+                            0
+                          ),
+                          _vm._v(" "),
+                          _vm.errors.stake_id
+                            ? _c("span", { staticClass: "error-message" }, [
+                                _vm._v(_vm._s(_vm.errors.stake_id[0]))
+                              ])
+                            : _vm._e()
+                        ])
+                      : _vm._e()
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
+                [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "w-full" }, [
+                    !_vm.editing
+                      ? _c("span", {
+                          domProps: {
+                            textContent: _vm._s(
+                              _vm.liveSession.limit.limit +
+                                " " +
+                                _vm.liveSession.variant.variant
+                            )
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editing
+                      ? _c("div", { staticClass: "flex w-full" }, [
+                          _c("div", { staticClass: "flex flex-1 flex-col" }, [
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.editLiveSession.limit_id,
+                                    expression: "editLiveSession.limit_id"
+                                  }
+                                ],
+                                staticClass: "p-1 text-lg mr-1",
+                                class: { "error-input": _vm.errors.limit_id },
+                                on: {
+                                  input: function($event) {
+                                    delete _vm.errors.limit_id
+                                  },
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.editLiveSession,
+                                      "limit_id",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              _vm._l(_vm.limits, function(limit) {
+                                return _c("option", {
+                                  key: limit.id,
+                                  domProps: {
+                                    value: limit.id,
+                                    textContent: _vm._s(limit.limit)
+                                  }
+                                })
+                              }),
+                              0
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.limit_id
+                              ? _c("span", { staticClass: "error-message" }, [
+                                  _vm._v(_vm._s(_vm.errors.limit_id[0]))
+                                ])
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "flex flex-1 flex-col" }, [
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.editLiveSession.variant_id,
+                                    expression: "editLiveSession.variant_id"
+                                  }
+                                ],
+                                staticClass: "p-1 text-lg",
+                                class: { "error-input": _vm.errors.variant_id },
+                                on: {
+                                  input: function($event) {
+                                    delete _vm.errors.variant_id
+                                  },
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.editLiveSession,
+                                      "variant_id",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              _vm._l(_vm.variants, function(variant) {
+                                return _c("option", {
+                                  key: variant.id,
+                                  domProps: {
+                                    value: variant.id,
+                                    textContent: _vm._s(variant.variant)
+                                  }
+                                })
+                              }),
+                              0
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.variant_id
+                              ? _c("span", { staticClass: "error-message" }, [
+                                  _vm._v(_vm._s(_vm.errors.variant_id[0]))
+                                ])
+                              : _vm._e()
+                          ])
+                        ])
+                      : _vm._e()
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
+                [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "w-full" }, [
+                    !_vm.editing
+                      ? _c("span", {
+                          domProps: {
+                            textContent: _vm._s(
+                              _vm.liveSession.table_size.table_size
+                            )
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editing
+                      ? _c("div", { staticClass: "flex flex-col" }, [
+                          _c(
+                            "select",
+                            {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.editLiveSession.table_size_id,
+                                  expression: "editLiveSession.table_size_id"
+                                }
+                              ],
+                              staticClass: "p-1 text-lg mr-1",
+                              class: {
+                                "error-input": _vm.errors.table_size_id
+                              },
+                              on: {
+                                input: function($event) {
+                                  delete _vm.errors.table_size_id
+                                },
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.$set(
+                                    _vm.editLiveSession,
+                                    "table_size_id",
+                                    $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  )
+                                }
+                              }
+                            },
+                            _vm._l(_vm.table_sizes, function(table_size) {
+                              return _c("option", {
+                                key: table_size.id,
+                                domProps: {
+                                  value: table_size.id,
+                                  textContent: _vm._s(table_size.table_size)
+                                }
+                              })
+                            }),
+                            0
+                          ),
+                          _vm._v(" "),
+                          _vm.errors.table_size_id
+                            ? _c("span", { staticClass: "error-message" }, [
+                                _vm._v(_vm._s(_vm.errors.table_size_id[0]))
+                              ])
+                            : _vm._e()
+                        ])
+                      : _vm._e()
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mb-2 md:mb-0 flex items-start p-0 md:p-2" },
+                [
+                  _vm._m(4),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "w-full" }, [
+                    !_vm.editing
+                      ? _c("span", {
+                          domProps: {
+                            textContent: _vm._s(
+                              _vm.formatDate(_vm.liveSession.start_time)
+                            )
+                          }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editing
+                      ? _c(
+                          "div",
+                          { staticClass: "flex flex-col" },
+                          [
+                            _c("datetime", {
+                              staticClass:
+                                "w-full bg-muted-light border border-muted-dark rounded border theme-green",
+                              attrs: {
+                                "input-id": "start_time",
+                                type: "datetime",
+                                "minute-step": 5,
+                                auto: "",
+                                placeholder: "Start Date and Time",
+                                title: "Start Date and Time",
+                                "input-class": {
+                                  "error-input": _vm.errors.start_time,
+                                  "p-1": true
+                                }
+                              },
+                              on: {
+                                input: function($event) {
+                                  delete _vm.errors.start_time
+                                }
+                              },
+                              model: {
+                                value: _vm.editLiveSession.start_time,
+                                callback: function($$v) {
+                                  _vm.$set(
+                                    _vm.editLiveSession,
+                                    "start_time",
+                                    $$v
+                                  )
+                                },
+                                expression: "editLiveSession.start_time"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.errors.start_time
+                              ? _c("span", { staticClass: "error-message" }, [
+                                  _vm._v(_vm._s(_vm.errors.start_time[0]))
+                                ])
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      : _vm._e()
+                  ])
+                ]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "col-span-6 md:col-span-3 flex flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+            },
+            [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "font-semibold md:border-b md:border-muted-dark md:p-1 mb-2"
+                },
+                [_vm._v("Buy Ins")]
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.liveSession.buy_ins, function(buy_in) {
+                return _c(
+                  "div",
+                  { key: buy_in.id, staticClass: "mb-1" },
+                  [
+                    _c("transaction-summary", {
+                      attrs: {
+                        transaction: buy_in,
+                        "transaction-type": "buyin",
+                        "game-id": _vm.liveSession.id
+                      }
+                    })
+                  ],
+                  1
+                )
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
+                  on: {
+                    click: function($event) {
+                      return _vm.addTransaction("buyin", { amount: 0 })
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                  _vm._v(" "),
+                  _c("span", [_vm._v("Add Buy In")])
+                ]
+              )
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "col-span-6 md:col-span-3 flex flex-col order-5 md:order-4 justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+            },
+            [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "font-semibold md:border-b md:border-muted-dark md:p-1 mb-2"
+                },
+                [_vm._v("Expenses")]
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.liveSession.expenses, function(expense) {
+                return _c(
+                  "div",
+                  { key: expense.id, staticClass: "mb-1" },
+                  [
+                    _c("transaction-summary", {
+                      attrs: {
+                        transaction: expense,
+                        "transaction-type": "expense",
+                        "game-id": _vm.liveSession.id
+                      }
+                    })
+                  ],
+                  1
+                )
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
+                  on: {
+                    click: function($event) {
+                      return _vm.addTransaction("expense", {
+                        amount: 0,
+                        comments: ""
+                      })
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                  _vm._v(" "),
+                  _c("span", [_vm._v("Add Expense")])
+                ]
+              )
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "col-span-6 md:col-span-3 flex flex-col order-6 md:order-5 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+            },
+            [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "font-semibold md:border-b md:border-muted-dark md:p-1 mb-2"
+                },
+                [_vm._v("Rebuys")]
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.liveSession.rebuys, function(rebuy) {
+                return _c(
+                  "div",
+                  { key: rebuy.id, staticClass: "mb-1" },
+                  [
+                    _c("transaction-summary", {
+                      attrs: {
+                        transaction: rebuy,
+                        "transaction-type": "rebuy",
+                        "game-id": _vm.liveSession.id
+                      }
+                    })
+                  ],
+                  1
+                )
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
+                  on: {
+                    click: function($event) {
+                      return _vm.addTransaction("rebuy", { amount: 0 })
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                  _vm._v(" "),
+                  _c("span", [_vm._v("Add Rebuy")])
+                ]
+              )
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "col-span-6 md:col-span-3 flex flex-col order-7 md:order-6 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+            },
+            [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "font-semibold md:border-b md:border-muted-dark md:p-1 mb-2"
+                },
+                [_vm._v("Add Ons")]
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.liveSession.add_ons, function(add_on) {
+                return _c(
+                  "div",
+                  { key: add_on.id, staticClass: "mb-1" },
+                  [
+                    _c("transaction-summary", {
+                      attrs: {
+                        transaction: add_on,
+                        "transaction-type": "addon",
+                        "game-id": _vm.liveSession.id
+                      }
+                    })
+                  ],
+                  1
+                )
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center",
+                  on: {
+                    click: function($event) {
+                      return _vm.addTransaction("addon", { amount: 0 })
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-plus-circle mr-2" }),
+                  _vm._v(" "),
+                  _c("span", [_vm._v("Add Add On")])
+                ]
+              )
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _vm.liveSession.comments || _vm.editing
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "col-span-6 md:col-span-3 row-span-1 flex flex-col order-8 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2"
+                    },
+                    [_vm._v("Comments")]
+                  ),
+                  _vm._v(" "),
+                  !_vm.editing
+                    ? _c("div", {
+                        domProps: {
+                          textContent: _vm._s(_vm.editLiveSession.comments)
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.editing
+                    ? _c("textarea", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.editLiveSession.comments,
+                            expression: "editLiveSession.comments"
+                          }
+                        ],
+                        class: { "error-input": _vm.errors.comments },
+                        attrs: { name: "comments", cols: "30", rows: "5" },
+                        domProps: { value: _vm.editLiveSession.comments },
+                        on: {
+                          input: [
+                            function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.editLiveSession,
+                                "comments",
+                                $event.target.value
+                              )
+                            },
+                            function($event) {
+                              delete _vm.errors.comments
+                            }
+                          ]
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.errors.comments
+                    ? _c("span", { staticClass: "error-message" }, [
+                        _vm._v(_vm._s(_vm.errors.comments[0]))
+                      ])
+                    : _vm._e()
+                ]
+              )
+            : _vm._e()
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "flex flex-col mt-4" }, [
+        _c(
+          "div",
+          { staticClass: "flex" },
+          [
+            _c(
+              "datetime",
+              {
+                staticClass: "w-full theme-green mr-1",
+                attrs: {
+                  "input-id": "end_time",
+                  type: "datetime",
+                  "minute-step": 5,
+                  flow: ["time"],
+                  format: "HH:mm",
+                  placeholder: "Cash Out At",
+                  title: "End Live Session At",
+                  "input-class": {
+                    "error-input": _vm.errors.end_time,
+                    "bg-red-700 border-none text-white font-bold p-4 uppercase text-center cursor-pointer": true
+                  }
+                },
+                on: {
+                  input: function($event) {
+                    delete _vm.errors.end_time
+                  }
+                },
+                model: {
+                  value: _vm.end_time,
+                  callback: function($$v) {
+                    _vm.end_time = $$v
+                  },
+                  expression: "end_time"
+                }
+              },
+              [
+                _c("template", { slot: "button-confirm" }, [
+                  _c(
+                    "div",
+                    {
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.cashOutAt($event)
+                        }
+                      }
+                    },
+                    [_vm._v("\n\t\t\t\t\t\tCash Out Now\n\t\t\t\t\t")]
+                  )
+                ])
+              ],
+              2
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "w-full bg-red-600 border border-red-700 hover:bg-red-700 rounded p-4 uppercase text-white font-bold text-center ml-1",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.cashOutNow($event)
+                  }
+                }
+              },
+              [_vm._v("\n\t\t\t\tCash Out\n\t\t\t")]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _vm.errors.end_time
+          ? _c("span", { staticClass: "error-message" }, [
+              _vm._v(_vm._s(_vm.errors.end_time[0]))
+            ])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "flex my-3" }, [
+        !_vm.editing
+          ? _c(
+              "button",
+              {
+                staticClass:
+                  "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    _vm.editing = true
+                  }
+                }
+              },
+              [
+                _c("i", { staticClass: "fas fa-edit mr-3" }),
+                _c("span", [_vm._v("Edit")])
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.editing
+          ? _c("div", { staticClass: "flex" }, [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2 mr-3",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.saveSession($event)
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-edit mr-3" }),
+                  _c("span", [_vm._v("Save Changes")])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "border border-muted-light hover:border-muted-dark hover:text-muted-light rounded text-sm px-4 py-2 cursor-pointer",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.cancelChanges($event)
+                    }
+                  }
+                },
+                [_vm._v("Cancel")]
+              )
+            ])
+          : _vm._e()
+      ])
+    ]
+  )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-map-marker-alt" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-coins" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-stream" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "fas fa-user-friends" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-1/6" }, [
+      _c("i", { staticClass: "far fa-clock" })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -66717,314 +68116,407 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h1", { staticClass: "text-lg md:text-2xl" }, [
-      _vm._v("Start a new cash game session.")
-    ]),
-    _vm._v(" "),
-    _c("hr", { staticClass: "mb-4 border border-muted-dark" }),
-    _vm._v(" "),
-    _c("div", { staticClass: "flex flex-col" }, [
-      _c("div", [
-        _c("p", { staticClass: "text-base md:text-lg mb-2" }, [
-          _vm._v("What are you playing?")
+  return _c(
+    "div",
+    { staticClass: "bg-card rounded border border-muted-dark p-4 text-white" },
+    [
+      _c("h1", { staticClass: "text-lg md:text-2xl" }, [
+        _vm._v("Start a new cash game session.")
+      ]),
+      _vm._v(" "),
+      _c("hr", { staticClass: "mb-4 border border-muted-dark" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "flex flex-col" }, [
+        _c("div", [
+          _c("p", { staticClass: "text-base md:text-lg mb-2" }, [
+            _vm._v("What are you playing?")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex flex-wrap" }, [
+            _c("div", { staticClass: "flex flex-col w-1/2 lg:w-1/4 p-1" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.session.stake_id,
+                      expression: "session.stake_id"
+                    }
+                  ],
+                  class: { "error-input": _vm.errors.stake_id },
+                  on: {
+                    input: function($event) {
+                      delete _vm.errors.stake_id
+                    },
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.session,
+                        "stake_id",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                _vm._l(_vm.stakes, function(stake) {
+                  return _c(
+                    "option",
+                    { key: stake.id, domProps: { value: stake.id } },
+                    [_vm._v(_vm._s(stake.stake))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _vm.errors.stake_id
+                ? _c("span", { staticClass: "error-message" }, [
+                    _vm._v(_vm._s(_vm.errors.stake_id[0]))
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex flex-col w-1/2 lg:w-1/4 p-1" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.session.limit_id,
+                      expression: "session.limit_id"
+                    }
+                  ],
+                  class: { "error-input": _vm.errors.limit_id },
+                  on: {
+                    input: function($event) {
+                      delete _vm.errors.limit_id
+                    },
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.session,
+                        "limit_id",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                _vm._l(_vm.limits, function(limit) {
+                  return _c(
+                    "option",
+                    { key: limit.id, domProps: { value: limit.id } },
+                    [_vm._v(_vm._s(limit.limit))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _vm.errors.limit_id
+                ? _c("span", { staticClass: "error-message" }, [
+                    _vm._v(_vm._s(_vm.errors.limit_id[0]))
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex flex-col w-1/2 lg:w-1/4 p-1" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.session.variant_id,
+                      expression: "session.variant_id"
+                    }
+                  ],
+                  class: { "error-input": _vm.errors.variant_id },
+                  on: {
+                    input: function($event) {
+                      delete _vm.errors.variant_id
+                    },
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.session,
+                        "variant_id",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                _vm._l(_vm.variants, function(variant) {
+                  return _c(
+                    "option",
+                    { key: variant.id, domProps: { value: variant.id } },
+                    [_vm._v(_vm._s(variant.variant))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _vm.errors.variant_id
+                ? _c("span", { staticClass: "error-message" }, [
+                    _vm._v(_vm._s(_vm.errors.variant_id[0]))
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex flex-col w-1/2 lg:w-1/4 p-1" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.session.table_size_id,
+                      expression: "session.table_size_id"
+                    }
+                  ],
+                  class: { "error-input": _vm.errors.table_size_id },
+                  on: {
+                    input: function($event) {
+                      delete _vm.errors.table_size_id
+                    },
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.session,
+                        "table_size_id",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                _vm._l(_vm.table_sizes, function(table_size) {
+                  return _c(
+                    "option",
+                    { key: table_size.id, domProps: { value: table_size.id } },
+                    [_vm._v(_vm._s(table_size.table_size))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _vm.errors.table_size_id
+                ? _c("span", { staticClass: "error-message" }, [
+                    _vm._v(_vm._s(_vm.errors.table_size_id[0]))
+                  ])
+                : _vm._e()
+            ])
+          ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "flex flex-wrap" }, [
-          _c("div", { staticClass: "w-1/2 lg:w-1/4 p-1" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.session.stake,
-                    expression: "session.stake"
-                  }
-                ],
-                class: { "border-red-700": _vm.errors.stake_id },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.session,
-                      "stake",
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  }
-                }
-              },
-              _vm._l(_vm.stakes, function(stake) {
-                return _c(
-                  "option",
-                  { key: stake.id, domProps: { value: stake.id } },
-                  [_vm._v(_vm._s(stake.stake))]
-                )
-              }),
-              0
-            ),
-            _vm._v(" "),
-            _vm.errors.stake_id
-              ? _c("span", { staticClass: "text-xs text-red-700 mt-1 mb-2" }, [
-                  _vm._v(_vm._s(_vm.errors.stake_id[0]))
-                ])
-              : _vm._e()
+        _c("div", { staticClass: "mt-3" }, [
+          _c("p", { staticClass: "text-base md:text-lg mb-2" }, [
+            _vm._v("Where are you playing?")
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "w-1/2 lg:w-1/4 p-1" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.session.limit,
-                    expression: "session.limit"
-                  }
-                ],
-                class: { "border-red-700": _vm.errors.limit_id },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.session,
-                      "limit",
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  }
+          _c("div", { staticClass: "flex flex-col" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.session.location,
+                  expression: "session.location"
                 }
-              },
-              _vm._l(_vm.limits, function(limit) {
-                return _c(
-                  "option",
-                  { key: limit.id, domProps: { value: limit.id } },
-                  [_vm._v(_vm._s(limit.limit))]
-                )
-              }),
-              0
-            ),
+              ],
+              class: { "error-input": _vm.errors.location },
+              attrs: { type: "text", placeholder: "Enter location" },
+              domProps: { value: _vm.session.location },
+              on: {
+                input: [
+                  function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.session, "location", $event.target.value)
+                  },
+                  function($event) {
+                    delete _vm.errors.location
+                  }
+                ]
+              }
+            }),
             _vm._v(" "),
-            _vm.errors.limit_id
-              ? _c("span", { staticClass: "text-xs text-red-700 mt-1 mb-2" }, [
-                  _vm._v(_vm._s(_vm.errors.limit_id[0]))
-                ])
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "w-1/2 lg:w-1/4 p-1" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.session.variant,
-                    expression: "session.variant"
-                  }
-                ],
-                class: { "border-red-700": _vm.errors.variant_id },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.session,
-                      "variant",
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  }
-                }
-              },
-              _vm._l(_vm.variants, function(variant) {
-                return _c(
-                  "option",
-                  { key: variant.id, domProps: { value: variant.id } },
-                  [_vm._v(_vm._s(variant.variant))]
-                )
-              }),
-              0
-            ),
-            _vm._v(" "),
-            _vm.errors.variant_id
-              ? _c("span", { staticClass: "text-xs text-red-700 mt-1 mb-2" }, [
-                  _vm._v(_vm._s(_vm.errors.variant_id[0]))
-                ])
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "w-1/2 lg:w-1/4 p-1" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.session.table_size,
-                    expression: "session.table_size"
-                  }
-                ],
-                class: { "border-red-700": _vm.errors.table_size_id },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.session,
-                      "table_size",
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  }
-                }
-              },
-              _vm._l(_vm.table_sizes, function(table_size) {
-                return _c(
-                  "option",
-                  { key: table_size.id, domProps: { value: table_size.id } },
-                  [_vm._v(_vm._s(table_size.table_size))]
-                )
-              }),
-              0
-            ),
-            _vm._v(" "),
-            _vm.errors.table_size_id
-              ? _c("span", { staticClass: "text-xs text-red-700 mt-1 mb-2" }, [
-                  _vm._v(_vm._s(_vm.errors.table_size_id[0]))
+            _vm.errors.location
+              ? _c("span", { staticClass: "error-message" }, [
+                  _vm._v(_vm._s(_vm.errors.location[0]))
                 ])
               : _vm._e()
           ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "mt-3" }, [
+          _c("p", { staticClass: "text-base md:text-lg mb-2" }, [
+            _vm._v("What's your buyin?")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex flex-col" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.session.amount,
+                  expression: "session.amount"
+                }
+              ],
+              class: { "error-input": _vm.errors.amount },
+              attrs: { type: "number", step: "0.01", min: "0" },
+              domProps: { value: _vm.session.amount },
+              on: {
+                input: [
+                  function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.session, "amount", $event.target.value)
+                  },
+                  function($event) {
+                    delete _vm.errors.amount
+                  }
+                ]
+              }
+            }),
+            _vm._v(" "),
+            _vm.errors.amount
+              ? _c("span", { staticClass: "error-message" }, [
+                  _vm._v(_vm._s(_vm.errors.amount[0]))
+                ])
+              : _vm._e()
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "flex flex-col mt-4" }, [
+          _c(
+            "div",
+            { staticClass: "flex" },
+            [
+              _c(
+                "datetime",
+                {
+                  staticClass: "w-full theme-green mr-1",
+                  attrs: {
+                    "input-id": "start_time",
+                    type: "datetime",
+                    "minute-step": 5,
+                    flow: ["time"],
+                    format: "HH:mm",
+                    placeholder: "Start At",
+                    title: "Start Live Session At",
+                    "input-class": {
+                      "error-input": _vm.errors.end_time,
+                      "bg-green-700 border-none text-white font-bold p-4 uppercase text-center cursor-pointer": true
+                    }
+                  },
+                  on: {
+                    input: function($event) {
+                      delete _vm.errors.end_time
+                    }
+                  },
+                  model: {
+                    value: _vm.start_time,
+                    callback: function($$v) {
+                      _vm.start_time = $$v
+                    },
+                    expression: "start_time"
+                  }
+                },
+                [
+                  _c("template", { slot: "button-confirm" }, [
+                    _c(
+                      "div",
+                      {
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.startSessionAt($event)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n\t\t\t\t\t\t\t\tStart Session\n\t\t\t\t\t\t\t"
+                        )
+                      ]
+                    )
+                  ])
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "w-full bg-green-600 border border-green-700 hover:bg-green-700 rounded p-4 uppercase text-white font-bold text-center ml-1",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.startSessionNow($event)
+                    }
+                  }
+                },
+                [_vm._v("\n\t\t\t\t\t\tStart Now\n\t\t\t\t\t")]
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.errors.start_time
+            ? _c("span", { staticClass: "error-message" }, [
+                _vm._v(_vm._s(_vm.errors.start_time[0]))
+              ])
+            : _vm._e()
         ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "mt-3" }, [
-        _c("p", { staticClass: "text-base md:text-lg mb-2" }, [
-          _vm._v("Where are you playing?")
-        ]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.session.location,
-              expression: "session.location"
-            }
-          ],
-          class: { "border-red-700": _vm.errors.location },
-          attrs: { type: "text", placeholder: "Enter location" },
-          domProps: { value: _vm.session.location },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.$set(_vm.session, "location", $event.target.value)
-            }
-          }
-        }),
-        _vm._v(" "),
-        _vm.errors.location
-          ? _c("span", { staticClass: "text-xs text-red-700" }, [
-              _vm._v(_vm._s(_vm.errors.location[0]))
-            ])
-          : _vm._e()
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "mt-3" }, [
-        _c("p", { staticClass: "text-base md:text-lg mb-2" }, [
-          _vm._v("What's your buyin?")
-        ]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.session.buyin,
-              expression: "session.buyin"
-            }
-          ],
-          class: { "border-red-700": _vm.errors.buyin },
-          attrs: { type: "number", step: "0.01", min: "0" },
-          domProps: { value: _vm.session.buyin },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.$set(_vm.session, "buyin", $event.target.value)
-            }
-          }
-        }),
-        _vm._v(" "),
-        _vm.errors.buyin
-          ? _c("span", { staticClass: "text-xs text-red-700" }, [
-              _vm._v(_vm._s(_vm.errors.buyin[0]))
-            ])
-          : _vm._e()
-      ]),
-      _vm._v(" "),
-      _vm._m(0)
-    ])
-  ])
+      ])
+    ]
+  )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "flex mt-4" }, [
-      _c(
-        "button",
-        {
-          staticClass:
-            "w-full bg-green-700 border border-green-800 hover:bg-green-800 p-4 uppercase text-white font-bold text-center mr-1",
-          attrs: { type: "button" }
-        },
-        [_vm._v("Start At")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass:
-            "w-full bg-green-600 border border-green-700 hover:bg-green-700 p-4 uppercase text-white font-bold text-center ml-1",
-          attrs: { type: "button" }
-        },
-        [_vm._v("Start Now")]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -68702,10 +70194,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    {
-      staticClass:
-        "w-full md:w-5/6 mx-auto bg-card rounded border border-muted-dark p-4 text-white"
-    },
+    { staticClass: "w-full mx-auto" },
     [_vm.sessionInProgress ? _c("current-cash-game") : _c("start-cash-game")],
     1
   )
@@ -90336,9 +91825,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _StartCashGame_vue_vue_type_template_id_52066013_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./StartCashGame.vue?vue&type=template&id=52066013&scoped=true& */ "./resources/js/components/Session/StartCashGame.vue?vue&type=template&id=52066013&scoped=true&");
 /* harmony import */ var _StartCashGame_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./StartCashGame.vue?vue&type=script&lang=js& */ "./resources/js/components/Session/StartCashGame.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _StartCashGame_vue_vue_type_style_index_0_id_52066013_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./StartCashGame.vue?vue&type=style&index=0&id=52066013&scoped=true&lang=css& */ "./resources/js/components/Session/StartCashGame.vue?vue&type=style&index=0&id=52066013&scoped=true&lang=css&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -90346,7 +91833,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
   _StartCashGame_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _StartCashGame_vue_vue_type_template_id_52066013_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
   _StartCashGame_vue_vue_type_template_id_52066013_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
@@ -90375,22 +91862,6 @@ component.options.__file = "resources/js/components/Session/StartCashGame.vue"
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_StartCashGame_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./StartCashGame.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Session/StartCashGame.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_StartCashGame_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/Session/StartCashGame.vue?vue&type=style&index=0&id=52066013&scoped=true&lang=css&":
-/*!********************************************************************************************************************!*\
-  !*** ./resources/js/components/Session/StartCashGame.vue?vue&type=style&index=0&id=52066013&scoped=true&lang=css& ***!
-  \********************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_StartCashGame_vue_vue_type_style_index_0_id_52066013_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./StartCashGame.vue?vue&type=style&index=0&id=52066013&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Session/StartCashGame.vue?vue&type=style&index=0&id=52066013&scoped=true&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_StartCashGame_vue_vue_type_style_index_0_id_52066013_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_StartCashGame_vue_vue_type_style_index_0_id_52066013_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_StartCashGame_vue_vue_type_style_index_0_id_52066013_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_StartCashGame_vue_vue_type_style_index_0_id_52066013_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_StartCashGame_vue_vue_type_style_index_0_id_52066013_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -90678,7 +92149,7 @@ __webpack_require__.r(__webpack_exports__);
   actions: {
     getBankrollTransactions: function getBankrollTransactions(_ref) {
       var commit = _ref.commit;
-      return axios.get('/api/bankroll/').then(function (response) {
+      return axios.get('/api/bankroll').then(function (response) {
         commit('ASSIGN_BANKROLL_TRANSACTIONS', response.data.bankrollTransactions);
       })["catch"](function (error) {
         throw error;
@@ -90686,7 +92157,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     addBankrollTransaction: function addBankrollTransaction(_ref2, transaction) {
       var commit = _ref2.commit;
-      return axios.post('/api/bankroll/', {
+      return axios.post('/api/bankroll', {
         amount: transaction.amount,
         comments: transaction.comments
       }).then(function (response) {
@@ -90786,7 +92257,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     getCashGames: function getCashGames(_ref2) {
       var commit = _ref2.commit;
-      return axios.get('/api/cash/').then(function (response) {
+      return axios.get('/api/cash').then(function (response) {
         commit('ASSIGN_CASH_GAMES', response.data.cash_games);
       })["catch"](function (error) {
         throw error;
@@ -90794,7 +92265,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     addCashGame: function addCashGame(_ref3, cash_game) {
       var commit = _ref3.commit;
-      return axios.post('/api/cash/', _objectSpread({}, cash_game, {
+      return axios.post('/api/cash', _objectSpread({}, cash_game, {
         start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.start_time).format("YYYY-MM-DD HH:mm:ss"),
         end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.end_time).format("YYYY-MM-DD HH:mm:ss")
       })).then(function (response) {
@@ -90860,13 +92331,13 @@ __webpack_require__.r(__webpack_exports__);
   actions: {
     startLiveSession: function startLiveSession(_ref, session) {
       var commit = _ref.commit;
-      return axios.get('/api/cash/live/start', session).then(function (response) {
+      return axios.post('/api/cash/live/start', session).then(function (response) {
         commit('ASSIGN_LIVE_SESSION', response.data.cash_game);
       })["catch"](function (error) {
         throw error;
       });
     },
-    retrieveLiveSession: function retrieveLiveSession(_ref2) {
+    currentLiveSession: function currentLiveSession(_ref2) {
       var commit = _ref2.commit;
       return axios.get('/api/cash/live/current').then(function (response) {
         if (response.data.success === true) {
@@ -90878,18 +92349,18 @@ __webpack_require__.r(__webpack_exports__);
         throw error;
       });
     },
-    endLiveSession: function endLiveSession(_ref3) {
+    updateLiveSession: function updateLiveSession(_ref3, session) {
       var commit = _ref3.commit;
-      return axios.get('/api/cash/live/end').then(function (response) {
-        commit('END_LIVE_SESSION');
+      return axios.patch('/api/cash/live/update', session).then(function (response) {
+        commit('UPDATE_LIVE_SESSION', response.data.cash_game);
       })["catch"](function (error) {
         throw error;
       });
     },
-    updateLiveSession: function updateLiveSession(_ref4, session) {
+    endLiveSession: function endLiveSession(_ref4) {
       var commit = _ref4.commit;
-      return axios.get('/api/cash/live/start', session).then(function (response) {
-        commit('UPDATE_LIVE_SESSION', response.data.cash_game);
+      return axios.post('/api/cash/live/end').then(function (response) {
+        commit('END_LIVE_SESSION');
       })["catch"](function (error) {
         throw error;
       });
