@@ -75,36 +75,34 @@
 					<span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>        
 				</div>
 			</div>
-			<div class="flex flex-col mt-4">
-				<div class="flex">
+			<div class="mt-3">
+				<p class="text-base md:text-lg mb-2">When are you starting?</p>
+				<div class="flex flex-col">
 					<datetime
-						v-model="start_time"
+						v-model="session.start_time"
 						input-id="start_time"
 						type="datetime"
 						:minute-step="5"
 						:flow="['time']"
-						format="HH:mm"
-						class="w-full theme-green mr-1"
-						placeholder="Start At"
+						placeholder="Start Time"
 						title="Start Live Session At"
-						:input-class="{'error-input' : errors.end_time, 'bg-green-700 border-none text-white font-bold p-4 uppercase text-center cursor-pointer' : true}"
-						@input="delete errors.end_time"	
+						auto
+						class="w-full bg-muted-light border border-muted-dark rounded border theme-green"
+						:input-class="{'error-input' : errors.start_time, 'p-3' : true}"
+						@input="delete errors.start_time"	
 					>
-						<template slot="button-confirm">
-							<div @click.prevent="startSessionAt">
-								Start Session
-							</div>
-						</template>
 					</datetime>
-					<button
-						@click.prevent="startSessionNow"
-						type="button"
-						class="w-full bg-green-600 border border-green-700 hover:bg-green-700 rounded p-4 uppercase text-white font-bold text-center ml-1"
-					>
-						Start Now
-					</button>
+					<span v-if="errors.start_time" class="error-message">{{ errors.start_time[0] }}</span>    
 				</div>
-				<span v-if="errors.start_time" class="error-message">{{ errors.start_time[0] }}</span>
+			</div>
+			<div class="flex mt-4">
+				<button
+					@click.prevent="startSession"
+					type="button"
+					class="w-full bg-green-600 border border-green-700 hover:bg-green-700 rounded p-4 uppercase text-white font-bold text-center ml-1"
+				>
+					Start Session
+				</button>				
 			</div>
 		</div>
 	</div>
@@ -126,8 +124,8 @@ export default {
 				table_size_id: 1,
 				location: '',
 				amount: 0,
+				start_time: moment(moment.now()).format()
 			},
-			start_time: '',
 		}
 	},
 	computed: {
@@ -135,7 +133,7 @@ export default {
 	},
     methods: {
 		...mapActions('live', ['startLiveSession']),
-		startSessionNow() {
+		startSession() {
 			this.startLiveSession(this.session)
 			.then(response => {
 				this.$snotify.success('Started live cash game.')
@@ -145,28 +143,6 @@ export default {
 				this.errors = error.response.data.errors
 			})
 		},
-		startSessionAt() {
-			// NOTE: setTimeout is horrible, but vue-datetime does not provide a callback feature
-			// Had to replace the Ok button with my own in the template which triggers this function on click
-			// But this function is fired before vue-datetime has updated the v-model
-			// Adding a slight delay so that start_time is correct, but this is dodgy
-			// TODO:  Look in to creating a callback feature and submitting a pull request to the open source project.
-			// Looks okay enough to do, need to edit Datetime.vue confirm and cancel methods to trigger a callback provided
-			// Don't know how to do the tests though
-			setTimeout(() => {
-				this.startLiveSession({
-					...this.session,
-					start_time: moment(this.start_time).format("YYYY-MM-DD HH:mm:ss"),
-				})
-				.then(response => {
-					this.$snotify.success('Started live cash game.')
-				})
-				.catch(error => {
-					this.$snotify.error('Error: '+error.response.data.message)
-					this.errors = error.response.data.errors
-				})
-			}, 100)
-		}
     }
 }
 </script>

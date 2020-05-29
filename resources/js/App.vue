@@ -17,7 +17,7 @@
                 :class="!sessionInProgress ? 'btn btn-green' : 'btn-red'"
 			>
                 <div v-if="!sessionInProgress">Start Session</div>
-                <div v-if="sessionInProgress"><i class="fas fa-circle-notch fa-spin mr-2"></i>In Progress</div>
+                <div v-if="sessionInProgress"><i class="fas fa-circle-notch fa-spin mr-2"></i>{{ runTime }}</div>
 			</router-link>
         </nav>
 
@@ -79,17 +79,41 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import moment from 'moment'
+import 'moment-duration-format'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
     name: 'App',
     data(){
         return {
             sessionsScrollTo: 0,
+            now: moment(),
+            runTimeInterval: null,
         }
     },
     computed: {
+        ...mapState('live', ['liveSession']),
         ...mapGetters('live', ['sessionInProgress']),
+        runTime() {
+			const start_time = moment(this.liveSession.start_time)
+			let diff = this.now.diff(start_time, 'hours', true)
+			return moment.duration(diff, 'hours').format("hh:mm", { trim: false})
+		}
+    },
+    watch: {
+        sessionInProgress: function(running) {
+            // running is the updated value on watcher.
+            // If sessionInProgress returns true then running else not running.
+            if (running) {
+                this.runTimeInterval = setInterval(() => {
+                    this.now = moment()
+                }, 60000)
+            } else {
+                clearInterval(this.runTimeInterval)
+                this.runTimeInterval = null
+            }
+        }
     },
     beforeCreate() {
         this.$store.dispatch('bankroll/getBankrollTransactions')

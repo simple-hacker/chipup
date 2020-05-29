@@ -51,10 +51,11 @@ export default {
                 throw error
             })
         },
-        endLiveSession({ commit }) {
-            return axios.post('/api/cash/live/end')
+        endLiveSession({ commit }, cashOut) {
+            return axios.post('/api/cash/live/end', cashOut)
             .then(response => {
-                commit('END_LIVE_SESSION')
+                commit('END_LIVE_SESSION', response.data.cash_game)
+                commit('cash_games/ADD_CASH_GAME', response.data.cash_game, { root: true})
             })
             .catch(error => {
                 throw error

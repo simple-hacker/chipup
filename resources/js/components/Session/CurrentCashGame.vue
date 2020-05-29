@@ -330,35 +330,13 @@
 			</div>
 		</div>
 		<div class="flex flex-col mt-4">
-			<div class="flex">
-				<datetime
-					v-model="end_time"
-					input-id="end_time"
-					type="datetime"
-					:minute-step="5"
-					:flow="['time']"
-					format="HH:mm"
-					class="w-full theme-green mr-1"
-					placeholder="Cash Out At"
-					title="End Live Session At"
-					:input-class="{'error-input' : errors.end_time, 'bg-red-700 border-none text-white font-bold p-4 uppercase text-center cursor-pointer' : true}"
-					@input="delete errors.end_time"	
-				>
-					<template slot="button-confirm">
-						<div @click.prevent="cashOutAt">
-							Cash Out Now
-						</div>
-					</template>
-				</datetime>
-				<button
-					@click.prevent="cashOutNow"
-					type="button"
-					class="w-full bg-red-600 border border-red-700 hover:bg-red-700 rounded p-4 uppercase text-white font-bold text-center ml-1"
-				>
-					Cash Out
-				</button>
-			</div>
-			<span v-if="errors.end_time" class="error-message">{{ errors.end_time[0] }}</span>
+			<button
+				@click.prevent="cashOutNow"
+				type="button"
+				class="w-full bg-red-600 border border-red-700 hover:bg-red-700 rounded p-4 uppercase text-white font-bold text-center ml-1"
+			>
+				Cash Out
+			</button>
 		</div>
 		<div class="flex my-3">
 			<button v-if="!editing" @click.prevent="editing = true" type="button" class="bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2"><i class="fas fa-edit mr-3"></i><span>Edit</span></button>
@@ -401,8 +379,6 @@ export default {
 			end_time: moment(this.liveSession.end_time).format(),
 			comments: this.liveSession.comments,
 		}
-
-		console.log(this.liveSession)
 	},
 	computed: {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
@@ -416,7 +392,7 @@ export default {
 		},
 		formattedBuyIns() {
 			return this.formatCurrency(this.buyInsTotal * -1)
-		}
+		},
 	},
 	methods: {
 		...mapActions('live', ['endLiveSession']),

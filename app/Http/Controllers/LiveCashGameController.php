@@ -85,6 +85,7 @@ class LiveCashGameController extends Controller
 
                 return response()->json([
                     'success' => true,
+                    'cash_game' => $cash_game->fresh()
                 ]);
 
             } catch (\Exception $e) {
