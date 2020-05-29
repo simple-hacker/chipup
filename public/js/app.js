@@ -2744,7 +2744,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -2797,22 +2799,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'CashOut',
   data: function data() {
     return {
       cashOut: {
-        end_time: moment(moment.now()).format(),
+        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(moment__WEBPACK_IMPORTED_MODULE_0___default.a.now()).format(),
         amount: 0
-      }
+      },
+      errors: {}
     };
   },
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('live', ['endLiveSession']), {
-    cashOut: function cashOut() {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('live', ['endLiveSession']), {
+    endSessionAndCashOut: function endSessionAndCashOut() {
       var _this = this;
 
       this.endLiveSession(this.cashOut).then(function (response) {
+        _this.$emit('close');
+
         _this.$router.push('sessions');
 
         _this.$snotify.success('Successfully cashed out.');
@@ -3216,8 +3224,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       editLiveSession: {},
       editing: false,
-      errors: {},
-      end_time: ''
+      errors: {}
     };
   },
   created: function created() {
@@ -3229,7 +3236,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       variant_id: this.liveSession.variant_id,
       table_size_id: this.liveSession.table_size_id,
       start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.liveSession.start_time).format(),
-      end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.liveSession.end_time).format(),
       comments: this.liveSession.comments
     };
   },
@@ -3499,7 +3505,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       this.startLiveSession(this.session).then(function (response) {
-        _this.$snotify.success('Started live cash game.');
+        _this.$snotify.success('Good luck!');
       })["catch"](function (error) {
         _this.$snotify.error('Error: ' + error.response.data.message);
 
@@ -67361,7 +67367,11 @@ var render = function() {
       [_vm._v("\n        Cash Out\n    ")]
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "w-2/3 mx-auto" }, [
+    _c("div", { staticClass: "flex flex-col" }, [
+      _c("p", { staticClass: "text-base md:text-lg mb-2" }, [
+        _vm._v("How much did you cash out?")
+      ]),
+      _vm._v(" "),
       _c("input", {
         directives: [
           {
@@ -67398,8 +67408,12 @@ var render = function() {
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: "w-2/3 mx-auto mt-3" },
+      { staticClass: "flex flex-col mt-3" },
       [
+        _c("p", { staticClass: "text-base md:text-lg mb-2" }, [
+          _vm._v("When did you finish?")
+        ]),
+        _vm._v(" "),
         _c("datetime", {
           staticClass:
             "w-full bg-muted-light border border-muted-dark rounded border theme-green",
@@ -67419,11 +67433,11 @@ var render = function() {
             }
           },
           model: {
-            value: _vm.session.end_time,
+            value: _vm.cashOut.end_time,
             callback: function($$v) {
-              _vm.$set(_vm.session, "end_time", $$v)
+              _vm.$set(_vm.cashOut, "end_time", $$v)
             },
-            expression: "session.end_time"
+            expression: "cashOut.end_time"
           }
         }),
         _vm._v(" "),
@@ -67441,16 +67455,16 @@ var render = function() {
         "button",
         {
           staticClass:
-            "w-full bg-green-600 border border-green-700 hover:bg-green-700 rounded p-4 uppercase text-white font-bold text-center ml-1",
+            "w-full bg-red-600 border border-red-700 hover:bg-red-700 rounded p-4 uppercase text-white font-bold text-center ml-1",
           attrs: { type: "button" },
           on: {
             click: function($event) {
               $event.preventDefault()
-              return _vm.cashOut($event)
+              return _vm.endSessionAndCashOut($event)
             }
           }
         },
-        [_vm._v("\n            Start Session\n        ")]
+        [_vm._v("\n            Cash Out\n        ")]
       )
     ])
   ])

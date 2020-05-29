@@ -331,7 +331,7 @@
 		</div>
 		<div class="flex flex-col mt-4">
 			<button
-				@click.prevent="cashOutNow"
+				@click.prevent="cashOut"
 				type="button"
 				class="w-full bg-red-600 border border-red-700 hover:bg-red-700 rounded p-4 uppercase text-white font-bold text-center ml-1"
 			>
@@ -351,8 +351,9 @@
 <script>
 import moment from 'moment'
 import 'moment-duration-format'
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
+import CashOut from '@components/Session/CashOut'
 import TransactionSummary from '@components/Transaction/TransactionSummary'
 import TransactionDetails from '@components/Transaction/TransactionDetails'
 
@@ -364,7 +365,6 @@ export default {
 			editLiveSession: {},
 			editing: false,
 			errors: {},
-			end_time: '',
 		}
 	},
 	created() {
@@ -376,7 +376,6 @@ export default {
 			variant_id: this.liveSession.variant_id,
 			table_size_id: this.liveSession.table_size_id,
 			start_time: moment(this.liveSession.start_time).format(),
-			end_time: moment(this.liveSession.end_time).format(),
 			comments: this.liveSession.comments,
 		}
 	},
@@ -395,45 +394,21 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions('live', ['endLiveSession']),
-		cashOutNow() {
-			this.endLiveSession(this.session)
-			.then(response => {
-				this.$snotify.success('Successfully cashed out.')
-			})
-			.catch(error => {
-				this.$snotify.error('Error: '+error.response.data.message)
-				this.errors = error.response.data.errors
-			})
-		},
-		cashOutAt() {
-			// NOTE: setTimeout is horrible, but vue-datetime does not provide a callback feature
-			// Had to replace the Ok button with my own in the template which triggers this function on click
-			// But this function is fired before vue-datetime has updated the v-model
-			// Adding a slight delay so that start_time is correct, but this is dodgy
-			// TODO:  Look in to creating a callback feature and submitting a pull request to the open source project.
-			// Looks okay enough to do, need to edit Datetime.vue confirm and cancel methods to trigger a callback provided
-			// Don't know how to do the tests though
-			setTimeout(() => {
-				this.endLiveSession({
-					...this.session,
-					end_time: moment(this.end_time).format("YYYY-MM-DD HH:mm:ss"),
-				})
-				.then(response => {
-					this.$snotify.success('Successfully cashed out.')
-				})
-				.catch(error => {
-					this.$snotify.error('Error: '+error.response.data.message)
-					this.errors = error.response.data.errors
-				})
-			}, 100)
-		},
 		formatCurrency(amount) {
 			return Vue.prototype.currency.format(amount)
 		},
 		formatDate(date) {
 			return moment(date).format("dddd Do MMMM, HH:mm")
-		},	
+		},
+		cashOut() {
+			this.$modal.show(CashOut, {}, {
+                // Modal Options
+                classes: 'modal',
+                height: 'auto',
+                width: '95%',
+                maxWidth: 600,
+            })
+		}
 	}
 }
 </script>

@@ -136,7 +136,7 @@ export default {
 		startSession() {
 			this.startLiveSession(this.session)
 			.then(response => {
-				this.$snotify.success('Started live cash game.')
+				this.$snotify.success('Good luck!')
 			})
 			.catch(error => {
 				this.$snotify.error('Error: '+error.response.data.message)
