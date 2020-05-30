@@ -12,32 +12,44 @@ export default {
     mutations: {
     },
     actions: {
-        createTransaction({ commit }, payload) {
+        createTransaction({ commit, rootGetters }, payload) {
             return axios.post(`/api/${payload.transactionType}`, {
                 ...payload.transaction,
                 game_id: payload.game_id,
                 game_type: payload.game_type
             })
             .then(response => {
-                commit('cash_games/UPDATE_CASH_GAME', response.data.game, { root: true})
+                if (rootGetters['live/liveSessionId'] === response.data.game.id) {
+                    commit('live/UPDATE_LIVE_SESSION', response.data.game, { root: true})
+                } else {
+                    commit('cash_games/UPDATE_CASH_GAME', response.data.game, { root: true})
+                }
             })
             .catch(error => {
                 throw error
             })
         },
-        updateTransaction({ commit }, payload) {
+        updateTransaction({ commit, rootGetters }, payload) {
             return axios.patch(`/api/${payload.transactionType}/${payload.transaction.id}`, payload.transaction)
             .then(response => {
-                commit('cash_games/UPDATE_CASH_GAME', response.data.game, { root: true})
+                if (rootGetters['live/liveSessionId'] === response.data.game.id) {
+                    commit('live/UPDATE_LIVE_SESSION', response.data.game, { root: true})
+                } else {
+                    commit('cash_games/UPDATE_CASH_GAME', response.data.game, { root: true})
+                }
             })
             .catch(error => {
                 throw error
             })
         },
-        deleteTransaction({ commit }, payload) {
+        deleteTransaction({ commit, rootGetters }, payload) {
             return axios.delete(`/api/${payload.transactionType}/${payload.transaction.id}`)
             .then(response => {
-                commit('cash_games/UPDATE_CASH_GAME', response.data.game, { root: true})     
+                if (rootGetters['live/liveSessionId'] === response.data.game.id) {
+                    commit('live/UPDATE_LIVE_SESSION', response.data.game, { root: true})
+                } else {
+                    commit('cash_games/UPDATE_CASH_GAME', response.data.game, { root: true})
+                }     
             })
             .catch(error => {
                 throw error

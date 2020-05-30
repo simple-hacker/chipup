@@ -6,6 +6,9 @@ export default {
     getters: {
         sessionInProgress: state => {
             return (Object.keys(state.liveSession).length > 0)
+        },
+        liveSessionId: state => {
+            return state.liveSession.id
         }
     },
     mutations: {
