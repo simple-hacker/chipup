@@ -413,6 +413,7 @@ export default {
 	data() {
 		return {
 			cash_game: {},
+			editSession: {},
 			editing: false,
 			errors: {}
 		}

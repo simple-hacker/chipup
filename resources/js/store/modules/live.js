@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export default {
     namespaced: true,
     state: {
@@ -46,7 +48,10 @@ export default {
             })
         },
         updateLiveSession({ commit }, session) {
-            return axios.patch('/api/cash/live/update', session)
+            return axios.patch('/api/cash/live/update', {
+                ...session,
+                start_time: moment(session.start_time).format("YYYY-MM-DD HH:mm:ss"),
+            })
             .then(response => {
                 commit('UPDATE_LIVE_SESSION', response.data.cash_game)
             })

@@ -157,6 +157,7 @@
 									input-id="start_time"
 									type="datetime"
 									:minute-step="5"
+									:flow="['time']"
 									auto
 									placeholder="Start Date and Time"
 									title="Start Date and Time"
@@ -262,7 +263,7 @@
 				-->
 				<div
 					v-if="liveSession.comments  || editing"
-					class="col-span-6 md:col-span-3 row-span-1 flex flex-col order-8 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3">
+					class="col-span-6 md:col-span-6 row-span-1 flex flex-col order-8 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3">
 					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2">Comments</div>
 					<div
 						v-if="!editing"
@@ -278,7 +279,7 @@
 					<span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
 				</div>
 			</div>
-			<div class="flex flex-col mt-4">
+			<div class="flex flex-col my-4">
 				<button
 					@click.prevent="cashOut"
 					type="button"
@@ -301,14 +302,14 @@
 <script>
 import moment from 'moment'
 import 'moment-duration-format'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 import CashOut from '@components/Session/CashOut'
 import TransactionSummary from '@components/Transaction/TransactionSummary'
 import TransactionDetails from '@components/Transaction/TransactionDetails'
 
 export default {
-	name: 'Session',
+	name: 'CurrentCashGame',
 	components: { TransactionSummary, TransactionDetails },
 	data() {
 		return {
@@ -318,16 +319,7 @@ export default {
 		}
 	},
 	created() {
-		this.editLiveSession = {
-			id: this.liveSession.id,
-			location: this.liveSession.location,
-			stake_id: this.liveSession.stake_id,
-			limit_id: this.liveSession.limit_id,
-			variant_id: this.liveSession.variant_id,
-			table_size_id: this.liveSession.table_size_id,
-			start_time: moment(this.liveSession.start_time).format(),
-			comments: this.liveSession.comments,
-		}
+		this.editLiveSession = this.editStateLiveSession()
 	},
 	computed: {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
@@ -344,6 +336,34 @@ export default {
 		},
 	},
 	methods: {
+		...mapActions('live', ['updateLiveSession']),
+		editStateLiveSession() {
+			return {
+				id: this.liveSession.id,
+				location: this.liveSession.location,
+				stake_id: this.liveSession.stake_id,
+				limit_id: this.liveSession.limit_id,
+				variant_id: this.liveSession.variant_id,
+				table_size_id: this.liveSession.table_size_id,
+				start_time: moment(this.liveSession.start_time).format(),
+				comments: this.liveSession.comments,
+			}
+		},
+		cancelChanges() {
+			this.editing = false
+			this.editLiveSession = this.editStateLiveSession()
+		},
+		saveSession() {
+			this.updateLiveSession(this.editLiveSession)
+			.then(response => {
+				// this.$snotify.success('Changes saved.')
+				this.editing = false
+			})
+			.catch(error => {
+				this.$snotify.error('Error: '+error.response.data.message)
+				this.errors = error.response.data.errors
+			})
+		},
 		formatCurrency(amount) {
 			return Vue.prototype.currency.format(amount)
 		},

@@ -3163,6 +3163,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 
@@ -3170,7 +3171,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'Session',
+  name: 'CurrentCashGame',
   components: {
     TransactionSummary: _components_Transaction_TransactionSummary__WEBPACK_IMPORTED_MODULE_4__["default"],
     TransactionDetails: _components_Transaction_TransactionDetails__WEBPACK_IMPORTED_MODULE_5__["default"]
@@ -3183,16 +3184,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   created: function created() {
-    this.editLiveSession = {
-      id: this.liveSession.id,
-      location: this.liveSession.location,
-      stake_id: this.liveSession.stake_id,
-      limit_id: this.liveSession.limit_id,
-      variant_id: this.liveSession.variant_id,
-      table_size_id: this.liveSession.table_size_id,
-      start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.liveSession.start_time).format(),
-      comments: this.liveSession.comments
-    };
+    this.editLiveSession = this.editStateLiveSession();
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])('live', ['liveSession']), {
     buyInsTotal: function buyInsTotal() {
@@ -3214,7 +3206,35 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.formatCurrency(this.buyInsTotal * -1);
     }
   }),
-  methods: {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])('live', ['updateLiveSession']), {
+    editStateLiveSession: function editStateLiveSession() {
+      return {
+        id: this.liveSession.id,
+        location: this.liveSession.location,
+        stake_id: this.liveSession.stake_id,
+        limit_id: this.liveSession.limit_id,
+        variant_id: this.liveSession.variant_id,
+        table_size_id: this.liveSession.table_size_id,
+        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.liveSession.start_time).format(),
+        comments: this.liveSession.comments
+      };
+    },
+    cancelChanges: function cancelChanges() {
+      this.editing = false;
+      this.editLiveSession = this.editStateLiveSession();
+    },
+    saveSession: function saveSession() {
+      var _this = this;
+
+      this.updateLiveSession(this.editLiveSession).then(function (response) {
+        // this.$snotify.success('Changes saved.')
+        _this.editing = false;
+      })["catch"](function (error) {
+        _this.$snotify.error('Error: ' + error.response.data.message);
+
+        _this.errors = error.response.data.errors;
+      });
+    },
     formatCurrency: function formatCurrency(amount) {
       return Vue.prototype.currency.format(amount);
     },
@@ -3247,7 +3267,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         maxWidth: 600
       });
     }
-  }
+  })
 });
 
 /***/ }),
@@ -3474,15 +3494,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes'])),
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('live', ['startLiveSession']), {
     startSession: function startSession() {
-      var _this = this;
-
-      this.startLiveSession(this.session).then(function (response) {
-        _this.$snotify.success('Good luck!');
-      })["catch"](function (error) {
-        _this.$snotify.error('Error: ' + error.response.data.message);
-
-        _this.errors = error.response.data.errors;
-      });
+      console.log(this.session);
+      console.log(moment__WEBPACK_IMPORTED_MODULE_1___default()(this.session.start_time).format("YYYY-MM-DD HH:mm:ss")); // this.startLiveSession(this.session)
+      // .then(response => {
+      // 	this.$snotify.success('Good luck!')
+      // })
+      // .catch(error => {
+      // 	this.$snotify.error('Error: '+error.response.data.message)
+      // 	this.errors = error.response.data.errors
+      // })
     }
   })
 });
@@ -4766,6 +4786,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       cash_game: {},
+      editSession: {},
       editing: false,
       errors: {}
     };
@@ -67710,6 +67731,7 @@ var render = function() {
                                   "input-id": "start_time",
                                   type: "datetime",
                                   "minute-step": 5,
+                                  flow: ["time"],
                                   auto: "",
                                   placeholder: "Start Date and Time",
                                   title: "Start Date and Time",
@@ -67975,7 +67997,7 @@ var render = function() {
                   "div",
                   {
                     staticClass:
-                      "col-span-6 md:col-span-3 row-span-1 flex flex-col order-8 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+                      "col-span-6 md:col-span-6 row-span-1 flex flex-col order-8 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
                   },
                   [
                     _c(
@@ -68039,7 +68061,7 @@ var render = function() {
           ]
         ),
         _vm._v(" "),
-        _c("div", { staticClass: "flex flex-col mt-4" }, [
+        _c("div", { staticClass: "flex flex-col my-4" }, [
           _c(
             "button",
             {
@@ -92503,6 +92525,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: {
@@ -92550,7 +92581,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     updateLiveSession: function updateLiveSession(_ref3, session) {
       var commit = _ref3.commit;
-      return axios.patch('/api/cash/live/update', session).then(function (response) {
+      return axios.patch('/api/cash/live/update', _objectSpread({}, session, {
+        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(session.start_time).format("YYYY-MM-DD HH:mm:ss")
+      })).then(function (response) {
         commit('UPDATE_LIVE_SESSION', response.data.cash_game);
       })["catch"](function (error) {
         throw error;

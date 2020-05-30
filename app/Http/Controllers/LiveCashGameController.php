@@ -92,7 +92,7 @@ class LiveCashGameController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => $e->getMessage()
-                ], 422);
+                ], $e->getCode());
             }
         } else {
             // Else send a 422
@@ -116,12 +116,12 @@ class LiveCashGameController extends Controller
             $cash_game = auth()->user()->liveCashGame();
 
             if ($cash_game) {
-
-                $cash_game->update($request->validated());
                 
+                $cash_game->update($request->validated());
+
                 return response()->json([
                     'success' => true,
-                    'cash_game' => $cash_game
+                    'cash_game' => $cash_game->fresh()
                 ]);
             } else {
                 throw new \Exception('You have not started a Cash Game.', 422);
