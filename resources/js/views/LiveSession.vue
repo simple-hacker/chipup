@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full mx-auto">
+    <div class="w-full h-full mx-auto">
         <current-cash-game v-if="sessionInProgress"></current-cash-game>
         <start-cash-game v-else></start-cash-game>
     </div>

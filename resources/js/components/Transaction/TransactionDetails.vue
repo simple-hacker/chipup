@@ -43,7 +43,7 @@
                     type="button"
                     class="bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2"
                 >
-                    <i class="fas fa-check mr-3"></i><span>Save Changes</span>
+                    <i class="fas fa-check mr-3"></i><span v-text="saveButtonText"></span>
                 </button>
             </div>
 		</div>
@@ -70,6 +70,13 @@ export default {
         title() {
             let mode = (this.transaction.id) ? 'Edit' : 'Add'
             return `${mode} ${this.transactionType}`
+        },
+        saveButtonText() {
+            if (this.transaction.id) {
+                return `Save Changes`
+            } else {
+                return `Add ${this.transactionType}`
+            }
         }
     },
     methods: {

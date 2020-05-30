@@ -52,6 +52,7 @@ import { mapActions } from 'vuex'
 
 export default {
     name: 'CashOut',
+    props: ['buyInTotal'],
     data() {
         return {
             cashOut: {
@@ -67,8 +68,13 @@ export default {
 			this.endLiveSession(this.cashOut)
 			.then(response => {
                 this.$emit('close')
-                this.$router.push('sessions')
-                this.$snotify.success('Successfully cashed out.')
+                this.$router.push('sessions')               
+
+                if ((this.cashOut.amount - this.buyInTotal) > 0) {
+                    this.$snotify.success(`Nice win!`)
+                } else {
+                    this.$snotify.warning(`Better luck next time.`)
+                }
 			})
 			.catch(error => {
 				this.$snotify.error('Error: '+error.response.data.message)
