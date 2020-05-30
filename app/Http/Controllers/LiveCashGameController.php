@@ -69,7 +69,7 @@ class LiveCashGameController extends Controller
     public function end(Request $request)
     {
         $request->validate([
-            'end_time' => 'nullable|date',
+            'end_time' => 'nullable|date|before_or_equal:now',
             'amount' => 'required|numeric|min:0'
         ]);
 
