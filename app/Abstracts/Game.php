@@ -223,4 +223,17 @@ abstract class Game extends Model
     {
         $this->attributes['profit'] = $profit * 100;
     }
+
+    // /**
+    // * Mutate start_time to be a Carbon instance to UTC
+    // * So can pass in values like 2020-03-01T16:45:21.000Z
+    // * and doesn't fail on MySQL timestamp column
+    // *
+    // * @param String $start_time
+    // * @return void
+    // */
+    // public function setStartTimeAttribute($start_time)
+    // {
+    //     $this->attributes['start_time'] = Carbon::create($start_time);
+    // }
 }

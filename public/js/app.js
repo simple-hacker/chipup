@@ -2230,13 +2230,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       sessionsScrollTo: 0,
-      now: moment__WEBPACK_IMPORTED_MODULE_0___default()(),
+      now: moment__WEBPACK_IMPORTED_MODULE_0___default()().utc(),
       runTimeInterval: null
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])('live', ['liveSession']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])('live', ['sessionInProgress']), {
     runTime: function runTime() {
-      var start_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.liveSession.start_time);
+      var start_time = moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(this.liveSession.start_time);
       var diff = this.now.diff(start_time, 'hours', true);
       return moment__WEBPACK_IMPORTED_MODULE_0___default.a.duration(diff, 'hours').format("hh:mm", {
         trim: false
@@ -2251,7 +2251,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       // If sessionInProgress returns true then running else not running.
       if (running) {
         this.runTimeInterval = setInterval(function () {
-          _this.now = moment__WEBPACK_IMPORTED_MODULE_0___default()();
+          _this.now = moment__WEBPACK_IMPORTED_MODULE_0___default()().utc();
         }, 60000);
       } else {
         clearInterval(this.runTimeInterval);
@@ -2809,7 +2809,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       cashOut: {
-        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(moment__WEBPACK_IMPORTED_MODULE_0___default.a.now()).format(),
+        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()().format(),
         amount: 0
       },
       errors: {}
@@ -3239,7 +3239,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return Vue.prototype.currency.format(amount);
     },
     formatDate: function formatDate(date) {
-      return moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format("dddd Do MMMM, HH:mm");
+      return moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(date).local().format("dddd Do MMMM, HH:mm");
     },
     cashOut: function cashOut() {
       this.$modal.show(_components_Session_CashOut__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -3487,22 +3487,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         table_size_id: 1,
         location: '',
         amount: 0,
-        start_time: moment__WEBPACK_IMPORTED_MODULE_1___default()(moment__WEBPACK_IMPORTED_MODULE_1___default.a.now()).format()
+        start_time: moment__WEBPACK_IMPORTED_MODULE_1___default()().format()
       }
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['stakes', 'limits', 'variants', 'table_sizes'])),
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('live', ['startLiveSession']), {
     startSession: function startSession() {
-      console.log(this.session);
-      console.log(moment__WEBPACK_IMPORTED_MODULE_1___default()(this.session.start_time).format("YYYY-MM-DD HH:mm:ss")); // this.startLiveSession(this.session)
-      // .then(response => {
-      // 	this.$snotify.success('Good luck!')
-      // })
-      // .catch(error => {
-      // 	this.$snotify.error('Error: '+error.response.data.message)
-      // 	this.errors = error.response.data.errors
-      // })
+      var _this = this;
+
+      this.startLiveSession(this.session).then(function (response) {
+        _this.$snotify.success('Good luck!');
+      })["catch"](function (error) {
+        _this.$snotify.error('Error: ' + error.response.data.message);
+
+        _this.errors = error.response.data.errors;
+      });
     }
   })
 });
@@ -4234,11 +4234,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (this.game_type === 'cash_game') {
         this.addCashGame(_objectSpread({}, this.session, {}, this.cash_game)).then(function (response) {
-          _this.$snotify.success('Successfully created cash game');
+          _this.$snotify.success('Successfully created cash game'); // this.$router.push({ name: 'sessions' })
 
-          _this.$router.push({
-            name: 'sessions'
-          });
         })["catch"](function (error) {
           _this.$snotify.error('Error: ' + error.response.data.message);
 
@@ -4247,17 +4244,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       } else if (this.game_type === 'tournament') {
         console.log('TOURNAMENT');
         console.log(_objectSpread({}, this.session, {}, this.tournament));
-      } // this.saveCashGame({
-      // 	...this.session,
-      // 	...this.cash_game
-      // })
-      // .then(response => {
-      // 	this.$snotify.success('Successfully created new session');
-      // })
-      // .catch(error => {
-      // 	this.$snotify.error('Error: '+error.response.data.message);
-      // })
-
+      }
     }
   })
 });
@@ -4853,8 +4840,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         limit_id: this.session.limit_id,
         variant_id: this.session.variant_id,
         table_size_id: this.session.table_size_id,
-        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.start_time).format(),
-        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.end_time).format(),
+        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(this.session.start_time).format(),
+        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(this.session.end_time).format(),
         comments: this.session.comments
       };
     },
@@ -4906,7 +4893,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return Vue.prototype.currency.format(amount);
     },
     formatDate: function formatDate(date) {
-      return moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format("dddd Do MMMM, HH:mm");
+      return moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(date).local().format("dddd Do MMMM, HH:mm");
     },
     addTransaction: function addTransaction(transactionType, transaction) {
       this.$modal.show(_components_Transaction_TransactionDetails__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -92483,10 +92470,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     addCashGame: function addCashGame(_ref3, cash_game) {
       var commit = _ref3.commit;
-      return axios.post('/api/cash', _objectSpread({}, cash_game, {
-        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.start_time).format("YYYY-MM-DD HH:mm:ss"),
-        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.end_time).format("YYYY-MM-DD HH:mm:ss")
-      })).then(function (response) {
+      return axios.post('/api/cash', _objectSpread({}, cash_game)).then(function (response) {
         commit('ADD_CASH_GAME', response.data.cash_game);
       })["catch"](function (error) {
         throw error;
@@ -92495,8 +92479,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     updateCashGame: function updateCashGame(_ref4, cash_game) {
       var commit = _ref4.commit;
       return axios.patch('/api/cash/' + cash_game.id, _objectSpread({}, cash_game, {
-        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.start_time).format("YYYY-MM-DD HH:mm:ss"),
-        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(cash_game.end_time).format("YYYY-MM-DD HH:mm:ss")
+        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(cash_game.start_time).format("YYYY-MM-DD HH:mm:ss"),
+        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(cash_game.end_time).format("YYYY-MM-DD HH:mm:ss")
       })).then(function (response) {
         commit('UPDATE_CASH_GAME', response.data.cash_game);
       })["catch"](function (error) {
@@ -92581,9 +92565,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     updateLiveSession: function updateLiveSession(_ref3, session) {
       var commit = _ref3.commit;
-      return axios.patch('/api/cash/live/update', _objectSpread({}, session, {
-        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(session.start_time).format("YYYY-MM-DD HH:mm:ss")
-      })).then(function (response) {
+      return axios.patch('/api/cash/live/update', _objectSpread({}, session)).then(function (response) {
         commit('UPDATE_LIVE_SESSION', response.data.cash_game);
       })["catch"](function (error) {
         throw error;

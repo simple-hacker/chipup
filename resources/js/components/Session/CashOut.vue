@@ -56,7 +56,7 @@ export default {
     data() {
         return {
             cashOut: {
-                end_time: moment(moment.now()).format(),
+                end_time: moment().format(),
                 amount: 0
             },
             errors: {}

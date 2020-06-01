@@ -45,14 +45,14 @@ class CashGameController extends Controller
 
             $cashGameAttributes = $request->validated();
             unset($cashGameAttributes['buy_ins'], $cashGameAttributes['cash_out_model'], $cashGameAttributes['expenses']);
-            
+
             $cash_game = auth()->user()->cashGames()->create($cashGameAttributes);
             
             // Add the BuyIn.
             foreach ($request->buy_ins as $buy_in) {
                 $cash_game->addBuyIn($buy_in['amount']);
             }
-            
+
             // Add the Expenses.
             if ($request->expenses) {
                 foreach ($request->expenses as $expense) {
@@ -61,6 +61,7 @@ class CashGameController extends Controller
                 }
             }
 
+            
             // CashOut the CashGame straight away with CashOut amount and end_time
             // If no cashout time or amount is supplied then it defaults to Now() and 0
             $cash_out = $request->cash_out_model['amount'] ?? 0;

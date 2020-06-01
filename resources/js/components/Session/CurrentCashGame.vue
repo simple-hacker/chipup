@@ -368,7 +368,7 @@ export default {
 			return Vue.prototype.currency.format(amount)
 		},
 		formatDate(date) {
-			return moment(date).format("dddd Do MMMM, HH:mm")
+			return moment.utc(date).local().format("dddd Do MMMM, HH:mm")
 		},
 		cashOut() {
 			this.$modal.show(CashOut, {

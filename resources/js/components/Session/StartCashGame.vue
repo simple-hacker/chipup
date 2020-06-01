@@ -124,7 +124,7 @@ export default {
 				table_size_id: 1,
 				location: '',
 				amount: 0,
-				start_time: moment(moment.now()).format()
+				start_time: moment().format(),
 			},
 		}
 	},
@@ -134,16 +134,14 @@ export default {
     methods: {
 		...mapActions('live', ['startLiveSession']),
 		startSession() {
-			console.log(this.session)
-			console.log(moment(this.session.start_time).format("YYYY-MM-DD HH:mm:ss"))
-			// this.startLiveSession(this.session)
-			// .then(response => {
-			// 	this.$snotify.success('Good luck!')
-			// })
-			// .catch(error => {
-			// 	this.$snotify.error('Error: '+error.response.data.message)
-			// 	this.errors = error.response.data.errors
-			// })
+			this.startLiveSession(this.session)
+			.then(response => {
+				this.$snotify.success('Good luck!')
+			})
+			.catch(error => {
+				this.$snotify.error('Error: '+error.response.data.message)
+				this.errors = error.response.data.errors
+			})
 		},
     }
 }

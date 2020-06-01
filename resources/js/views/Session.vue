@@ -473,8 +473,8 @@ export default {
 				limit_id: this.session.limit_id,
 				variant_id: this.session.variant_id,
 				table_size_id: this.session.table_size_id,
-				start_time: moment(this.session.start_time).format(),
-				end_time: moment(this.session.end_time).format(),
+				start_time: moment.utc(this.session.start_time).format(),
+				end_time: moment.utc(this.session.end_time).format(),
 				comments: this.session.comments,
 			}
 		},
@@ -524,7 +524,7 @@ export default {
 			return Vue.prototype.currency.format(amount)
 		},
 		formatDate(date) {
-			return moment(date).format("dddd Do MMMM, HH:mm")
+			return moment.utc(date).local().format("dddd Do MMMM, HH:mm")
 		},
 		addTransaction(transactionType, transaction) {
 			this.$modal.show(TransactionDetails, {

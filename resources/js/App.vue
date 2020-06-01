@@ -88,7 +88,7 @@ export default {
     data(){
         return {
             sessionsScrollTo: 0,
-            now: moment(),
+            now: moment().utc(),
             runTimeInterval: null,
         }
     },
@@ -96,7 +96,7 @@ export default {
         ...mapState('live', ['liveSession']),
         ...mapGetters('live', ['sessionInProgress']),
         runTime() {
-			const start_time = moment(this.liveSession.start_time)
+			const start_time = moment.utc(this.liveSession.start_time)
 			let diff = this.now.diff(start_time, 'hours', true)
 			return moment.duration(diff, 'hours').format("hh:mm", { trim: false})
 		}
@@ -107,7 +107,7 @@ export default {
             // If sessionInProgress returns true then running else not running.
             if (running) {
                 this.runTimeInterval = setInterval(() => {
-                    this.now = moment()
+                    this.now = moment().utc()
                 }, 60000)
             } else {
                 clearInterval(this.runTimeInterval)

@@ -488,7 +488,7 @@ export default {
 				})
 				.then(response => {
 					this.$snotify.success('Successfully created cash game')
-					this.$router.push({ name: 'sessions' })
+					// this.$router.push({ name: 'sessions' })
 				})
 				.catch(error => {
 					this.$snotify.error('Error: '+error.response.data.message)
@@ -501,16 +501,6 @@ export default {
 					...this.tournament
 				})
 			}
-			// this.saveCashGame({
-			// 	...this.session,
-			// 	...this.cash_game
-			// })
-			// .then(response => {
-			// 	this.$snotify.success('Successfully created new session');
-			// })
-			// .catch(error => {
-			// 	this.$snotify.error('Error: '+error.response.data.message);
-			// })
 		},
 	}
 }
