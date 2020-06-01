@@ -17,7 +17,7 @@ class StartCashGameRequest extends FormRequest
 
         return [
             'start_time' => 'sometimes|nullable|date|before_or_equal:now',
-            'amount' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:0|not_in:0',
             'stake_id' => 'required|integer|exists:stakes,id',
             'variant_id' => 'required|integer|exists:variants,id',
             'limit_id' => 'required|integer|exists:limits,id',
