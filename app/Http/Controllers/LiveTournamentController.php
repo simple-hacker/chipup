@@ -73,10 +73,7 @@ class LiveTournamentController extends Controller
         if ($tournament) {
             // If there is a live Tournament try to end if with supplied time or null
             try {
-                $tournament->end($request->end_time);
-                if ($request->amount) {
-                    $tournament->cashOut($request->amount);
-                }
+                $tournament->endAndCashOut($request->end_time, $request->amount);
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,

@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\CashGame;
-use App\Transactions\BuyIn;
-use App\Transactions\Expense;
 use Illuminate\Support\Carbon;
 use App\Http\Requests\CreateCashGameRequest;
 use App\Http\Requests\UpdateCashGameRequest;
@@ -25,6 +23,22 @@ class CashGameController extends Controller
     }
 
     /**
+    * GET method to retrieve specific cash game
+    *
+    * @param CashGame $cash_game
+    * @return json
+    */
+    public function view(CashGame $cash_game)
+    {
+        $this->authorize('manage', $cash_game);
+
+        return response()->json([
+            'success' => true,
+            'cash_game' => $cash_game
+        ]);
+    }
+
+    /**
     * POST method to create a completed cash game with all required attributes.
     * 
     * @param CreateCashGameRequest $request
@@ -34,7 +48,7 @@ class CashGameController extends Controller
     {
         try {
             // If start_time conflicts with another cash game then reject.
-            if (auth()->user()->cashGamesAtTime(Carbon::create($request->start_time)) > 0) {
+            if (auth()->user()->cashGamesAtTime($request->start_time) > 0) {
                 throw new \Exception('You already have another cash game at that time.', 422);
             }
             
@@ -60,7 +74,6 @@ class CashGameController extends Controller
                     $cash_game->addExpense($expense['amount'] ?? 0, $expense['comments'] ?? null);
                 }
             }
-
             
             // CashOut the CashGame straight away with CashOut amount and end_time
             // If no cashout time or amount is supplied then it defaults to Now() and 0
@@ -80,22 +93,6 @@ class CashGameController extends Controller
     }
 
     /**
-    * GET method to retrieve specific cash game
-    *
-    * @param CashGame $cash_game
-    * @return json
-    */
-    public function view(CashGame $cash_game)
-    {
-        $this->authorize('manage', $cash_game);
-
-        return response()->json([
-            'success' => true,
-            'cash_game' => $cash_game
-        ]);
-    }
-
-    /**
     * PATCH method to update cash game.
     * 
     * @param CashGame $cash_game
@@ -106,23 +103,12 @@ class CashGameController extends Controller
     {
         $this->authorize('manage', $cash_game);
 
-        $cashGameAttributes = $request->validated();
+        $cash_game->update($request->validated());
 
-        try {
-            // Update Cash Game attributes if provided.
-            $cash_game->update($cashGameAttributes);
-
-            return response()->json([
-                'success' => true,
-                'cash_game' => $cash_game->fresh()
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], $e->getCode());
-        }
+        return response()->json([
+            'success' => true,
+            'cash_game' => $cash_game->fresh()
+        ]);
     }
 
     /**

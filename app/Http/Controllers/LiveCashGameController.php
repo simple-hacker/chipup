@@ -75,8 +75,7 @@ class LiveCashGameController extends Controller
         if ($cash_game) {
             // If there is a live CashGame try to end if with supplied time or null
             try {
-                $cash_game->end($request->end_time);
-                $cash_game->cashOut($request->amount);
+                $cash_game->endAndCashOut($request->end_time, $request->amount);
 
                 return response()->json([
                     'success' => true,

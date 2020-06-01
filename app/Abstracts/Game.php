@@ -147,6 +147,19 @@ abstract class Game extends Model
     }
 
     /**
+    * End the Game and Cash Out
+    * One method to simplify Controllers.
+    * 
+    * @param float amount
+    * @return CashOut
+    */
+    public function endAndCashOut($end_time = null, float $amount = 0)
+    {
+        $this->end($end_time);
+        $this->cashOut($amount);
+    }
+
+    /**
     * Returns the game type's BuyIns
     * 
     * @return morphMany

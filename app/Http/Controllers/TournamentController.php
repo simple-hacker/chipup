@@ -16,7 +16,7 @@ class TournamentController extends Controller
     {
         return response()->json([
             'success' => true,
-            'tournaments' => auth()->user()->tournaments()->get()
+            'tournaments' => auth()->user()->tournaments()->whereNotNull('end_time')->get()
         ]);
     }
 
@@ -51,7 +51,7 @@ class TournamentController extends Controller
         
         return response()->json([
             'success' => true,
-            'tournament' => $tournament
+            'tournament' => $tournament->fresh()
         ]);
     }
 

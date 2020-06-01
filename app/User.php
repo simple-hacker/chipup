@@ -157,12 +157,14 @@ class User extends Authenticatable
     * @param Carbon $time
     * @return hasMany
     */
-    public function cashGamesAtTime(Carbon $time)
+    public function cashGamesAtTime($time = null)
     {
+        $start_time = $time ? Carbon::create($time) : now();
+        
         return $this->cashGames()
-                    ->where('start_time', '<=', $time)
-                    ->where(function ($query) use ($time) {
-                        $query->where('end_time', '>=', $time)
+                    ->where('start_time', '<=', $start_time)
+                    ->where(function ($query) use ($start_time) {
+                        $query->where('end_time', '>=', $start_time)
                               ->orWhere('end_time', null);
                     })
                     ->count();
