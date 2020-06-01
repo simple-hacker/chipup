@@ -65,12 +65,13 @@ abstract class Game extends Model
     * @param Carbon end_time
     * @return mixed
     */
-    public function end(Carbon $end_time = null)
+    public function end($end_time = null)
     {
-        $end_time  = $end_time ?? now();
+        // Need a Carbon instance of date string that's passed to compare to Carbon start_time
+        $dateTest = $end_time ? Carbon::create($end_time) : now();
 
         // The end_time cannot be before the start_time
-        if ($end_time < $this->start_time) {
+        if ($dateTest < $this->start_time) {
             throw new InvalidDate('Cannot set the end time before the start time', 422);
         }
 
@@ -239,11 +240,22 @@ abstract class Game extends Model
         } else {
             $this->attributes['start_time'] = now();
         }
-        
-        // if ($start_time instanceof Carbon) {
-        //     $this->attributes['start_time'] = $start_time;
-        // } else {
-        //     $this->attributes['start_time'] = Carbon::create($start_time);
-        // }
+    }
+
+    /**
+    * Mutate end_time to be a Carbon instance to UTC
+    * So can pass in values like 2020-03-01T16:45:21.000Z
+    * and doesn't fail on MySQL timestamp column
+    *
+    * @param String $end_time
+    * @return void
+    */
+    public function setEndTimeAttribute($end_time)
+    {
+        if ($end_time) {
+            $this->attributes['end_time'] = Carbon::create($end_time);
+        } else {
+            $this->attributes['end_time'] = now();
+        }
     }
 }

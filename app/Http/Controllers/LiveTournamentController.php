@@ -77,8 +77,7 @@ class LiveTournamentController extends Controller
         if ($tournament) {
             // If there is a live Tournament try to end if with supplied time or null
             try {
-                $end_time = ($request->end_time) ? Carbon::create($request->end_time) : null;
-                $tournament->end($end_time);
+                $tournament->end($request->end_time);
                 if ($request->amount) {
                     $tournament->cashOut($request->amount);
                 }

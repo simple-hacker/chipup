@@ -64,11 +64,11 @@ class CashGameTest extends TestCase
     {
         $cash_game = $this->startLiveCashGame();
 
-        $time = Carbon::create('+3 hours');
+        $time = Carbon::create('+3 hours')->toDateTimeString();
 
         $cash_game->end($time);
 
-        $this->assertEquals($cash_game->fresh()->end_time, $time->toDateTimeString());
+        $this->assertEquals($cash_game->fresh()->end_time, $time);
     }
 
     public function testAnEndTimeCannotBeBeforeAStartTime()
@@ -77,7 +77,7 @@ class CashGameTest extends TestCase
 
         $cash_game = $this->startLiveCashGame();
 
-        $cash_game->end(Carbon::create('-3 hours'));
+        $cash_game->end(Carbon::create('-3 hours')->toDateTimeString());
     }
 
     public function testACashGameCannotBeStartedIfThereIsAlreadyALiveCashGameInProgress()
@@ -97,7 +97,7 @@ class CashGameTest extends TestCase
 
         // Start and finish a cash game.
         $cash_game = $user->startCashGame();
-        $cash_game->end(Carbon::create('+1 hour'));
+        $cash_game->end(Carbon::create('+1 hour')->toDateTimeString());
 
         Carbon::setTestNow('+ 3 hours');
 
