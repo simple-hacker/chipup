@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EndSessionRequest;
 use App\Http\Requests\StartCashGameRequest;
 use App\Http\Requests\UpdateCashGameRequest;
 use App\Http\Requests\UpdateLiveCashGameRequest;
@@ -63,16 +64,11 @@ class LiveCashGameController extends Controller
     /**
     * POST method to end the current live Cash Game
     * 
-    * @param Request $request
+    * @param EndSessionRequest $request
     * @return json
     */
-    public function end(Request $request)
+    public function end(EndSessionRequest $request)
     {
-        $request->validate([
-            'end_time' => 'nullable|date|before_or_equal:now',
-            'amount' => 'required|numeric|min:0'
-        ]);
-
         // Get the current live Cash Game if there is one.
         $cash_game = auth()->user()->liveCashGame();
 
