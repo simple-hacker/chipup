@@ -69,8 +69,6 @@ class User extends Authenticatable
         } else {
             $this->decrement('bankroll', $amount * -100);
         }
-
-        // return $this->bankroll;
     }
 
     /**
@@ -128,7 +126,7 @@ class User extends Authenticatable
         // All default values attributes are required in the StartCashGameRequest
         // Using defaults if not set in case mistakes have been made elsewhere in app.
         return $this->cashGames()->create([
-            'start_time' => (isset($attributes['start_time'])) ? Carbon::create($attributes['start_time']) : now(),
+            'start_time' => $attributes['start_time'] ?? null,
             'stake_id' => $attributes['stake_id'] ?? $this->default_stake_id,
             'variant_id' => $attributes['variant_id'] ?? $this->default_variant_id,
             'limit_id' => $attributes['limit_id'] ?? $this->default_limit_id,
@@ -163,7 +161,6 @@ class User extends Authenticatable
     {
         return $this->cashGames()
                     ->where('start_time', '<=', $time)
-                    // ->where('end_time', '>=', $time)
                     ->where(function ($query) use ($time) {
                         $query->where('end_time', '>=', $time)
                               ->orWhere('end_time', null);
@@ -197,7 +194,7 @@ class User extends Authenticatable
         }
 
         return $this->tournaments()->create([
-            'start_time' => (isset($attributes['start_time'])) ? Carbon::create($attributes['start_time']) : now(),
+            'start_time' => $attributes['start_time'] ?? null,
             'buy_in' => $attributes['amount'],
             'name' => $attributes['name'] ?? null,
             'variant_id' => $attributes['variant_id'],

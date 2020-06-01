@@ -234,10 +234,16 @@ abstract class Game extends Model
     */
     public function setStartTimeAttribute($start_time)
     {
-        if ($start_time instanceof Carbon) {
-            $this->attributes['start_time'] = $start_time;
-        } else {
+        if ($start_time) {
             $this->attributes['start_time'] = Carbon::create($start_time);
+        } else {
+            $this->attributes['start_time'] = now();
         }
+        
+        // if ($start_time instanceof Carbon) {
+        //     $this->attributes['start_time'] = $start_time;
+        // } else {
+        //     $this->attributes['start_time'] = Carbon::create($start_time);
+        // }
     }
 }
