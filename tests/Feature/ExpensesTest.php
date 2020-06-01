@@ -15,8 +15,8 @@ class ExpensesTest extends TestCase
         $user = factory('App\User')->create();
         $cash_game = $user->startCashGame();
 
-        $this->postJson(route('expense.add'), [
-                    'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 500
                 ])
@@ -27,8 +27,8 @@ class ExpensesTest extends TestCase
     {
         $cash_game = $this->signIn()->startCashGame();
 
-        $this->postJson(route('expense.add'), [
-                    'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 500
                 ])
@@ -44,8 +44,8 @@ class ExpensesTest extends TestCase
         $this->signIn();
 
         // ID 500 does not exist, assert 404
-        $this->postJson(route('expense.add'), [
-                    'id' => 99,
+        $this->postJson(route('expense.create'), [
+                    'game_id' => 99,
                     'game_type' => 'cash_game',
                     'amount' => 500
                 ])
@@ -58,13 +58,13 @@ class ExpensesTest extends TestCase
     {
         $cash_game = $this->signIn()->startCashGame();
 
-        $this->postJson(route('expense.add'), [
-            'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
-        $this->postJson(route('expense.add'), [
-            'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 1000
         ]);
@@ -77,8 +77,8 @@ class ExpensesTest extends TestCase
     {
         $cash_game = $this->signIn()->startCashGame();
 
-        $this->postJson(route('expense.add'), [
-            'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
@@ -97,8 +97,8 @@ class ExpensesTest extends TestCase
     {
         $cash_game = $this->signIn()->startCashGame();
 
-        $this->postJson(route('expense.add'), [
-            'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
@@ -120,8 +120,8 @@ class ExpensesTest extends TestCase
     {
         $cash_game = $this->signIn()->startCashGame();
 
-        $this->postJson(route('expense.add'), [
-            'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
@@ -144,52 +144,53 @@ class ExpensesTest extends TestCase
         $cash_game = $this->signIn()->startCashGame();
 
         // Test not sending amount
-        $this->postJson(route('expense.add'), [
-                    'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                 ])
                 ->assertStatus(422);
 
         // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
-        $this->postJson(route('expense.add'), [
-                    'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 55.52
                 ])
                 ->assertOk();
                 
         // Test negative numbers
-        $this->postJson(route('expense.add'), [
-                    'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => -10
                 ])
                 ->assertStatus(422);
 
         // Test string
-        $this->postJson(route('expense.add'), [
-                    'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 'Invalid'
                 ])
                 ->assertStatus(422);
 
         // Zero should be okay
-        $this->postJson(route('expense.add'), [
-                    'id' => $cash_game->id,
+        // NOTE: 2020-06-01 Zero is no invalid on front end, though valid backend.
+        $this->postJson(route('expense.create'), [
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 0
                 ])
-                ->assertOk();
+                ->assertStatus(422);
     }
 
     public function testExpenseAmountIsValidForUpdate()
     {
         $cash_game = $this->signIn()->startCashGame();
 
-        $this->postJson(route('expense.add'), [
-            'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
@@ -209,7 +210,8 @@ class ExpensesTest extends TestCase
         $this->patchJson(route('expense.update', ['expense' => $expense]), ['amount' => 'Invalid'])->assertStatus(422);
 
         // Zero should be okay
-        $this->patchJson(route('expense.update', ['expense' => $expense]), ['amount' => 0])->assertOk();
+        // NOTE: 2020-06-01 Zero is no invalid on front end, though valid backend.
+        $this->patchJson(route('expense.update', ['expense' => $expense]), ['amount' => 0])->assertStatus(422);
     }
 
     public function testTheExpenseMustBelongToTheAuthenticatedUser()
@@ -217,8 +219,8 @@ class ExpensesTest extends TestCase
         // User1 creates a CashGame and adds a Expense
         $user1 = $this->signIn();
         $cash_game = $user1->startCashGame();
-        $this->postJson(route('expense.add'), [
-                    'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 500
                 ]);
@@ -228,8 +230,8 @@ class ExpensesTest extends TestCase
         $user2 = $this->signIn();
 
         // User2 tries to Add Expense to User1's CashGame
-        $this->postJson(route('expense.add'), [
-                    'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+                    'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 1000
                 ])
@@ -253,8 +255,8 @@ class ExpensesTest extends TestCase
         $cash_game = $this->signIn()->startCashGame();
 
         // You can add a comment when adding an expense.
-        $this->postJson(route('expense.add'), [
-            'id' => $cash_game->id,
+        $this->postJson(route('expense.create'), [
+            'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
             'amount' => 500,
             'comments' => 'Comment'

@@ -64,11 +64,11 @@ class TournamentTest extends TestCase
     {
         $tournament = $this->startLiveTournament();
 
-        $time = Carbon::create('+3 hours');
+        $time = Carbon::create('+3 hours')->toDateTimeString();
 
         $tournament->end($time);
 
-        $this->assertEquals($tournament->fresh()->end_time, $time->toDateTimeString());
+        $this->assertEquals($tournament->fresh()->end_time, $time);
     }
 
     public function testAnEndTimeCannotBeBeforeAStartTime()
@@ -77,7 +77,7 @@ class TournamentTest extends TestCase
 
         $tournament = $this->startLiveTournament();
 
-        $tournament->end(Carbon::create('-3 hours'));
+        $tournament->end(Carbon::create('-3 hours')->toDateTimeString());
     }
 
     public function testATournamentCannotBeStartedIfThereIsAlreadyALiveTournamentInProgress()
@@ -97,7 +97,7 @@ class TournamentTest extends TestCase
 
         // Start and finish a tournament.
         $tournament = $user->startTournament($this->getTournamentAttributes());
-        $tournament->end(Carbon::create('+1 hour'));
+        $tournament->end(Carbon::create('+1 hour')->toDateTimeString());
 
         Carbon::setTestNow('+ 3 hours');
 

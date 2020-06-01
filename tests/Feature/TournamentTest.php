@@ -122,8 +122,9 @@ class TournamentTest extends TestCase
         $this->postJson(route('tournament.live.start'), $this->getTournamentAttributes());
 
         //  End the tournament
-        $this->postJson(route('tournament.live.end'))
-                ->assertOk();
+        $this->postJson(route('tournament.live.end'), [
+                'amount' => 100
+            ])->assertOk();
 
         $tournament = $user->tournaments()->first();
 
@@ -135,14 +136,16 @@ class TournamentTest extends TestCase
         $user = $this->signIn();
 
         // Start one tournament
-        $this->postJson(route('tournament.live.start'), $this->getTournamentAttributes())
-                ->assertOk();
+        $start_time = Carbon::create('-1 hour')->toDateTimeString();
 
-        $end_time = Carbon::create('+1 hour')->toDateTimeString();
+        $this->postJson(route('tournament.live.start'), $this->getTournamentAttributes(1000, $start_time))->assertOk();
+
+        $end_time = Carbon::create('-10 mins')->toDateTimeString();
 
         // End the tournament
         $this->postJson(route('tournament.live.end'), [
-                    'end_time' => $end_time
+                    'end_time' => $end_time,
+                    'amount' => 100
                 ])
                 ->assertOk();
 
@@ -160,12 +163,14 @@ class TournamentTest extends TestCase
 
         // End the tournament trying a string and a number
         $this->postJson(route('tournament.live.end'), [
-                    'end_time' => 'this is not a date'
+                    'end_time' => 'this is not a date',
+                    'amount' => 100
                 ])
                 ->assertStatus(422);
 
         $this->postJson(route('tournament.live.end'), [
-                    'end_time' => 34732
+                    'end_time' => 34732,
+                    'amount' => 100
                 ])
                 ->assertStatus(422);
     }
@@ -177,7 +182,9 @@ class TournamentTest extends TestCase
         // Don't Start Tournament
 
         // End the tournament
-        $this->postJson(route('tournament.live.end'))
+        $this->postJson(route('tournament.live.end'), [
+                    'amount' => 100
+                ])
                 ->assertStatus(422)
                 ->assertJsonStructure(['success', 'message'])
                 ->assertJson([
@@ -197,7 +204,10 @@ class TournamentTest extends TestCase
                 ->assertOk();
 
         // End the tournament at $end_time which is before $start_time
-        $this->postJson(route('tournament.live.end'), ['end_time' => $end_time])
+        $this->postJson(route('tournament.live.end'), [
+                    'end_time' => $end_time,
+                    'amount' => 100
+                ])
                 ->assertStatus(422)
                 ->assertJsonStructure(['success', 'message'])
                 ->assertJson([
@@ -278,12 +288,6 @@ class TournamentTest extends TestCase
         // Should fail when ending with a negative number
         $this->postJson(route('tournament.live.end'), [
                 'amount' => -1000
-            ])
-            ->assertStatus(422);
-
-        // Should fail when ending with a float number
-        $this->postJson(route('tournament.live.end'), [
-                'amount' => 54.2
             ])
             ->assertStatus(422);
 
@@ -517,8 +521,7 @@ class TournamentTest extends TestCase
         $user = $this->signIn();
         $tournament = $user->startTournament($this->getTournamentAttributes());
 
-        $this->deleteJson(route('tournament.delete', ['tournament' => $tournament->id]))
-                ->assertOk();
+        $this->deleteJson(route('tournament.delete', ['tournament' => $tournament->id]))->assertOk();
 
         $this->assertEmpty($user->tournaments);
     }
@@ -532,7 +535,6 @@ class TournamentTest extends TestCase
         $this->signIn();
 
         // User 2 is Forbidden to delete user 1s tournament.
-        $this->deleteJson(route('tournament.delete', ['tournament' => $tournament->id]))
-                ->assertForbidden();
+        $this->deleteJson(route('tournament.delete', ['tournament' => $tournament->id]))->assertForbidden();
     }
 }

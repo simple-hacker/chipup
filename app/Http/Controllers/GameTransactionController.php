@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\CashGame;
 use App\Tournament;
 use App\Abstracts\GameTransaction;
-use App\Http\Requests\AddGameTransactionRequest;
+use App\Http\Requests\CreateGameTransactionRequest;
 use App\Http\Requests\UpdateGameTransactionRequest;
 
 abstract class GameTransactionController extends Controller
@@ -14,32 +14,30 @@ abstract class GameTransactionController extends Controller
     protected $transaction_relationship;
 
     /**
-    * Add a buy in to the CashGame
+    * Create a transaction to the CashGame
     * 
-    * @param AddGameTransactionRequest $request
+    * @param CreateGameTransactionRequest $request
     * @return json
     */
-    public function add(AddGameTransactionRequest $request)
+    public function create(CreateGameTransactionRequest $request)
     {
         // Get the model for the correct GameType
         switch ($request->game_type) {
             case 'cash_game':
-                $game_type = CashGame::findOrFail($request->id);
+                $game = CashGame::findOrFail($request->game_id);
                 break;
             case 'tournament':
-                $game_type = Tournament::findOrFail($request->id);
+                $game = Tournament::findOrFail($request->game_id);
                 break;
             default:
                 abort(422, 'Invalid GameType was supplied');
         }
 
-        // Authorize that the user can manage the game_type
-        $this->authorize('manage', $game_type);
-
-        // dd($request->validated());
+        // Authorize that the user can manage the game
+        $this->authorize('manage', $game);
 
         try {
-            $game_transaction = $game_type->addTransaction($this->transaction_type, $request->amount);
+            $game_transaction = $game->addTransaction($this->transaction_type, $request->amount);
 
             // Add Comments
             if ($request->comments) {
@@ -48,7 +46,8 @@ abstract class GameTransactionController extends Controller
 
             return response()->json([
                 'success' => true,
-                'transaction' => $game_transaction
+                'transaction' => $game_transaction,
+                'game' => $game->fresh(),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -59,8 +58,8 @@ abstract class GameTransactionController extends Controller
     }
 
     /**
-    * Retrieve the Buy In
-    * Make sure it belongs to the correct cash_game
+    * Retrieve the Transaction
+    * Make sure it belongs to the correct game_type
     * 
     * @param GameTransaction $game_transaction
     * @return json
@@ -84,8 +83,6 @@ abstract class GameTransactionController extends Controller
     */
     public function update(GameTransaction $game_transaction, UpdateGameTransactionRequest $request)
     {
-        // dd($request->validated());
-
         $this->authorize('manage', $game_transaction);
 
         // Only updated the validated request data.
@@ -94,12 +91,13 @@ abstract class GameTransactionController extends Controller
 
         return response()->json([
             'success' => true,
-            'transaction' => $game_transaction
+            'transaction' => $game_transaction,
+            'game' => $game_transaction->game->fresh(),
         ]);
     }
 
     /**
-    * Destroy the Buy In
+    * Destroy the Transaction
     * 
     * @param GameTransaction $game_transaction
     * @return json
@@ -111,7 +109,8 @@ abstract class GameTransactionController extends Controller
         $success = $game_transaction->delete();
 
         return response()->json([
-            'success' => $success
+            'success' => $success,
+            'game' => $game_transaction->game->fresh(),
         ]);
     }
 }

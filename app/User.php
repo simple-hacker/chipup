@@ -69,10 +69,7 @@ class User extends Authenticatable
         } else {
             $this->decrement('bankroll', $amount * -100);
         }
-
-        // return $this->bankroll;
     }
-
 
     /**
     * Add amount to bankroll.
@@ -85,7 +82,7 @@ class User extends Authenticatable
     public function createBankrollTransaction($transaction)
     {
         return $this->bankrollTransactions()->create([
-            'date' => $transaction['date'] ?? date('Y-m-d'),
+            'date' => $transaction['date'] ?? null,
             'amount' => $transaction['amount'],
             'comments' => $transaction['comments'] ?? null,
         ]);
@@ -100,7 +97,6 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Transactions\Bankroll')->orderByDesc('date');
     }
-
 
     /**
     * Returns a collection of the user's CashGames
@@ -127,10 +123,10 @@ class User extends Authenticatable
             throw new CashGameInProgress('A Cash Game is already in progress.');
         }
 
-        // TODO:  Maybe don't use default attributes??
-
+        // All default values attributes are required in the StartCashGameRequest
+        // Using defaults if not set in case mistakes have been made elsewhere in app.
         return $this->cashGames()->create([
-            'start_time' => (isset($attributes['start_time'])) ? Carbon::create($attributes['start_time']) : now(),
+            'start_time' => $attributes['start_time'] ?? null,
             'stake_id' => $attributes['stake_id'] ?? $this->default_stake_id,
             'variant_id' => $attributes['variant_id'] ?? $this->default_variant_id,
             'limit_id' => $attributes['limit_id'] ?? $this->default_limit_id,
@@ -142,7 +138,6 @@ class User extends Authenticatable
 
     /**
     * Return the latest Cash Game without an end_time.
-    * NOTE: We should only ever have one live session so need to check.
     * This check is performed in startCashGame
     * 
     * @return \App\CashGame
@@ -162,13 +157,14 @@ class User extends Authenticatable
     * @param Carbon $time
     * @return hasMany
     */
-    public function cashGamesAtTime(Carbon $time)
+    public function cashGamesAtTime($time = null)
     {
+        $start_time = $time ? Carbon::create($time) : now();
+        
         return $this->cashGames()
-                    ->where('start_time', '<=', $time)
-                    // ->where('end_time', '>=', $time)
-                    ->where(function ($query) use ($time) {
-                        $query->where('end_time', '>=', $time)
+                    ->where('start_time', '<=', $start_time)
+                    ->where(function ($query) use ($start_time) {
+                        $query->where('end_time', '>=', $start_time)
                               ->orWhere('end_time', null);
                     })
                     ->count();
@@ -200,7 +196,7 @@ class User extends Authenticatable
         }
 
         return $this->tournaments()->create([
-            'start_time' => (isset($attributes['start_time'])) ? Carbon::create($attributes['start_time']) : now(),
+            'start_time' => $attributes['start_time'] ?? null,
             'buy_in' => $attributes['amount'],
             'name' => $attributes['name'] ?? null,
             'variant_id' => $attributes['variant_id'],
@@ -213,7 +209,6 @@ class User extends Authenticatable
 
     /**
     * Return the latest Tournament without an end_time.
-    * NOTE: We should only ever have one live tournament so need to check.
     * This check is performed in startTournament
     * 
     * @return \App\Tournament
@@ -283,7 +278,7 @@ class User extends Authenticatable
     /**
     * Mutate bankroll in to currency
     *
-    * @param  Integer $bankroll
+    * @param Integer $bankroll
     * @return void
     */
     public function getBankrollAttribute($bankroll)
@@ -294,7 +289,7 @@ class User extends Authenticatable
     /**
     * Mutate bankroll in to lowest denomination
     *
-    * @param  Float $bankroll
+    * @param Float $bankroll
     * @return void
     */
     public function setBankrollAttribute($bankroll)

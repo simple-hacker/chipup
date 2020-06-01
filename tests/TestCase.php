@@ -84,7 +84,7 @@ abstract class TestCase extends BaseTestCase
                 ['amount' => 400],
                 ['amount' => 750, 'comments' => 'Tips'],
             ],
-            'cash_out' => [
+            'cash_out_model' => [
                 'amount' => 1000,
             ]
         ];

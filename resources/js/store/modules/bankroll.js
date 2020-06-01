@@ -38,7 +38,7 @@ export default {
     },
     actions: {
         getBankrollTransactions({ commit }) {
-            return axios.get('/api/bankroll/')
+            return axios.get('/api/bankroll')
             .then(response => {
                 commit('ASSIGN_BANKROLL_TRANSACTIONS', response.data.bankrollTransactions)
             })
@@ -47,7 +47,7 @@ export default {
             })
         },
         addBankrollTransaction({ commit }, transaction) {
-            return axios.post('/api/bankroll/create', {
+            return axios.post('/api/bankroll', {
                 amount: transaction.amount,
                 comments: transaction.comments
             })
@@ -58,12 +58,8 @@ export default {
                 throw error
             })
         },
-        updateBankrollTransaction({ commit }, payload) {
-            return axios.patch('/api/bankroll/'+payload.transaction.id, {
-                date: payload.data.date.split("T")[0],
-                amount: payload.data.amount,
-                comments: payload.data.comments
-            })
+        updateBankrollTransaction({ commit }, bankrollTransaction) {
+            return axios.patch('/api/bankroll/'+bankrollTransaction.id, bankrollTransaction)
             .then(response => {
                 commit('UPDATE_BANKROLL_TRANSACTION', response.data.bankrollTransaction)
             })

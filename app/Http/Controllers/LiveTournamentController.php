@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Http\Requests\EndSessionRequest;
 use App\Http\Requests\AddTournamentRequest;
 
 class LiveTournamentController extends Controller
@@ -61,27 +62,18 @@ class LiveTournamentController extends Controller
     /**
     * POST method to end the current live Tournament
     * 
-    * @param Request $request
+    * @param EndSessionRequest $request
     * @return json
     */
-    public function end(Request $request)
+    public function end(EndSessionRequest $request)
     {
-        $request->validate([
-            'end_time' => 'nullable|date',
-            'amount' => 'sometimes|integer|min:0'
-        ]);
-
         // Get the current live Tournament if there is one.
         $tournament = auth()->user()->liveTournament();
 
         if ($tournament) {
             // If there is a live Tournament try to end if with supplied time or null
             try {
-                $end_time = ($request->end_time) ? Carbon::create($request->end_time) : null;
-                $tournament->end($end_time);
-                if ($request->amount) {
-                    $tournament->cashOut($request->amount);
-                }
+                $tournament->endAndCashOut($request->end_time, $request->amount);
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,

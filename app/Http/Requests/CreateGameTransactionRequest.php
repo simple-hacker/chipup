@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AddGameTransactionRequest extends FormRequest
+class CreateGameTransactionRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,9 +14,9 @@ class AddGameTransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|integer',
+            'game_id' => 'required|integer',
             'game_type' => 'required|string',
-            'amount' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:0|not_in:0',
             'comments' => 'sometimes|nullable|string'
         ];
     }

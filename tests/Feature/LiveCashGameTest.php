@@ -133,15 +133,15 @@ class LiveCashGameTest extends TestCase
 
     public function testUserCanEndACashGameAtASuppliedTime()
     {
-        $this->withoutExceptionHandling();
-
         $user = $this->signIn();
 
-        // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())
-                ->assertOk();
+        Carbon::setTestNow(Carbon::create('-30 mins'));
 
-        $end_time = Carbon::create('+30 mins')->toDateTimeString();
+        // Start one cash game 30 minutes ago
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())->assertOk();
+
+        // End Time is now which is valid, cannot be in the future as described in next test.
+        $end_time = Carbon::now()->toDateTimeString();
 
         // End the cash game
         $this->postJson(route('cash.live.end'), [
@@ -152,6 +152,24 @@ class LiveCashGameTest extends TestCase
 
         $cash_game = $user->cashGames()->first();
         $this->assertEquals($cash_game->end_time, $end_time);
+    }
+
+    public function testUserCannotEndACashGameInTheFuture()
+    {
+        $user = $this->signIn();
+
+        // Start one cash game
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())->assertOk();
+
+        // End_time one second in the future
+        $end_time = Carbon::now()->addSeconds(1)->toDateTimeString();
+
+        // End the cash game
+        $this->postJson(route('cash.live.end'), [
+                    'end_time' => $end_time,
+                    'amount' => 1000,
+                ])
+                ->assertStatus(422);
     }
 
     public function testUserCannotEndACashGameAtAInvalidTime()
@@ -191,6 +209,8 @@ class LiveCashGameTest extends TestCase
 
     public function testUserCannotEndACashGameBeforeItsStartTime()
     {
+        $this->withoutExceptionHandling();
+        
         $start_time = Carbon::create('-1 hour')->toDateTimeString();
         $end_time = Carbon::create('-2 hour')->toDateTimeString();
 
@@ -472,23 +492,6 @@ class LiveCashGameTest extends TestCase
         // Start_time cannot be in the future
         $this->patchJson(route('cash.live.update'), [
             'start_time' => Carbon::create('+1 second')->toDateTimeString()
-        ])->assertStatus(422);
-
-        // end_time cannot be in the future
-        $this->patchJson(route('cash.live.update'), [
-            'end_time' => Carbon::create('+1 second')->toDateTimeString()
-        ])->assertStatus(422);
-
-        // Start_time cannot be after end_time
-        $this->patchJson(route('cash.live.update'), [
-            'start_time' => Carbon::create('-10 minutes')->toDateTimeString(),
-            'end_time' => Carbon::create('-20 minutes')->toDateTimeString(),
-        ])->assertStatus(422);
-
-        // Start_time and end_time cannot be the same
-        $this->patchJson(route('cash.live.update'), [
-            'start_time' => Carbon::create('-10 minutes')->toDateTimeString(),
-            'end_time' => Carbon::create('-10 minutes')->toDateTimeString(),
         ])->assertStatus(422);
     }   
 }

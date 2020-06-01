@@ -2,6 +2,7 @@
 
 namespace App\Transactions;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Bankroll extends Model
@@ -51,5 +52,22 @@ class Bankroll extends Model
     public function setAmountAttribute($amount)
     {
         $this->attributes['amount'] = $amount * 100;
+    }
+
+    /**
+    * Mutate date to be a Carbon instance to UTC
+    * So can pass in values like 2020-03-01T16:45:21.000Z
+    * and doesn't fail on MySQL timestamp column
+    *
+    * @param String $date
+    * @return void
+    */
+    public function setDateAttribute($date)
+    {
+        if ($date) {
+            $this->attributes['date'] = Carbon::create($date)->startOfDay();
+        } else {
+            $this->attributes['date'] = now()->startOfDay();
+        }
     }
 }

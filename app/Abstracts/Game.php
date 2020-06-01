@@ -11,7 +11,11 @@ abstract class Game extends Model
 {
     protected $casts = [
         'user_id' => 'integer',
-        'profit' => 'float'
+        'profit' => 'float',
+    ];
+
+    protected $dates = [
+        'start_time', 'end_time'
     ];
 
     /**
@@ -26,18 +30,49 @@ abstract class Game extends Model
     }
 
     /**
+    * Return the parent's variant model
+    * 
+    * @return belongsTo
+    */
+    public function variant()
+    {
+        return $this->belongsTo('App\Attributes\Variant');
+    }
+
+    /**
+    * Return the parent's limit model
+    * 
+    * @return belongsTo
+    */
+    public function limit()
+    {
+        return $this->belongsTo('App\Attributes\Limit');
+    }
+
+    /**
+    * Return the parent's table size model
+    * 
+    * @return belongsTo
+    */
+    public function table_size()
+    {
+        return $this->belongsTo('App\Attributes\TableSize');
+    }
+
+    /**
     * End the Game by updating the end_time to the current time or given time.
     * 
     * @param Carbon end_time
     * @return mixed
     */
-    public function end(Carbon $end_time = null)
+    public function end($end_time = null)
     {
-        $end_time  = $end_time ?? now();
+        // Need a Carbon instance of date string that's passed to compare to Carbon start_time
+        $dateTest = $end_time ? Carbon::create($end_time) : now();
 
         // The end_time cannot be before the start_time
-        if ($end_time < $this->start_time) {
-            throw new InvalidDate('Cannot set the end time before the start time');
+        if ($dateTest < $this->start_time) {
+            throw new InvalidDate('Cannot set the end time before the start time', 422);
         }
 
         return $this->update([
@@ -109,6 +144,19 @@ abstract class Game extends Model
         return $this->cashOutModel()->create([
             'amount' => $amount
         ]);
+    }
+
+    /**
+    * End the Game and Cash Out
+    * One method to simplify Controllers.
+    * 
+    * @param float amount
+    * @return CashOut
+    */
+    public function endAndCashOut($end_time = null, float $amount = 0)
+    {
+        $this->end($end_time);
+        $this->cashOut($amount);
     }
 
     /**
@@ -188,5 +236,39 @@ abstract class Game extends Model
     public function setProfitAttribute($profit)
     {
         $this->attributes['profit'] = $profit * 100;
+    }
+
+    /**
+    * Mutate start_time to be a Carbon instance to UTC
+    * So can pass in values like 2020-03-01T16:45:21.000Z
+    * and doesn't fail on MySQL timestamp column
+    *
+    * @param String $start_time
+    * @return void
+    */
+    public function setStartTimeAttribute($start_time)
+    {
+        if ($start_time) {
+            $this->attributes['start_time'] = Carbon::create($start_time);
+        } else {
+            $this->attributes['start_time'] = now();
+        }
+    }
+
+    /**
+    * Mutate end_time to be a Carbon instance to UTC
+    * So can pass in values like 2020-03-01T16:45:21.000Z
+    * and doesn't fail on MySQL timestamp column
+    *
+    * @param String $end_time
+    * @return void
+    */
+    public function setEndTimeAttribute($end_time)
+    {
+        if ($end_time) {
+            $this->attributes['end_time'] = Carbon::create($end_time);
+        } else {
+            $this->attributes['end_time'] = now();
+        }
     }
 }

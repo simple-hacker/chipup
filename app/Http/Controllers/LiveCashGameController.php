@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EndSessionRequest;
 use App\Http\Requests\StartCashGameRequest;
 use App\Http\Requests\UpdateCashGameRequest;
 use App\Http\Requests\UpdateLiveCashGameRequest;
@@ -22,13 +23,12 @@ class LiveCashGameController extends Controller
         try {
             $cash_game = auth()->user()->startCashGame($request->validated());
 
-            if ($request->amount) {
-                $cash_game->addBuyIn($request->amount);
-            }
+            // request->amount is required
+            $cash_game->addBuyIn($request->amount);
 
             return [
                 'success' => true,
-                'cash_game' => $cash_game
+                'cash_game' => $cash_game->fresh() // NOTE: Returning fresh copy of cash_game because of transactions.
             ];
         } catch(\Exception $e) {
             return response()->json([
@@ -57,42 +57,36 @@ class LiveCashGameController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'You currently don\'t have a Cash Game in progress'
-            ], 422);
+            ]);
         }
     }
 
     /**
     * POST method to end the current live Cash Game
     * 
-    * @param Request $request
+    * @param EndSessionRequest $request
     * @return json
     */
-    public function end(Request $request)
+    public function end(EndSessionRequest $request)
     {
-        $request->validate([
-            'end_time' => 'nullable|date',
-            'amount' => 'required|numeric|min:0'
-        ]);
-
         // Get the current live Cash Game if there is one.
         $cash_game = auth()->user()->liveCashGame();
 
         if ($cash_game) {
             // If there is a live CashGame try to end if with supplied time or null
             try {
-                $end_time = ($request->end_time) ? Carbon::create($request->end_time) : null;
-                $cash_game->end($end_time);
-                $cash_game->cashOut($request->amount);
+                $cash_game->endAndCashOut($request->end_time, $request->amount);
 
                 return response()->json([
                     'success' => true,
+                    'cash_game' => $cash_game->fresh()
                 ]);
 
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
                     'message' => $e->getMessage()
-                ], 422);
+                ], $e->getCode());
             }
         } else {
             // Else send a 422
@@ -116,12 +110,12 @@ class LiveCashGameController extends Controller
             $cash_game = auth()->user()->liveCashGame();
 
             if ($cash_game) {
-
-                $cash_game->update($request->validated());
                 
+                $cash_game->update($request->validated());
+
                 return response()->json([
                     'success' => true,
-                    'cash_game' => $cash_game
+                    'cash_game' => $cash_game->fresh()
                 ]);
             } else {
                 throw new \Exception('You have not started a Cash Game.', 422);

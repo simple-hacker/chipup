@@ -20,8 +20,8 @@ use Illuminate\Http\Request;
 Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
     // Bankroll Routes
     Route::prefix('bankroll')->name('bankroll.')->group(function () {
-        Route::get('/', 'BankrollController@index')->name('index');
-        Route::post('create', 'BankrollController@create')->name('create');
+        Route::get('', 'BankrollController@index')->name('index');
+        Route::post('', 'BankrollController@create')->name('create');
         Route::get('{bankrollTransaction}', 'BankrollController@view')->name('view');
         Route::patch('{bankrollTransaction}', 'BankrollController@update')->name('update');
         Route::delete('{bankrollTransaction}', 'BankrollController@delete')->name('delete');
@@ -63,7 +63,7 @@ Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
     
     // BuyIn Routes
     Route::prefix('buyin')->name('buyin.')->group(function () {
-        Route::post('add', 'BuyInController@add')->name('add');
+        Route::post('', 'BuyInController@create')->name('create');
         Route::get('{buy_in}', 'BuyInController@view')->name('view');
         Route::patch('{buy_in}', 'BuyInController@update')->name('update');
         Route::delete('{buy_in}', 'BuyInController@destroy')->name('delete');
@@ -71,7 +71,7 @@ Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
     
     // Expenses Routes
     Route::prefix('expense')->name('expense.')->group(function () {
-        Route::post('add', 'ExpenseController@add')->name('add');
+        Route::post('', 'ExpenseController@create')->name('create');
         Route::get('{expense}', 'ExpenseController@view')->name('view');
         Route::patch('{expense}', 'ExpenseController@update')->name('update');
         Route::delete('{expense}', 'ExpenseController@destroy')->name('delete');
@@ -79,7 +79,7 @@ Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
     
     // CashOut Routes
     Route::prefix('cashout')->name('cashout.')->group(function () {
-        Route::post('add', 'CashOutController@add')->name('add');
+        Route::post('', 'CashOutController@create')->name('create');
         Route::get('{cash_out}', 'CashOutController@view')->name('view');
         Route::patch('{cash_out}', 'CashOutController@update')->name('update');
         Route::delete('{cash_out}', 'CashOutController@destroy')->name('delete');
@@ -87,7 +87,7 @@ Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
     
     // Rebuy Routes
     Route::prefix('rebuy')->name('rebuy.')->group(function () {
-        Route::post('add', 'RebuyController@add')->name('add');
+        Route::post('', 'RebuyController@create')->name('create');
         Route::get('{rebuy}', 'RebuyController@view')->name('view');
         Route::patch('{rebuy}', 'RebuyController@update')->name('update');
         Route::delete('{rebuy}', 'RebuyController@destroy')->name('delete');
@@ -95,7 +95,7 @@ Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
     
     // AddOn Routes
     Route::prefix('addon')->name('addon.')->group(function () {
-        Route::post('add', 'AddOnController@add')->name('add');
+        Route::post('', 'AddOnController@create')->name('create');
         Route::get('{add_on}', 'AddOnController@view')->name('view');
         Route::patch('{add_on}', 'AddOnController@update')->name('update');
         Route::delete('{add_on}', 'AddOnController@destroy')->name('delete');

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BankrollTransactionRequest extends FormRequest
+class EndSessionRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,9 +14,8 @@ class BankrollTransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            'date' => 'sometimes|date|before:tomorrow',
-            'amount' => 'required|numeric|not_in:0',
-            'comments' => 'sometimes|nullable|string'
+            'end_time' => 'nullable|date|before_or_equal:now',
+            'amount' => 'required|numeric|min:0'
         ];
     }
 }

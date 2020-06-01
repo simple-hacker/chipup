@@ -12,15 +12,17 @@
                 </router-link>
             </h1>
             <router-link
-				:to="{ name: 'session' }"
-				class="btn-green"
+				:to="{ name: 'live' }"
+				class="btn btn-green"
+                :class="!sessionInProgress ? 'btn btn-green' : 'btn-red'"
 			>
-			Start Session
+                <div v-if="!sessionInProgress">Start Session</div>
+                <div v-if="sessionInProgress"><i class="fas fa-circle-notch fa-spin mr-2"></i>{{ runTime }}</div>
 			</router-link>
         </nav>
 
         <div class="flex flex-1 flex-col lg:flex-row lg:relative overflow-hidden">
-            <div class="flex-1 justify-center pt-4 px-2 w-full lg:px-4 lg:order-last overflow-y-auto scrolling-touch">
+            <div ref="scroll" class="flex-1 justify-center pt-4 px-2 w-full lg:px-4 lg:order-last overflow-y-auto scrolling-touch">
                 <transition name="fade" mode="out-in">
                     <router-view></router-view>
                 </transition>
@@ -29,7 +31,7 @@
             <!-- Bottom Nav -->
             <nav aria-label="bottom-navigation" class="sticky bottom-0 p-2 flex justify-around items-center bg-card border-t-2 border-background lg:order-first lg:flex-col lg:justify-start lg:items-start lg:w-1/6 lg:max-w-nav lg:p-2 xl:p-3 lg:border-none">
                 <router-link
-                    :to="{ name: 'session' }"
+                    :to="{ name: 'live' }"
                     class="w-1/6 flex justify-center items-center rounded-lg p-4 text-white hover:bg-green-500 hover:text-muted-dark focus:bg-green-500 focus:text-muted-dark flex lg:w-full lg:justify-start lg:p-3 lg:mb-2"
                     :active-class="'bg-green-600 text-muted-dark'"
                 >
@@ -77,11 +79,72 @@
 </template>
 
 <script>
+import moment from 'moment'
+import 'moment-duration-format'
+import { mapState, mapGetters } from 'vuex'
+
 export default {
     name: 'App',
-    created() {
+    data(){
+        return {
+            sessionsScrollTo: 0,
+            now: moment().utc(),
+            runTimeInterval: null,
+        }
+    },
+    computed: {
+        ...mapState('live', ['liveSession']),
+        ...mapGetters('live', ['sessionInProgress']),
+        runTime() {
+			const start_time = moment.utc(this.liveSession.start_time)
+			let diff = this.now.diff(start_time, 'hours', true)
+			return moment.duration(diff, 'hours').format("hh:mm", { trim: false})
+		}
+    },
+    watch: {
+        sessionInProgress: function(running) {
+            // running is the updated value on watcher.
+            // If sessionInProgress returns true then running else not running.
+            if (running) {
+                this.runTimeInterval = setInterval(() => {
+                    this.now = moment().utc()
+                }, 60000)
+            } else {
+                clearInterval(this.runTimeInterval)
+                this.runTimeInterval = null
+            }
+        }
+    },
+    beforeCreate() {
         this.$store.dispatch('bankroll/getBankrollTransactions')
         this.$store.dispatch('cash_games/getCashGames')
+        this.$store.dispatch('live/currentLiveSession')
+    },
+    created() {
+        // App uses main-content ref=scroll as a scrollable div for main content, where as vue-router uses window.scrollTop for scrollBehaviour
+        // which is always at 0,0 because it's fixed and overflow is hidden.
+        // Code found on https://github.com/vuejs/vue-router/issues/1187
+        // I only want to save the scroll position from sessions->session so that if the user clicks back (session->sessions)
+        // they will be in the same scroll position with the list of sessions.
+
+        this.$router.afterEach( (to, from) => {
+
+            let scrollTo = 0;
+            
+            // If sessions->session then save current scroll position but continue to scroll to 0 on session
+            if (from.name === 'sessions' && to.name === 'session') {
+                this.sessionsScrollTo = this.$refs.scroll.scrollTop
+            }
+
+            // If session->sessions then load saved sessions scroll position
+            if (from.name === 'session' && to.name === 'sessions') {
+                scrollTo = this.sessionsScrollTo
+            }
+
+            this.$nextTick(()=>{
+                this.$refs.scroll.scrollTop = scrollTo
+            });
+        });
     },
 }
 </script>

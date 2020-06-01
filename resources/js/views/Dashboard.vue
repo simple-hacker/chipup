@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full grid grid-cols-4 gap-4">
+    <div class="w-full grid grid-cols-4 gap-4 pb-4">
         <div class="col-span-4 xl:col-span-3 p-2 bg-card border border-muted-dark rounded shadow">
 			<chart/>
         </div>
