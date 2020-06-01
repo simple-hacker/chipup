@@ -450,13 +450,11 @@ export default {
 			return buyInTotal + addOnTotal + rebuyTotal + expenseTotal
 		},
 		runTimeHours() {
-			const end_time = moment(this.session.end_time)
-			const start_time = moment(this.session.start_time)
+			const end_time = moment.utc(this.session.end_time)
+			const start_time = moment.utc(this.session.start_time)
 			return end_time.diff(start_time, 'hours', true)
 		},
 		runTime() {
-			const end_time = moment(this.session.end_time)
-			const start_time = moment(this.session.start_time)
 			return moment.duration(this.runTimeHours, 'hours').format("h [hours] m [mins]")
 		},
 		profitPerHour() {

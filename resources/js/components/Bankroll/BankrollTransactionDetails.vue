@@ -6,27 +6,43 @@
                 <div class="w-1/4 font-medium">Date</div>
                 <div class="w-3/4">
                     <datetime
-                        v-model="date"
+                        v-model="editBankrollTransaction.date"
                         type="date"
-                        input-class="w-full p-3"
+                        value-zone="local"
                         auto
                         title="Bankroll Transaction Date"
                         class="w-full bg-muted-light border border-muted-dark rounded border theme-green"
-                        :class="errors.date ? 'border-red-700' : 'border-gray-400'"
+                        :input-class="{'error-input' : errors.date, 'w-full p-3' : true}"
+                        @input="delete errors.date"
                     ></datetime>
+                    <span v-if="errors.date" class="error-message">{{ errors.date[0] }}</span>
                 </div>
 
             </div>
             <div class="flex w-full items-center mb-3">
                 <div class="w-1/4 font-medium">Amount</div>
                 <div class="w-3/4">
-                    <input v-model="amount" type="number" step="0.01" :class="{ 'border-red-700' : errors.amount }"/>
+                    <input
+                        v-model="editBankrollTransaction.amount"
+                        type="number"
+                        step="0.01"
+                        :class="{ 'error-input' : errors.amount }"
+                        @input="delete errors.amount"
+                    />
+                    <span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
                 </div>
             </div>
             <div class="flex w-full items-center mb-3">
                 <div class="w-1/4 font-medium">Comments</div>
                 <div class="w-3/4">
-                    <textarea v-model="comments" placeholder="Comments" rows=4 :class="{ 'border-red-700' : errors.comments }"></textarea>
+                    <textarea
+                        v-model="editBankrollTransaction.comments"
+                        placeholder="Comments"
+                        rows=4
+                        :class="{ 'error-input' : errors.comments }"
+                        @input="delete errors.comments"
+                    ></textarea>
+                    <span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
                 </div>
             </div>
         </div>
@@ -48,11 +64,12 @@ export default {
     },
     data() {
         return {
-            date: moment.utc(this.bankrollTransaction.date).format(),
-            // Need to convert to UTC first otherwise vue-js-datetime in date mode doesn't factor in BST
-            // https://github.com/mariomka/vue-datetime/issues/214
-            amount: this.bankrollTransaction.amount,
-            comments: this.bankrollTransaction.comments,
+            editBankrollTransaction: {
+                id: this.bankrollTransaction.id,
+                date: moment.utc(this.bankrollTransaction.date).format(),
+                amount: this.bankrollTransaction.amount,
+                comments: this.bankrollTransaction.comments,
+            },
             errors: {},
         }
     },
@@ -86,14 +103,7 @@ export default {
 			})
         },
         saveTransaction: function () {
-            this.updateBankrollTransaction({
-                transaction: this.bankrollTransaction,
-                data: {
-                    date: this.date,
-                    amount: this.amount,
-                    comments: this.comments
-                }
-            })
+            this.updateBankrollTransaction(this.editBankrollTransaction)
             .then(response => {
                 this.$modal.hide('dialog');
                 this.$emit('close');
@@ -101,6 +111,7 @@ export default {
             })
             .catch(error => {
                 this.$snotify.error('Error: '+error.response.data.message);
+                this.errors = error.response.data.errors
             })
         }
 	}

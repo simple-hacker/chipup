@@ -345,7 +345,7 @@ export default {
 				limit_id: this.liveSession.limit_id,
 				variant_id: this.liveSession.variant_id,
 				table_size_id: this.liveSession.table_size_id,
-				start_time: moment(this.liveSession.start_time).format(),
+				start_time: moment.utc(this.liveSession.start_time).format(),
 				comments: this.liveSession.comments,
 			}
 		},
@@ -356,7 +356,6 @@ export default {
 		saveSession() {
 			this.updateLiveSession(this.editLiveSession)
 			.then(response => {
-				// this.$snotify.success('Changes saved.')
 				this.editing = false
 			})
 			.catch(error => {

@@ -2353,6 +2353,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'BankrollTransaction',
@@ -2360,7 +2377,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       amount: 0,
-      comments: ''
+      comments: '',
+      errors: {}
     };
   },
   computed: {
@@ -2388,6 +2406,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this.comments = '';
       })["catch"](function (error) {
         _this.$snotify.error(error.response.data.message);
+
+        _this.errors = error.response.data.errors;
       });
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('bankroll', ['addBankrollTransaction']))
@@ -2452,6 +2472,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2461,11 +2497,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   data: function data() {
     return {
-      date: moment__WEBPACK_IMPORTED_MODULE_1___default.a.utc(this.bankrollTransaction.date).format(),
-      // Need to convert to UTC first otherwise vue-js-datetime in date mode doesn't factor in BST
-      // https://github.com/mariomka/vue-datetime/issues/214
-      amount: this.bankrollTransaction.amount,
-      comments: this.bankrollTransaction.comments,
+      editBankrollTransaction: {
+        id: this.bankrollTransaction.id,
+        date: moment__WEBPACK_IMPORTED_MODULE_1___default.a.utc(this.bankrollTransaction.date).format(),
+        amount: this.bankrollTransaction.amount,
+        comments: this.bankrollTransaction.comments
+      },
       errors: {}
     };
   },
@@ -2498,14 +2535,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     saveTransaction: function saveTransaction() {
       var _this2 = this;
 
-      this.updateBankrollTransaction({
-        transaction: this.bankrollTransaction,
-        data: {
-          date: this.date,
-          amount: this.amount,
-          comments: this.comments
-        }
-      }).then(function (response) {
+      this.updateBankrollTransaction(this.editBankrollTransaction).then(function (response) {
         _this2.$modal.hide('dialog');
 
         _this2.$emit('close');
@@ -2513,6 +2543,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this2.$snotify.success('Successfully updated bankroll transaction.');
       })["catch"](function (error) {
         _this2.$snotify.error('Error: ' + error.response.data.message);
+
+        _this2.errors = error.response.data.errors;
       });
     }
   })
@@ -2551,7 +2583,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     transactionDate: function transactionDate() {
-      return moment__WEBPACK_IMPORTED_MODULE_0___default()(this.bankrollTransaction.date).format("dddd, Do MMMM YYYY");
+      return moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(this.bankrollTransaction.date).format("dddd, Do MMMM YYYY");
     },
     transactionAmount: function transactionAmount() {
       return Vue.prototype.currency.format(this.bankrollTransaction.amount);
@@ -3215,7 +3247,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         limit_id: this.liveSession.limit_id,
         variant_id: this.liveSession.variant_id,
         table_size_id: this.liveSession.table_size_id,
-        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default()(this.liveSession.start_time).format(),
+        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(this.liveSession.start_time).format(),
         comments: this.liveSession.comments
       };
     },
@@ -3227,7 +3259,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       this.updateLiveSession(this.editLiveSession).then(function (response) {
-        // this.$snotify.success('Changes saved.')
         _this.editing = false;
       })["catch"](function (error) {
         _this.$snotify.error('Error: ' + error.response.data.message);
@@ -4234,8 +4265,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (this.game_type === 'cash_game') {
         this.addCashGame(_objectSpread({}, this.session, {}, this.cash_game)).then(function (response) {
-          _this.$snotify.success('Successfully created cash game'); // this.$router.push({ name: 'sessions' })
+          _this.$snotify.success('Successfully created cash game');
 
+          _this.$router.push({
+            name: 'sessions'
+          });
         })["catch"](function (error) {
           _this.$snotify.error('Error: ' + error.response.data.message);
 
@@ -4818,13 +4852,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return buyInTotal + addOnTotal + rebuyTotal + expenseTotal;
     },
     runTimeHours: function runTimeHours() {
-      var end_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.end_time);
-      var start_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.start_time);
+      var end_time = moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(this.session.end_time);
+      var start_time = moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(this.session.start_time);
       return end_time.diff(start_time, 'hours', true);
     },
     runTime: function runTime() {
-      var end_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.end_time);
-      var start_time = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.session.start_time);
       return moment__WEBPACK_IMPORTED_MODULE_0___default.a.duration(this.runTimeHours, 'hours').format("h [hours] m [mins]");
     },
     profitPerHour: function profitPerHour() {
@@ -66367,34 +66399,47 @@ var render = function() {
         })
       : _vm._e(),
     _vm._v(" "),
-    _c("div", { staticClass: "flex-1 flex mb-4 justify-center items-center" }, [
+    _c("div", { staticClass: "flex w-full justify-center mb-4" }, [
       _c("span", { staticClass: "text-4xl font-bold mr-3" }, [_vm._v("£")]),
       _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.amount,
-            expression: "amount"
-          }
-        ],
-        staticClass:
-          "w-1/2 rounded border border-muted-dark bg-background px-4 py-2 text-3xl",
-        attrs: { type: "number" },
-        domProps: { value: _vm.amount },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
+      _c("div", { staticClass: "w-1/2 flex-col" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.amount,
+              expression: "amount"
             }
-            _vm.amount = $event.target.value
+          ],
+          staticClass: "w-full rounded border bg-background px-4 py-2 text-3xl",
+          class: { "error-input": _vm.errors.amount },
+          attrs: { type: "number" },
+          domProps: { value: _vm.amount },
+          on: {
+            input: [
+              function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.amount = $event.target.value
+              },
+              function($event) {
+                delete _vm.errors.amount
+              }
+            ]
           }
-        }
-      })
+        }),
+        _vm._v(" "),
+        _vm.errors.amount
+          ? _c("span", { staticClass: "error-message" }, [
+              _vm._v(_vm._s(_vm.errors.amount[0]))
+            ])
+          : _vm._e()
+      ])
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "flex-1 flex mb-6 justify-center items-center" }, [
+    _c("div", { staticClass: "flex flex-col w-full mb-4 " }, [
       _c("textarea", {
         directives: [
           {
@@ -66406,17 +66451,29 @@ var render = function() {
         ],
         staticClass:
           "w-full xl:w-3/4 rounded border border-muted-dark bg-background p-2",
+        class: { "error-input": _vm.errors.amount },
         attrs: { placeholder: "Add comments", rows: "4" },
         domProps: { value: _vm.comments },
         on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
+          input: [
+            function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.comments = $event.target.value
+            },
+            function($event) {
+              delete _vm.errors.comments
             }
-            _vm.comments = $event.target.value
-          }
+          ]
         }
-      })
+      }),
+      _vm._v(" "),
+      _vm.errors.comments
+        ? _c("span", { staticClass: "error-message" }, [
+            _vm._v(_vm._s(_vm.errors.comments[0]))
+          ])
+        : _vm._e()
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "flex justify-around" }, [
@@ -66495,21 +66552,35 @@ var render = function() {
             _c("datetime", {
               staticClass:
                 "w-full bg-muted-light border border-muted-dark rounded border theme-green",
-              class: _vm.errors.date ? "border-red-700" : "border-gray-400",
               attrs: {
                 type: "date",
-                "input-class": "w-full p-3",
+                "value-zone": "local",
                 auto: "",
-                title: "Bankroll Transaction Date"
+                title: "Bankroll Transaction Date",
+                "input-class": {
+                  "error-input": _vm.errors.date,
+                  "w-full p-3": true
+                }
+              },
+              on: {
+                input: function($event) {
+                  delete _vm.errors.date
+                }
               },
               model: {
-                value: _vm.date,
+                value: _vm.editBankrollTransaction.date,
                 callback: function($$v) {
-                  _vm.date = $$v
+                  _vm.$set(_vm.editBankrollTransaction, "date", $$v)
                 },
-                expression: "date"
+                expression: "editBankrollTransaction.date"
               }
-            })
+            }),
+            _vm._v(" "),
+            _vm.errors.date
+              ? _c("span", { staticClass: "error-message" }, [
+                  _vm._v(_vm._s(_vm.errors.date[0]))
+                ])
+              : _vm._e()
           ],
           1
         )
@@ -66524,22 +66595,37 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.amount,
-                expression: "amount"
+                value: _vm.editBankrollTransaction.amount,
+                expression: "editBankrollTransaction.amount"
               }
             ],
-            class: { "border-red-700": _vm.errors.amount },
+            class: { "error-input": _vm.errors.amount },
             attrs: { type: "number", step: "0.01" },
-            domProps: { value: _vm.amount },
+            domProps: { value: _vm.editBankrollTransaction.amount },
             on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+              input: [
+                function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.editBankrollTransaction,
+                    "amount",
+                    $event.target.value
+                  )
+                },
+                function($event) {
+                  delete _vm.errors.amount
                 }
-                _vm.amount = $event.target.value
-              }
+              ]
             }
-          })
+          }),
+          _vm._v(" "),
+          _vm.errors.amount
+            ? _c("span", { staticClass: "error-message" }, [
+                _vm._v(_vm._s(_vm.errors.amount[0]))
+              ])
+            : _vm._e()
         ])
       ]),
       _vm._v(" "),
@@ -66552,22 +66638,37 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.comments,
-                expression: "comments"
+                value: _vm.editBankrollTransaction.comments,
+                expression: "editBankrollTransaction.comments"
               }
             ],
-            class: { "border-red-700": _vm.errors.comments },
+            class: { "error-input": _vm.errors.comments },
             attrs: { placeholder: "Comments", rows: "4" },
-            domProps: { value: _vm.comments },
+            domProps: { value: _vm.editBankrollTransaction.comments },
             on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+              input: [
+                function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.editBankrollTransaction,
+                    "comments",
+                    $event.target.value
+                  )
+                },
+                function($event) {
+                  delete _vm.errors.comments
                 }
-                _vm.comments = $event.target.value
-              }
+              ]
             }
-          })
+          }),
+          _vm._v(" "),
+          _vm.errors.comments
+            ? _c("span", { staticClass: "error-message" }, [
+                _vm._v(_vm._s(_vm.errors.comments[0]))
+              ])
+            : _vm._e()
         ])
       ])
     ]),
@@ -92371,13 +92472,9 @@ __webpack_require__.r(__webpack_exports__);
         throw error;
       });
     },
-    updateBankrollTransaction: function updateBankrollTransaction(_ref3, payload) {
+    updateBankrollTransaction: function updateBankrollTransaction(_ref3, bankrollTransaction) {
       var commit = _ref3.commit;
-      return axios.patch('/api/bankroll/' + payload.transaction.id, {
-        date: payload.data.date.split("T")[0],
-        amount: payload.data.amount,
-        comments: payload.data.comments
-      }).then(function (response) {
+      return axios.patch('/api/bankroll/' + bankrollTransaction.id, bankrollTransaction).then(function (response) {
         commit('UPDATE_BANKROLL_TRANSACTION', response.data.bankrollTransaction);
       })["catch"](function (error) {
         throw error;
@@ -92478,10 +92575,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     updateCashGame: function updateCashGame(_ref4, cash_game) {
       var commit = _ref4.commit;
-      return axios.patch('/api/cash/' + cash_game.id, _objectSpread({}, cash_game, {
-        start_time: moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(cash_game.start_time).format("YYYY-MM-DD HH:mm:ss"),
-        end_time: moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(cash_game.end_time).format("YYYY-MM-DD HH:mm:ss")
-      })).then(function (response) {
+      return axios.patch('/api/cash/' + cash_game.id, _objectSpread({}, cash_game)).then(function (response) {
         commit('UPDATE_CASH_GAME', response.data.cash_game);
       })["catch"](function (error) {
         throw error;

@@ -58,8 +58,6 @@ export default {
         updateCashGame({ commit }, cash_game) {
             return axios.patch('/api/cash/'+cash_game.id, {
                 ...cash_game,
-				start_time: moment.utc(cash_game.start_time).format("YYYY-MM-DD HH:mm:ss"),
-				end_time: moment.utc(cash_game.end_time).format("YYYY-MM-DD HH:mm:ss")
             })
             .then(response => {
                 commit('UPDATE_CASH_GAME', response.data.cash_game)

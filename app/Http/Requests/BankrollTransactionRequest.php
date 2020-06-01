@@ -15,7 +15,7 @@ class BankrollTransactionRequest extends FormRequest
     {
         return [
             'date' => 'sometimes|date|before:tomorrow',
-            'amount' => 'required|numeric',
+            'amount' => 'required|numeric|not_in:0',
             'comments' => 'sometimes|nullable|string'
         ];
     }
