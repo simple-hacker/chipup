@@ -65,9 +65,9 @@ class Bankroll extends Model
     public function setDateAttribute($date)
     {
         if ($date) {
-            $this->attributes['date'] = Carbon::create($date);
+            $this->attributes['date'] = Carbon::create($date)->startOfDay();
         } else {
-            $this->attributes['date'] = now();
+            $this->attributes['date'] = now()->startOfDay();
         }
     }
 }

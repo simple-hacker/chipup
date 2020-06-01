@@ -82,7 +82,7 @@ class User extends Authenticatable
     public function createBankrollTransaction($transaction)
     {
         return $this->bankrollTransactions()->create([
-            'date' => $transaction['date'] ?? date('Y-m-d'),
+            'date' => $transaction['date'] ?? null,
             'amount' => $transaction['amount'],
             'comments' => $transaction['comments'] ?? null,
         ]);
