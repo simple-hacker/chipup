@@ -14,7 +14,7 @@ class UpdateGameTransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            'amount' => 'sometimes|numeric|min:0',
+            'amount' => 'sometimes|numeric|min:0|not_in:0',
             'comments' => 'sometimes|nullable|string'
         ];
     }

@@ -176,12 +176,13 @@ class ExpensesTest extends TestCase
                 ->assertStatus(422);
 
         // Zero should be okay
+        // NOTE: 2020-06-01 Zero is no invalid on front end, though valid backend.
         $this->postJson(route('expense.create'), [
                     'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 0
                 ])
-                ->assertOk();
+                ->assertStatus(422);
     }
 
     public function testExpenseAmountIsValidForUpdate()
@@ -209,7 +210,8 @@ class ExpensesTest extends TestCase
         $this->patchJson(route('expense.update', ['expense' => $expense]), ['amount' => 'Invalid'])->assertStatus(422);
 
         // Zero should be okay
-        $this->patchJson(route('expense.update', ['expense' => $expense]), ['amount' => 0])->assertOk();
+        // NOTE: 2020-06-01 Zero is no invalid on front end, though valid backend.
+        $this->patchJson(route('expense.update', ['expense' => $expense]), ['amount' => 0])->assertStatus(422);
     }
 
     public function testTheExpenseMustBelongToTheAuthenticatedUser()

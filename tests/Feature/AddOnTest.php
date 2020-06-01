@@ -175,12 +175,13 @@ class AddOnTest extends TestCase
                 ->assertStatus(422);
 
         // Zero should be okay
+        // NOTE: 2020-06-01 Zero is no invalid on front end, though valid backend.
         $this->postJson(route('addon.create'), [
                     'game_id' => $tournament->id,
                     'game_type' => $tournament->game_type,
                     'amount' => 0
                 ])
-                ->assertOk();
+                ->assertStatus(422);
     }
 
     public function testAddOnAmountIsValidForUpdate()
@@ -208,7 +209,8 @@ class AddOnTest extends TestCase
         $this->patchJson(route('addon.update', ['add_on' => $add_on]), ['amount' => 'Invalid'])->assertStatus(422);
 
         // Zero should be okay
-        $this->patchJson(route('addon.update', ['add_on' => $add_on]), ['amount' => 0])->assertOk();
+        // NOTE: 2020-06-01 Zero is no invalid on front end, though valid backend.
+        $this->patchJson(route('addon.update', ['add_on' => $add_on]), ['amount' => 0])->assertStatus(422);
     }
 
     public function testTheAddOnMustBelongToTheAuthenticatedUser()

@@ -175,12 +175,13 @@ class BuyInTest extends TestCase
                 ->assertStatus(422);
 
         // Zero should be okay
+        // NOTE: 2020-06-01 Zero is now invalid on front end, though valid backend.
         $this->postJson(route('buyin.create'), [
                     'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 0
                 ])
-                ->assertOk();
+                ->assertStatus(422);
     }
 
     public function testBuyInAmountIsValidForUpdate()
@@ -208,7 +209,8 @@ class BuyInTest extends TestCase
         $this->patchJson(route('buyin.update', ['buy_in' => $buy_in]), ['amount' => 'Invalid'])->assertStatus(422);
 
         // Zero should be okay
-        $this->patchJson(route('buyin.update', ['buy_in' => $buy_in]), ['amount' => 0])->assertOk();
+        // NOTE: 2020-06-01 Zero is now invalid on front end, though valid backend.
+        $this->patchJson(route('buyin.update', ['buy_in' => $buy_in]), ['amount' => 0])->assertStatus(422);
     }
 
     public function testTheBuyInMustBelongToTheAuthenticatedUser()

@@ -183,13 +183,15 @@ class CashOutTest extends TestCase
         // Need to delete the cashOutModel for the test because we can only have one which was made in
         // the earlier okay assertion above.
         $cash_game->cashOutModel->delete();
+
         // Zero should be okay
+        // NOTE: 2020-06-01 Zero is no invalid on front end, though valid backend.
         $this->postJson(route('cashout.create'), [
                     'game_id' => $cash_game->id,
                     'game_type' => $cash_game->game_type,
                     'amount' => 0
                 ])
-                ->assertOk();
+                ->assertStatus(422);
     }
 
     public function testCashOutAmountIsValidForUpdate()
@@ -217,7 +219,8 @@ class CashOutTest extends TestCase
         $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), ['amount' => 'Invalid'])->assertStatus(422);
 
         // Zero should be okay
-        $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), ['amount' => 0])->assertOk();
+        // NOTE: 2020-06-01 Zero is no invalid on front end, though valid backend.
+        $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), ['amount' => 0])->assertStatus(422);
     }
 
     public function testTheCashOutMustBelongToTheAuthenticatedUser()

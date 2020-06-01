@@ -175,12 +175,13 @@ class RebuyTest extends TestCase
                 ->assertStatus(422);
 
         // Zero should be okay
+        // NOTE: 2020-06-01 Zero is no invalid on front end, though valid backend.
         $this->postJson(route('rebuy.create'), [
                     'game_id' => $tournament->id,
                     'game_type' => $tournament->game_type,
                     'amount' => 0
                 ])
-                ->assertOk();
+                ->assertStatus(422);
     }
 
     public function testRebuyAmountIsValidForUpdate()
@@ -208,7 +209,8 @@ class RebuyTest extends TestCase
         $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), ['amount' => 'Invalid'])->assertStatus(422);
 
         // Zero should be okay
-        $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), ['amount' => 0])->assertOk();
+        // NOTE: 2020-06-01 Zero is no invalid on front end, though valid backend.
+        $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), ['amount' => 0])->assertStatus(422);
     }
 
     public function testTheRebuyMustBelongToTheAuthenticatedUser()
