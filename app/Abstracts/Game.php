@@ -71,7 +71,7 @@ abstract class Game extends Model
 
         // The end_time cannot be before the start_time
         if ($end_time < $this->start_time) {
-            throw new InvalidDate('Cannot set the end time before the start time');
+            throw new InvalidDate('Cannot set the end time before the start time', 422);
         }
 
         return $this->update([
@@ -224,16 +224,20 @@ abstract class Game extends Model
         $this->attributes['profit'] = $profit * 100;
     }
 
-    // /**
-    // * Mutate start_time to be a Carbon instance to UTC
-    // * So can pass in values like 2020-03-01T16:45:21.000Z
-    // * and doesn't fail on MySQL timestamp column
-    // *
-    // * @param String $start_time
-    // * @return void
-    // */
-    // public function setStartTimeAttribute($start_time)
-    // {
-    //     $this->attributes['start_time'] = Carbon::create($start_time);
-    // }
+    /**
+    * Mutate start_time to be a Carbon instance to UTC
+    * So can pass in values like 2020-03-01T16:45:21.000Z
+    * and doesn't fail on MySQL timestamp column
+    *
+    * @param String $start_time
+    * @return void
+    */
+    public function setStartTimeAttribute($start_time)
+    {
+        if ($start_time instanceof Carbon) {
+            $this->attributes['start_time'] = $start_time;
+        } else {
+            $this->attributes['start_time'] = Carbon::create($start_time);
+        }
+    }
 }
