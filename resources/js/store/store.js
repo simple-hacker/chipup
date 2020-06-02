@@ -2,6 +2,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import createPersistedState from "vuex-persistedstate"
+
 import bankroll from '@modules/bankroll'
 import cash_games from '@modules/cash_games'
 import tournaments from '@modules/tournaments'
@@ -23,6 +25,9 @@ const store = new Vuex.Store({
         live,
         filters,
     },
+    plugins: [createPersistedState({
+        paths: ['sessions.session'],
+    })],
     state: {
         user: {
             email: "example@email.com"
