@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col">
 		<div v-for="session in sessions.slice(0, 5)"
-			:key="session.id"
+			:key="`${session.game_type}_${session.id}`"
 			class="mb-2">
 			<session-summary :session="session"></session-summary>
 		</div>
@@ -25,7 +25,7 @@ export default {
 	components: { SessionSummary },
 	computed: {
         ...mapGetters('sessions', ['sessions']),
-	}
+	},
 }
 </script>
 

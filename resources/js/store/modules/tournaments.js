@@ -4,7 +4,6 @@ export default {
     namespaced: true,
     state: {
         tournaments: [],
-        view_tournament: {},
     },
     getters: {
         getTournamentById: (state) => (id) => {
@@ -16,24 +15,26 @@ export default {
             state.tournaments = tournaments
         },
         VIEW_TOURNAMENT(state, id) {
-            const index = state.tournaments.findIndex(cg => cg.id === id)
-            state.view_tournament = state.tournaments[index]
+            const index = state.tournaments.findIndex(t => t.id === id)
+            state.session = state.tournaments[index]
         },
         ADD_TOURNAMENT(state, tournament) {
             state.tournaments.unshift(tournament)
         },
         UPDATE_TOURNAMENT(state, tournament) {
-            const index = state.tournaments.findIndex(cg => cg.id === tournament.id)
+            const index = state.tournaments.findIndex(t => t.id === tournament.id)
             state.tournaments.splice(index, 1, tournament)
         },
         REMOVE_TOURNAMENT(state, tournament) {
-            const index = state.tournaments.findIndex(cg => cg.id === tournament.id)
+            const index = state.tournaments.findIndex(t => t.id === tournament.id)
             state.tournaments.splice(index, 1)
         }
     },
     actions: {
-        viewTournament({ commit }, tournament_id) {
-            commit('VIEW_TOURNAMENT',  tournament_id)
+        viewTournament({ commit, getters }, tournament_id) {
+            // commit('VIEW_TOURNAMENT',  tournament_id)
+            let tournament = getters.getTournamentById(tournament_id)
+            commit('sessions/VIEW_SESSION', tournament, {root: true})
         },
         getTournaments({ commit }) {
             return axios.get('/api/tournament')

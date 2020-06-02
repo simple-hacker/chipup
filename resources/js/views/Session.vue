@@ -40,33 +40,34 @@
 					<!--
 						STAKE
 					-->
-					<!-- <div v-show-slide="game_type === 'cash_game'"> -->
-						<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
-							<div class="w-1/6">
-								<i class="fas fa-coins"></i>
-							</div>
-							<div class="w-full">
-								<span v-if="!editing" v-text="session.stake.stake"></span>
-								<div v-if="editing" class="flex flex-col">
-									<select
-										v-model="editSession.stake_id"
-										class="p-1 text-lg mr-1"
-										:class="{'error-input' : errors.stake_id}"
-										@input="delete errors.stake_id"
+					<div
+						v-if="session.stake"
+						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
+					>
+						<div class="w-1/6">
+							<i class="fas fa-coins"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="session.stake.stake"></span>
+							<div v-if="editing" class="flex flex-col">
+								<select
+									v-model="editSession.stake_id"
+									class="p-1 text-lg mr-1"
+									:class="{'error-input' : errors.stake_id}"
+									@input="delete errors.stake_id"
+								>
+									<option
+										v-for="stake in stakes"
+										:key="stake.id"
+										:value="stake.id"
+										v-text="stake.stake"
 									>
-										<option
-											v-for="stake in stakes"
-											:key="stake.id"
-											:value="stake.id"
-											v-text="stake.stake"
-										>
-										</option>
-									</select>
-									<span v-if="errors.stake_id" class="error-message">{{ errors.stake_id[0] }}</span>
-								</div>
+									</option>
+								</select>
+								<span v-if="errors.stake_id" class="error-message">{{ errors.stake_id[0] }}</span>
 							</div>
 						</div>
-					<!-- </div> -->
+					</div>
 					<!--
 						LIMIT AND VARIANT
 					-->
@@ -117,7 +118,10 @@
 					<!--
 						TABLE SIZE
 					-->
-					<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
+					<div
+						v-if="session.table_size"
+						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
+					>
 						<div class="w-1/6">
 							<i class="fas fa-user-friends"></i>
 						</div>
@@ -143,8 +147,86 @@
 						</div>
 					</div>
 					<!--
+						PRIZE POOL
+					-->
+					<div
+						v-if="session.prize_pool >= 0"
+						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
+					>
+						<div class="w-1/6">
+							<i class="fas fa-money-bill-wave"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="`£${session.prize_pool} prize pool`"></span>
+							<div v-if="editing" class="flex flex-col">
+								<input
+									type="number"
+									min=0
+									step=1
+									v-model="editSession.prize_pool"
+									placeholder="Prize Pool"
+									class="p-1 text-lg"
+									:class="{'error-input' : errors.prize_pool}"
+									@input="delete errors.prize_pool"
+								/>
+								<span v-if="errors.prize_pool" class="error-message">{{ errors.prize_pool[0] }}</span>
+							</div>						
+						</div>
+					</div>
+					<!--
+						POSITION
+					-->
+					<div
+						v-if="session.position"
+						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
+					>
+						<div class="w-1/6">
+							<i class="fas fa-medal"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="session.position"></span>
+							<div v-if="editing" class="flex flex-col">
+								<input
+									type="number"
+									min=0
+									step=1
+									v-model="editSession.position"
+									placeholder="Finishing Position"
+									class="p-1 text-lg"
+									:class="{'error-input' : errors.position}"
+									@input="delete errors.position"
+								/>
+								<span v-if="errors.position" class="error-message">{{ errors.position[0] }}</span>
+							</div>						
+						</div>
+					</div>
+					<!--
 						ENTRIES
 					-->
+					<div
+						v-if="session.entries"
+						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
+					>
+						<div class="w-1/6">
+							<i class="fas fa-users"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="`${session.entries} entries`"></span>
+							<div v-if="editing" class="flex flex-col">
+								<input
+									type="number"
+									min=0
+									step=1
+									v-model="editSession.entries"
+									placeholder="Number of Entries"
+									class="p-1 text-lg"
+									:class="{'error-input' : errors.entries}"
+									@input="delete errors.entries"
+								/>
+								<span v-if="errors.entries" class="error-message">{{ errors.entries[0] }}</span>
+							</div>						
+						</div>
+					</div>
 					<!--
 						START TIME
 					-->
@@ -199,10 +281,10 @@
 					</div>
 				</div>	
 				<!--
-					BUY INS
+					CASH BUY INS
 				-->
 				<div
-					v-if="(session.buy_ins && session.buy_ins.length > 0) || editing" 
+					v-if="session.game_type === 'cash_game' && ((session.buy_ins && session.buy_ins.length > 0) || editing)"
 					class="col-span-6 md:col-span-3 flex flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 				>
 					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Buy Ins</div>
@@ -214,6 +296,25 @@
 						<transaction-summary :transaction="buy_in" :transaction-type="'buyin'" :game-id="session.id"></transaction-summary>
 					</div>
 					<div
+						v-if="editing"
+						@click="addTransaction('buyin', { amount: 0 })"
+						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
+					>
+						<i class="fas fa-plus-circle mr-2"></i>
+						<span>Add Buy In</span>
+					</div>
+				</div>
+				<!--
+					TOURNAMENT BUY IN
+				-->
+				<div
+					v-if="session.game_type === 'tournament' && (session.buy_in || editing)" 
+					class="col-span-6 md:col-span-3 flex flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+				>
+					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Buy In</div>
+					<transaction-summary :transaction="session.buy_in" :transaction-type="'buyin'" :game-id="session.id"></transaction-summary>
+					<div
+						v-if="editing && !session.buy_in"
 						@click="addTransaction('buyin', { amount: 0 })"
 						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
@@ -232,14 +333,11 @@
 					<transaction-summary v-if="session.cash_out_model" :transaction="session.cash_out_model" :transaction-type="'cashout'" :game-id="session.id"></transaction-summary>
 					<div
 						v-if="editing && !session.cash_out_model"
+						@click="addTransaction('cashout', { amount: 0 })"
+						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
-						<div
-							@click="addTransaction('cashout', { amount: 0 })"
-							class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
-						>
-							<i class="fas fa-plus-circle mr-2"></i>
-							<span>Add Cash Out</span>
-						</div>
+						<i class="fas fa-plus-circle mr-2"></i>
+						<span>Add Cash Out</span>
 					</div>
 				</div>
 				<!--
@@ -258,6 +356,7 @@
 						<transaction-summary :transaction="expense" :transaction-type="'expense'" :game-id="session.id"></transaction-summary>
 					</div>
 					<div
+						v-if="editing"
 						@click="addTransaction('expense', { amount: 0, comments: '' })"
 						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
@@ -269,7 +368,7 @@
 					REBUYS
 				-->
 				<div
-					v-if="(session.rebuys && session.rebuys.length > 0) || editing" 
+					v-if="session.game_type === 'tournament' && ((session.rebuys && session.rebuys.length > 0) || editing)" 
 					class="col-span-6 md:col-span-3 flex flex-col order-6 md:order-5 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 				>
 					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Rebuys</div>
@@ -281,6 +380,7 @@
 						<transaction-summary :transaction="rebuy" :transaction-type="'rebuy'" :game-id="session.id"></transaction-summary>
 					</div>
 					<div
+						v-if="editing"
 						@click="addTransaction('rebuy', { amount: 0 })"
 						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
@@ -292,7 +392,7 @@
 					ADD ONS
 				-->
 				<div
-					v-if="(session.add_ons && session.add_ons.length > 0) || editing" 
+					v-if="session.game_type === 'tournament' && ((session.add_ons && session.add_ons.length > 0) || editing)" 
 					class="col-span-6 md:col-span-3 flex flex-col order-7 md:order-6 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 				>
 					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Add Ons</div>
@@ -304,6 +404,7 @@
 						<transaction-summary :transaction="add_on" :transaction-type="'addon'" :game-id="session.id"></transaction-summary>
 					</div>
 					<div
+						v-if="editing"
 						@click="addTransaction('addon', { amount: 0 })"
 						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
@@ -311,6 +412,8 @@
 						<span>Add Add On</span>
 					</div>
 				</div>
+			</div>
+			<div class="grid grid-cols-6 gap-2 md:gap-3 mt-2 md:mt-4">
 				<!--
 					STATS
 				-->
@@ -407,31 +510,26 @@ import TransactionDetails from '@components/Transaction/TransactionDetails'
 export default {
 	name: 'Session',
 	components: { TransactionSummary, TransactionDetails },
-	props: {
-		id: Number
-	},
 	data() {
 		return {
-			cash_game: {},
 			editSession: {},
 			editing: false,
 			errors: {}
 		}
 	},
 	created() {
-		// If no id provided or user visits /session then redirect to sessions
-		if (! this.id) {
-			this.$router.push({ name: 'sessions' })
-		} else {
+		if (Object.keys(this.session).length > 0) {
 			this.editSession = this.editStateSession()
+		} else {
+			this.$snotify.error('Please selected a session to view')
+			this.$router.push({ name: 'sessions' })
 		}
+
+		console.log(this.session)
 	},
 	computed: {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
-		...mapGetters('cash_games', ['getCashGameById']),
-		session() {
-			return this.getCashGameById(this.id)
-		},
+		...mapState('sessions', ['session']),
 		profit() {
 			return this.session.profit
 		},
@@ -463,6 +561,7 @@ export default {
 	},
 	methods: {
 		...mapActions('cash_games', ['updateCashGame', 'deleteCashGame']),
+		...mapActions('tournaments', ['updateTournament', 'deleteTournament']),
 		editStateSession() {
 			return {
 				id: this.session.id,
@@ -530,7 +629,7 @@ export default {
                 transaction,
 				transactionType,
 				gameId: this.session.id,
-                gameType: 'cash_game'
+                gameType: this.session.game_type
             }, {
                 // Modal Options
                 classes: 'modal',

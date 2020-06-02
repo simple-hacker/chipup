@@ -4,7 +4,6 @@ export default {
     namespaced: true,
     state: {
         cash_games: [],
-        view_cash_game: {},
     },
     getters: {
         getCashGameById: (state) => (id) => {
@@ -17,7 +16,7 @@ export default {
         },
         VIEW_CASH_GAME(state, id) {
             const index = state.cash_games.findIndex(cg => cg.id === id)
-            state.view_cash_game = state.cash_games[index]
+            state.session = state.cash_games[index]
         },
         ADD_CASH_GAME(state, cash_game) {
             state.cash_games.unshift(cash_game)
@@ -32,8 +31,10 @@ export default {
         }
     },
     actions: {
-        viewCashGame({ commit }, cash_game_id) {
-            commit('VIEW_CASH_GAME',  cash_game_id)
+        viewCashGame({ commit, getters }, cash_game_id) {
+            // commit('VIEW_CASH_GAME',  cash_game_id)
+            let cash_game = getters.getCashGameById(cash_game_id)
+            commit('sessions/VIEW_SESSION', cash_game, {root: true})
         },
         getCashGames({ commit }) {
             return axios.get('/api/cash')

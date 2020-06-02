@@ -34,12 +34,6 @@ export default {
 	computed: {
 		...mapGetters('sessions', ['sessions'])
     },
-    mounted() {
-        // this.sessions.forEach(session => {
-        //     console.log(session.start_time)
-        // });
-        console.log(this.sessions)
-    }
 }
 </script>
 
