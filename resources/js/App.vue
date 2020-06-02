@@ -146,7 +146,7 @@ export default {
                 this.$refs.scroll.scrollTop = scrollTo
             });
         });
-    },
+    }
 }
 </script>
 

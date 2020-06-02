@@ -8,6 +8,7 @@ import tournaments from '@modules/tournaments'
 import sessions from '@modules/sessions'
 import transactions from '@modules/transactions'
 import live from '@modules/live'
+import filters from '@modules/filters'
 
 Vue.use(Vuex)
 
@@ -20,6 +21,7 @@ const store = new Vuex.Store({
         sessions,
         transactions,
         live,
+        filters,
     },
     state: {
         user: {

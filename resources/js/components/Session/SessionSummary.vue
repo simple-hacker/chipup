@@ -2,9 +2,13 @@
 	<div 
 		@click="showSessionDetails()"
 		class="flex justify-between p-4 border border-muted-dark shadow bg-card hover:bg-muted-dark cursor-pointer text-white">
-		<div class="flex flex-col">
-			<div class="uppercase">{{ date }}</div>
-			<div class="text-sm text-gray-600">{{ session.location }}</div>
+		<div class="flex items-center">
+			<i v-if="session.game_type === 'cash_game'" class="fas fa-money-bill fa-2x mr-3"></i>
+			<i v-if="session.game_type === 'tournament'" class="fas fa-trophy fa-2x mr-3"></i>
+			<div class="flex-col">
+				<div class="uppercase">{{ date }}</div>
+				<div class="text-sm text-gray-600">{{ session.location }}</div>
+			</div>
 		</div>
 		<div
 			class="text-2xl font-bold"

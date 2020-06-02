@@ -14,7 +14,7 @@
 				</div>
 			</router-link>
             <div v-for="session in sessions"
-				:key="session.id"
+				:key="`${session.game_type}_${session.id}`"
 				class="col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0"
 			>
                 <session-summary :session="session"></session-summary>
@@ -33,7 +33,13 @@ export default {
 	components: { Filters, SessionSummary},
 	computed: {
 		...mapGetters('sessions', ['sessions'])
-	},
+    },
+    mounted() {
+        // this.sessions.forEach(session => {
+        //     console.log(session.start_time)
+        // });
+        console.log(this.sessions)
+    }
 }
 </script>
 
