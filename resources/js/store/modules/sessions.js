@@ -4,7 +4,7 @@ export default {
     getters: {
         sessions: (state, getters, rootState) => {
             return [
-                ...rootState.cash_games.cash_games,
+                // ...rootState.cash_games.cash_games,
                 ...rootState.tournaments.tournaments
             ]
         }

@@ -103,4 +103,26 @@ class Tournament extends Game
 
         parent::deleteGameTransactions();
     }
+
+    /**
+    * Mutate prize_pool in to currency
+    *
+    * @param Float $prize_pool
+    * @return void
+    */
+    public function getPrizePoolAttribute($prize_pool)
+    {
+        return $prize_pool / 100;
+    }
+
+    /**
+    * Mutate prize_pool in to lowest denomination
+    *
+    * @param Float $prize_pool
+    * @return void
+    */
+    public function setPrizePoolAttribute($prize_pool)
+    {
+        $this->attributes['prize_pool'] = $prize_pool * 100;
+    }
 }
