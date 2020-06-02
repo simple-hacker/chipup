@@ -2262,6 +2262,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   beforeCreate: function beforeCreate() {
     this.$store.dispatch('bankroll/getBankrollTransactions');
     this.$store.dispatch('cash_games/getCashGames');
+    this.$store.dispatch('tournaments/getTournaments');
     this.$store.dispatch('live/currentLiveSession');
   },
   created: function created() {
@@ -4999,7 +5000,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     Filters: _components_Filters__WEBPACK_IMPORTED_MODULE_1__["default"],
     SessionSummary: _components_Session_SessionSummary__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['cash_games']))
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('sessions', ['sessions']))
 });
 
 /***/ }),
@@ -5497,7 +5498,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   components: {
     SessionSummary: _components_Session_SessionSummary__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['cash_games']))
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])('sessions', ['sessions']))
 });
 
 /***/ }),
@@ -71669,7 +71670,7 @@ var render = function() {
           ]
         ),
         _vm._v(" "),
-        _vm._l(_vm.cash_games.cash_games, function(session) {
+        _vm._l(_vm.sessions, function(session) {
           return _c(
             "div",
             {
@@ -72514,7 +72515,7 @@ var render = function() {
     "div",
     { staticClass: "flex flex-col" },
     [
-      _vm._l(_vm.cash_games.cash_games.slice(0, 5), function(session) {
+      _vm._l(_vm.sessions.slice(0, 5), function(session) {
         return _c(
           "div",
           { key: session.id, staticClass: "mb-2" },
@@ -92687,6 +92688,140 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /***/ }),
 
+/***/ "./resources/js/store/modules/sessions.js":
+/*!************************************************!*\
+  !*** ./resources/js/store/modules/sessions.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: {},
+  getters: {
+    sessions: function sessions(state, getters, rootState) {
+      return [].concat(_toConsumableArray(rootState.cash_games.cash_games), _toConsumableArray(rootState.tournaments.tournaments));
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/tournaments.js":
+/*!***************************************************!*\
+  !*** ./resources/js/store/modules/tournaments.js ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: {
+    tournaments: [],
+    view_tournament: {}
+  },
+  getters: {
+    getTournamentById: function getTournamentById(state) {
+      return function (id) {
+        return state.tournaments.find(function (tournament) {
+          return tournament.id === id;
+        });
+      };
+    }
+  },
+  mutations: {
+    ASSIGN_TOURNAMENTS: function ASSIGN_TOURNAMENTS(state, tournaments) {
+      state.tournaments = tournaments;
+    },
+    VIEW_TOURNAMENT: function VIEW_TOURNAMENT(state, id) {
+      var index = state.tournaments.findIndex(function (cg) {
+        return cg.id === id;
+      });
+      state.view_tournament = state.tournaments[index];
+    },
+    ADD_TOURNAMENT: function ADD_TOURNAMENT(state, tournament) {
+      state.tournaments.unshift(tournament);
+    },
+    UPDATE_TOURNAMENT: function UPDATE_TOURNAMENT(state, tournament) {
+      var index = state.tournaments.findIndex(function (cg) {
+        return cg.id === tournament.id;
+      });
+      state.tournaments.splice(index, 1, tournament);
+    },
+    REMOVE_TOURNAMENT: function REMOVE_TOURNAMENT(state, tournament) {
+      var index = state.tournaments.findIndex(function (cg) {
+        return cg.id === tournament.id;
+      });
+      state.tournaments.splice(index, 1);
+    }
+  },
+  actions: {
+    viewTournament: function viewTournament(_ref, tournament_id) {
+      var commit = _ref.commit;
+      commit('VIEW_TOURNAMENT', tournament_id);
+    },
+    getTournaments: function getTournaments(_ref2) {
+      var commit = _ref2.commit;
+      return axios.get('/api/tournament').then(function (response) {
+        commit('ASSIGN_TOURNAMENTS', response.data.tournaments);
+      })["catch"](function (error) {
+        throw error;
+      });
+    },
+    addTournament: function addTournament(_ref3, tournament) {
+      var commit = _ref3.commit;
+      return axios.post('/api/tournament', _objectSpread({}, tournament)).then(function (response) {
+        commit('ADD_TOURNAMENT', response.data.tournament);
+      })["catch"](function (error) {
+        throw error;
+      });
+    },
+    updateTournament: function updateTournament(_ref4, tournament) {
+      var commit = _ref4.commit;
+      return axios.patch('/api/tournament/' + tournament.id, _objectSpread({}, tournament)).then(function (response) {
+        commit('UPDATE_TOURNAMENT', response.data.tournament);
+      })["catch"](function (error) {
+        throw error;
+      });
+    },
+    deleteTournament: function deleteTournament(_ref5, tournament) {
+      var commit = _ref5.commit;
+      return axios["delete"]('/api/tournament/' + tournament.id).then(function (response) {
+        commit('REMOVE_TOURNAMENT', tournament);
+      })["catch"](function (error) {
+        throw error;
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/store/modules/transactions.js":
 /*!****************************************************!*\
   !*** ./resources/js/store/modules/transactions.js ***!
@@ -92786,9 +92921,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _modules_bankroll__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @modules/bankroll */ "./resources/js/store/modules/bankroll.js");
 /* harmony import */ var _modules_cash_games__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @modules/cash_games */ "./resources/js/store/modules/cash_games.js");
-/* harmony import */ var _modules_transactions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @modules/transactions */ "./resources/js/store/modules/transactions.js");
-/* harmony import */ var _modules_live__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @modules/live */ "./resources/js/store/modules/live.js");
+/* harmony import */ var _modules_tournaments__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @modules/tournaments */ "./resources/js/store/modules/tournaments.js");
+/* harmony import */ var _modules_sessions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @modules/sessions */ "./resources/js/store/modules/sessions.js");
+/* harmony import */ var _modules_transactions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @modules/transactions */ "./resources/js/store/modules/transactions.js");
+/* harmony import */ var _modules_live__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @modules/live */ "./resources/js/store/modules/live.js");
 // vuex
+
+
 
 
 
@@ -92801,8 +92940,10 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
     bankroll: _modules_bankroll__WEBPACK_IMPORTED_MODULE_2__["default"],
     cash_games: _modules_cash_games__WEBPACK_IMPORTED_MODULE_3__["default"],
-    transactions: _modules_transactions__WEBPACK_IMPORTED_MODULE_4__["default"],
-    live: _modules_live__WEBPACK_IMPORTED_MODULE_5__["default"]
+    tournaments: _modules_tournaments__WEBPACK_IMPORTED_MODULE_4__["default"],
+    sessions: _modules_sessions__WEBPACK_IMPORTED_MODULE_5__["default"],
+    transactions: _modules_transactions__WEBPACK_IMPORTED_MODULE_6__["default"],
+    live: _modules_live__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
   state: {
     user: {

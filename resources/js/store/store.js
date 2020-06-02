@@ -4,6 +4,8 @@ import Vuex from 'vuex'
 
 import bankroll from '@modules/bankroll'
 import cash_games from '@modules/cash_games'
+import tournaments from '@modules/tournaments'
+import sessions from '@modules/sessions'
 import transactions from '@modules/transactions'
 import live from '@modules/live'
 
@@ -14,6 +16,8 @@ const store = new Vuex.Store({
     modules: {
         bankroll,
         cash_games,
+        tournaments,
+        sessions,
         transactions,
         live,
     },

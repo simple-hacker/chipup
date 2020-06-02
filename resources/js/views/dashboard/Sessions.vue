@@ -1,6 +1,6 @@
 <template>
 	<div class="flex flex-col">
-		<div v-for="session in cash_games.cash_games.slice(0, 5)"
+		<div v-for="session in sessions.slice(0, 5)"
 			:key="session.id"
 			class="mb-2">
 			<session-summary :session="session"></session-summary>
@@ -17,14 +17,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import SessionSummary from '@components/Session/SessionSummary'
 
 export default {
 	name: 'Sessions',
 	components: { SessionSummary },
 	computed: {
-        ...mapState(['cash_games']),
+        ...mapGetters('sessions', ['sessions']),
 	}
 }
 </script>

@@ -118,6 +118,7 @@ export default {
     beforeCreate() {
         this.$store.dispatch('bankroll/getBankrollTransactions')
         this.$store.dispatch('cash_games/getCashGames')
+        this.$store.dispatch('tournaments/getTournaments')
         this.$store.dispatch('live/currentLiveSession')
     },
     created() {

@@ -13,7 +13,7 @@
 					<div class="text-white text-lg uppercase">Add New Session</div>
 				</div>
 			</router-link>
-            <div v-for="session in cash_games.cash_games"
+            <div v-for="session in sessions"
 				:key="session.id"
 				class="col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0"
 			>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import Filters from '@components/Filters'
 import SessionSummary from '@components/Session/SessionSummary'
 
@@ -32,7 +32,7 @@ export default {
     name: 'Sessions',
 	components: { Filters, SessionSummary},
 	computed: {
-		...mapState(['cash_games'])
+		...mapGetters('sessions', ['sessions'])
 	},
 }
 </script>
