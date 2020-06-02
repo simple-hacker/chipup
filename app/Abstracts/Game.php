@@ -18,6 +18,10 @@ abstract class Game extends Model
         'start_time', 'end_time'
     ];
 
+    protected $appends = [
+        'game_type'
+    ];
+
     /**
     * A Game belongs to a user 
     *

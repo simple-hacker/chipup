@@ -9,6 +9,8 @@ class Tournament extends Game
 {
     protected $guarded = [];
 
+    protected $with = ['variant', 'limit', 'table_size', 'buyIn', 'expenses', 'rebuys', 'addOns', 'cashOutModel'];
+
     /**
     * Add a BuyIn for the tournament.
     * This updates the Tournament's profit by subtracting the BuyIn amount.
