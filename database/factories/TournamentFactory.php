@@ -20,6 +20,7 @@ $factory->define(Tournament::class, function (Faker $faker) {
         'limit_id' => Limit::all()->random()->id,
         'variant_id' => Variant::all()->random()->id,
         'name' => $faker->sentence(3, true),
+        'prize_pool' => ($faker->numberBetween(10, 500)) * 100,
         'entries' => $entries,
         'position' => $faker->numberBetween(1, $entries),
         'location' => $faker->randomElement(['CasinoMK', 'Las Vegas', 'Grosvenor Casino Luton', 'Grosvenor Casino Cardiff']),

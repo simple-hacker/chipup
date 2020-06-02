@@ -197,11 +197,12 @@ class User extends Authenticatable
 
         return $this->tournaments()->create([
             'start_time' => $attributes['start_time'] ?? null,
-            'buy_in' => $attributes['amount'],
             'name' => $attributes['name'] ?? null,
             'variant_id' => $attributes['variant_id'],
             'limit_id' => $attributes['limit_id'],
-            'entries' => $attributes['entries'] ?? null,
+            'prize_pool' => $attributes['prize_pool'] ?? 0,
+            'position' => $attributes['position'] ?? 0,
+            'entries' => $attributes['entries'] ?? 0,
             'location' => $attributes['location'] ?? null,
             'comments' => $attributes['comments'] ?? null,
         ]);

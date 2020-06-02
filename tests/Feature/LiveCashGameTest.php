@@ -262,8 +262,10 @@ class LiveCashGameTest extends TestCase
 
         // Delete the cash game for the test as it was created in assertion above and can only have one running at a time.
         CashGame::first()->delete();
-        // Starting with 0 is ok
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(0))->assertOk();
+
+        // Starting with 0 is not okay
+        // NOTE: 2020-06-02 Zero BuyIn is now invalid.
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(0))->assertStatus(422);
     }
 
     public function testUserCanSupplyACashOutWhenEndingTheirSession()

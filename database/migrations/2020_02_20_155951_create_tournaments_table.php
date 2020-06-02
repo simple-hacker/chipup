@@ -22,9 +22,9 @@ class CreateTournamentsTable extends Migration
             $table->unsignedBigInteger('limit_id')->nullable();
             $table->unsignedBigInteger('variant_id')->nullable();
             $table->string('name')->nullable();
-            $table->unsignedInteger('entries')->nullable();
-            $table->unsignedInteger('position')->nullable();
-            $table->unsignedInteger('prize_pool')->nullable();
+            $table->unsignedInteger('entries')->default(0);
+            $table->unsignedInteger('position')->default(0);
+            $table->unsignedInteger('prize_pool')->default(0);
             $table->string('location')->nullable();
             $table->text('comments')->nullable();
             $table->timestamps();

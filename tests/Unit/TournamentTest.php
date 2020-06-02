@@ -19,7 +19,8 @@ class TournamentTest extends TestCase
 
     public function testATournamentBelongsToAUser()
     {
-        $tournament = factory('App\Tournament')->create(['buy_in' => 1000]);
+        $user = factory('App\User')->create();
+        $tournament = factory('App\Tournament')->create(['user_id' => $user->id]);
 
         $this->assertInstanceOf(User::class, $tournament->user);
     }
