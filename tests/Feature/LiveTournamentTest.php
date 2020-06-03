@@ -15,34 +15,6 @@ class LiveTournamentTest extends TestCase
 {
     use RefreshDatabase;
 
-    // User must be logged in start/view/update/end live tournament
-    
-    // User can start a live tournament
-    // Data must be valid when starting
-    // BuyIn can be zero
-    // BuyIn must be valid
-    // If BuyIn is not supplied then a BuyIn is created with amount zero.
-    // User can start at a specified time.
-    // If no start time is provided then it starts at current time.
-    // Start date cannot be in the future
-    // Cannot start a tournament which clashes with another tournament
-
-    // User can update live Tournament
-    // User cannot update another user's live tournament
-    // Data must be valid when updating live tournament
-    // Start date cannot be in the future
-    // Cannot update live tournament with new times which clases with another tournament
-
-    // User can view their live tournament
-
-    // User can end a live tournament
-    // User can end a live tournament at a specified time
-    // User cannot end a live tournament in the future
-    // User cannot end a live tournament before it's start time
-    // If no end time is provided then CashOut at current time.
-    // Cash out valid must be valid
-    // If no cash out is provided then it defaults to 0.
-
     public function testAUserMustBeLoggedInToStartTournament()
     {
         factory('App\User')->create();
