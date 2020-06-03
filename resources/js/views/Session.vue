@@ -2,12 +2,12 @@
 	<div class="flex flex-col xxl:w-2/3 xxl:mx-auto w-full h-full text-white">
 		<div class="flex-1">	
 			<div class="text-center text-6xl font-bold"
-				:class="(session.profit > 0) ? 'text-green-500' : 'text-red-500'"
+				:class="(profit > 0) ? 'text-green-500' : 'text-red-500'"
 			>
 				{{ formattedProfit }}
 			</div>
 			<div class="text-center text-lg font-bold">
-				in for {{ formatCurrency(buyInsTotal) }} and out for {{ formatCurrency(session.cash_out_model.amount) }}
+				in for {{ formatCurrency(buyInsTotal) }} and out for {{ cashOutTotal }}
 			</div>
 			<div class="grid grid-cols-6 gap-2 md:gap-3 mt-2 md:mt-4">
 				<div class="col-span-6 md:col-span-3 md:row-span-3 flex-col bg-card border border-muted-dark rounded-lg p-3 text-lg">
@@ -15,6 +15,30 @@
 						DETAILS
 					-->
 					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2">Details</div>
+					<!--
+						TOURNAMENT NAME
+					-->
+					<div
+						v-if="session.name"
+						class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
+						<div class="w-1/6">
+							<i class="fas fa-star"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="session.name"></span>
+							<div v-if="editing" class="flex flex-col">
+								<input
+									type="text"
+									v-model="editSession.name"
+									placeholder="Tournament name"
+									class="p-1 text-lg"
+									:class="{'error-input' : errors.name}"
+									@input="delete errors.name"
+								/>
+								<span v-if="errors.name" class="error-message">{{ errors.name[0] }}</span>
+							</div>						
+						</div>
+					</div>
 					<!--
 						LOCATION
 					-->
@@ -510,42 +534,83 @@ import TransactionDetails from '@components/Transaction/TransactionDetails'
 export default {
 	name: 'Session',
 	components: { TransactionSummary, TransactionDetails },
+	props: {
+		viewSession: Object,
+	},
 	data() {
 		return {
 			editSession: {},
 			editing: false,
-			errors: {}
+			errors: {},
+			loadSession: {},
+			// session: {},
 		}
 	},
 	created() {
-		if (Object.keys(this.session).length > 0) {
-			this.editSession = this.editStateSession()
-		} else {
-			this.$snotify.error('Please selected a session to view')
-			this.$router.push({ name: 'sessions' })
+		// If session was provided then use that id and game_type to load session and save to state.
+		if (this.viewSession) {
+			this.loadSession = this.viewSession
+			this.saveLoadSession(this.loadSession)
+		}
+		// Else user refreshed the page so load last viewed session by getting the id and game_type from state.
+		else {
+			this.loadSession = this.loadSessionState
 		}
 
-		console.log(this.session)
+		// We should have a fully loaded session at this point, whether user clicked to view one or loaded from state
+		// after user refreshes page.
+		// Create a copy of loaded session so we can edit without mutating state directly.
+		// This editSession is what's send to api controllers when updating data.
+		if (Object.keys(this.loadSession).length > 0) {
+			this.editSession = this.getEditSession()
+		}
+		// Else change router and give error message.
+		// The only cases where this should occur is if the user visits /session directly without ever having viewed even one session.
+		// Or views /session directly after deleting a session as loadSessionState is cleared to {} after destroying.
+		else {
+			this.$router.push({ name: 'sessions' })
+			this.$snotify.error('Please selected a session to view')
+		}
+	},
+	mounted() {
+		console.log(this.editSession)
 	},
 	computed: {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
-		...mapState('sessions', ['session']),
+		...mapState('sessions', ['loadSessionState']),
+		...mapGetters('cash_games', ['getCashGameById']),
+		...mapGetters('tournaments', ['getTournamentById']),
+		session() {
+			if (this.loadSession.game_type === 'cash_game') {
+				return this.getCashGameById(this.loadSession.id)
+			} else if (this.loadSession.game_type === 'tournament') {
+				return this.getTournamentById(this.loadSession.id)
+			}
+		},
 		profit() {
-			return this.session.profit
+			return (this.session) ? this.session.profit : 0
 		},
 		formattedProfit() {
-			return Vue.prototype.currency.format(this.profit);
+			return Vue.prototype.currency.format(this.profit)
 		},
 		roi() {
 			const buy_inTotal = (this.buyInsTotal < 1) ? 1 : this.buyInsTotal
 			return this.profit / buy_inTotal
 		},
 		buyInsTotal() {
-			let buyInTotal = (this.session.buy_ins) ? this.session.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) : 0
-			let addOnTotal = (this.session.add_ons) ? this.session.add_ons.reduce((total, add_ons) => total + add_ons.amount, 0) : 0
-			let rebuyTotal = (this.session.rebuys) ? this.session.rebuys.reduce((total, rebuys) => total + rebuys.amount, 0) : 0
-			let expenseTotal = (this.session.expenses) ? this.session.expenses.reduce((total, expenses) => total + expenses.amount, 0) : 0
-			return buyInTotal + addOnTotal + rebuyTotal + expenseTotal
+			if (this.session) {
+				let buyInTotal = (this.session.buy_ins) ? this.session.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) : 0
+				let addOnTotal = (this.session.add_ons) ? this.session.add_ons.reduce((total, add_ons) => total + add_ons.amount, 0) : 0
+				let rebuyTotal = (this.session.rebuys) ? this.session.rebuys.reduce((total, rebuys) => total + rebuys.amount, 0) : 0
+				let expenseTotal = (this.session.expenses) ? this.session.expenses.reduce((total, expenses) => total + expenses.amount, 0) : 0
+				return buyInTotal + addOnTotal + rebuyTotal + expenseTotal
+			} else {
+				return 0
+			}
+		},
+		cashOutTotal() {
+			let amount  = (this.session) ? this.session.cash_out_model.amount : 0
+			return this.formatCurrency(amount)
 		},
 		runTimeHours() {
 			const end_time = moment.utc(this.session.end_time)
@@ -560,27 +625,21 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions('cash_games', ['updateCashGame', 'deleteCashGame']),
-		...mapActions('tournaments', ['updateTournament', 'deleteTournament']),
-		editStateSession() {
+		...mapActions('sessions', ['saveLoadSession', 'updateSession', 'destroySession']),
+		getEditSession() {
+			let session = JSON.parse(JSON.stringify(this.session))
 			return {
-				id: this.session.id,
-				location: this.session.location,
-				stake_id: this.session.stake_id,
-				limit_id: this.session.limit_id,
-				variant_id: this.session.variant_id,
-				table_size_id: this.session.table_size_id,
-				start_time: moment.utc(this.session.start_time).format(),
-				end_time: moment.utc(this.session.end_time).format(),
-				comments: this.session.comments,
+				...session,
+				start_time: moment.utc(session.start_time).format(),
+				end_time: moment.utc(session.end_time).format(),
 			}
 		},
 		cancelChanges() {
 			this.editing = false
-			this.editSession = this.editStateSession()
+			this.editSession = this.getEditSession()
 		},
 		saveSession() {
-			this.updateCashGame(this.editSession)
+			this.updateSession(this.editSession)
 			.then(response => {
 				this.$snotify.success('Changes saved.')
 				this.editing = false
@@ -593,7 +652,7 @@ export default {
 		deleteSession() {
 			this.$modal.show('dialog', {
 				title: 'Are you sure?',
-				text: 'Are you sure you want to delete this cash game?  This action cannot be undone.',
+				text: 'Are you sure you want to delete this session?  This action cannot be undone.',
 				buttons: [
 					{
 						title: 'Cancel'
@@ -601,11 +660,11 @@ export default {
 					{
 						title: 'Yes, delete.',
 						handler: () => { 
-                            this.deleteCashGame(this.editSession)
+                            this.destroySession(this.editSession)
                             .then(response => {
-								this.$modal.hide('dialog')
 								this.$router.push({ name: 'sessions' })
-                                this.$snotify.warning('Successfully deleted cash game.')
+								this.$modal.hide('dialog')
+                                this.$snotify.warning('Successfully deleted session.')
                             })
                             .catch(error => {
                                 this.$snotify.error('Error: '+error.response.data.message)

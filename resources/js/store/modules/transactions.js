@@ -19,10 +19,16 @@ export default {
                 game_type: payload.game_type
             })
             .then(response => {
-                if (rootGetters['live/liveSessionId'] === response.data.game.id) {
+                if (rootGetters['live/isLiveSession'](response.data.game)) {
                     commit('live/UPDATE_LIVE_SESSION', response.data.game, { root: true})
                 } else {
-                    commit('cash_games/UPDATE_CASH_GAME', response.data.game, { root: true})
+                    if (response.data.game.game_type === 'cash_game') {
+                        commit('cash_games/UPDATE_CASH_GAME', response.data.game, { root: true})
+                    } else if (response.data.game.game_type === 'tournament') {
+                        commit('tournaments/UPDATE_TOURNAMENT', response.data.game, { root: true})
+                    } else {
+                        return Promise.reject({response: {data: { message: 'Unknown Game Type'}}})
+                    }
                 }
             })
             .catch(error => {
@@ -32,10 +38,16 @@ export default {
         updateTransaction({ commit, rootGetters }, payload) {
             return axios.patch(`/api/${payload.transactionType}/${payload.transaction.id}`, payload.transaction)
             .then(response => {
-                if (rootGetters['live/liveSessionId'] === response.data.game.id) {
+                if (rootGetters['live/isLiveSession'](response.data.game)) {
                     commit('live/UPDATE_LIVE_SESSION', response.data.game, { root: true})
                 } else {
-                    commit('cash_games/UPDATE_CASH_GAME', response.data.game, { root: true})
+                    if (response.data.game.game_type === 'cash_game') {
+                        commit('cash_games/UPDATE_CASH_GAME', response.data.game, { root: true})
+                    } else if (response.data.game.game_type === 'tournament') {
+                        commit('tournaments/UPDATE_TOURNAMENT', response.data.game, { root: true})
+                    } else {
+                        return Promise.reject({response: {data: { message: 'Unknown Game Type'}}})
+                    }
                 }
             })
             .catch(error => {
@@ -45,10 +57,16 @@ export default {
         deleteTransaction({ commit, rootGetters }, payload) {
             return axios.delete(`/api/${payload.transactionType}/${payload.transaction.id}`)
             .then(response => {
-                if (rootGetters['live/liveSessionId'] === response.data.game.id) {
+                if (rootGetters['live/isLiveSession'](response.data.game)) {
                     commit('live/UPDATE_LIVE_SESSION', response.data.game, { root: true})
                 } else {
-                    commit('cash_games/UPDATE_CASH_GAME', response.data.game, { root: true})
+                    if (response.data.game.game_type === 'cash_game') {
+                        commit('cash_games/UPDATE_CASH_GAME', response.data.game, { root: true})
+                    } else if (response.data.game.game_type === 'tournament') {
+                        commit('tournaments/UPDATE_TOURNAMENT', response.data.game, { root: true})
+                    } else {
+                        return Promise.reject({response: {data: { message: 'Unknown Game Type'}}})
+                    }
                 }     
             })
             .catch(error => {

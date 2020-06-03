@@ -11,6 +11,9 @@ export default {
         },
         liveSessionId: state => {
             return state.liveSession.id
+        },
+        isLiveSession: state => game => {
+            return state.liveSession.id === game.id && state.liveSession.game_type === game.game_type
         }
     },
     mutations: {

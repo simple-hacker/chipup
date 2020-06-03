@@ -83,7 +83,7 @@ import store from '@store/store.js'
 
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
-const router = new VueRouter({
+export const router = new VueRouter({
     mode: 'history',
     routes,
 })

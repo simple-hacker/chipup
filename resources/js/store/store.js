@@ -25,9 +25,7 @@ const store = new Vuex.Store({
         live,
         filters,
     },
-    plugins: [createPersistedState({
-        paths: ['sessions.session'],
-    })],
+    plugins: [createPersistedState()],
     state: {
         user: {
             email: "example@email.com"

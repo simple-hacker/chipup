@@ -4,10 +4,31 @@ export default {
     namespaced: true,
     state: {
         cash_games: [],
+        defaultCashGame: {
+            id: 0,
+            game_type: 'cash_game',
+            location: '',
+            stake_id: 0,
+            limit: {},
+            limit_id: 0,
+            variant: {},
+            variant_id: 0,
+            table_size: {},
+            table_size_id: 0,
+            start_time: moment.utc().format(),
+            end_time: moment.utc().format(),
+            comments: '',
+            buy_ins: [],
+            cash_out_model: {
+                amount: 0
+            },
+            expenses: [],
+        }
     },
     getters: {
         getCashGameById: (state) => (id) => {
-            return state.cash_games.find(cash_game => cash_game.id === id)
+            let cash_game = state.cash_games.find(cash_game => cash_game.id === id)
+            return cash_game ?? state.defaultCashGame
         }
     },
     mutations: {
@@ -31,11 +52,6 @@ export default {
         }
     },
     actions: {
-        viewCashGame({ commit, getters }, cash_game_id) {
-            // commit('VIEW_CASH_GAME',  cash_game_id)
-            let cash_game = getters.getCashGameById(cash_game_id)
-            commit('sessions/VIEW_SESSION', cash_game, {root: true})
-        },
         getCashGames({ commit }) {
             return axios.get('/api/cash')
             .then(response => {
@@ -67,10 +83,10 @@ export default {
                 throw error
             })
         },
-        deleteCashGame({ commit }, cash_game) {
+        destroyCashGame({ commit }, cash_game) {
             return axios.delete('/api/cash/'+cash_game.id)
             .then(response => {
-                commit('REMOVE_CASH_GAME', cash_game)          
+                commit('REMOVE_CASH_GAME', cash_game)
             })
             .catch(error => {
                 throw error

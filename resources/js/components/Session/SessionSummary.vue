@@ -43,23 +43,13 @@ export default {
 		...mapActions('cash_games', ['viewCashGame']),
 		...mapActions('tournaments', ['viewTournament']),
 		showSessionDetails: function () {
-			// Will need to update to viewSession to include Tournaments
-			// Save CashGame in to state and then go to sessions route.
-			// This is because I don't want /session/:id as the ids could be in the thousands and non consecutive because
-			// they're consecutive for all users and don't want the user to type random numbers in the URL
-			// even though viewing other user's is protected server side.
-			if (this.session.game_type === 'cash_game') {
-				this.viewCashGame(this.session.id)
-			} else if (this.session.game_type === 'tournament') {
-				this.viewTournament(this.session.id)
-			} else {
-				this.$snotify.error('Invalid Game Type')
-			}
-			
 			this.$router.push({
 				name: 'session',
 				params: {
-					id: this.session.id
+					viewSession: {
+						id: this.session.id,
+						game_type: this.session.game_type
+					}
 				}
 			})
 		}

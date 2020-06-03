@@ -4,10 +4,32 @@ export default {
     namespaced: true,
     state: {
         tournaments: [],
+        defaultTournament: {
+            id: 0,
+            game_type: 'tournament',
+            location: '',
+            name: '',
+            limit: {},
+            limit_id: 0,
+            variant: {},
+            variant_id: 0,
+            prize_pool: 0,
+            position: 0,
+            entries: 0,
+            start_time: moment.utc().format(),
+            end_time: moment.utc().format(),
+            comments: '',
+            buy_ins: [],
+            cash_out_model: {
+                amount: 0
+            },
+            expenses: [],
+        }
     },
     getters: {
         getTournamentById: (state) => (id) => {
-            return state.tournaments.find(tournament => tournament.id === id)
+            let tournament = state.tournaments.find(tournament => tournament.id === id)
+            return tournament ?? state.defaultTournament
         }
     },
     mutations: {
@@ -31,11 +53,6 @@ export default {
         }
     },
     actions: {
-        viewTournament({ commit, getters }, tournament_id) {
-            // commit('VIEW_TOURNAMENT',  tournament_id)
-            let tournament = getters.getTournamentById(tournament_id)
-            commit('sessions/VIEW_SESSION', tournament, {root: true})
-        },
         getTournaments({ commit }) {
             return axios.get('/api/tournament')
             .then(response => {
@@ -67,7 +84,7 @@ export default {
                 throw error
             })
         },
-        deleteTournament({ commit }, tournament) {
+        destroyTournament({ commit }, tournament) {
             return axios.delete('/api/tournament/'+tournament.id)
             .then(response => {
                 commit('REMOVE_TOURNAMENT', tournament)          
