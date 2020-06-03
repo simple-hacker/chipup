@@ -223,6 +223,26 @@ class User extends Authenticatable
     }
 
     /**
+    * Returns a collection of Tournaments where provided time is between start_time and end_time
+    * This is used to prevent adding a completed tournament between an already existing tournament.
+    * 
+    * @param Carbon $time
+    * @return hasMany
+    */
+    public function tournamentsAtTime($time = null)
+    {
+        $start_time = $time ? Carbon::create($time) : now();
+        
+        return $this->tournaments()
+                    ->where('start_time', '<=', $start_time)
+                    ->where(function ($query) use ($start_time) {
+                        $query->where('end_time', '>=', $start_time)
+                              ->orWhere('end_time', null);
+                    })
+                    ->count();
+    }
+
+    /**
     * Return the user's default stake model
     * 
     * @return hasOne

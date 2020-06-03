@@ -572,9 +572,6 @@ export default {
 			this.$snotify.error('Please selected a session to view')
 		}
 	},
-	mounted() {
-		console.log(this.editSession)
-	},
 	computed: {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
 		...mapState('sessions', ['loadSessionState']),

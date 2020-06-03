@@ -13,6 +13,28 @@
 				-->
 				<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2">Details</div>
 				<!--
+					TOURNAMENT NAME
+				-->
+				<div
+					v-show-slide="game_type === 'tournament'"
+					class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
+				>
+					<div class="w-1/6">
+						<i class="fas fa-star"></i>
+					</div>
+					<div class="flex flex-col w-full">
+						<input
+							type="text"
+							v-model="tournament.name"
+							placeholder="Tournament Name"
+							class="p-1 text-lg"
+							:class="{'error-input' : errors.name}"
+							@input="delete errors.name"
+						/>
+						<span v-if="errors.name" class="error-message">{{ errors.name[0] }}</span>
+					</div>
+				</div>
+				<!--
 					LOCATION
 				-->
 				<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
@@ -34,7 +56,9 @@
 				<!--
 					STAKE
 				-->
-				<div v-show-slide="game_type === 'cash_game'">
+				<div
+					v-show-slide="game_type === 'cash_game'"
+				>
 					<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
 						<div class="w-1/6">
 							<i class="fas fa-coins"></i>
@@ -105,13 +129,16 @@
 				<!--
 					TABLE SIZE
 				-->
-				<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
+				<div
+					v-show-slide="game_type === 'cash_game'"
+					class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
+				>
 					<div class="w-1/6">
 						<i class="fas fa-user-friends"></i>
 					</div>
 					<div class="flex flex-col w-full">
 						<select
-							v-model="session.table_size_id"
+							v-model="cash_game.table_size_id"
 							class="p-1 text-lg"
 							:class="{'error-input' : errors.table_size_id}"
 							@input="delete errors.table_size_id"
@@ -128,9 +155,59 @@
 					</div>
 				</div>
 				<!--
+					PRIZE POOL
+				-->
+				<div
+					v-show-slide="game_type === 'tournament'"
+				>
+					<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
+						<div class="w-1/6">
+							<i class="fas fa-money-bill-wave"></i>
+						</div>
+						<div class="flex flex-col w-full">
+							<input
+								type="number"
+								min="0"
+								placeholder="Prize Pool"
+								v-model="tournament.prize_pool"
+								class="p-1 text-lg"
+								:class="{'error-input' : errors.prize_pool}"
+								@input="delete errors.prize_pool"
+							/>
+							<span v-if="errors.prize_pool" class="error-message">{{ errors.prize_pool[0] }}</span>
+						</div>
+					</div>
+				</div>
+				<!--
+					POSITION
+				-->
+				<div
+					v-show-slide="game_type === 'tournament'"
+				>
+					<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
+						<div class="w-1/6">
+							<i class="fas fa-medal"></i>
+						</div>
+						<div class="flex flex-col w-full">
+							<input
+								type="number"
+								min="0"
+								placeholder="Finishing Position"
+								v-model="tournament.position"
+								class="p-1 text-lg"
+								:class="{'error-input' : errors.position}"
+								@input="delete errors.position"
+							/>
+							<span v-if="errors.position" class="error-message">{{ errors.position[0] }}</span>
+						</div>
+					</div>
+				</div>
+				<!--
 					ENTRIES
 				-->
-				<div v-show-slide="game_type === 'tournament'">
+				<div
+					v-show-slide="game_type === 'tournament'"
+				>
 					<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
 						<div class="w-1/6">
 							<i class="fas fa-users"></i>
@@ -139,7 +216,7 @@
 							<input
 								type="number"
 								min="0"
-								placeholder="Number of entries"
+								placeholder="Number of Entries"
 								v-model="tournament.entries"
 								class="p-1 text-lg"
 								:class="{'error-input' : errors.entries}"
@@ -431,18 +508,21 @@ export default {
 				end_time: '',
 				variant_id: 0,
 				limit_id: 0,
-				table_size_id: 0,
 				expenses: [],
 				cash_out_model: { amount: 0 },
 				comments: ''
 			},
 			cash_game: {
 				stake_id: 0,
+				table_size_id: 0,
 				buy_ins: [
 					{ amount: 0 },
 				],
 			},
 			tournament: {
+				name: '',
+				prize_pool: '',
+				position: '',
 				entries: '',
 				buy_in: { amount: 0},
 				rebuys: [],
@@ -473,6 +553,7 @@ export default {
 	},
 	methods: {
 		...mapActions('cash_games', ['addCashGame']),
+		...mapActions('tournaments', ['addTournament']),
 		switchGameType() {
 			if (this.game_type === 'cash_game') {
 				this.game_type = 'tournament'
@@ -487,7 +568,7 @@ export default {
 					...this.cash_game
 				})
 				.then(response => {
-					this.$snotify.success('Successfully created cash game')
+					this.$snotify.success(`Successfully created cash game.`)
 					this.$router.push({ name: 'sessions' })
 				})
 				.catch(error => {
@@ -495,10 +576,17 @@ export default {
 					this.errors = error.response.data.errors
 				})
 			} else if (this.game_type === 'tournament') {
-				console.log('TOURNAMENT')
-				console.log({
+				this.addTournament({
 					...this.session,
 					...this.tournament
+				})
+				.then(response => {
+					this.$snotify.success(`Successfully created tournament.`)
+					this.$router.push({ name: 'sessions' })
+				})
+				.catch(error => {
+					this.$snotify.error('Error: '+error.response.data.message)
+					this.errors = error.response.data.errors
 				})
 			}
 		},

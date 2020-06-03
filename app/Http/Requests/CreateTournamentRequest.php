@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateCashGameRequest extends FormRequest
+class CreateTournamentRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,18 +15,24 @@ class CreateCashGameRequest extends FormRequest
     {
         $rules = [
             'location' => 'required|string',
-            'stake_id' => 'required|integer|exists:stakes,id',
+            'name' => 'sometimes|nullable|string',
             'variant_id' => 'required|integer|exists:variants,id',
             'limit_id' => 'required|integer|exists:limits,id',
-            'table_size_id' => 'required|integer|exists:table_sizes,id',
+            'prize_pool' => 'sometimes|nullable|integer|min:0',
+            'position' => 'sometimes|nullable|integer|min:0',
+            'entries' => 'sometimes|nullable|integer|min:0',
             'start_time' => 'required|date|before_or_equal:now',
             'end_time' =>'required|date|before_or_equal:now',
-            'comments' => 'nullable|string',
+            'comments' => 'sometimes|nullable|string',
 
-            'buy_ins.*.amount' => 'required|numeric|min:0|not_in:0',
+            'buy_ins.*.amount' => 'required|numeric|min:0',
 
             'expenses.*.amount' => 'required_with:expenses.*.comments|numeric|min:0|not_in:0',
             'expenses.*.comments' => 'sometimes|nullable|string',
+
+            'rebuys.*.amount' => 'sometimes|numeric|min:0|not_in:0',
+
+            'add_ons.*.amount' => 'sometimes|numeric|min:0|not_in:0',
 
             'cash_out_model.amount' => 'sometimes|numeric|min:0',
         ];
@@ -34,7 +40,7 @@ class CreateCashGameRequest extends FormRequest
         if ($this->input('start_time') && $this->input('end_time')) {
             $rules['end_time'] .= '|after:start_time';
         }
-
+    
         return $rules;
     }
 }
