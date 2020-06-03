@@ -45,7 +45,7 @@ abstract class TestCase extends BaseTestCase
     {
         // In User.php startTournament does not have default values
         // So need to add them here.
-        return $this->signIn($user)->startTournament($this->getTournamentAttributes());
+        return $this->signIn($user)->startTournament($this->getLiveTournamentAttributes());
     }
 
     protected function getLiveCashGameAttributes($amount = 1000, $start_time = null) {
@@ -55,6 +55,7 @@ abstract class TestCase extends BaseTestCase
             'stake_id' => Stake::inRandomOrder()->first()->id,
             'variant_id' => Variant::inRandomOrder()->first()->id,
             'limit_id' => Limit::inRandomOrder()->first()->id,
+            'prize_pool' => 1500,
             'table_size_id' => TableSize::inRandomOrder()->first()->id,
             'location' => 'Casino MK',
         ];
@@ -92,7 +93,7 @@ abstract class TestCase extends BaseTestCase
         return $attributes;
     }
 
-    protected function getTournamentAttributes($amount = 1000, $start_time = null) {
+    protected function getLiveTournamentAttributes($amount = 1000, $start_time = null) {
 
         $attributes = [
             'amount' => $amount,
@@ -107,6 +108,39 @@ abstract class TestCase extends BaseTestCase
         if ($start_time) {
             $attributes['start_time'] = $start_time;
         }
+        
+        return $attributes;
+    }
+
+    protected function getTournamentAttributes($amount = 1000, $start_time = null, $end_time = null) {
+
+        $attributes = [
+            'start_time' => $start_time ?? Carbon::create('-4 hour')->toDateTimeString(),
+            'name' => 'FU Flip',
+            'limit_id' => 1,
+            'variant_id' => 1,
+            'prize_pool' => 1000,
+            'position' => 5,
+            'entries' => 110,
+            'location' => 'CasinoMK',
+            'end_time' => $end_time ?? Carbon::create('-1 hour')->toDateTimeString(),
+            'buy_in' => [
+                ['amount' => $amount]
+            ],
+            'rebuys' => [
+                ['amount' => ($amount/2)]
+            ],
+            'add_ons' => [
+                ['amount' => ($amount/3)]
+            ],
+            'expenses' => [
+                ['amount' => 400],
+                ['amount' => 750, 'comments' => 'Tips'],
+            ],
+            'cash_out_model' => [
+                'amount' => 1000,
+            ]
+        ];
         
         return $attributes;
     }

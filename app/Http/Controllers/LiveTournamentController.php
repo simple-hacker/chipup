@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use App\Http\Requests\EndSessionRequest;
-use App\Http\Requests\AddTournamentRequest;
+use App\Http\Requests\StartTournamentRequest;
+use App\Http\Requests\UpdateLiveTournamentRequest;
 
 class LiveTournamentController extends Controller
 {
 /**
     * POST method for starting a Tournament for the authenticated user
     * 
-    * @param AddTournamentRequest $request
+    * @param StartTournamentRequest $request
     * @return json 
     */
-    public function start(AddTournamentRequest $request)
+    public function start(StartTournamentRequest $request)
     {
         try {
             $tournament = auth()->user()->startTournament($request->validated());
@@ -86,6 +85,37 @@ class LiveTournamentController extends Controller
                 'success' => false,
                 'message' => 'You currently don\'t have a Tournament in progress'
             ], 422);
+        }
+    }
+
+    /**
+    * PATCH method to update specific cash game
+    *
+    * @param Tournament $tournament
+    * @param UpdateTournamentRequest $request
+    * @return json
+    */
+    public function update(UpdateLiveTournamentRequest $request)
+    {
+        try {
+            $tournament = auth()->user()->liveTournament();
+
+            if ($tournament) {
+                
+                $tournament->update($request->validated());
+
+                return response()->json([
+                    'success' => true,
+                    'tournament' => $tournament->fresh()
+                ]);
+            } else {
+                throw new \Exception('You have not started a Tournament.', 422);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], $e->getCode());
         }
     }
 }
