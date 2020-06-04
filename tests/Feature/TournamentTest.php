@@ -71,10 +71,9 @@ class TournamentTest extends TestCase
     // Tournament must exist when deleting
     // User cannot delete another user's tournament
 
-
     /*
     * ==================================
-    * TEST
+    * TESTS
     * ==================================
     */
 
@@ -118,168 +117,168 @@ class TournamentTest extends TestCase
 
 
 
-    
-    public function testAUserCanGetAllTheirTournamentsAsJson()
-    {   
-        $user = $this->signIn();
 
-        // Assert response tournaments is empty if no tournaments exist
-        $response = $this->getJson(route('tournament.index'))
-                ->assertOk()
-                ->assertJsonStructure(['success', 'tournaments']);
+    // public function testAUserCanGetAllTheirTournamentsAsJson()
+    // {   
+    //     $user = $this->signIn();
 
-        $this->assertEmpty($response['tournaments']);
+    //     // Assert response tournaments is empty if no tournaments exist
+    //     $response = $this->getJson(route('tournament.index'))
+    //             ->assertOk()
+    //             ->assertJsonStructure(['success', 'tournaments']);
 
-        // Create 2 Tournaments
-        factory('App\Tournament', 2)->create(['user_id' => $user->id]);
+    //     $this->assertEmpty($response['tournaments']);
 
-        // Assert response tournaments returns two tournaments
-        $response = $this->getJson(route('tournament.index'))
-                            ->assertOk()
-                            ->assertJsonStructure(['success', 'tournaments']);
+    //     // Create 2 Tournaments
+    //     factory('App\Tournament', 2)->create(['user_id' => $user->id]);
 
-        $this->assertCount(2, $response['tournaments']);
-    }
+    //     // Assert response tournaments returns two tournaments
+    //     $response = $this->getJson(route('tournament.index'))
+    //                         ->assertOk()
+    //                         ->assertJsonStructure(['success', 'tournaments']);
 
-    public function testAssertNotFoundIfViewingInvalidTournament()
-    {
-        $this->signIn();
+    //     $this->assertCount(2, $response['tournaments']);
+    // }
 
-        // Assert Not Found if supply incorrect tournament id
-        $this->getJson(route('tournament.view', ['tournament' => 99]))
-                ->assertNotFound();
-    }
+    // public function testAssertNotFoundIfViewingInvalidTournament()
+    // {
+    //     $this->signIn();
 
-    public function testAUserCanViewAValidTournament()
-    {
-        $tournament = $this->startLiveTournament();
+    //     // Assert Not Found if supply incorrect tournament id
+    //     $this->getJson(route('tournament.view', ['tournament' => 99]))
+    //             ->assertNotFound();
+    // }
 
-        $this->getJson(route('tournament.view', ['tournament' => $tournament->id]))
-                ->assertOk()
-                ->assertJsonStructure(['success', 'tournament']);
-    }
+    // public function testAUserCanViewAValidTournament()
+    // {
+    //     $tournament = $this->startLiveTournament();
 
-    public function testAUserCannotViewAnotherUsersTournament()
-    {
-        // Sign in User and create tournament
-        $tournament = $this->startLiveTournament();
+    //     $this->getJson(route('tournament.view', ['tournament' => $tournament->id]))
+    //             ->assertOk()
+    //             ->assertJsonStructure(['success', 'tournament']);
+    // }
 
-        //Sign in another user
-        $this->signIn();
+    // public function testAUserCannotViewAnotherUsersTournament()
+    // {
+    //     // Sign in User and create tournament
+    //     $tournament = $this->startLiveTournament();
 
-        // Assert Forbidden if tournament does not belong to user
-        $this->getJson(route('tournament.view', ['tournament' => $tournament->id]))
-                ->assertForbidden();
-    }
+    //     //Sign in another user
+    //     $this->signIn();
 
-    public function testAUserCanUpdateTheTournamentDetails()
-    {
-        $tournament = $this->startLiveTournament();
+    //     // Assert Forbidden if tournament does not belong to user
+    //     $this->getJson(route('tournament.view', ['tournament' => $tournament->id]))
+    //             ->assertForbidden();
+    // }
 
-        $start_time = Carbon::create('-1 hour')->toDateTimeString();
+    // public function testAUserCanUpdateTheTournamentDetails()
+    // {
+    //     $tournament = $this->startLiveTournament();
 
-        $attributes = [
-            'start_time' => $start_time,
-            'limit_id' => 2,
-            'variant_id' => 2,
-            'location' => 'Las Vegas',
-            'entries' => 300,
-            'comments' => 'New comments',
-        ];
+    //     $start_time = Carbon::create('-1 hour')->toDateTimeString();
 
-        $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), $attributes)
-                ->assertOk()
-                ->assertJsonStructure(['success', 'tournament'])
-                ->assertJson([
-                    'success' => true
-                ]);
+    //     $attributes = [
+    //         'start_time' => $start_time,
+    //         'limit_id' => 2,
+    //         'variant_id' => 2,
+    //         'location' => 'Las Vegas',
+    //         'entries' => 300,
+    //         'comments' => 'New comments',
+    //     ];
 
-        $this->assertDatabaseHas('tournaments', $attributes);
-    }
+    //     $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), $attributes)
+    //             ->assertOk()
+    //             ->assertJsonStructure(['success', 'tournament'])
+    //             ->assertJson([
+    //                 'success' => true
+    //             ]);
 
-    public function testAUserCannnotUpdateAnotherUsersTournament()
-    {
-        // Create a tournament belonging to new user.
-        $tournament = factory('App\Tournament')->create();
+    //     $this->assertDatabaseHas('tournaments', $attributes);
+    // }
 
-        // Sign in as another new user
-        $this->signIn();
+    // public function testAUserCannnotUpdateAnotherUsersTournament()
+    // {
+    //     // Create a tournament belonging to new user.
+    //     $tournament = factory('App\Tournament')->create();
 
-        // Assert signed in user does not own the created tournament.
-        $this->assertNotEquals($tournament->user_id, auth()->user()->id);
+    //     // Sign in as another new user
+    //     $this->signIn();
 
-        $attributes = [
-            'start_time' => '2020-02-02 18:00:00',
-            'limit_id' => 2,
-            'variant_id' => 2,
-            'location' => 'Las Vegas',
-            'entries' => 300,
-            'comments' => 'New comments',
-        ];
+    //     // Assert signed in user does not own the created tournament.
+    //     $this->assertNotEquals($tournament->user_id, auth()->user()->id);
 
-        $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), $attributes)
-                ->assertForbidden();
+    //     $attributes = [
+    //         'start_time' => '2020-02-02 18:00:00',
+    //         'limit_id' => 2,
+    //         'variant_id' => 2,
+    //         'location' => 'Las Vegas',
+    //         'entries' => 300,
+    //         'comments' => 'New comments',
+    //     ];
 
-        $this->assertDatabaseMissing('tournaments', $attributes);
-    }
+    //     $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), $attributes)
+    //             ->assertForbidden();
 
-    public function testDataMustBeValidWhenUpdatingATournament()
-    {     
-        $tournament = $this->signIn()->startTournament($this->getTournamentAttributes());
-        $tournament->end();
+    //     $this->assertDatabaseMissing('tournaments', $attributes);
+    // }
+
+    // public function testDataMustBeValidWhenUpdatingATournament()
+    // {     
+    //     $tournament = $this->signIn()->startTournament($this->getTournamentAttributes());
+    //     $tournament->end();
         
-        // Variant Id must exist in variants table
-        $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [
-            'variant_id' => 999
-        ])->assertStatus(422);
+    //     // Variant Id must exist in variants table
+    //     $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [
+    //         'variant_id' => 999
+    //     ])->assertStatus(422);
 
-        // Start_time cannot be in the future
-        $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [
-            'start_time' => Carbon::create('+1 second')->toDateTimeString()
-        ])->assertStatus(422);
+    //     // Start_time cannot be in the future
+    //     $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [
+    //         'start_time' => Carbon::create('+1 second')->toDateTimeString()
+    //     ])->assertStatus(422);
 
-        // end_time cannot be in the future
-        $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [
-            'end_time' => Carbon::create('+1 second')->toDateTimeString()
-        ])->assertStatus(422);
+    //     // end_time cannot be in the future
+    //     $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [
+    //         'end_time' => Carbon::create('+1 second')->toDateTimeString()
+    //     ])->assertStatus(422);
 
-        // Start_time cannot be after end_time
-        $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [
-            'start_time' => Carbon::create('-10 minutes')->toDateTimeString(),
-            'end_time' => Carbon::create('-20 minutes')->toDateTimeString(),
-        ])->assertStatus(422);
+    //     // Start_time cannot be after end_time
+    //     $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [
+    //         'start_time' => Carbon::create('-10 minutes')->toDateTimeString(),
+    //         'end_time' => Carbon::create('-20 minutes')->toDateTimeString(),
+    //     ])->assertStatus(422);
 
-        // Start_time and end_time cannot be the same
-        $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [
-            'start_time' => Carbon::create('-10 minutes')->toDateTimeString(),
-            'end_time' => Carbon::create('-10 minutes')->toDateTimeString(),
-        ])->assertStatus(422);
+    //     // Start_time and end_time cannot be the same
+    //     $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [
+    //         'start_time' => Carbon::create('-10 minutes')->toDateTimeString(),
+    //         'end_time' => Carbon::create('-10 minutes')->toDateTimeString(),
+    //     ])->assertStatus(422);
 
-        // Empty data is valid
-        $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [])->assertOk();
-    }
+    //     // Empty data is valid
+    //     $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [])->assertOk();
+    // }
 
-    public function testAUserCanDeleteTheirTournament()
-    {
-        $this->withoutExceptionHandling();
+    // public function testAUserCanDeleteTheirTournament()
+    // {
+    //     $this->withoutExceptionHandling();
 
-        $user = $this->signIn();
-        $tournament = $user->startTournament($this->getTournamentAttributes());
+    //     $user = $this->signIn();
+    //     $tournament = $user->startTournament($this->getTournamentAttributes());
 
-        $this->deleteJson(route('tournament.delete', ['tournament' => $tournament->id]))->assertOk();
+    //     $this->deleteJson(route('tournament.delete', ['tournament' => $tournament->id]))->assertOk();
 
-        $this->assertEmpty($user->tournaments);
-    }
+    //     $this->assertEmpty($user->tournaments);
+    // }
 
-    public function testAUserCannotDeleteAnotherUsersTournament()
-    {
-        // Sign in new user and create tournament
-        $tournament = $this->startLiveTournament();
+    // public function testAUserCannotDeleteAnotherUsersTournament()
+    // {
+    //     // Sign in new user and create tournament
+    //     $tournament = $this->startLiveTournament();
 
-        //Sign in as another new user
-        $this->signIn();
+    //     //Sign in as another new user
+    //     $this->signIn();
 
-        // User 2 is Forbidden to delete user 1s tournament.
-        $this->deleteJson(route('tournament.delete', ['tournament' => $tournament->id]))->assertForbidden();
-    }
+    //     // User 2 is Forbidden to delete user 1s tournament.
+    //     $this->deleteJson(route('tournament.delete', ['tournament' => $tournament->id]))->assertForbidden();
+    // }
 }

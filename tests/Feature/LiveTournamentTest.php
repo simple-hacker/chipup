@@ -13,6 +13,57 @@ class LiveTournamentTest extends TestCase
 {
     use RefreshDatabase;
 
+    /*
+    * ==================================
+    * INDEX
+    * ==================================
+    */
+
+    // User must be logged in start/view/update/end live tournament
+
+    // User can start a live tournament
+    // User cannot start another tournament if there is one already live
+    // Required data must be valid when starting
+    // Non required data are optional but must be valid when provided when creating
+    // User can start at a specified time.
+    // If no start time is provided then it starts at current time
+    // Start time cannot be in the future
+    // Start time must be valid
+    // Cannot start a tournament which clashes with another tournament
+
+    // A BuyIn Can be provided when starting a tournament
+    // BuyIn can be zero for Tournaments for freerolls
+    // Non provided BuyIn is valid as it creates a BuyIn transaction with amount zero
+    // BuyIn must be valid
+
+    // User can view their live tournament
+    // Trying to view a Live Tournament when one has not been started is invalid
+
+    // User can update live Tournament
+    // User cannot update a live tournament that does not exist
+    // User cannot update another user's live tournament
+    // Required data, if present, must be valid when updating live tournament
+    // Non required data, if present, must be valid when updating live tournament
+    // Start date cannot be in the future
+    // Cannot update live tournament with new times which clashes with another tournament
+
+    // User can end a live Tournament
+    // User can end a live tournament at a specified time
+    // User cannot end a live tournament that does not exist
+    // User cannot end a live tournament in the future
+    // End time must be valid if provided
+    // User cannot end a live tournament before it's start time
+    // User can end a live tournament exactly on its start time
+    // If no end time is provided then CashOut at current time
+    // If no cash out is provided then it defaults to zero
+    // Cash out amount must be valid
+
+    /*
+    * ==================================
+    * TESTS
+    * ==================================
+    */
+
     // User must be logged in start/view/update/end live tournament
     public function testUserMustBeLoggedInToStartTournament()
     {
@@ -83,6 +134,7 @@ class LiveTournamentTest extends TestCase
         $this->postJson(route('tournament.live.start'), $attributes)->assertStatus(422);
     }
 
+    // Non required data are optional but must be valid when provided when creating
     public function testNonRequiredTournamentAttributesAreOptionalAndValidWhenStarting()
     {
         // Delete Tournaments after every assertOk because we can only have one Live session at a time.
@@ -123,7 +175,7 @@ class LiveTournamentTest extends TestCase
         $this->postJson(route('tournament.live.start'), $attributes)->assertStatus(422);
     }
     
-    // User can start at a specified time.
+    // User can start at a specified time
     public function testUserCanStartATournamentAtASpecifiedTime()
     {
         $user = $this->signIn();
@@ -151,7 +203,7 @@ class LiveTournamentTest extends TestCase
         $this->assertEquals(now()->micro(0), $user->tournaments()->first()->start_time);
     }
 
-    // start date cannot be in the future
+    // Start time cannot be in the future
     public function testUserCannotStartATournamentInTheFuture()
     {
         $this->signIn();
@@ -248,7 +300,7 @@ class LiveTournamentTest extends TestCase
         $this->postJson(route('tournament.live.start'), $attributes)->assertOk();
     }
 
-    // Non provided BuyIn is valid as it creates a BuyIn transaction with amount zero.
+    // Non provided BuyIn is valid as it creates a BuyIn transaction with amount zero
     // This is because Freeroll Tournaments are possible.
     public function testIfNoBuyInIsSuppliedThenOneIsCreatedWithAmountZero()
     {
@@ -384,7 +436,7 @@ class LiveTournamentTest extends TestCase
         $this->assertTrue(true);
     }
     
-    // Data must be valid when updating live tournament
+    // Required data, if present, must be valid when updating live tournament
     public function testNonNullableMustBeValidWhenUpdatingLiveTournament()
     {
         // All of this data is sometimes present, but not nullable and must be valid is supplied.
@@ -422,7 +474,7 @@ class LiveTournamentTest extends TestCase
         $this->patchJson(route('tournament.live.update'), $attributes)->assertStatus(422);
     }
 
-    // Data must be valid when updating live tournament
+    // Non required data, if present, must be valid when updating live tournament
     public function testNullableDataIsOptionalWhenUpdatingLiveTournament()
     {
         // All of this data is sometimes present, but can be nullable if supplied.
@@ -504,7 +556,7 @@ class LiveTournamentTest extends TestCase
         $this->patchJson(route('tournament.live.update'), ['start_time' => $start_time])->assertStatus(422);
     }
 
-    // User can end a live tournament.
+    // User can end a live tournament
     // If no end_time is provided then it defaults to now().
     // Assert CashOut transaction was created and equal to the amount provided.
     public function testUserCanEndATournament()
@@ -547,7 +599,7 @@ class LiveTournamentTest extends TestCase
         $this->assertEquals($tournament->end_time, $end_time->micro(0));
     }
 
-    // User cannot end a live tournament that does not exist.
+    // User cannot end a live tournament that does not exist
     public function testUserCannotEndATournamentWhichDoesntExist()
     {
         $user = $this->signIn();
@@ -582,7 +634,7 @@ class LiveTournamentTest extends TestCase
                 ->assertStatus(422);
     }
 
-    // End time must be valid if provided.
+    // End time must be valid if provided
     public function testUserCannotEndATournamentAtAInvalidTime()
     {
         $this->signIn();
@@ -640,10 +692,10 @@ class LiveTournamentTest extends TestCase
                 ->assertOk();
     }
 
-    // If no end time is provided then CashOut at current time.
+    // If no end time is provided then CashOut at current time
     // This is tested under testUserCanEndATournament
 
-    // If no cash out is provided then it defaults to 0.
+    // If no cash out is provided then it defaults to zero
     public function testCashOutAmountDefaultsToZeroIfNotSupplied()
     {
         $user = $this->signIn();

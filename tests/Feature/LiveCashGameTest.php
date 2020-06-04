@@ -12,6 +12,55 @@ class LiveCashGameTest extends TestCase
 {
     use RefreshDatabase;
 
+    /*
+    * ==================================
+    * INDEX
+    * ==================================
+    */
+
+    // User must be logged in start/view/update/end live cash game
+
+    // User can start a live cash game
+    // User cannot start another cash game if there is one already live
+    // Required data must be valid when starting
+    // CashGames do not have any non required attributes
+    // User can start at a specified time.
+    // If no start time is provided then it starts at current time.
+    // Start time cannot be in the future
+    // Start time must be valid
+    // Cannot start a cash game which clashes with another cash game
+
+    // A BuyIn Can be provided when starting a cash game
+    // BuyIn CANNOT be zero for CashGames
+    // BuyIn amount must be provided when starting a Cash Game
+
+    // User can view their live cash game
+    // Trying to view a Live CashGame when one has not been started is invalid
+
+    // User can update live CashGame
+    // User cannot update a live cash game that does not exis
+    // User cannot update another user's live cash game
+    // Data must be valid when updating live cash game
+    // Start date cannot be in the future when updating
+    // Cannot update live cash game with new times which clashes with another cash game
+
+    // User can end a live cash.
+    // User can end a live cash game at a specified time
+    // User cannot end a live cash game that does not exist.
+    // User cannot end a live cash game in the future
+    // End time must be valid if provided.
+    // User cannot end a live cash game before it's start time
+    // User can end a live cash game exactly on its start time
+    // If no end time is provided then CashOut at current time
+    // If no cash out is provided then it defaults to 0
+    // Cash out amount must be valid
+
+    /*
+    * ==================================
+    * TESTS
+    * ==================================
+    */
+
     // User must be logged in start/view/update/end live cash game
     public function testUserMustBeLoggedInToStartCashGame()
     {
@@ -136,7 +185,7 @@ class LiveCashGameTest extends TestCase
         $this->assertEquals(now()->micro(0), $user->cashGames()->first()->start_time);
     }
 
-    // start date cannot be in the future
+    // Start time cannot be in the future
     public function testUserCannotStartACashGameInTheFuture()
     {
         $this->signIn();
@@ -233,7 +282,7 @@ class LiveCashGameTest extends TestCase
         $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
     }
 
-    // BuyIn amount must be provided when starting a Cash Game.
+    // BuyIn amount must be provided when starting a Cash Game
     public function testBuyInAmountIsRequired()
     {
         $user = $this->signIn();
@@ -406,7 +455,7 @@ class LiveCashGameTest extends TestCase
         $this->patchJson(route('cash.live.update'), $attributes)->assertStatus(422);
     }
 
-    // Start date cannot be in the future
+    // Start date cannot be in the future when updating
     public function testStartTimeCannotBeInTheFutureWhenUpdatingLiveCashGame()
     {
         $this->signIn();
@@ -577,10 +626,10 @@ class LiveCashGameTest extends TestCase
                 ->assertOk();
     }
 
-    // If no end time is provided then CashOut at current time.
+    // If no end time is provided then CashOut at current time
     // This is tested under testUserCanEndACashGame
 
-    // If no cash out is provided then it defaults to 0.
+    // If no cash out is provided then it defaults to 0
     public function testCashOutAmountDefaultsToZeroIfNotSupplied()
     {
         $user = $this->signIn();
