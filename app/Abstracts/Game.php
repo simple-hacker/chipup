@@ -4,7 +4,8 @@ namespace App\Abstracts;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
-use App\Exceptions\InvalidDate;
+use App\Exceptions\InvalidDateException;
+use App\Exceptions\MultipleCashOutException;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class Game extends Model
@@ -79,7 +80,7 @@ abstract class Game extends Model
 
         // The end_time cannot be before the start_time
         if ($dateTest < $this->start_time) {
-            throw new InvalidDate('Cannot set the end time before the start time', 422);
+            throw new InvalidDateException('Cannot set the end time before the start time', 422);
         }
 
         return $this->update([
@@ -148,6 +149,10 @@ abstract class Game extends Model
     */
     public function cashOut(float $amount)
     {
+        // if ($this->cashOutModel) {
+        //     throw new MultipleCashOutException();
+        // }
+
         return $this->cashOutModel()->create([
             'amount' => $amount
         ]);

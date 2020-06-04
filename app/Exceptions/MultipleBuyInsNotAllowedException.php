@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 
-class CashGameInProgress extends Exception
+class MultipleBuyInsNotAllowedException extends Exception
 {
     //
 }

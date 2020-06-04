@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CashGame;
 use App\Tournament;
 use App\Abstracts\GameTransaction;
+use App\Exceptions\InvalidGameTypeException;
 use App\Http\Requests\CreateGameTransactionRequest;
 use App\Http\Requests\UpdateGameTransactionRequest;
 
@@ -30,7 +31,7 @@ abstract class GameTransactionController extends Controller
                 $game = Tournament::findOrFail($request->game_id);
                 break;
             default:
-                abort(422, 'Invalid GameType was supplied');
+                throw new InvalidGameTypeException();
         }
 
         // Authorize that the user can manage the game

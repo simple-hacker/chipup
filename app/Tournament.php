@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Abstracts\Game;
-use App\Exceptions\MultipleBuyInsNotAllowed;
+use App\Exceptions\MultipleBuyInsNotAllowedException;
 
 class Tournament extends Game
 {
@@ -23,7 +23,7 @@ class Tournament extends Game
     public function addBuyIn(float $amount)
     {
         if ($this->buyIn()->count() > 0) {
-            throw new MultipleBuyInsNotAllowed();
+            throw new MultipleBuyInsNotAllowedException();
         }
 
         return $this->buyIn()->create([

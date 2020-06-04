@@ -31,7 +31,7 @@ class LiveCashGameController extends GameController
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
-            ], 422);
+            ], $e->getCode());
         }
     }
 

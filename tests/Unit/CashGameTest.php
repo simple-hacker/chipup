@@ -73,7 +73,7 @@ class CashGameTest extends TestCase
 
     public function testAnEndTimeCannotBeBeforeAStartTime()
     {
-        $this->expectException(\App\Exceptions\InvalidDate::class);
+        $this->expectException(\App\Exceptions\InvalidDateException::class);
 
         $cash_game = $this->startLiveCashGame();
 
@@ -82,7 +82,7 @@ class CashGameTest extends TestCase
 
     public function testACashGameCannotBeStartedIfThereIsAlreadyALiveCashGameInProgress()
     {
-        $this->expectException(\App\Exceptions\CashGameInProgress::class);
+        $this->expectException(\App\Exceptions\SessionInProgressException::class);
 
         $user = factory('App\User')->create();
 

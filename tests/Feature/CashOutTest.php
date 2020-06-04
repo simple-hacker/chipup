@@ -56,6 +56,8 @@ class CashOutTest extends TestCase
 
     public function testUserCannotAddMultipleCashOutsToCashGame()
     {
+        $this->withoutExceptionHandling();
+        
         $cash_game = $this->signIn()->startCashGame();
 
         // Cash Out should be Ok

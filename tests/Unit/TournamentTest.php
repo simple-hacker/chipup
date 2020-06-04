@@ -98,7 +98,7 @@ class TournamentTest extends TestCase
 
     public function testAnEndTimeCannotBeBeforeAStartTime()
     {
-        $this->expectException(\App\Exceptions\InvalidDate::class);
+        $this->expectException(\App\Exceptions\InvalidDateException::class);
 
         $tournament = $this->startLiveTournament();
 
@@ -107,7 +107,7 @@ class TournamentTest extends TestCase
 
     public function testATournamentCannotBeStartedIfThereIsAlreadyALiveTournamentInProgress()
     {
-        $this->expectException(\App\Exceptions\TournamentInProgress::class);
+        $this->expectException(\App\Exceptions\SessionInProgressException::class);
 
         $user = factory('App\User')->create();
 
@@ -145,7 +145,7 @@ class TournamentTest extends TestCase
 
     public function testTournamentCannotHaveMultipleBuyIns()
     {
-        $this->expectException(\App\Exceptions\MultipleBuyInsNotAllowed::class);
+        $this->expectException(\App\Exceptions\MultipleBuyInsNotAllowedException::class);
 
         try {
             $tournament = $this->startLiveTournament();
@@ -242,20 +242,20 @@ class TournamentTest extends TestCase
         $this->assertCount(1, $tournament->cashOutModel()->get());
 
         // Change the first Expense to 500 instead of 50
-        tap($tournament->expenses->first())->update([
+        $tournament->expenses->first()->update([
             'amount' => 500
         ]);
 
         // Delete the second expense (200);
-        tap($tournament->expenses->last())->delete();
+        $tournament->expenses->last()->delete();
 
         // Change the 2nd rebuy to 2000 instead of 1000
-        tap($tournament->rebuys->last())->update([
+        $tournament->rebuys->last()->update([
             'amount' => 2000
         ]);
 
         // Delete the only add on (5000);
-        tap($tournament->addOns->first())->delete();
+        $tournament->addOns->first()->delete();
 
         // Update the cashOut value to 4000.
         $tournament->cashOutModel->update([

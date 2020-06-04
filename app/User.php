@@ -2,10 +2,8 @@
 
 namespace App;
 
-use App\Transactions\Bankroll;
 use Illuminate\Support\Carbon;
-use App\Exceptions\CashGameInProgress;
-use App\Exceptions\TournamentInProgress;
+use App\Exceptions\SessionInProgressException;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -120,7 +118,7 @@ class User extends Authenticatable
         // The $attributes array will have been validated in the CashGameController
 
         if ($this->liveCashGame()) {
-            throw new CashGameInProgress('A Cash Game is already in progress.');
+            throw new SessionInProgressException('A Cash Game is already in progress.', 422);
         }
 
         // If start_time was provided check to see if it clashes with another tournament
@@ -196,7 +194,7 @@ class User extends Authenticatable
     {
         // The $attributes array will have been validated in the TournamentController
         if ($this->liveTournament()) {
-            throw new TournamentInProgress('A Tournament is already in progress.', 422);
+            throw new SessionInProgressException('A Tournament is already in progress.', 422);
         }
 
         // If start_time was provided check to see if it clashes with another tournament

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\ClashingSessionsException;
 use Illuminate\Support\Carbon;
+use App\Exceptions\InvalidDateException;
+use App\Exceptions\SessionNotStartedException;
 
 class GameController extends Controller
 {
@@ -92,7 +95,7 @@ class GameController extends Controller
     */
     public function throwLiveCashGameNotStartedException()
     {
-        throw new \Exception('You have not started a Cash Game.', 422);
+        throw new SessionNotStartedException('You have not started a Cash Game.');
     }
 
     /**
@@ -102,7 +105,7 @@ class GameController extends Controller
     */
     public function throwLiveTournamentNotStartedException()
     {
-        throw new \Exception('You have not started a Tournament.', 422);
+        throw new SessionNotStartedException('You have not started a Tournament.');
     }
 
     /**
@@ -114,7 +117,7 @@ class GameController extends Controller
     {
         // If start_time was provided, check it doesn't clash with an exisiting cash game.
         if (request()->start_time && auth()->user()->cashGamesAtTime(request()->start_time) > 0) {
-            throw new \Exception('You already have another cash game at that time.', 422);
+            throw new ClashingSessionsException('You already have another cash game at that time.');
         }
     }
 
@@ -127,7 +130,7 @@ class GameController extends Controller
     {
         // If start_time was provided, check it doesn't clash with an exisiting tournament.
         if (request()->start_time && auth()->user()->tournamentsAtTime(request()->start_time) > 0) {
-            throw new \Exception('You already have another tournament at that time.', 422);
+            throw new ClashingSessionsException('You already have another tournament at that time');
         }
     }
 
@@ -145,14 +148,14 @@ class GameController extends Controller
         // If only start time was provided, make sure it's after the saved end time.
         if (request()->start_time && !request()->end_time) {
             if (Carbon::create(request()->start_time) > $game->end_time) {
-                throw new \Exception('Start time cannot be after end time', 422);
+                throw new InvalidDateException('Cannot set the start time after the start time', 422);
             }
         }
 
         // If only end time is provided, make sure it's before the saved start time
         if (request()->end_time && !request()->start_time) {
             if (Carbon::create(request()->end_time) < $game->start_time) {
-                throw new \Exception('End time cannot be before start time', 422);
+                throw new InvalidDateException('Cannot set the end time before the start time', 422);
             }
         }
     }
