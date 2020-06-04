@@ -190,9 +190,13 @@ class User extends Authenticatable
     public function startTournament(Array $attributes = []) : Tournament
     {
         // The $attributes array will have been validated in the TournamentController
-        
         if ($this->liveTournament()) {
-            throw new TournamentInProgress('A Tournament is already in progress.');
+            throw new TournamentInProgress('A Tournament is already in progress.', 422);
+        }
+
+        // If start_time was provided check to see if it clashes with another tournament
+        if (isset($attributes['start_time']) && ($this->tournamentsAtTime($attributes['start_time']) > 0)) {
+            throw new \Exception('You already have another tournament at that time.', 422);
         }
 
         return $this->tournaments()->create([
@@ -232,11 +236,11 @@ class User extends Authenticatable
     public function tournamentsAtTime($time = null)
     {
         $start_time = $time ? Carbon::create($time) : now();
-        
+
         return $this->tournaments()
-                    ->where('start_time', '<=', $start_time)
+                    ->where('start_time', '<=', $start_time->toDateTimeString())
                     ->where(function ($query) use ($start_time) {
-                        $query->where('end_time', '>=', $start_time)
+                        $query->where('end_time', '>=', $start_time->toDateTimeString())
                               ->orWhere('end_time', null);
                     })
                     ->count();

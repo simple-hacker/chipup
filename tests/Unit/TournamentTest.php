@@ -25,6 +25,30 @@ class TournamentTest extends TestCase
         $this->assertInstanceOf(User::class, $tournament->user);
     }
 
+    public function testTournamentFactoryCreatesNewUser()
+    {
+        factory('App\Tournament')->create();
+        $this->assertCount(1, User::all());
+    }
+
+    public function testTournamentFactoryAndThenSignInCreatesTwoDifferentUsers()
+    {
+        factory('App\Tournament')->create();
+
+        $this->signIn();
+
+        $this->assertCount(2, User::all());
+    }
+
+    public function testSignInAfterTournamentFactoryDoesNotOwnTournament()
+    {
+        $tournament = factory('App\Tournament')->create();
+
+        $this->signIn();
+
+        $this->assertTrue($tournament->user->isNot(auth()->user()));
+    }
+
     public function testAUserCanStartATournament()
     {
         $user = factory('App\User')->create();

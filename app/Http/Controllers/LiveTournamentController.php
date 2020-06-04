@@ -19,9 +19,9 @@ class LiveTournamentController extends Controller
         try {
             $tournament = auth()->user()->startTournament($request->validated());
 
-            if ($request->amount) {
-                $tournament->addBuyIn($request->amount);
-            }
+            // If no BuyIn is provided still create a transaction with amount zero
+            // This is because Freeroll tournaments are possible.
+            $tournament->addBuyIn($request->amount ?? 0);
 
             return [
                 'success' => true,
@@ -31,7 +31,7 @@ class LiveTournamentController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
-            ], 422);
+            ], $e->getCode());
         }
     }
 
@@ -42,19 +42,23 @@ class LiveTournamentController extends Controller
     */
     public function current()
     {
-        $tournament = auth()->user()->liveTournament();
+        try {
+            $tournament = auth()->user()->liveTournament();
 
-        if ($tournament) {
-            return response()->json([
-                'success' => true,
-                'status' => 'live',
-                'tournament' => $tournament
-            ]);
-        } else {
+            if ($tournament) {
+                return response()->json([
+                    'success' => true,
+                    'status' => 'live',
+                    'tournament' => $tournament
+                ]);
+            } else {
+                throw new \Exception('You have not started a Tournament.', 422);
+            }
+        } catch(\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'You currently don\'t have a Tournament in progress'
-            ], 422);
+                'message' => $e->getMessage()
+            ], $e->getCode());
         }
     }
 
@@ -66,25 +70,26 @@ class LiveTournamentController extends Controller
     */
     public function end(EndSessionRequest $request)
     {
-        // Get the current live Tournament if there is one.
-        $tournament = auth()->user()->liveTournament();
+        try {
+            $tournament = auth()->user()->liveTournament();
 
-        if ($tournament) {
-            // If there is a live Tournament try to end if with supplied time or null
-            try {
-                $tournament->endAndCashOut($request->end_time, $request->amount);
-            } catch (\Exception $e) {
+            if ($tournament) {
+
+                $tournament->endAndCashOut($request->end_time, $request->amount ?? 0);
+
                 return response()->json([
-                    'success' => false,
-                    'message' => $e->getMessage()
-                ], 422);
+                    'success' => true,
+                    'status' => 'live',
+                    'tournament' => $tournament
+                ]);
+            } else {
+                throw new \Exception('You have not started a Tournament.', 422);
             }
-        } else {
-            // Else send a 422
+        } catch(\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'You currently don\'t have a Tournament in progress'
-            ], 422);
+                'message' => $e->getMessage()
+            ], $e->getCode());
         }
     }
 
@@ -101,7 +106,12 @@ class LiveTournamentController extends Controller
             $tournament = auth()->user()->liveTournament();
 
             if ($tournament) {
-                
+
+                // If start_time was provided, check it doesn't clash with an exisiting tournament.
+                if ($request->start_time && auth()->user()->tournamentsAtTime($request->start_time) > 0) {
+                    throw new \Exception('You already have another tournament at that time.', 422);
+                }
+
                 $tournament->update($request->validated());
 
                 return response()->json([

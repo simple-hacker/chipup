@@ -14,8 +14,8 @@ class EndSessionRequest extends FormRequest
     public function rules()
     {
         return [
-            'end_time' => 'nullable|date|before_or_equal:now',
-            'amount' => 'required|numeric|min:0'
+            'end_time' => 'sometimes|date|before_or_equal:now',
+            'amount' => 'sometimes|numeric|min:0'
         ];
     }
 }

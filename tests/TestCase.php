@@ -41,13 +41,6 @@ abstract class TestCase extends BaseTestCase
         ]);
     }
 
-    protected function startLiveTournament($user = null)
-    {
-        // In User.php startTournament does not have default values
-        // So need to add them here.
-        return $this->signIn($user)->startTournament($this->getLiveTournamentAttributes());
-    }
-
     protected function getLiveCashGameAttributes($amount = 1000, $start_time = null) {
 
         $attributes = [
@@ -55,7 +48,6 @@ abstract class TestCase extends BaseTestCase
             'stake_id' => Stake::inRandomOrder()->first()->id,
             'variant_id' => Variant::inRandomOrder()->first()->id,
             'limit_id' => Limit::inRandomOrder()->first()->id,
-            'prize_pool' => 1500,
             'table_size_id' => TableSize::inRandomOrder()->first()->id,
             'location' => 'Casino MK',
         ];
@@ -93,6 +85,13 @@ abstract class TestCase extends BaseTestCase
         return $attributes;
     }
 
+    protected function startLiveTournament($user = null)
+    {
+        // In User.php startTournament does not have default values
+        // So need to add them here.
+        return $this->signIn($user)->startTournament($this->getLiveTournamentAttributes());
+    }
+
     protected function getLiveTournamentAttributes($amount = 1000, $start_time = null) {
 
         $attributes = [
@@ -100,6 +99,7 @@ abstract class TestCase extends BaseTestCase
             'name' => 'FU Flip',
             'variant_id' => Variant::inRandomOrder()->first()->id,
             'limit_id' => Limit::inRandomOrder()->first()->id,
+            'prize_pool' => rand(1000, 5000),
             'entries' => rand(30,500),
             'location' => 'Casino MK',
         ];
