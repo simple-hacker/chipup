@@ -60,18 +60,20 @@ abstract class TestCase extends BaseTestCase
         return $attributes;
     }
 
-    protected function getCashGameAttributes($amount = 1000, $start_time = null, $end_time = null) {
+    protected function getCashGameAttributes($amount = 1000, $time = null)
+    {
+        $start_time = $time ? Carbon::create($time) : Carbon::create('-4 hours');
 
         $attributes = [
-            'start_time' => $start_time ?? Carbon::create('-4 hour')->toDateTimeString(),
-            'stake_id' => 1,
-            'limit_id' => 1,
-            'variant_id' => 1,
-            'table_size_id' => 1,
+            'start_time' => $start_time->toDateTimeString(),
+            'stake_id' => Stake::inRandomOrder()->first()->id,
+            'limit_id' => Limit::inRandomOrder()->first()->id,
+            'variant_id' => Variant::inRandomOrder()->first()->id,
+            'table_size_id' => TableSize::inRandomOrder()->first()->id,
             'location' => 'CasinoMK',
-            'end_time' => $end_time ?? Carbon::create('-1 hour')->toDateTimeString(),
+            'end_time' => $start_time->copy()->addMinutes(30)->toDateTimeString(),
             'buy_ins' => [
-                ['amount' => $amount]
+                ['amount' => $amount],
             ],
             'expenses' => [
                 ['amount' => 400],
@@ -92,8 +94,8 @@ abstract class TestCase extends BaseTestCase
         return $this->signIn($user)->startTournament($this->getLiveTournamentAttributes());
     }
 
-    protected function getLiveTournamentAttributes($amount = 1000, $start_time = null) {
-
+    protected function getLiveTournamentAttributes($amount = 1000, $start_time = null)
+    {
         $attributes = [
             'amount' => $amount,
             'name' => 'FU Flip',
@@ -112,10 +114,12 @@ abstract class TestCase extends BaseTestCase
         return $attributes;
     }
 
-    protected function getTournamentAttributes($amount = 1000, $start_time = null, $end_time = null) {
+    protected function getTournamentAttributes($amount = 1000, $time = null)
+    {
+        $start_time = $time ? Carbon::create($time) : Carbon::create('-4 hours');
 
         $attributes = [
-            'start_time' => $start_time ?? Carbon::create('-4 hour')->toDateTimeString(),
+            'start_time' => $start_time->toDateTimeString(),
             'name' => 'FU Flip',
             'limit_id' => 1,
             'variant_id' => 1,
@@ -123,7 +127,7 @@ abstract class TestCase extends BaseTestCase
             'position' => 5,
             'entries' => 110,
             'location' => 'CasinoMK',
-            'end_time' => $end_time ?? Carbon::create('-1 hour')->toDateTimeString(),
+            'end_time' => $start_time->copy()->addMinutes(30)->toDateTimeString(),
             'buy_in' => [
                 ['amount' => $amount]
             ],

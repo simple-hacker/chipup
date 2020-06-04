@@ -442,7 +442,6 @@ class LiveCashGameTest extends TestCase
 
     // User can end a live cash.
     // If no end_time is provided then it defaults to now().
-    // Assert CashOut transaction was created and equal to the amount provided.
     public function testUserCanEndACashGame()
     {
         $user = $this->signIn();

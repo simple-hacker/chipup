@@ -10,40 +10,101 @@ class TournamentTest extends TestCase
 {
     use RefreshDatabase;
 
-    // User must be logged in create/view/update/delete tournament
+    /*
+    * ==================================
+    * INDEX
+    * ==================================
+    */
+
+    // User must be logged in create/view/view all/update/delete tournament
 
     // User can create a tournament
     // Data must be valid when creating
+    // Start time cannot be in the future
+    // End time cannot be in the future
+    // End time cannot be before start time
+    // Start time and end time can be the same
+    // Start time and end time can be exactly now
+    // Cannot add tournament which clashes with another tournament
+    // User can add a completed tournament with start time before a current live tournament
+    // User cannot add a completed tournament if start_time clashes with a live tournament
+
+    // BuyIn must be supplied
+    // Cannot add multiple BuyIns
     // BuyIn can be zero
     // BuyIn must be valid.
-    // Start date cannot be in the future
-    // End date cannot be before start date
-    // Cannot add tournament which clases with another tournament
 
     // Expenses can be supplied when creating a tournament
+    // Expenses are optional
     // Expenses must be valid
     // Rebuys can be supplied when creating a tournament
+    // Rebuys are optional
     // Rebuys must be valid
-    // Rebuys can be supplied when creating a tournament
-    // Rebuys must be valid
+    // AddOns can be supplied when creating a tournament
+    // AddOns are optional
+    // AddOns must be valid
 
     // Cash Out can be provided when creating a tournament
+    // If CashOut not supplied then a CashOut is created with amount zero
+    // Cash Out amount can be zero
     // Cash Out must be valid
-    // If CashOut not supplied then a CashOut is created with amount
 
-    // User can update Tournament
+    // User can view all their tournaments
+    // User can view their tournament
+    // Tournament must exist when viewing
+    // User cannot view another user's tournament
+
+    // User can update tournament
+    // tournament must exist when updating
     // User cannot update another user's tournament
     // Data must be valid when updating tournament
-    // Start date cannot be in the future
-    // End date cannot be before start date
-    // Cannot update tournament with new times which clases with another tournament
-
-    // User can view their tournament
-    // User can view all their tournaments
-    // User cannot view another user's tournaments
+    // Start time cannot be in the future when updating
+    // End time cannot be in the future when updating.
+    // Providing both start and end time, end time cannot be before start time
+    // Start time and end time can be the same
+    // Start time and end time can be exactly now
+    // Only providing end time, it cannot be before tournament's start time
+    // Only providing start time, it cannot be after tournament's end time
+    // Cannot update tournament with new start time that clashes with another tournament
 
     // User can delete their tournament
+    // Tournament must exist when deleting
     // User cannot delete another user's tournament
+
+
+    /*
+    * ==================================
+    * TEST
+    * ==================================
+    */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -58,7 +119,6 @@ class TournamentTest extends TestCase
 
 
     
-
     public function testAUserCanGetAllTheirTournamentsAsJson()
     {   
         $user = $this->signIn();
@@ -167,10 +227,7 @@ class TournamentTest extends TestCase
     {     
         $tournament = $this->signIn()->startTournament($this->getTournamentAttributes());
         $tournament->end();
-
-        // Empty data is valid
-        $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [])->assertOk();
-
+        
         // Variant Id must exist in variants table
         $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [
             'variant_id' => 999
@@ -197,6 +254,9 @@ class TournamentTest extends TestCase
             'start_time' => Carbon::create('-10 minutes')->toDateTimeString(),
             'end_time' => Carbon::create('-10 minutes')->toDateTimeString(),
         ])->assertStatus(422);
+
+        // Empty data is valid
+        $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), [])->assertOk();
     }
 
     public function testAUserCanDeleteTheirTournament()
