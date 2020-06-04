@@ -236,6 +236,8 @@ class CashGameTest extends TestCase
     // Start time and end time can be the same when creating
     public function testStartTimeAndEndTimeCanTheSameWhenCreating()
     {
+        $this->withoutExceptionHandling();
+        
         $this->signIn();
         
         $attributes = $this->getCashGameAttributes();

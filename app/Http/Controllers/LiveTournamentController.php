@@ -6,7 +6,7 @@ use App\Http\Requests\EndSessionRequest;
 use App\Http\Requests\StartTournamentRequest;
 use App\Http\Requests\UpdateLiveTournamentRequest;
 
-class LiveTournamentController extends Controller
+class LiveTournamentController extends GameController
 {
 /**
     * POST method for starting a Tournament for the authenticated user
@@ -43,17 +43,14 @@ class LiveTournamentController extends Controller
     public function current()
     {
         try {
-            $tournament = auth()->user()->liveTournament();
+            $tournament = auth()->user()->liveTournament() ?? $this->throwLiveTournamentNotStartedException();
 
-            if ($tournament) {
-                return response()->json([
-                    'success' => true,
-                    'status' => 'live',
-                    'tournament' => $tournament
-                ]);
-            } else {
-                throw new \Exception('You have not started a Tournament.', 422);
-            }
+            return response()->json([
+                'success' => true,
+                'status' => 'live',
+                'tournament' => $tournament
+            ]);
+
         } catch(\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -71,20 +68,16 @@ class LiveTournamentController extends Controller
     public function end(EndSessionRequest $request)
     {
         try {
-            $tournament = auth()->user()->liveTournament();
+            $tournament = auth()->user()->liveTournament() ?? $this->throwLiveTournamentNotStartedException();
 
-            if ($tournament) {
+            $tournament->endAndCashOut($request->end_time, $request->amount ?? 0);
 
-                $tournament->endAndCashOut($request->end_time, $request->amount ?? 0);
+            return response()->json([
+                'success' => true,
+                'status' => 'live',
+                'tournament' => $tournament
+            ]);
 
-                return response()->json([
-                    'success' => true,
-                    'status' => 'live',
-                    'tournament' => $tournament
-                ]);
-            } else {
-                throw new \Exception('You have not started a Tournament.', 422);
-            }
         } catch(\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -103,24 +96,17 @@ class LiveTournamentController extends Controller
     public function update(UpdateLiveTournamentRequest $request)
     {
         try {
-            $tournament = auth()->user()->liveTournament();
+            $tournament = auth()->user()->liveTournament() ?? $this->throwLiveTournamentNotStartedException();
 
-            if ($tournament) {
+            $this->checkIfRequestTimesClashWithAnotherTournament();
 
-                // If start_time was provided, check it doesn't clash with an exisiting tournament.
-                if ($request->start_time && auth()->user()->tournamentsAtTime($request->start_time) > 0) {
-                    throw new \Exception('You already have another tournament at that time.', 422);
-                }
+            $tournament->update($request->validated());
 
-                $tournament->update($request->validated());
+            return response()->json([
+                'success' => true,
+                'tournament' => $tournament->fresh()
+            ]);
 
-                return response()->json([
-                    'success' => true,
-                    'tournament' => $tournament->fresh()
-                ]);
-            } else {
-                throw new \Exception('You have not started a Tournament.', 422);
-            }
         } catch(\Exception $e) {
             return response()->json([
                 'success' => false,

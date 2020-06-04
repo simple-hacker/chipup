@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\EndSessionRequest;
 use App\Http\Requests\StartCashGameRequest;
 use App\Http\Requests\UpdateCashGameRequest;
 use App\Http\Requests\UpdateLiveCashGameRequest;
 
-class LiveCashGameController extends Controller
+class LiveCashGameController extends GameController
 {
 /**
     * POST method for starting a Cash Game for the authenticated user
@@ -21,7 +20,7 @@ class LiveCashGameController extends Controller
         try {
             $cash_game = auth()->user()->startCashGame($request->validated());
 
-            // request->amount is required but set to 0 in case something goes wrong
+            // Amount is required in request, but using null coalescing to zero just in case
             $cash_game->addBuyIn($request->amount ?? 0);
 
             return [
@@ -44,17 +43,14 @@ class LiveCashGameController extends Controller
     public function current()
     {
         try {
-            $cashGame = auth()->user()->liveCashGame();
+            $cashGame = auth()->user()->liveCashGame() ?? $this->throwLiveCashGameNotStartedException();
 
-            if ($cashGame) {
-                return response()->json([
-                    'success' => true,
-                    'status' => 'live',
-                    'cash_game' => $cashGame
-                ]);
-            } else {
-                throw new \Exception('You have not started a Cash Game.', 422);
-            }
+            return response()->json([
+                'success' => true,
+                'status' => 'live',
+                'cash_game' => $cashGame
+            ]);
+
         } catch(\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -72,20 +68,16 @@ class LiveCashGameController extends Controller
     public function end(EndSessionRequest $request)
     {
         try {
-            $cashGame = auth()->user()->liveCashGame();
+            $cashGame = auth()->user()->liveCashGame() ?? $this->throwLiveCashGameNotStartedException();
 
-            if ($cashGame) {
+            $cashGame->endAndCashOut($request->end_time, $request->amount ?? 0);
 
-                $cashGame->endAndCashOut($request->end_time, $request->amount ?? 0);
-
-                return response()->json([
-                    'success' => true,
-                    'status' => 'live',
-                    'cash_game' => $cashGame
-                ]);
-            } else {
-                throw new \Exception('You have not started a Cash Game.', 422);
-            }
+            return response()->json([
+                'success' => true,
+                'status' => 'live',
+                'cash_game' => $cashGame
+            ]);
+            
         } catch(\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -97,31 +89,24 @@ class LiveCashGameController extends Controller
     /**
     * PATCH method to update specific cash game
     *
-    * @param CashGame $cash_game
+    * @param CashGame $cashGame
     * @param UpdateCashGameRequest $request
     * @return json
     */
     public function update(UpdateLiveCashGameRequest $request)
     {
         try {
-            $cash_game = auth()->user()->liveCashGame();
+            $cashGame = auth()->user()->liveCashGame() ?? $this->throwLiveCashGameNotStartedException();
 
-            if ($cash_game) {
+            $this->checkIfRequestTimesClashWithAnotherCashGame();
+            
+            $cashGame->update($request->validated());
 
-                // If start_time was provided, check it doesn't clash with an exisiting cash game.
-                if ($request->start_time && auth()->user()->cashGamesAtTime($request->start_time) > 0) {
-                    throw new \Exception('You already have another cash game at that time.', 422);
-                }
-                
-                $cash_game->update($request->validated());
-
-                return response()->json([
-                    'success' => true,
-                    'cash_game' => $cash_game->fresh()
-                ]);
-            } else {
-                throw new \Exception('You have not started a Cash Game.', 422);
-            }
+            return response()->json([
+                'success' => true,
+                'cash_game' => $cashGame->fresh()
+            ]);
+            
         } catch(\Exception $e) {
             return response()->json([
                 'success' => false,
