@@ -25,7 +25,7 @@ class CreateTournamentRequest extends FormRequest
             'end_time' =>'required|date|before_or_equal:now',
             'comments' => 'sometimes|nullable|string',
 
-            'buy_ins.*.amount' => 'required|numeric|min:0',
+            'buy_in.amount' => 'required|numeric|min:0',
 
             'expenses.*.amount' => 'required_with:expenses.*.comments|numeric|min:0|not_in:0',
             'expenses.*.comments' => 'sometimes|nullable|string',
@@ -38,7 +38,7 @@ class CreateTournamentRequest extends FormRequest
         ];
 
         if ($this->input('start_time') && $this->input('end_time')) {
-            $rules['end_time'] .= '|after:start_time';
+            $rules['end_time'] .= '|after_or_equal:start_time';
         }
     
         return $rules;

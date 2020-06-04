@@ -128,9 +128,7 @@ abstract class TestCase extends BaseTestCase
             'entries' => 110,
             'location' => 'CasinoMK',
             'end_time' => $start_time->copy()->addMinutes(30)->toDateTimeString(),
-            'buy_in' => [
-                ['amount' => $amount]
-            ],
+            'buy_in' => ['amount' => $amount],
             'rebuys' => [
                 ['amount' => ($amount/2)]
             ],

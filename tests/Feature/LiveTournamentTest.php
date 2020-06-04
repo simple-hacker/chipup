@@ -101,7 +101,7 @@ class LiveTournamentTest extends TestCase
     {
         $this->signIn();
 
-        $validAttributes = $this->getLiveCashGameAttributes();
+        $validAttributes = $this->getLiveTournamentAttributes();
 
         // variant must be supplied
         $attributes = $validAttributes;
@@ -140,7 +140,18 @@ class LiveTournamentTest extends TestCase
         // Delete Tournaments after every assertOk because we can only have one Live session at a time.
         $this->signIn();
 
-        $validAttributes = $this->getLiveCashGameAttributes();
+        $validAttributes = $this->getLiveTournamentAttributes();
+
+        // name is optional
+        $attributes = $validAttributes;
+        unset($attributes['name']);
+        $this->postJson(route('tournament.live.start'), $attributes)->assertOk();
+
+        // name must be an string
+        Tournament::first()->delete();
+        $attributes = $validAttributes;
+        $attributes['name'] = 100;
+        $this->postJson(route('tournament.live.start'), $attributes)->assertStatus(422);
 
         // entries is optional
         $attributes = $validAttributes;
@@ -253,7 +264,7 @@ class LiveTournamentTest extends TestCase
             'end_time' => $dateTime->copy()->addHours(2)->toDateTimeString()
         ]);
 
-        $validAttributes = $this->getLiveCashGameAttributes();
+        $validAttributes = $this->getLiveTournamentAttributes();
 
         // Try starting one at 13:00 (30 minutes after other tournament start_time)
         $attributes = $validAttributes;
@@ -278,7 +289,7 @@ class LiveTournamentTest extends TestCase
         $user = $this->signIn();
 
         // Start a live tournament
-        $attributes = $this->getLiveCashGameAttributes();
+        $attributes = $this->getLiveTournamentAttributes();
         $attributes['amount'] = 1000;
         $this->postJson(route('tournament.live.start'), $attributes)->assertOk();
 
@@ -295,7 +306,7 @@ class LiveTournamentTest extends TestCase
         $this->signIn();
 
         // Start a live tournament
-        $attributes = $this->getLiveCashGameAttributes();
+        $attributes = $this->getLiveTournamentAttributes();
         $attributes['amount'] = 0;
         $this->postJson(route('tournament.live.start'), $attributes)->assertOk();
     }
@@ -307,7 +318,7 @@ class LiveTournamentTest extends TestCase
         $user = $this->signIn();
 
         // Start a live tournament
-        $attributes = $this->getLiveCashGameAttributes();
+        $attributes = $this->getLiveTournamentAttributes();
         unset($attributes['amount']);
         $this->postJson(route('tournament.live.start'), $attributes)->assertOk();
 
@@ -323,7 +334,7 @@ class LiveTournamentTest extends TestCase
     {
         $this->signIn();
 
-        $validAttributes = $this->getLiveCashGameAttributes();
+        $validAttributes = $this->getLiveTournamentAttributes();
 
         // Amount must be an integer.
         $attributes = $validAttributes;
@@ -382,7 +393,7 @@ class LiveTournamentTest extends TestCase
         $user = $this->signIn();
 
         // Start a Live Tournament
-        $attributes = $this->getLiveCashGameAttributes();
+        $attributes = $this->getLiveTournamentAttributes();
         $this->postJson(route('tournament.live.start'), $attributes)->assertOk();
 
         $updatedAttributes = [
@@ -442,7 +453,7 @@ class LiveTournamentTest extends TestCase
         // All of this data is sometimes present, but not nullable and must be valid is supplied.
         $this->signIn();
 
-        $validAttributes = $this->getLiveCashGameAttributes();
+        $validAttributes = $this->getLiveTournamentAttributes();
         $this->postJson(route('tournament.live.start'), $validAttributes)->assertOk();
 
         // start_time must be valid if supplied
@@ -451,6 +462,11 @@ class LiveTournamentTest extends TestCase
         $this->patchJson(route('tournament.live.update'), $attributes)->assertStatus(422);
         $attributes = $validAttributes;
         $attributes['start_time'] = 'Invalid date';
+        $this->patchJson(route('tournament.live.update'), $attributes)->assertStatus(422);
+
+        // name must be a string
+        $attributes = $validAttributes;
+        $attributes['name'] = 999;
         $this->patchJson(route('tournament.live.update'), $attributes)->assertStatus(422);
 
         // variant must exist in database
@@ -480,7 +496,7 @@ class LiveTournamentTest extends TestCase
         // All of this data is sometimes present, but can be nullable if supplied.
         $this->signIn();
 
-        $validAttributes = $this->getLiveCashGameAttributes();
+        $validAttributes = $this->getLiveTournamentAttributes();
         $this->postJson(route('tournament.live.start'), $validAttributes)->assertOk();
 
         // prize_pool must be integer if supplied
@@ -527,7 +543,7 @@ class LiveTournamentTest extends TestCase
     {
         $this->signIn();
 
-        $validAttributes = $this->getLiveCashGameAttributes();
+        $validAttributes = $this->getLiveTournamentAttributes();
         $this->postJson(route('tournament.live.start'), $validAttributes)->assertOk();
 
         $attributes = $validAttributes;
@@ -549,7 +565,7 @@ class LiveTournamentTest extends TestCase
         ]);
 
         // Start a Live Tournament now which is valid
-        $validAttributes = $this->getLiveCashGameAttributes();
+        $validAttributes = $this->getLiveTournamentAttributes();
         $this->postJson(route('tournament.live.start'), $validAttributes)->assertOk();
 
         $start_time = $dateTime->copy()->addMinutes(30)->toDateTimeString();
@@ -584,7 +600,7 @@ class LiveTournamentTest extends TestCase
 
         // Start a tournament an hour ago
         $start_time = Carbon::create('-1 hour');
-        $this->postJson(route('tournament.live.start'), $this->getLiveCashGameAttributes(1000, $start_time->toDateTimeString()))->assertOk();
+        $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes(1000, $start_time->toDateTimeString()))->assertOk();
 
         // End the tournament 30 minutes later.
         $end_time = $start_time->copy()->addMinutes(30);
