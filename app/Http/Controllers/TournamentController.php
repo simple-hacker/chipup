@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Tournament;
+use Illuminate\Support\Carbon;
 use App\Http\Requests\CreateTournamentRequest;
 use App\Http\Requests\UpdateTournamentRequest;
 
@@ -36,7 +37,7 @@ class TournamentController extends Controller
             }
             
             $tournamentAttributes = $request->validated();
-            unset($tournamentAttributes['buy_ins'], $tournamentAttributes['cash_out_model'], $tournamentAttributes['expenses'], $tournamentAttributes['rebuys'], $tournamentAttributes['add_ons']);
+            unset($tournamentAttributes['buy_in'], $tournamentAttributes['cash_out_model'], $tournamentAttributes['expenses'], $tournamentAttributes['rebuys'], $tournamentAttributes['add_ons']);
 
             $tournament = auth()->user()->tournaments()->create($tournamentAttributes);
             
@@ -111,12 +112,40 @@ class TournamentController extends Controller
     {
         $this->authorize('manage', $tournament);
 
-        $tournament->update($request->validated());
+        try {
+            // If only start time was provided, make sure it's after the saved end time.
+            if ($request->start_time && !$request->end_time) {
+                if (Carbon::create($request->start_time) > $tournament->end_time) {
+                    throw new \Exception('Start time cannot be after end time', 422);
+                }
+            }
+
+            // If only end time is provided, make sure it's before the saved start time
+            if ($request->end_time && !$request->start_time) {
+                if (Carbon::create($request->end_time) < $tournament->start_time) {
+                    throw new \Exception('End time cannot be before start time', 422);
+                }
+            }
+
+            // If trying to update start time, make sure it doesn't clash with another tournament
+            if ($request->start_time && auth()->user()->tournamentsAtTime($request->start_time) > 0) {
+                throw new \Exception('You already have another tournament at that time.', 422);
+            }
+    
+            // Update the tournament with the validated request
+            $tournament->update($request->validated());
         
-        return response()->json([
-            'success' => true,
-            'tournament' => $tournament->fresh()
-        ]);
+            return response()->json([
+                'success' => true,
+                'tournament' => $tournament->fresh()
+            ]);
+
+        } catch(\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], $e->getCode());
+        }
     }
 
     /**

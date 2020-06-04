@@ -16,7 +16,7 @@ $factory->define(Tournament::class, function (Faker $faker) {
     $entries = $faker->numberBetween(50, 500);
 
     return [
-        'user_id' => User::all()->random()->id,
+        'user_id' => factory('App\User')->create(),
         'limit_id' => Limit::all()->random()->id,
         'variant_id' => Variant::all()->random()->id,
         'name' => $faker->sentence(3, true),

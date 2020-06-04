@@ -17,7 +17,7 @@ $factory->define(CashGame::class, function (Faker $faker) {
     $end_time = $start_time->copy()->addMinutes(rand(10, 2880));
 
     return [
-        'user_id' => User::all()->random()->id,
+        'user_id' => factory('App\User')->create(),
         'stake_id' => Stake::all()->random()->id,
         'limit_id' => Limit::all()->random()->id,
         'variant_id' => Variant::all()->random()->id,

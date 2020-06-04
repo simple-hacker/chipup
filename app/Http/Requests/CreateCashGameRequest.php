@@ -32,7 +32,7 @@ class CreateCashGameRequest extends FormRequest
         ];
 
         if ($this->input('start_time') && $this->input('end_time')) {
-            $rules['end_time'] .= '|after:start_time';
+            $rules['end_time'] .= '|after_or_equal:start_time';
         }
 
         return $rules;

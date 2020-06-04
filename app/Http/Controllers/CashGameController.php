@@ -103,12 +103,40 @@ class CashGameController extends Controller
     {
         $this->authorize('manage', $cash_game);
 
-        $cash_game->update($request->validated());
+        try {
+            // If only start time was provided, make sure it's after the saved end time.
+            if ($request->start_time && !$request->end_time) {
+                if (Carbon::create($request->start_time) > $cash_game->end_time) {
+                    throw new \Exception('Start time cannot be after end time', 422);
+                }
+            }
 
-        return response()->json([
-            'success' => true,
-            'cash_game' => $cash_game->fresh()
-        ]);
+            // If only end time is provided, make sure it's before the saved start time
+            if ($request->end_time && !$request->start_time) {
+                if (Carbon::create($request->end_time) < $cash_game->start_time) {
+                    throw new \Exception('End time cannot be before start time', 422);
+                }
+            }
+
+            // If trying to update start time, make sure it doesn't clash with another cash game
+            if ($request->start_time && auth()->user()->cashGamesAtTime($request->start_time) > 0) {
+                throw new \Exception('You already have another cash game at that time.', 422);
+            }
+    
+            // Update the cash game with the validated request
+            $cash_game->update($request->validated());
+    
+            return response()->json([
+                'success' => true,
+                'cash_game' => $cash_game->fresh()
+            ]);
+
+        } catch(\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], $e->getCode());
+        }
     }
 
     /**
