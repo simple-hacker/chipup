@@ -13,8 +13,6 @@ class StartCashGameRequest extends FormRequest
      */
     public function rules()
     {
-        // TODO: Validate, start_time cannot be during another session that exists.
-
         return [
             'start_time' => 'sometimes|nullable|date|before_or_equal:now',
             'amount' => 'required|numeric|min:0|not_in:0',

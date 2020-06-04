@@ -12,6 +12,9 @@ abstract class Game extends Model
     protected $casts = [
         'user_id' => 'integer',
         'profit' => 'float',
+        'prize_pool' => 'integer',
+        'position' => 'integer',
+        'entries' => 'integer',
     ];
 
     protected $dates = [

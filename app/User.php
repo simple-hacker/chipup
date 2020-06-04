@@ -123,6 +123,11 @@ class User extends Authenticatable
             throw new CashGameInProgress('A Cash Game is already in progress.');
         }
 
+        // If start_time was provided check to see if it clashes with another tournament
+        if (isset($attributes['start_time']) && ($this->cashGamesAtTime($attributes['start_time']) > 0)) {
+            throw new \Exception('You already have another tournament at that time.', 422);
+        }
+
         // All default values attributes are required in the StartCashGameRequest
         // Using defaults if not set in case mistakes have been made elsewhere in app.
         return $this->cashGames()->create([
@@ -154,10 +159,10 @@ class User extends Authenticatable
     * Returns a collection of Cash Games where provided time is between start_time and end_time
     * This is used to prevent adding a completed cash game between an already existing cash game.
     * 
-    * @param Carbon $time
-    * @return hasMany
+    * @param String $time
+    * @return integer
     */
-    public function cashGamesAtTime($time = null)
+    public function cashGamesAtTime($time = null) : int
     {
         $start_time = $time ? Carbon::create($time) : now();
         
@@ -230,10 +235,10 @@ class User extends Authenticatable
     * Returns a collection of Tournaments where provided time is between start_time and end_time
     * This is used to prevent adding a completed tournament between an already existing tournament.
     * 
-    * @param Carbon $time
-    * @return hasMany
+    * @param String $time
+    * @return int
     */
-    public function tournamentsAtTime($time = null)
+    public function tournamentsAtTime($time = null) : int
     {
         $start_time = $time ? Carbon::create($time) : now();
 

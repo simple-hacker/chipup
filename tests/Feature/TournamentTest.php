@@ -2,11 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Tournament;
-use App\Attributes\Limit;
-use App\Attributes\Variant;
-use App\Attributes\TableSize;
-use App\Transactions\CashOut;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

@@ -4,10 +4,6 @@ namespace Tests\Feature;
 
 use App\CashGame;
 use Tests\TestCase;
-use App\Attributes\Limit;
-use App\Attributes\Stake;
-use App\Attributes\Variant;
-use App\Attributes\TableSize;
 use App\Transactions\CashOut;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,484 +12,604 @@ class LiveCashGameTest extends TestCase
 {
     use RefreshDatabase;
 
+    // User must be logged in start/view/update/end live cash game
     public function testUserMustBeLoggedInToStartCashGame()
     {
-        factory('App\User')->create();
-
-        $this->postJson(route('cash.live.start'))
-                ->assertUnauthorized();
-
-        $this->getJson(route('cash.live.current'))
-                ->assertUnauthorized();
+        $this->postJson(route('cash.live.start'))->assertUnauthorized();
+        $this->getJson(route('cash.live.current'))->assertUnauthorized();
+        $this->getJson(route('cash.live.update'))->assertUnauthorized();
+        $this->getJson(route('cash.live.end'))->assertUnauthorized();
     }
-
+    
+    // User can start a live cash game
     public function testUserCanStartALiveCashGame()
-    {     
+    {   
         $user = $this->signIn();
 
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())
-                ->assertOk()
-                ->assertJsonStructure(['success', 'cash_game'])
-                ->assertJson([
-                    'success' => true
-                ]);
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())->assertOk();
 
         $this->assertCount(1, CashGame::all());
-        $cash_game = CashGame::first();
-        $this->assertEquals($user->id, $cash_game->user_id);
+        $cashGame = CashGame::first();
+        $this->assertTrue($cashGame->user->is($user));
     }
 
+    // User cannot start another cash game if there is one already live
+    public function testUserCannotStartLiveCashGameIfOneIsInProgress()
+    {   
+        $this->signIn();
+
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())->assertOk();
+
+        // Starting another cash game will result in 422
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())->assertStatus(422);
+    }
+
+    // Required data must be valid when starting
+    public function testCashGameAttributesMustBeValidWhenStarting()
+    {
+        $this->signIn();
+
+        $validAttributes = $this->getLiveCashGameAttributes();
+
+        // stake must be supplied
+        $attributes = $validAttributes;
+        unset($attributes['stake_id']);
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        // stake must exist in database
+        $attributes = $validAttributes;
+        $attributes['variant_id'] = 999;
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        // variant must be supplied
+        $attributes = $validAttributes;
+        unset($attributes['variant_id']);
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        // variant must exist in database
+        $attributes = $validAttributes;
+        $attributes['variant_id'] = 999;
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        // limit must be supplied
+        $attributes = $validAttributes;
+        unset($attributes['limit_id']);
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        // limit must exist in database
+        $attributes = $validAttributes;
+        $attributes['limit_id'] = 999;
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        // table_size must be supplied
+        $attributes = $validAttributes;
+        unset($attributes['table_size_id']);
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        // table_size must exist in database
+        $attributes = $validAttributes;
+        $attributes['table_size_id'] = 999;
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        // location must be supplied
+        $attributes = $validAttributes;
+        unset($attributes['location']);
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        // location must be a string
+        $attributes = $validAttributes;
+        $attributes['location'] = 999;
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+    }
+
+    public function testNonRequiredCashGameAttributesAreOptionalAndValidWhenStarting()
+    {
+        // CashGames do not have any non required attributes
+        $this->assertTrue(true);
+    }
+    
+    // User can start at a specified time.
     public function testUserCanStartACashGameAtASpecifiedTime()
     {
         $user = $this->signIn();
 
         // We'll be passing a Y-m-d H:i:s string from the front end.
-        $start_time = Carbon::create('-2 hours')->toDateTimeString();
+        $start_time = Carbon::create('-1 second')->toDateTimeString();
 
         $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $start_time));
-        $cash_game = CashGame::first();
 
-        $this->assertEquals($start_time, $cash_game->start_time);
+        $this->assertEquals($start_time, $user->cashGames()->first()->start_time);
     }
 
+    // If no start time is provided then it starts at current time.
+    public function testIfNoStartTimeProvidedThenStartCashGameAtCurrentTime()
+    {
+        $user = $this->signIn();
+
+        // getLiveCashGameAttributes without the start_time parameter has start_time already unset
+        $attributes = $this->getLiveCashGameAttributes();
+        unset($attributes['start_time']);
+
+        $this->postJson(route('cash.live.start'), $attributes);
+
+        // Set microseconds of now to 0 because microseconds are not saved in database
+        $this->assertEquals(now()->micro(0), $user->cashGames()->first()->start_time);
+    }
+
+    // start date cannot be in the future
     public function testUserCannotStartACashGameInTheFuture()
     {
-        $user = $this->signIn();
+        $this->signIn();
 
-        // We'll be passing a Y-m-d H:i:s string from the front end.
-        $start_time = Carbon::create('+1 hours')->toDateTimeString();
+        $attributes = $this->getLiveCashGameAttributes();
+        $attributes['start_time'] = Carbon::create('+1 seconds')->toDateTimeString();
 
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $start_time))
-                ->assertStatus(422);
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
     }
 
-    public function testUserCanGetTheirCurrentLiveCashGame()
+    // Start time must be valid
+    public function testStartTimeMustBeValid()
+    {
+        $this->signIn();
+
+        $validAttributes = $this->getLiveCashGameAttributes();
+
+        $attributes = $validAttributes;
+        $attributes['start_time'] = 'Not a date';
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        $attributes = $validAttributes;
+        $attributes['start_time'] = 999;
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        $attributes = $validAttributes;
+        $attributes['start_time'] = true;
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        // Null is valid as it will use current date and time.
+    }
+
+    // Cannot start a cash game which clashes with another cash game
+    public function testStartTimeCannotClashWithAnotherCashGame()
+    {
+        // NOTE: Clashes can still occur, if you start one a second before another cash game's start time
+        // then it will overrun in to the other cash.
+        // But then cashGamesAtTime will return more than 1 which is still > 0
+
+        $user = $this->signIn();
+        $dateTime = Carbon::create(2020, 05, 01, 12, 0, 0);
+
+        // Add CashGame to database with times 1st May 2020 12:30 - 14:30
+        factory('App\CashGame')->create([
+            'user_id' => $user->id,
+            'start_time' => $dateTime->toDateTimeString(),
+            'end_time' => $dateTime->copy()->addHours(2)->toDateTimeString()
+        ]);
+
+        $validAttributes = $this->getLiveCashGameAttributes();
+
+        // Try starting one at 13:00 (30 minutes after other cash game start_time)
+        $attributes = $validAttributes;
+        $attributes['start_time'] = $dateTime->copy()->addMinutes(30);
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        // Try starting on exactly the start_time
+        $attributes = $validAttributes;
+        $attributes['start_time'] = $dateTime->toDateTimeString();
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        // Try starting on exactly the end_time
+        $attributes = $validAttributes;
+        $attributes['start_time'] = $dateTime->copy()->addHours(2)->toDateTimeString();
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+    }
+
+    // A BuyIn Can be provided when starting a cash game
+    // This has already been tested in testUserCanStartALiveCashGame
+    public function testABuyInCanBeSuppliedWhenStartingACashGame()
     {
         $user = $this->signIn();
-        // Start CashGame
-        $this->post(route('cash.live.start'), $this->getLiveCashGameAttributes());
 
-        $response = $this->getJson(route('cash.live.current'))
-                            ->assertJsonStructure(['success', 'status', 'cash_game'])
-                            ->assertJson([
-                                'success' => true,
-                                'status' => 'live'
-                            ])
-                            ->assertOk();
+        // Start a live cash game
+        $attributes = $this->getLiveCashGameAttributes();
+        $attributes['amount'] = 1000;
+        $this->postJson(route('cash.live.start'), $attributes)->assertOk();
 
-        $this->assertEquals($response->json()['status'], 'live');
-        $this->assertEquals($response->json()['cash_game'], $user->liveCashGame()->toArray());
+        $cashGame = $user->cashGames()->first();
+        // Check BuyIn was created
+        $this->assertCount(1, $cashGame->buyIns);
+        // Check the amount of the BuyIn is 1000.
+        $this->assertEquals(1000, $cashGame->buyIns->first()->amount);
     }
 
-    public function testGettingUsersLiveCashGameWhenNotStartedResultsInNull()
+    // BuyIn CANNOT be zero for CashGames
+    public function testABuyInCannotBeZeroForFreerollCashGames()
+    {
+        $this->signIn();
+
+        // Start a live cash game
+        $attributes = $this->getLiveCashGameAttributes();
+        $attributes['amount'] = 0;
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+    }
+
+    // BuyIn amount must be provided when starting a Cash Game.
+    public function testBuyInAmountIsRequired()
+    {
+        $user = $this->signIn();
+
+        // Start a live cash game without providing amount
+        $attributes = $this->getLiveCashGameAttributes();
+        unset($attributes['amount']);
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+    }
+
+    // BuyIn must be valid
+    public function testTheBuyInAmountMustBeValidWhenStartingACashGame()
+    {
+        $this->signIn();
+
+        $validAttributes = $this->getLiveCashGameAttributes();
+
+        // Amount must be an integer.
+        $attributes = $validAttributes;
+        $attributes['amount'] = 'Not an integer';
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        // Amount cannot be negative
+        $attributes = $validAttributes;
+        $attributes['amount'] = -1;
+        $this->postJson(route('cash.live.start'), $attributes)->assertStatus(422);
+
+        // Float numbers are valid.
+        $attributes = $validAttributes;
+        $attributes['amount'] = 10.55;
+        $this->postJson(route('cash.live.start'), $attributes)->assertOk();
+    }
+
+    // User can view their live cash game
+    public function testUserCanViewTheirLiveCashGame()
+    {
+        $user = $this->signIn();
+
+        $this->post(route('cash.live.start'), $this->getLiveCashGameAttributes());
+
+        // Viewing live.current returns the current live CashGame
+        $this->getJson(route('cash.live.current'))
+                ->assertJsonStructure(['success', 'status', 'cash_game'])
+                ->assertJson([
+                    'success' => true,
+                    'status' => 'live',
+                    'cash_game' => $user->liveCashGame()->toArray()
+                ])
+                ->assertOk();
+    }
+
+    // Trying to view a Live CashGame when one has not been started is invalid
+    public function testCannotViewLiveCashGameIfNotBeenStarted()
     {
         $user = $this->signIn();
         // Don't start CashGame
 
         $this->getJson(route('cash.live.current'))
+                ->assertStatus(422)
                 ->assertJsonStructure(['success', 'message'])
                 ->assertJson([
-                    'success' => false
+                    'success' => false,
+                    'message' => "You have not started a Cash Game."
                 ]);
                             
         $this->assertEmpty($user->liveCashGame());
     }
 
-    public function testUserCannotStartACashGameWhenThereIsOneInProgress()
-    {
-        $this->signIn();
-
-        // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes());
-        
-        // Start the second cash game without finishing the other one
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())
-                ->assertStatus(422)
-                ->assertJsonStructure(['success', 'message'])
-                ->assertJson([
-                    'success' => false,
-                ]);
-    }
-
-    public function testUserCanEndACashGame()
-    {
-        $user = $this->signIn();
-
-        // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes());
-
-        //  End the cash game
-        $this->postJson(route('cash.live.end'), ['amount' => 1000])
-                ->assertOk();
-
-        $cash_game = $user->cashGames()->first();
-
-        $this->assertEquals($cash_game->end_time, Carbon::now()->toDateTimeString());      
-    }
-
-    public function testUserCanEndACashGameAtASuppliedTime()
-    {
-        $user = $this->signIn();
-
-        Carbon::setTestNow(Carbon::create('-30 mins'));
-
-        // Start one cash game 30 minutes ago
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())->assertOk();
-
-        // End Time is now which is valid, cannot be in the future as described in next test.
-        $end_time = Carbon::now()->toDateTimeString();
-
-        // End the cash game
-        $this->postJson(route('cash.live.end'), [
-                    'end_time' => $end_time,
-                    'amount' => 1000,
-                ])
-                ->assertOk();
-
-        $cash_game = $user->cashGames()->first();
-        $this->assertEquals($cash_game->end_time, $end_time);
-    }
-
-    public function testUserCannotEndACashGameInTheFuture()
-    {
-        $user = $this->signIn();
-
-        // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())->assertOk();
-
-        // End_time one second in the future
-        $end_time = Carbon::now()->addSeconds(1)->toDateTimeString();
-
-        // End the cash game
-        $this->postJson(route('cash.live.end'), [
-                    'end_time' => $end_time,
-                    'amount' => 1000,
-                ])
-                ->assertStatus(422);
-    }
-
-    public function testUserCannotEndACashGameAtAInvalidTime()
-    {
-        $this->signIn();
-
-        // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())
-                ->assertOk();
-
-        // End the cash game trying a string and a number
-        $this->postJson(route('cash.live.end'), [
-                    'end_time' => 'this is not a date'
-                ])
-                ->assertStatus(422);
-
-        $this->postJson(route('cash.live.end'), [
-                    'end_time' => 34732
-                ])
-                ->assertStatus(422);
-    }
-
-    public function testUserCannotEndACashGameWhichDoesntExist()
-    {
-        $user = $this->signIn();
-
-        // Don't Start Cash Game
-
-        // End the cash game
-        $this->postJson(route('cash.live.end'), ['amount' => 1000])
-                ->assertStatus(422)
-                ->assertJsonStructure(['success', 'message'])
-                ->assertJson([
-                    'success' => false,
-                ]);
-    }
-
-    public function testUserCannotEndACashGameBeforeItsStartTime()
-    {
-        $this->withoutExceptionHandling();
-        
-        $start_time = Carbon::create('-1 hour')->toDateTimeString();
-        $end_time = Carbon::create('-2 hour')->toDateTimeString();
-
-        $this->signIn();
-
-        // Start one cash game at $start_time
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $start_time))
-                ->assertOk();
-
-        // End the cash game at $end_time which is before $start_time
-        $this->postJson(route('cash.live.end'), ['end_time' => $end_time, 'amount' => 1000])
-                ->assertStatus(422)
-                ->assertJsonStructure(['success', 'message'])
-                ->assertJson([
-                    'success' => false,
-                ]);
-    }
-
-    public function testABuyInCanBeSuppliedWhenStartingACashGame()
-    {
-        $user = $this->signIn();
-
-        // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(5000))
-            ->assertOk();
-
-        // CashGame profit should be -5000 as it's a BuyIn
-        $cash_game = $user->cashGames()->first();
-        $this->assertEquals(-5000, $cash_game->profit);
-        $this->assertCount(1, $cash_game->buyIns);
-
-        $buy_in = $cash_game->buyIns()->first();
-        $this->assertEquals(5000, $buy_in->amount);
-
-        //Check user's bankroll.  It should be 5000 as orignal bankroll is 10000, but we subtract 5000 as it's a buyIn (negative transaction)
-        $this->assertEquals(5000, $user->fresh()->bankroll);
-    }
-
-    public function testTheBuyInAmountMustBeValidWhenStartingACashGame()
-    {
-        $this->signIn();
-
-        // Should fail when starting with a negative number
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(-1000))->assertStatus(422);
-
-        // NOTE: 2020-05-01 Float numbers are valid
-        // Should fail when starting with a float number
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(5.2))->assertOk();
-
-        // Delete the cash game for the test as it was created in assertion above and can only have one running at a time.
-        CashGame::first()->delete();
-
-        // Starting with 0 is not okay
-        // NOTE: 2020-06-02 Zero BuyIn is now invalid.
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(0))->assertStatus(422);
-    }
-
-    public function testUserCanSupplyACashOutWhenEndingTheirSession()
-    {
-        $user = $this->signIn();
-
-        // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000));
-
-        // End the cash game with a CashOut amount
-        $this->postJson(route('cash.live.end'), ['amount' => 5000])->assertOk();
-
-        // CashGame profit should be 4000. (-1000 buyIn + 5000 cashOut)
-        $cash_game = $user->cashGames()->first();
-        $this->assertEquals(4000, $cash_game->profit);
-
-        $cash_out = $cash_game->cashOutModel;
-        $this->assertInstanceOf(CashOut::class, $cash_out);
-        $this->assertEquals(5000, $cash_out->amount);
-
-        //Check user's bankroll.  It should be 14,000 as factory default is 10,000. (Bankroll + CashGame profit)
-        $this->assertEquals(14000, $user->fresh()->bankroll);
-    }
-
-    public function testTheCashOutAmountMustBeValidWhenEndingACashGame()
-    {
-        $user = $this->signIn();
-
-        // Start one cash game
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes());
-
-        // Should fail when ending with a negative number
-        $this->postJson(route('cash.live.end'), ['amount' => -1000])->assertStatus(422);
-
-        // NOTE: 2020-05-01 Float numbers are now valid.
-        $this->postJson(route('cash.live.end'), ['amount' => 54.2])->assertOk();
-
-        // Start another cash game as the one above was completed in the last assertion
-        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes());
-        // Ending with 0 is ok
-        $this->postJson(route('cash.live.end'), ['amount' => 0])->assertOk();
-    }
-
-    public function testCashGameAttributesMustBeValidWhenAdding()
-    {
-        $user = $this->signIn();
-
-        // Stake must be present
-        $this->postJson(route('cash.live.start'), [
-                    'amount' => 1000,
-                    'variant_id' => Variant::inRandomOrder()->first()->id,
-                    'limit_id' => Limit::inRandomOrder()->first()->id,
-                    'table_size_id' => TableSize::inRandomOrder()->first()->id,
-                    'location' => 'Casino MK',
-                ])
-                ->assertStatus(422);
-        
-        // Stake must exist in database
-        $this->postJson(route('cash.live.start'), [
-                    'amount' => 1000,
-                    'stake_id' => 999,
-                    'variant_id' => Variant::inRandomOrder()->first()->id,
-                    'limit_id' => Limit::inRandomOrder()->first()->id,
-                    'table_size_id' => TableSize::inRandomOrder()->first()->id,
-                    'location' => 'Casino MK',
-                ])
-                ->assertStatus(422);
-
-        // Variant must exist in database
-        $this->postJson(route('cash.live.start'), [
-                    'amount' => 1000,
-                    'stake_id' => Stake::inRandomOrder()->first()->id,
-                    'limit_id' => Limit::inRandomOrder()->first()->id,
-                    'table_size_id' => TableSize::inRandomOrder()->first()->id,
-                    'location' => 'Casino MK',
-                ])
-                ->assertStatus(422);
-
-        // Variant must exist in database
-        $this->postJson(route('cash.live.start'), [
-                    'amount' => 1000,
-                    'stake_id' => Stake::inRandomOrder()->first()->id,
-                    'variant_id' => 999,
-                    'limit_id' => Limit::inRandomOrder()->first()->id,
-                    'table_size_id' => TableSize::inRandomOrder()->first()->id,
-                    'location' => 'Casino MK',
-                ])
-                ->assertStatus(422);
-
-        // Limit must exist in database
-        $this->postJson(route('cash.live.start'), [
-                    'amount' => 1000,
-                    'stake_id' => Stake::inRandomOrder()->first()->id,
-                    'variant_id' => Variant::inRandomOrder()->first()->id,
-                    'table_size_id' => TableSize::inRandomOrder()->first()->id,
-                    'location' => 'Casino MK',
-                ])
-                ->assertStatus(422);
-
-        // Limit must exist in database
-        $this->postJson(route('cash.live.start'), [
-                    'amount' => 1000,
-                    'stake_id' => Stake::inRandomOrder()->first()->id,
-                    'limit_id' => 999,
-                    'variant_id' => Variant::inRandomOrder()->first()->id,
-                    'table_size_id' => TableSize::inRandomOrder()->first()->id,
-                    'location' => 'Casino MK',
-                ])
-                ->assertStatus(422);
-
-        // Table Size must exist in database
-        $this->postJson(route('cash.live.start'), [
-                    'amount' => 1000,
-                    'stake_id' => Stake::inRandomOrder()->first()->id,
-                    'variant_id' => Variant::inRandomOrder()->first()->id,
-                    'limit_id' => Limit::inRandomOrder()->first()->id,
-                    'location' => 'Casino MK',
-                ])
-                ->assertStatus(422);
-
-        // Table Size must exist in database
-        $this->postJson(route('cash.live.start'), [
-                    'amount' => 1000,
-                    'stake_id' => Stake::inRandomOrder()->first()->id,
-                    'variant_id' => Variant::inRandomOrder()->first()->id,
-                    'limit_id' => Limit::inRandomOrder()->first()->id,
-                    'table_size_id' => 999,
-                    'location' => 'Casino MK',
-                ])
-                ->assertStatus(422);
-
-        // Location must be supplied
-        $this->postJson(route('cash.live.start'), [
-                    'amount' => 1000,
-                    'stake_id' => Stake::inRandomOrder()->first()->id,
-                    'variant_id' => Variant::inRandomOrder()->first()->id,
-                    'limit_id' => Limit::inRandomOrder()->first()->id,
-                    'table_size_id' => TableSize::inRandomOrder()->first()->id,
-                ])
-                ->assertStatus(422);
-
-        // Location must be a string
-        $this->postJson(route('cash.live.start'), [
-                    'amount' => 1000,
-                    'stake_id' => Stake::inRandomOrder()->first()->id,
-                    'variant_id' => Variant::inRandomOrder()->first()->id,
-                    'limit_id' => Limit::inRandomOrder()->first()->id,
-                    'table_size_id' => TableSize::inRandomOrder()->first()->id,
-                    'location' => 328
-                ])
-                ->assertStatus(422);
-    }
-
-    public function testUpdatingANonExistingLiveCashGameResultsInError()
-    {
-        // Sign in user but don't start cash game.
-        $this->signIn();
-
-        $attributes = [
-            'start_time' => Carbon::create('-1 hour')->toDateTimeString(),
-            'stake_id' => 2,
-            'limit_id' => 2,
-            'variant_id' => 2,
-            'table_size_id' => 2,
-            'comments' => 'New comments',
-            'location' => 'Las Vegas',
-        ];
-
-        // Try to update live cash game which has not been started.
-        $this->patchJson(route('cash.live.update'), $attributes)->assertStatus(422);
-    }
-    
-
+    // User can update live CashGame
     public function testUserCanUpdateTheLiveCashGameDetails()
     {
-        $this->startLiveCashGame();
+        $user = $this->signIn();
 
-        $attributes = [
-            'start_time' => Carbon::create('-1 hour')->toDateTimeString(),
+        // Start a Live CashGame
+        $attributes = $this->getLiveCashGameAttributes();
+        $this->postJson(route('cash.live.start'), $attributes)->assertOk();
+
+        $updatedAttributes = [
+            'start_time' => Carbon::create('-30 mins')->toDateTimeString(),
             'stake_id' => 2,
-            'limit_id' => 2,
             'variant_id' => 2,
+            'limit_id' => 2,
             'table_size_id' => 2,
-            'comments' => 'New comments',
-            'location' => 'Las Vegas',
+            'location' => 'Updated Location',
+            'comments' => 'New comments'
         ];
 
-        $this->patchJson(route('cash.live.update'), $attributes)
+        $this->patchJson(route('cash.live.update'), $updatedAttributes)
                 ->assertOk()
                 ->assertJsonStructure(['success', 'cash_game'])
                 ->assertJson([
                     'success' => true
                 ]);
 
-        $this->assertCount(1, CashGame::all());
-        $this->assertDatabaseHas('cash_games', $attributes);
+        // Assert we find the updated attributes
+        $this->assertDatabaseHas('cash_games', $updatedAttributes);
     }
 
-    public function testDataMustBeValidWhenUpdatingALiveCashGame()
-    {     
-        $this->signIn()->startCashGame($this->getLiveCashGameAttributes());
+    // User cannot update a live cash game that does not exist
+    public function testCannotUpdateLiveCashGameIfNotBeenStarted()
+    {
+        $user = $this->signIn();
+        // Don't start CashGame
 
-        // Empty data is valid
-        $this->patchJson(route('cash.live.update'), [])->assertOk();
+        $attributes = $this->getLiveCashGameAttributes();
+        $this->patchJson(route('cash.live.update'), $attributes)
+                ->assertStatus(422)
+                ->assertJsonStructure(['success', 'message'])
+                ->assertJson([
+                    'success' => false,
+                    'message' => "You have not started a Cash Game."
+                ]);
+                            
+        $this->assertEmpty($user->liveCashGame());
+    }
 
-        // Stake Id must exist in stakes table
-        $this->patchJson(route('cash.live.update'), [
-            'stake_id' => 999
-        ])->assertStatus(422);
+    // User cannot update another user's live cash game
+    public function testCannotUpdateAnotherUsersLiveCashGame()
+    {
+        // Impossible now as we obtain liveCashGame through auth()->user()
+        // CashGameTest covers where trying to update by suppliying another user's cash game id.
+        $this->assertTrue(true);
+    }
+    
+    // Data must be valid when updating live cash game
+    public function testNonNullableMustBeValidWhenUpdatingLiveCashGame()
+    {
+        // All of this data is sometimes present, but not nullable and must be valid is supplied.
+        $this->signIn();
 
-        // Limit Id must exist in limits table
-        $this->patchJson(route('cash.live.update'), [
-            'limit_id' => 999
-        ])->assertStatus(422);
+        $validAttributes = $this->getLiveCashGameAttributes();
+        $this->postJson(route('cash.live.start'), $validAttributes)->assertOk();
 
-        // Variant Id must exist in variants table
-        $this->patchJson(route('cash.live.update'), [
-            'variant_id' => 999
-        ])->assertStatus(422);
+        // start_time must be valid if supplied
+        $attributes = $validAttributes;
+        $attributes['start_time'] = 999;
+        $this->patchJson(route('cash.live.update'), $attributes)->assertStatus(422);
+        $attributes = $validAttributes;
+        $attributes['start_time'] = 'Invalid date';
+        $this->patchJson(route('cash.live.update'), $attributes)->assertStatus(422);
 
-        // Table_size Id must exist in table_sizes table
-        $this->patchJson(route('cash.live.update'), [
-            'table_size_id' => 999
-        ])->assertStatus(422);
+        // stake must exist in database
+        $attributes = $validAttributes;
+        $attributes['stake_id'] = 999;
+        $this->patchJson(route('cash.live.update'), $attributes)->assertStatus(422);
 
-        // Start_time cannot be in the future
-        $this->patchJson(route('cash.live.update'), [
-            'start_time' => Carbon::create('+1 second')->toDateTimeString()
-        ])->assertStatus(422);
-    }   
+        // variant must exist in database
+        $attributes = $validAttributes;
+        $attributes['variant_id'] = 999;
+        $this->patchJson(route('cash.live.update'), $attributes)->assertStatus(422);
+
+        // limit must exist in database
+        $attributes = $validAttributes;
+        $attributes['limit_id'] = 999;
+        $this->patchJson(route('cash.live.update'), $attributes)->assertStatus(422);
+
+        // table_size must exist in database
+        $attributes = $validAttributes;
+        $attributes['table_size_id'] = 999;
+        $this->patchJson(route('cash.live.update'), $attributes)->assertStatus(422);
+
+        // location cannot be empty
+        $attributes = $validAttributes;
+        $attributes['location'] = '';
+        $this->patchJson(route('cash.live.update'), $attributes)->assertStatus(422);
+
+        // location must be a string
+        $attributes = $validAttributes;
+        $attributes['location'] = 999;
+        $this->patchJson(route('cash.live.update'), $attributes)->assertStatus(422);
+    }
+
+    // Start date cannot be in the future
+    public function testStartTimeCannotBeInTheFutureWhenUpdatingLiveCashGame()
+    {
+        $this->signIn();
+
+        $validAttributes = $this->getLiveCashGameAttributes();
+        $this->postJson(route('cash.live.start'), $validAttributes)->assertOk();
+
+        $attributes = $validAttributes;
+        $attributes['start_time'] = Carbon::create('+1 second')->toDateTimeString();
+        $this->patchJson(route('cash.live.update'), $attributes)->assertStatus(422);
+    }
+
+    // Cannot update live cash game with new times which clashes with another cash game
+    public function testUpdatingLiveCashGameStartTimeMustNotClashWithExistingCashGame()
+    {
+        $user = $this->signIn();
+        $dateTime = Carbon::create(2020, 06, 01, 12, 0, 0);
+
+        // Add CashGame to database with times 1st June 2020 12:30 - 14:30
+        factory('App\CashGame')->create([
+            'user_id' => $user->id,
+            'start_time' => $dateTime->toDateTimeString(),
+            'end_time' => $dateTime->copy()->addHours(2)->toDateTimeString()
+        ]);
+
+        // Start a Live CashGame now which is valid
+        $validAttributes = $this->getLiveCashGameAttributes();
+        $this->postJson(route('cash.live.start'), $validAttributes)->assertOk();
+
+        $start_time = $dateTime->copy()->addMinutes(30)->toDateTimeString();
+        $this->patchJson(route('cash.live.update'), ['start_time' => $start_time])->assertStatus(422);
+    }
+
+    // User can end a live cash.
+    // If no end_time is provided then it defaults to now().
+    // Assert CashOut transaction was created and equal to the amount provided.
+    public function testUserCanEndACashGame()
+    {
+        $user = $this->signIn();
+
+        $start_time = Carbon::create('-1 hour')->toDateTimeString();
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $start_time));
+        // Do not provide end_time so default to now
+        $this->postJson(route('cash.live.end'), ['amount' => 100])->assertOk();
+
+        $cashGame = $user->cashGames()->first();
+
+        // Assert end_time is now as end_time was not provided.
+        $this->assertEquals($cashGame->end_time, Carbon::now()->toDateTimeString());
+        // Check CashOut transaction was completed.
+        $this->assertInstanceOf(CashOut::class, $cashGame->cashOutModel);
+        // Check the amount of the Cash Out is 100.
+        $this->assertEquals(100, $cashGame->cashOutModel->amount);
+
+    }
+
+    // User can end a live cash game at a specified time
+    public function testUserCanEndACashGameAtASuppliedTime()
+    {
+        $user = $this->signIn();
+
+        // Start a cash game an hour ago
+        $start_time = Carbon::create('-1 hour');
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $start_time->toDateTimeString()))->assertOk();
+
+        // End the cash game 30 minutes later.
+        $end_time = $start_time->copy()->addMinutes(30);
+        $this->postJson(route('cash.live.end'), [
+                    'end_time' => $end_time->toDateTimeString(),
+                    'amount' => 100
+                ])
+                ->assertOk();
+
+        // Asset end time is correct.  (Need to set micro to 0)
+        $cashGame = $user->cashGames()->first();
+        $this->assertEquals($cashGame->end_time, $end_time->micro(0));
+    }
+
+    // User cannot end a live cash game that does not exist.
+    public function testUserCannotEndACashGameWhichDoesntExist()
+    {
+        $user = $this->signIn();
+
+        // Don't Start CashGame
+
+        // End the cash game
+        $this->postJson(route('cash.live.end'), [
+                    'amount' => 100
+                ])
+                ->assertStatus(422)
+                ->assertJsonStructure(['success', 'message'])
+                ->assertJson([
+                    'success' => false,
+                    'message' => "You have not started a Cash Game."
+                ]);
+    }
+
+    // User cannot end a live cash game in the future
+    public function testUserCannotEndACashGameInTheFuture()
+    {
+        $this->signIn();
+
+        // Start one cash game
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())->assertOk();
+
+        // Try to end the cash game one second in the future
+        $this->postJson(route('cash.live.end'), [
+                    'end_time' => Carbon::create('+1 second')->toDateTimeString(),
+                    'amount' => 100
+                ])
+                ->assertStatus(422);
+    }
+
+    // End time must be valid if provided.
+    public function testUserCannotEndACashGameAtAInvalidTime()
+    {
+        $this->signIn();
+
+        // Start one cash game
+        $this->postJson(route('cash.live.start'),$this->getLiveCashGameAttributes())->assertOk();
+
+        // End the cash game trying a string and a number
+        $this->postJson(route('cash.live.end'), [
+                    'end_time' => 'this is not a date',
+                    'amount' => 100
+                ])
+                ->assertStatus(422);
+
+        $this->postJson(route('cash.live.end'), [
+                    'end_time' => 34732,
+                    'amount' => 100
+                ])
+                ->assertStatus(422);
+    }
+
+    // User cannot end a live cash game before it's start time
+    public function testUserCannotEndACashGameBeforeItsStartTime()
+    {
+        $time = Carbon::create('-1 hour');
+
+        $this->signIn();
+
+        // Start one cash game at time
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $time->toDateTimeString()))->assertOk();
+
+        // End the cash game one second before it's start time.
+        $this->postJson(route('cash.live.end'), [
+                    'end_time' => $time->copy()->subSeconds(1)->toDateTimeString(),
+                    'amount' => 100
+                ])
+                ->assertStatus(422);
+    }
+
+    // User can end a live cash game exactly on its start time
+    public function testUserCanEndACashGameExactlyOnItsStartTime()
+    {
+        $time = Carbon::create('-1 hour');
+
+        $this->signIn();
+
+        // Start one cash game at time
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $time->toDateTimeString()))->assertOk();
+
+        // End the cash game one second before it's start time.
+        $this->postJson(route('cash.live.end'), [
+                    'end_time' => $time->toDateTimeString(),
+                    'amount' => 100
+                ])
+                ->assertOk();
+    }
+
+    // If no end time is provided then CashOut at current time.
+    // This is tested under testUserCanEndACashGame
+
+    // If no cash out is provided then it defaults to 0.
+    public function testCashOutAmountDefaultsToZeroIfNotSupplied()
+    {
+        $user = $this->signIn();
+
+        // Start one cash game
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes());
+        // End cash game without passing any data
+        $this->postJson(route('cash.live.end'))->assertOk();
+
+        $cashGame = $user->cashGames()->first();
+        // Check CashOut transaction was completed.
+        $this->assertInstanceOf(CashOut::class, $cashGame->cashOutModel);
+        // Check the amount of the BuyIn is zero.
+        $this->assertEquals(0, $cashGame->cashOutModel->amount);
+    }
+    
+    // Cash out amount must be valid
+    public function testTheCashOutAmountMustBeValidWhenEndingACashGame()
+    {
+        $this->signIn();
+
+        // Start one cash game
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes());
+
+        // Must be a number
+        $this->postJson(route('cash.live.end'), ['amount' => 'Not a number'])->assertStatus(422);
+
+        // Must be a positive number
+        $this->postJson(route('cash.live.end'), ['amount' => -1000])->assertStatus(422);
+    }
 }
