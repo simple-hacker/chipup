@@ -18,4 +18,20 @@ class EndSessionRequest extends FormRequest
             'amount' => 'sometimes|numeric|min:0'
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'end_time.date' => 'Please enter a valid end time.',
+            'end_time.before_or_equal' => 'End time cannot be in the future.',
+
+            'amount.numeric' => 'Amount must be a number.',
+            'amount.min' => 'Amount must be a positive number.',
+        ];
+    }
 }

@@ -19,4 +19,21 @@ class BankrollTransactionRequest extends FormRequest
             'comments' => 'sometimes|nullable|string'
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'date.date' => 'Please enter a valid date.',
+            'date.before' => 'Date cannot be in the future.',
+            'amount.required' => 'Please enter a valid amount.',
+            'amount.numeric' => 'Amount must be a number.',
+            'amount.not_in' => 'Amount cannot be zero.',
+            'comments.string' => 'Comments must be text.'
+        ];
+    }
 }

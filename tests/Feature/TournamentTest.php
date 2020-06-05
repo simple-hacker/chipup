@@ -418,7 +418,7 @@ class TournamentTest extends TestCase
     // Cannot add multiple BuyIns to Tournaments
     public function testTournamentsCanOnlyHaveOneBuyIn()
     {
-        $this->signIn();
+        $user = $this->signIn();
 
         $attributes = $this->getTournamentAttributes();
         $attributes['buy_in'] = [
@@ -427,7 +427,11 @@ class TournamentTest extends TestCase
             ['amount' => 75],
         ];
 
-        $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
+        // This is okay because the buy_in array is invalid, which then defaults to only one
+        // BuyIn transactions with amount zero.
+        $this->postJson(route('tournament.create'), $attributes)->assertOk();
+        $this->assertInstanceOf(BuyIn::class, $user->tournaments->first()->buyIn);
+        $this->assertEquals(0, $user->tournaments->first()->buyIn->amount);
     }
 
     // BuyIn CAN be zero for freerolls

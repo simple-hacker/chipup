@@ -22,4 +22,24 @@ class SetupRequest extends FormRequest
             'default_location' => 'sometimes|nullable|string',
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'bankroll.numeric' => 'Amount must be a number.',
+            'bankroll.min' => 'Amount must be a positive number.',
+
+            'default_stake_id.*' => 'Please select a stake.',
+            'default_limit_id.*' => 'Please select a game limit.',
+            'default_variant_id.*' => 'Please select a game variant.',
+            'default_table_size_id.*' => 'Please select a ring size.',
+
+            'default_location.string' => 'Location must be text.',
+        ];
+    }
 }

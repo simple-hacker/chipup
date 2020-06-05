@@ -18,4 +18,20 @@ class UpdateGameTransactionRequest extends FormRequest
             'comments' => 'sometimes|nullable|string'
         ];
     }
+
+        /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'amount.required' => 'Please enter a valid amount.',
+            'amount.numeric' => 'Amount must be a number.',
+            'amount.min' => 'Amount must be a positive number.',
+            'amount.not_in' => 'Amount cannot be zero.',
+            'comments.string' => 'Comments must be text.'
+        ];
+    }
 }
