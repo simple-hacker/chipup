@@ -2,11 +2,13 @@
 
 namespace App;
 
+use App\Abstracts\Game;
 use Illuminate\Support\Carbon;
 use App\Exceptions\SessionInProgressException;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 
 
@@ -97,6 +99,19 @@ class User extends Authenticatable
     }
 
     /**
+    * Return the latest Cash Game or Tournament without an end_time.
+    * 
+    * @return Collection|null
+    */
+    public function liveSession()
+    {
+        $liveCashGame = $this->liveCashGame();
+        $liveTournament = $this->liveTournament();
+
+        return $liveCashGame ?? $liveTournament ?? [];
+    }
+
+    /**
     * Returns a collection of the user's CashGames
     * Unable to prepare route [api/user] for serialization. Uses Closure.Unable to prepare route [api/user] for serialization. Uses Closure.
     * @return hasMany
@@ -143,7 +158,7 @@ class User extends Authenticatable
     * Return the latest Cash Game without an end_time.
     * This check is performed in startCashGame
     * 
-    * @return \App\CashGame
+    * @return \App\CashGame|null
     */
     public function liveCashGame() : ?CashGame
     {

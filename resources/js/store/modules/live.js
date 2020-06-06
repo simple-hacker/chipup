@@ -1,5 +1,3 @@
-import moment from 'moment'
-
 export default {
     namespaced: true,
     state: {
@@ -28,10 +26,16 @@ export default {
         },
     },
     actions: {
-        startLiveSession({ commit }, session) {
-            return axios.post('/api/cash/live/start', session)
+        startLiveSession({ commit }, {game_type, session}) {
+            let url = ''
+            if (game_type === 'cash_game') {
+                url = '/api/cash/live/start'
+            } else if (game_type === 'tournament') {
+                url = '/api/tournament/live/start'
+            }
+            return axios.post(url, session)
             .then(response => {
-                commit('ASSIGN_LIVE_SESSION', response.data.cash_game)
+                commit('ASSIGN_LIVE_SESSION', response.data.game)
             })
             .catch(error => {
                 throw error
@@ -41,7 +45,7 @@ export default {
             return axios.get('/api/cash/live/current')
             .then(response => {
                 if (response.data.success === true) {
-                    commit('ASSIGN_LIVE_SESSION', response.data.cash_game)
+                    commit('ASSIGN_LIVE_SESSION', response.data.game)
                 } else {
                     commit('ASSIGN_LIVE_SESSION', {})
                 }
@@ -51,11 +55,9 @@ export default {
             })
         },
         updateLiveSession({ commit }, session) {
-            return axios.patch('/api/cash/live/update', {
-                ...session,
-            })
+            return axios.patch('/api/cash/live/update', session)
             .then(response => {
-                commit('UPDATE_LIVE_SESSION', response.data.cash_game)
+                commit('UPDATE_LIVE_SESSION', response.data.game)
             })
             .catch(error => {
                 throw error
@@ -64,8 +66,8 @@ export default {
         endLiveSession({ commit }, cashOut) {
             return axios.post('/api/cash/live/end', cashOut)
             .then(response => {
-                commit('END_LIVE_SESSION', response.data.cash_game)
-                commit('cash_games/ADD_CASH_GAME', response.data.cash_game, { root: true})
+                commit('END_LIVE_SESSION', response.data.game)
+                commit('cash_games/ADD_CASH_GAME', response.data.game, { root: true})
             })
             .catch(error => {
                 throw error

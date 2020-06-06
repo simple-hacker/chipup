@@ -89,23 +89,13 @@ class GameController extends Controller
     }
 
     /**
-    * If liveCashGame() returns null/empty, then fire this exception.
+    * If liveSession() returns null/empty, then fire this exception.
     * 
     * @return void
     */
-    public function throwLiveCashGameNotStartedException()
+    public function throwLiveSessionNotStartedException()
     {
-        throw new SessionNotStartedException('You have not started a Cash Game.');
-    }
-
-    /**
-    * If liveTournament() returns null/empty, then fire this exception.
-    * 
-    * @return void
-    */
-    public function throwLiveTournamentNotStartedException()
-    {
-        throw new SessionNotStartedException('You have not started a Tournament.');
+        throw new SessionNotStartedException('You have not started a live session.');
     }
 
     /**

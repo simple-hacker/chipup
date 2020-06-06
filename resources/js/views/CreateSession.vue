@@ -506,8 +506,8 @@ export default {
 				location: '',
 				start_time: '',
 				end_time: '',
-				variant_id: 0,
 				limit_id: 0,
+				variant_id: 0,
 				expenses: [],
 				cash_out: { amount: 0 },
 				comments: ''

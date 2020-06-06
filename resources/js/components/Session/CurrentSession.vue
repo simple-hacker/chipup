@@ -38,7 +38,9 @@
 						STAKE
 					-->
 					<!-- <div v-show-slide="game_type === 'cash_game'"> -->
-						<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
+						<div
+							v-if="liveSession.stake"
+							class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
 							<div class="w-1/6">
 								<i class="fas fa-coins"></i>
 							</div>

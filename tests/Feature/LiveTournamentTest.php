@@ -362,11 +362,11 @@ class LiveTournamentTest extends TestCase
 
         // Viewing live.current returns the current live Tournament
         $this->getJson(route('tournament.live.current'))
-                ->assertJsonStructure(['success', 'status', 'tournament'])
+                ->assertJsonStructure(['success', 'status', 'game'])
                 ->assertJson([
                     'success' => true,
                     'status' => 'live',
-                    'tournament' => $user->liveTournament()->toArray()
+                    'game' => $user->liveTournament()->toArray()
                 ])
                 ->assertOk();
     }
@@ -379,10 +379,10 @@ class LiveTournamentTest extends TestCase
 
         $this->getJson(route('tournament.live.current'))
                 ->assertOk()
-                ->assertJsonStructure(['success', 'tournament'])
+                ->assertJsonStructure(['success', 'game'])
                 ->assertJson([
                     'success' => true,
-                    'tournament' => []
+                    'game' => []
                 ]);
                             
         $this->assertEmpty($user->liveTournament());
@@ -411,7 +411,7 @@ class LiveTournamentTest extends TestCase
 
         $this->patchJson(route('tournament.live.update'), $updatedAttributes)
                 ->assertOk()
-                ->assertJsonStructure(['success', 'tournament'])
+                ->assertJsonStructure(['success', 'game'])
                 ->assertJson([
                     'success' => true
                 ]);
@@ -434,7 +434,7 @@ class LiveTournamentTest extends TestCase
                 ->assertJsonStructure(['success', 'message'])
                 ->assertJson([
                     'success' => false,
-                    'message' => "You have not started a Tournament."
+                    'message' => "You have not started a live session."
                 ]);
                             
         $this->assertEmpty($user->liveTournament());
@@ -650,7 +650,7 @@ class LiveTournamentTest extends TestCase
                 ->assertJsonStructure(['success', 'message'])
                 ->assertJson([
                     'success' => false,
-                    'message' => "You have not started a Tournament."
+                    'message' => "You have not started a live session."
                 ]);
     }
 

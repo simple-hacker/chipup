@@ -326,11 +326,11 @@ class LiveCashGameTest extends TestCase
 
         // Viewing live.current returns the current live CashGame
         $this->getJson(route('cash.live.current'))
-                ->assertJsonStructure(['success', 'status', 'cash_game'])
+                ->assertJsonStructure(['success', 'status', 'game'])
                 ->assertJson([
                     'success' => true,
                     'status' => 'live',
-                    'cash_game' => $user->liveCashGame()->toArray()
+                    'game' => $user->liveCashGame()->toArray()
                 ])
                 ->assertOk();
     }
@@ -343,10 +343,10 @@ class LiveCashGameTest extends TestCase
 
         $this->getJson(route('cash.live.current'))
                 ->assertOk()
-                ->assertJsonStructure(['success', 'cash_game'])
+                ->assertJsonStructure(['success', 'game'])
                 ->assertJson([
                     'success' => true,
-                    'cash_game' => []
+                    'game' => []
                 ]);
                             
         $this->assertEmpty($user->liveCashGame());
@@ -373,7 +373,7 @@ class LiveCashGameTest extends TestCase
 
         $this->patchJson(route('cash.live.update'), $updatedAttributes)
                 ->assertOk()
-                ->assertJsonStructure(['success', 'cash_game'])
+                ->assertJsonStructure(['success', 'game'])
                 ->assertJson([
                     'success' => true
                 ]);
@@ -394,7 +394,7 @@ class LiveCashGameTest extends TestCase
                 ->assertJsonStructure(['success', 'message'])
                 ->assertJson([
                     'success' => false,
-                    'message' => "You have not started a Cash Game."
+                    'message' => "You have not started a live session."
                 ]);
                             
         $this->assertEmpty($user->liveCashGame());
@@ -513,6 +513,8 @@ class LiveCashGameTest extends TestCase
     // If no end_time is provided then it defaults to now().
     public function testUserCanEndACashGame()
     {
+        $this->withoutExceptionHandling();
+        
         $user = $this->signIn();
 
         $start_time = Carbon::create('-1 hour')->toDateTimeString();
@@ -568,7 +570,7 @@ class LiveCashGameTest extends TestCase
                 ->assertJsonStructure(['success', 'message'])
                 ->assertJson([
                     'success' => false,
-                    'message' => "You have not started a Cash Game."
+                    'message' => "You have not started a live session."
                 ]);
     }
 

@@ -1,14 +1,34 @@
 <template>
 	<div class="bg-card rounded border border-muted-dark p-4 text-white">
-		<h1 class="text-lg md:text-2xl">Start a new cash game session.</h1>
+		<h1 class="text-lg md:text-2xl">Start a new {{ game_type_label }}</h1>
     	<hr class="mb-4 border border-muted-dark">
+		<div @click="switchGameType" class="text-center font-bold text-green-500 p-3 cursor-pointer">
+			<span class="mr-3">Switch to {{ game_type_label_inverse }} Mode</span>
+		</div>
 		<div class="flex flex-col">
+			<div
+				v-show-slide="game_type === 'tournament'"
+				class="mb-2">
+				<p class="text-base md:text-lg mb-2">What's the name of the tournament?</p>
+				<div class="flex flex-col">
+					<input
+						v-model="tournament.name"
+						type="text"
+						placeholder="Tournament name"
+						:class="{ 'error-input' : errors.name }"
+						@input="delete errors.name"
+					/>
+					<span v-if="errors.name" class="error-message">{{ errors.name[0] }}</span>
+				</div>
+			</div>
 			<div>
 				<p class="text-base md:text-lg mb-2">What are you playing?</p>
 				<div class="flex flex-wrap">
-					<div class="flex flex-col w-1/2 lg:w-1/4 p-1">
+					<div
+						v-if="game_type === 'cash_game'"
+						class="flex flex-col w-1/2 lg:w-1/4 p-1">
 						<select
-							v-model="session.stake_id"
+							v-model="cash_game.stake_id"
 							:class="{ 'error-input' : errors.stake_id }"
 							@input="delete errors.stake_id"
 						>
@@ -36,9 +56,11 @@
 						</select>
 						<span v-if="errors.variant_id" class="error-message">{{ errors.variant_id[0] }}</span>
 					</div>
-					<div class="flex flex-col w-1/2 lg:w-1/4 p-1">
+					<div
+						v-if="game_type === 'cash_game'"
+						class="flex flex-col w-1/2 lg:w-1/4 p-1">
 						<select
-							v-model="session.table_size_id"
+							v-model="cash_game.table_size_id"
 							:class="{ 'error-input' : errors.table_size_id }"
 							@input="delete errors.table_size_id"
 						>
@@ -100,8 +122,8 @@
 					@click.prevent="startSession"
 					type="button"
 					class="w-full bg-green-600 border border-green-700 hover:bg-green-700 rounded p-4 uppercase text-white font-bold text-center ml-1"
+					v-text="`Start ${game_type_label}`"
 				>
-					Start Session
 				</button>				
 			</div>
 		</div>
@@ -117,24 +139,64 @@ export default {
     data() {
 		return {
 			errors: {},
+			game_type: 'cash_game',
 			session: {
-				stake_id: 1,
+				location: '',
 				limit_id: 1,
 				variant_id: 1,
-				table_size_id: 1,
-				location: '',
 				amount: 0,
 				start_time: moment().format(),
 			},
+			cash_game: {
+				stake_id: 1,
+				table_size_id: 1,
+			},
+			tournament: {
+				name: '',
+			},
+			errors: {}
 		}
 	},
 	computed: {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
+		liveSession() {
+			if (this.game_type === 'cash_game') {
+				return {...this.session, ...this.cash_game}
+			} else if (this.game_type === 'tournament') {
+				return {...this.session, ...this.tournament}
+			} else {
+				return {}
+			}
+		},
+		game_type_label_inverse() {
+			if (this.game_type === 'cash_game') {
+				return 'Tournament'
+			} else {
+				return 'Cash Game'
+			}
+		},
+		game_type_label() {
+			if (this.game_type === 'cash_game') {
+				return 'Cash Game'
+			} else {
+				return 'Tournament'
+			}
+		},
 	},
     methods: {
 		...mapActions('live', ['startLiveSession']),
+		switchGameType() {
+			if (this.game_type === 'cash_game') {
+				this.game_type = 'tournament'
+			} else {
+				this.game_type = 'cash_game'
+			}
+		},
 		startSession() {
-			this.startLiveSession(this.session)
+			this.startLiveSession({
+				game_type: this.game_type,
+				session: this.liveSession
+			})
 			.then(response => {
 				this.$snotify.success('Good luck!')
 			})
