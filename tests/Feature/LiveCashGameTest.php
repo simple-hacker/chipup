@@ -43,6 +43,7 @@ class LiveCashGameTest extends TestCase
     // Data must be valid when updating live cash game
     // Start date cannot be in the future when updating
     // Cannot update live cash game with new times which clashes with another cash game
+    // Updating live cash game's times does not clash with itself
 
     // User can end a live cash.
     // User can end a live cash game at a specified time
@@ -487,6 +488,25 @@ class LiveCashGameTest extends TestCase
 
         $start_time = $dateTime->copy()->addMinutes(30)->toDateTimeString();
         $this->patchJson(route('cash.live.update'), ['start_time' => $start_time])->assertStatus(422);
+    }
+
+    // Updating live cash game's times does not clash with itself
+    public function testUpdatingLiveCashGameTimesDoesNotClashWithItself()
+    {
+        // Current Live Cash Game being updated is not included when checking for clashes
+        $this->signIn();
+
+        // Start Cash Game an hour ago
+        $validAttributes = $this->getLiveCashGameAttributes();
+        $validAttributes['start_time'] = Carbon::create('-1 hour')->toDateTimeString();
+        $this->postJson(route('cash.live.start'), $validAttributes)->assertOk();
+
+        // Update Live Cash Game start time to 45 minutes ago instead.
+        // So that it clashes within 1 hour ago and null but valid to update
+        $updateAttributes = [
+            'start_time' => Carbon::create('-45 minutes')->toDateTimeString()
+        ];
+        $this->patchJson(route('cash.live.update'), $updateAttributes)->assertOk();
     }
 
     // User can end a live cash.

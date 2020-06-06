@@ -88,7 +88,7 @@ class CashGameController extends GameController
 
         try {
             $this->checkIfUpdateRequestTimesAreValidAgainstSavedTimes($cash_game);
-            $this->checkIfRequestTimesClashWithAnotherCashGame();
+            $this->checkIfRequestTimesClashWithAnotherCashGame($cash_game->id);
     
             // Update the cash game with the validated request
             $cash_game->update($request->validated());

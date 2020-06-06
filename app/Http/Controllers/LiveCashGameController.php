@@ -98,7 +98,7 @@ class LiveCashGameController extends GameController
         try {
             $cashGame = auth()->user()->liveCashGame() ?? $this->throwLiveCashGameNotStartedException();
 
-            $this->checkIfRequestTimesClashWithAnotherCashGame();
+            $this->checkIfRequestTimesClashWithAnotherCashGame($cashGame->id);
             
             $cashGame->update($request->validated());
 

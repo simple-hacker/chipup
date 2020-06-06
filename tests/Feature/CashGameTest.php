@@ -61,6 +61,7 @@ class CashGameTest extends TestCase
     // Only providing end time, it cannot be before cash game's start time
     // Only providing start time, it cannot be after cash game's end time
     // Cannot update cash game with new start time that clashes with another cash game
+    // Updating cash game's times does not clash with itself
 
     // User can delete their cash game
     // Cash game must exist when deleting
@@ -810,12 +811,36 @@ class CashGameTest extends TestCase
         $this->patchJson(route('cash.update', ['cash_game' => $cashGameToUpdate->id]), $attributes)->assertStatus(422);
 
         // Start time exactly the same as another cash game's start time
-        $attributes = ['start_time' => $time->copy()->toDateTimeString()];
+        $attributes = ['start_time' => $cashGame1->start_time->toDateTimeString()];
         $this->patchJson(route('cash.update', ['cash_game' => $cashGameToUpdate->id]), $attributes)->assertStatus(422);
 
-        // Start time exactly the same as another cash game's start time
-        $attributes = ['start_time' => $updateTime->copy()->addMinutes(30)->toDateTimeString()];
+        // Start time exactly the same as another cash game's end
+        $attributes = ['start_time' => $cashGame1->end_time->toDateTimeString()];
         $this->patchJson(route('cash.update', ['cash_game' => $cashGameToUpdate->id]), $attributes)->assertStatus(422);
+    }
+
+    // Updating cash game's times does not clash with itself
+    public function testUpdatingCashGameTimesDoesNotClashWithItself()
+    {
+        // Current Cash Game that's being updated is not included when checking for clashes
+
+        $user = $this->signIn();
+
+        // Create a Cash Game which which started 1 hour ago and ended 30 minutes after
+        $time = Carbon::create('-1 hours');
+        $cashGame = factory('App\CashGame')->create([
+            'user_id' => $user->id,
+            'start_time' => $time->toDateTimeString(),
+            'end_time' => $time->copy()->addMinutes(30)->toDateTimeString(),
+        ]);
+
+        // Update start time to 45 minutes ago (so add 15 minutes to $time) which is in between it's current start and end times
+        $attributes = ['start_time' => $time->copy()->addMinutes(15)->toDateTimeString()];
+        $this->patchJson(route('cash.update', ['cash_game' => $cashGame->id]), $attributes)->assertOk();
+
+        // Update start time it's current end time which is ok
+        $attributes = ['start_time' => $cashGame->end_time->toDateTimeString()];
+        $this->patchJson(route('cash.update', ['cash_game' => $cashGame->id]), $attributes)->assertOk();
     }
 
     // User can delete their cash game

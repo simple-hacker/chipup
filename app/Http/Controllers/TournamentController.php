@@ -86,7 +86,7 @@ class TournamentController extends GameController
 
         try {
             $this->checkIfUpdateRequestTimesAreValidAgainstSavedTimes($tournament);
-            $this->checkIfRequestTimesClashWithAnotherTournament();
+            $this->checkIfRequestTimesClashWithAnotherTournament($tournament->id);
     
             // Update the tournament with the validated request
             $tournament->update($request->validated());

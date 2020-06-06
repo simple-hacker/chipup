@@ -46,6 +46,7 @@ class LiveTournamentTest extends TestCase
     // Non required data, if present, must be valid when updating live tournament
     // Start date cannot be in the future
     // Cannot update live tournament with new times which clashes with another tournament
+    // Updating live tournament's times does not clash with itself
 
     // User can end a live Tournament
     // User can end a live tournament at a specified time
@@ -570,6 +571,25 @@ class LiveTournamentTest extends TestCase
 
         $start_time = $dateTime->copy()->addMinutes(30)->toDateTimeString();
         $this->patchJson(route('tournament.live.update'), ['start_time' => $start_time])->assertStatus(422);
+    }
+
+    // Updating live tournament's times does not clash with itself
+    public function testUpdatingLiveTournamentTimesDoesNotClashWithItself()
+    {
+        // Current Live Cash Game being updated is not included when checking for clashes
+        $this->signIn();
+
+        // Start Cash Game an hour ago
+        $validAttributes = $this->getLiveTournamentAttributes();
+        $validAttributes['start_time'] = Carbon::create('-1 hour')->toDateTimeString();
+        $this->postJson(route('tournament.live.start'), $validAttributes)->assertOk();
+
+        // Update Live Cash Game start time to 45 minutes ago instead.
+        // So that it clashes within 1 hour ago and null but valid to update
+        $updateAttributes = [
+            'start_time' => Carbon::create('-45 minutes')->toDateTimeString()
+        ];
+        $this->patchJson(route('tournament.live.update'), $updateAttributes)->assertOk();
     }
 
     // User can end a live tournament

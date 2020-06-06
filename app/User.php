@@ -160,11 +160,12 @@ class User extends Authenticatable
     * @param String $time
     * @return integer
     */
-    public function cashGamesAtTime($time = null) : int
+    public function cashGamesAtTime($time = null, $id = null) : int
     {
         $start_time = $time ? Carbon::create($time) : now();
         
         return $this->cashGames()
+                    ->where('id', '<>', $id)
                     ->where('start_time', '<=', $start_time)
                     ->where(function ($query) use ($start_time) {
                         $query->where('end_time', '>=', $start_time)
@@ -236,11 +237,12 @@ class User extends Authenticatable
     * @param String $time
     * @return int
     */
-    public function tournamentsAtTime($time = null) : int
+    public function tournamentsAtTime($time = null, $id = null) : int
     {
         $start_time = $time ? Carbon::create($time) : now();
 
         return $this->tournaments()
+                    ->where('id', '<>', $id)
                     ->where('start_time', '<=', $start_time->toDateTimeString())
                     ->where(function ($query) use ($start_time) {
                         $query->where('end_time', '>=', $start_time->toDateTimeString())

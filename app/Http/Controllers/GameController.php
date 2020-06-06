@@ -113,10 +113,10 @@ class GameController extends Controller
     * 
     * @return void
     */
-    public function checkIfRequestTimesClashWithAnotherCashGame()
+    public function checkIfRequestTimesClashWithAnotherCashGame($cashGameId = null)
     {
         // If start_time was provided, check it doesn't clash with an exisiting cash game.
-        if (request()->start_time && auth()->user()->cashGamesAtTime(request()->start_time) > 0) {
+        if (request()->start_time && auth()->user()->cashGamesAtTime(request()->start_time, $cashGameId) > 0) {
             throw new ClashingSessionsException('You already have another cash game at that time.');
         }
     }
@@ -126,10 +126,10 @@ class GameController extends Controller
     * 
     * @return void
     */
-    public function checkIfRequestTimesClashWithAnotherTournament()
+    public function checkIfRequestTimesClashWithAnotherTournament($tournamentId = null)
     {
         // If start_time was provided, check it doesn't clash with an exisiting tournament.
-        if (request()->start_time && auth()->user()->tournamentsAtTime(request()->start_time) > 0) {
+        if (request()->start_time && auth()->user()->tournamentsAtTime(request()->start_time, $tournamentId) > 0) {
             throw new ClashingSessionsException('You already have another tournament at that time');
         }
     }

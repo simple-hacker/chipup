@@ -98,7 +98,7 @@ class LiveTournamentController extends GameController
         try {
             $tournament = auth()->user()->liveTournament() ?? $this->throwLiveTournamentNotStartedException();
 
-            $this->checkIfRequestTimesClashWithAnotherTournament();
+            $this->checkIfRequestTimesClashWithAnotherTournament($tournament->id);
 
             $tournament->update($request->validated());
 
