@@ -113,7 +113,7 @@ import { mapState, mapActions } from 'vuex'
 import moment from 'moment'
 
 export default {
-	name: 'StartCashGame',
+	name: 'StartSession',
     data() {
 		return {
 			errors: {},

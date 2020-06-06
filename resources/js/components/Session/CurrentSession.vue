@@ -309,7 +309,7 @@ import TransactionSummary from '@components/Transaction/TransactionSummary'
 import TransactionDetails from '@components/Transaction/TransactionDetails'
 
 export default {
-	name: 'CurrentCashGame',
+	name: 'CurrentSession',
 	components: { TransactionSummary, TransactionDetails },
 	data() {
 		return {
