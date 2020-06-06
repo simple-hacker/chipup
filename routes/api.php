@@ -26,15 +26,23 @@ Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
         Route::patch('{bankrollTransaction}', 'BankrollController@update')->name('update');
         Route::delete('{bankrollTransaction}', 'BankrollController@delete')->name('delete');
     });
+
+    // Live Session Routes
+    Route::prefix('live')->name('live.')->group(function () {
+        // Route::post('start', 'LiveGameController@start')->name('start');
+        Route::get('current', 'LiveGameController@current')->name('current');
+        // Route::patch('update', 'LiveGameController@update')->name('update');
+        Route::post('end', 'LiveGameController@end')->name('end'); 
+    });
     
-    // CashGame Routes
+    // Cash Game Routes
     Route::prefix('cash')->name('cash.')->group(function () {
 
         Route::prefix('live')->name('live.')->group(function () {
             Route::post('start', 'LiveCashGameController@start')->name('start');
-            Route::get('current', 'LiveCashGameController@current')->name('current');
+            // Route::get('current', 'LiveCashGameController@current')->name('current');
             Route::patch('update', 'LiveCashGameController@update')->name('update');
-            Route::post('end', 'LiveCashGameController@end')->name('end'); 
+            // Route::post('end', 'LiveCashGameController@end')->name('end'); 
         });
  
         Route::get('', 'CashGameController@index')->name('index');
@@ -49,9 +57,9 @@ Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
 
         Route::prefix('live')->name('live.')->group(function () {
             Route::post('start', 'LiveTournamentController@start')->name('start');
-            Route::get('current', 'LiveTournamentController@current')->name('current');
+            // Route::get('current', 'LiveTournamentController@current')->name('current');
             Route::patch('update', 'LiveTournamentController@update')->name('update');
-            Route::post('end', 'LiveTournamentController@end')->name('end'); 
+            // Route::post('end', 'LiveTournamentController@end')->name('end'); 
         });
 
         Route::get('', 'TournamentController@index')->name('index');

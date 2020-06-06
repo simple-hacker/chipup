@@ -69,9 +69,9 @@ class LiveTournamentTest extends TestCase
     public function testUserMustBeLoggedInToStartTournament()
     {
         $this->postJson(route('tournament.live.start'))->assertUnauthorized();
-        $this->getJson(route('tournament.live.current'))->assertUnauthorized();
+        $this->getJson(route('live.current'))->assertUnauthorized();
         $this->getJson(route('tournament.live.update'))->assertUnauthorized();
-        $this->getJson(route('tournament.live.end'))->assertUnauthorized();
+        $this->getJson(route('live.end'))->assertUnauthorized();
     }
     
     // User can start a live tournament
@@ -361,7 +361,7 @@ class LiveTournamentTest extends TestCase
         $this->post(route('tournament.live.start'), $this->getLiveTournamentAttributes());
 
         // Viewing live.current returns the current live Tournament
-        $this->getJson(route('tournament.live.current'))
+        $this->getJson(route('live.current'))
                 ->assertJsonStructure(['success', 'status', 'game'])
                 ->assertJson([
                     'success' => true,
@@ -377,7 +377,7 @@ class LiveTournamentTest extends TestCase
         $user = $this->signIn();
         // Don't start Tournament
 
-        $this->getJson(route('tournament.live.current'))
+        $this->getJson(route('live.current'))
                 ->assertOk()
                 ->assertJsonStructure(['success', 'game'])
                 ->assertJson([
@@ -600,7 +600,7 @@ class LiveTournamentTest extends TestCase
         $user = $this->signIn();
 
         $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes());
-        $this->postJson(route('tournament.live.end'), ['amount' => 100])->assertOk();
+        $this->postJson(route('live.end'), ['amount' => 100])->assertOk();
 
         $tournament = $user->tournaments()->first();
 
@@ -624,7 +624,7 @@ class LiveTournamentTest extends TestCase
 
         // End the tournament 30 minutes later.
         $end_time = $start_time->copy()->addMinutes(30);
-        $this->postJson(route('tournament.live.end'), [
+        $this->postJson(route('live.end'), [
                     'end_time' => $end_time->toDateTimeString(),
                     'amount' => 100
                 ])
@@ -643,7 +643,7 @@ class LiveTournamentTest extends TestCase
         // Don't Start Tournament
 
         // End the tournament
-        $this->postJson(route('tournament.live.end'), [
+        $this->postJson(route('live.end'), [
                     'amount' => 100
                 ])
                 ->assertStatus(422)
@@ -663,7 +663,7 @@ class LiveTournamentTest extends TestCase
         $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes())->assertOk();
 
         // Try to end the tournament one second in the future
-        $this->postJson(route('tournament.live.end'), [
+        $this->postJson(route('live.end'), [
                     'end_time' => Carbon::create('+1 second')->toDateTimeString(),
                     'amount' => 100
                 ])
@@ -679,13 +679,13 @@ class LiveTournamentTest extends TestCase
         $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes())->assertOk();
 
         // End the tournament trying a string and a number
-        $this->postJson(route('tournament.live.end'), [
+        $this->postJson(route('live.end'), [
                     'end_time' => 'this is not a date',
                     'amount' => 100
                 ])
                 ->assertStatus(422);
 
-        $this->postJson(route('tournament.live.end'), [
+        $this->postJson(route('live.end'), [
                     'end_time' => 34732,
                     'amount' => 100
                 ])
@@ -703,7 +703,7 @@ class LiveTournamentTest extends TestCase
         $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes(1000, $time->toDateTimeString()))->assertOk();
 
         // End the tournament one second before it's start time.
-        $this->postJson(route('tournament.live.end'), [
+        $this->postJson(route('live.end'), [
                     'end_time' => $time->copy()->subSeconds(1)->toDateTimeString(),
                     'amount' => 100
                 ])
@@ -721,7 +721,7 @@ class LiveTournamentTest extends TestCase
         $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes(1000, $time->toDateTimeString()))->assertOk();
 
         // End the tournament one second before it's start time.
-        $this->postJson(route('tournament.live.end'), [
+        $this->postJson(route('live.end'), [
                     'end_time' => $time->toDateTimeString(),
                     'amount' => 100
                 ])
@@ -739,7 +739,7 @@ class LiveTournamentTest extends TestCase
         // Start one tournament
         $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes());
         // End tournament without passing any data
-        $this->postJson(route('tournament.live.end'))->assertOk();
+        $this->postJson(route('live.end'))->assertOk();
 
         $tournament = $user->tournaments()->first();
         // Check CashOut transaction was completed.
@@ -757,9 +757,9 @@ class LiveTournamentTest extends TestCase
         $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes());
 
         // Must be a number
-        $this->postJson(route('tournament.live.end'), ['amount' => 'Not a number'])->assertStatus(422);
+        $this->postJson(route('live.end'), ['amount' => 'Not a number'])->assertStatus(422);
 
         // Must be a positive number
-        $this->postJson(route('tournament.live.end'), ['amount' => -1000])->assertStatus(422);
+        $this->postJson(route('live.end'), ['amount' => -1000])->assertStatus(422);
     }
 }

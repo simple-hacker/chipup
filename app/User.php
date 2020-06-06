@@ -123,7 +123,7 @@ class User extends Authenticatable
 
     /**
     * Start a Cash Game with the current time as start_time
-    * This first checks if we have a Cash Game in progress by checking the count of CashGame where end_time is null
+    * This first checks if we have a Session in progress and then checks if the start time would clash with another Cash Game.
     *
     * @param array $attributes
     * @return \App\CashGame
@@ -132,8 +132,8 @@ class User extends Authenticatable
     {
         // The $attributes array will have been validated in the CashGameController
 
-        if ($this->liveCashGame()) {
-            throw new SessionInProgressException('A Cash Game is already in progress.', 422);
+        if ($this->liveSession()) {
+            throw new SessionInProgressException('A live session is already in progress.', 422);
         }
 
         // If start_time was provided check to see if it clashes with another tournament
@@ -201,7 +201,7 @@ class User extends Authenticatable
 
     /**
     * Start a Tournament with the current time as start_time
-    * This first checks if we have a Tournament in progress by checking the count of Tournament where end_time is null
+    * This first checks if we have a Session in progress and then checks if the start time would clash with another Tournament.
     *
     * @param Array $attributes
     * @return \App\Tournament
@@ -209,8 +209,8 @@ class User extends Authenticatable
     public function startTournament(Array $attributes = []) : Tournament
     {
         // The $attributes array will have been validated in the TournamentController
-        if ($this->liveTournament()) {
-            throw new SessionInProgressException('A Tournament is already in progress.', 422);
+        if ($this->liveSession()) {
+            throw new SessionInProgressException('A live session is already in progress.', 422);
         }
 
         // If start_time was provided check to see if it clashes with another tournament

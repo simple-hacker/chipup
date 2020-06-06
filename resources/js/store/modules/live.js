@@ -42,7 +42,7 @@ export default {
             })
         },
         currentLiveSession({ commit }) {
-            return axios.get('/api/cash/live/current')
+            return axios.get('/api/live/current')
             .then(response => {
                 if (response.data.success === true) {
                     commit('ASSIGN_LIVE_SESSION', response.data.game)
@@ -55,7 +55,7 @@ export default {
             })
         },
         updateLiveSession({ commit }, session) {
-            return axios.patch('/api/cash/live/update', session)
+            return axios.patch('/api/live/update', session)
             .then(response => {
                 commit('UPDATE_LIVE_SESSION', response.data.game)
             })

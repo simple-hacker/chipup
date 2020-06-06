@@ -66,9 +66,9 @@ class LiveCashGameTest extends TestCase
     public function testUserMustBeLoggedInToStartCashGame()
     {
         $this->postJson(route('cash.live.start'))->assertUnauthorized();
-        $this->getJson(route('cash.live.current'))->assertUnauthorized();
+        $this->getJson(route('live.current'))->assertUnauthorized();
         $this->getJson(route('cash.live.update'))->assertUnauthorized();
-        $this->getJson(route('cash.live.end'))->assertUnauthorized();
+        $this->getJson(route('live.end'))->assertUnauthorized();
     }
     
     // User can start a live cash game
@@ -325,7 +325,7 @@ class LiveCashGameTest extends TestCase
         $this->post(route('cash.live.start'), $this->getLiveCashGameAttributes());
 
         // Viewing live.current returns the current live CashGame
-        $this->getJson(route('cash.live.current'))
+        $this->getJson(route('live.current'))
                 ->assertJsonStructure(['success', 'status', 'game'])
                 ->assertJson([
                     'success' => true,
@@ -341,7 +341,7 @@ class LiveCashGameTest extends TestCase
         $user = $this->signIn();
         // Don't start CashGame
 
-        $this->getJson(route('cash.live.current'))
+        $this->getJson(route('live.current'))
                 ->assertOk()
                 ->assertJsonStructure(['success', 'game'])
                 ->assertJson([
@@ -520,7 +520,7 @@ class LiveCashGameTest extends TestCase
         $start_time = Carbon::create('-1 hour')->toDateTimeString();
         $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $start_time));
         // Do not provide end_time so default to now
-        $this->postJson(route('cash.live.end'), ['amount' => 100])->assertOk();
+        $this->postJson(route('live.end'), ['amount' => 100])->assertOk();
 
         $cashGame = $user->cashGames()->first();
 
@@ -544,7 +544,7 @@ class LiveCashGameTest extends TestCase
 
         // End the cash game 30 minutes later.
         $end_time = $start_time->copy()->addMinutes(30);
-        $this->postJson(route('cash.live.end'), [
+        $this->postJson(route('live.end'), [
                     'end_time' => $end_time->toDateTimeString(),
                     'amount' => 100
                 ])
@@ -563,7 +563,7 @@ class LiveCashGameTest extends TestCase
         // Don't Start CashGame
 
         // End the cash game
-        $this->postJson(route('cash.live.end'), [
+        $this->postJson(route('live.end'), [
                     'amount' => 100
                 ])
                 ->assertStatus(422)
@@ -583,7 +583,7 @@ class LiveCashGameTest extends TestCase
         $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())->assertOk();
 
         // Try to end the cash game one second in the future
-        $this->postJson(route('cash.live.end'), [
+        $this->postJson(route('live.end'), [
                     'end_time' => Carbon::create('+1 second')->toDateTimeString(),
                     'amount' => 100
                 ])
@@ -599,13 +599,13 @@ class LiveCashGameTest extends TestCase
         $this->postJson(route('cash.live.start'),$this->getLiveCashGameAttributes())->assertOk();
 
         // End the cash game trying a string and a number
-        $this->postJson(route('cash.live.end'), [
+        $this->postJson(route('live.end'), [
                     'end_time' => 'this is not a date',
                     'amount' => 100
                 ])
                 ->assertStatus(422);
 
-        $this->postJson(route('cash.live.end'), [
+        $this->postJson(route('live.end'), [
                     'end_time' => 34732,
                     'amount' => 100
                 ])
@@ -623,7 +623,7 @@ class LiveCashGameTest extends TestCase
         $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $time->toDateTimeString()))->assertOk();
 
         // End the cash game one second before it's start time.
-        $this->postJson(route('cash.live.end'), [
+        $this->postJson(route('live.end'), [
                     'end_time' => $time->copy()->subSeconds(1)->toDateTimeString(),
                     'amount' => 100
                 ])
@@ -641,7 +641,7 @@ class LiveCashGameTest extends TestCase
         $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $time->toDateTimeString()))->assertOk();
 
         // End the cash game one second before it's start time.
-        $this->postJson(route('cash.live.end'), [
+        $this->postJson(route('live.end'), [
                     'end_time' => $time->toDateTimeString(),
                     'amount' => 100
                 ])
@@ -659,7 +659,7 @@ class LiveCashGameTest extends TestCase
         // Start one cash game
         $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes());
         // End cash game without passing any data
-        $this->postJson(route('cash.live.end'))->assertOk();
+        $this->postJson(route('live.end'))->assertOk();
 
         $cashGame = $user->cashGames()->first();
         // Check CashOut transaction was completed.
@@ -677,9 +677,9 @@ class LiveCashGameTest extends TestCase
         $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes());
 
         // Must be a number
-        $this->postJson(route('cash.live.end'), ['amount' => 'Not a number'])->assertStatus(422);
+        $this->postJson(route('live.end'), ['amount' => 'Not a number'])->assertStatus(422);
 
         // Must be a positive number
-        $this->postJson(route('cash.live.end'), ['amount' => -1000])->assertStatus(422);
+        $this->postJson(route('live.end'), ['amount' => -1000])->assertStatus(422);
     }
 }
