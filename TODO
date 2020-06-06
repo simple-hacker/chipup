@@ -55,7 +55,7 @@ Todo:
 Don't Forget:
     ✔ $amount validation should be integer and positive for all Transactions (BuyIn, Expense, CashOut etc) @file:///var/www/html/poker/app/CashGame.php @done(20-03-07 20:13)
     ☐ Change amounts in migrations to unsignedBigInteger so we don't have negative values.
-    ☐ Come up with a better name for cashOutModel method in @file:///var/www/html/poker/app/CashGame.php
+    ☐ Come up with a better name for cashOut method in @file:///var/www/html/poker/app/CashGame.php
     ☐ Controllers should return success => true for successful api requests
 
 Thoughts:

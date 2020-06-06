@@ -103,7 +103,7 @@ abstract class Game extends Model
             case 'expense':
                 return $this->addExpense($amount);
             case 'cashOut':
-                return $this->cashOut($amount);
+                return $this->addCashOut($amount);
             case 'rebuy':
                 return $this->addRebuy($amount);
             case 'addOn':
@@ -147,13 +147,13 @@ abstract class Game extends Model
     * @param float amount
     * @return CashOut
     */
-    public function cashOut(float $amount)
+    public function addCashOut(float $amount)
     {
-        // if ($this->cashOutModel) {
+        // if ($this->cashOut) {
         //     throw new MultipleCashOutException();
         // }
 
-        return $this->cashOutModel()->create([
+        return $this->cashOut()->create([
             'amount' => $amount
         ]);
     }
@@ -168,7 +168,7 @@ abstract class Game extends Model
     public function endAndCashOut($end_time = null, float $amount = 0)
     {
         $this->end($end_time);
-        $this->cashOut($amount);
+        $this->addCashOut($amount);
     }
 
     /**
@@ -196,7 +196,7 @@ abstract class Game extends Model
     * 
     * @return morphOne
     */
-    public function cashOutModel()
+    public function cashOut()
     {
         return $this->morphOne('App\Transactions\CashOut', 'game');
     }
@@ -214,7 +214,7 @@ abstract class Game extends Model
     public function deleteGameTransactions()
     {
         $this->expenses()->delete();
-        $this->cashOutModel()->delete();
+        $this->cashOut()->delete();
     }
 
     /**

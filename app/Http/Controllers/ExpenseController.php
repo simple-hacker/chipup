@@ -11,6 +11,5 @@ class ExpenseController extends GameTransactionController
     public function __construct()
     {
         $this->transaction_type = 'expense';
-        $this->transaction_relationship = 'expenses';
     }
 }

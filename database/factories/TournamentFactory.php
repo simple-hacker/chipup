@@ -76,5 +76,5 @@ $factory->afterCreating(Tournament::class, function ($tournament, $faker) {
         $cash_out_amount = 0;
     }
 
-    $tournament->cashOut($cash_out_amount);
+    $tournament->addCashOut($cash_out_amount);
 });

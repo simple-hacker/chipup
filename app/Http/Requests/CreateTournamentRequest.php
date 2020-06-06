@@ -34,7 +34,7 @@ class CreateTournamentRequest extends FormRequest
 
             'add_ons.*.amount' => 'sometimes|numeric|min:0|not_in:0',
 
-            'cash_out_model.amount' => 'sometimes|numeric|min:0',
+            'cash_out.amount' => 'sometimes|numeric|min:0',
         ];
 
         if ($this->input('start_time') && $this->input('end_time')) {
@@ -86,8 +86,8 @@ class CreateTournamentRequest extends FormRequest
             'add_ons.*.amount.min' => 'Add on must be a positive amount',
             'add_ons.*.amount.not_in' => 'Add on amount cannot be zero',
 
-            'cash_out_model.amount.numeric' => 'Cash out amount must be a number.',
-            'cash_out_model.amount.min' => 'Cash out must be a positive amount',
+            'cash_out.amount.numeric' => 'Cash out amount must be a number.',
+            'cash_out.amount.min' => 'Cash out must be a positive amount',
         ];
     }
 }

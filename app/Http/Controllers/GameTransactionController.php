@@ -12,7 +12,6 @@ use App\Http\Requests\UpdateGameTransactionRequest;
 abstract class GameTransactionController extends Controller
 {
     protected $transaction_type;
-    protected $transaction_relationship;
 
     /**
     * Create a transaction to the CashGame

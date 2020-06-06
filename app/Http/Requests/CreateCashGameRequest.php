@@ -28,7 +28,7 @@ class CreateCashGameRequest extends FormRequest
             'expenses.*.amount' => 'required_with:expenses.*.comments|numeric|min:0|not_in:0',
             'expenses.*.comments' => 'sometimes|nullable|string',
 
-            'cash_out_model.amount' => 'sometimes|numeric|min:0',
+            'cash_out.amount' => 'sometimes|numeric|min:0',
         ];
 
         if ($this->input('start_time') && $this->input('end_time')) {
@@ -72,8 +72,8 @@ class CreateCashGameRequest extends FormRequest
             'expenses.*.amount.not_in' => 'Expense amount cannot be zero',            
             'expenses.*.comments.string' => 'Comments must be text.',
 
-            'cash_out_model.amount.numeric' => 'Cash out amount must be a number.',
-            'cash_out_model.amount.min' => 'Cash out must be a positive amount',
+            'cash_out.amount.numeric' => 'Cash out amount must be a number.',
+            'cash_out.amount.min' => 'Cash out must be a positive amount',
         ];
     }
 }

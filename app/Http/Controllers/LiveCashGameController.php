@@ -43,7 +43,7 @@ class LiveCashGameController extends GameController
     public function current()
     {
         try {
-            $cashGame = auth()->user()->liveCashGame() ?? $this->throwLiveCashGameNotStartedException();
+            $cashGame = auth()->user()->liveCashGame() ?? [];
 
             return response()->json([
                 'success' => true,
@@ -62,20 +62,20 @@ class LiveCashGameController extends GameController
     /**
     * POST method to end the current live Cash Game
     * 
-    * @param EndSessionRequest $request
+* @param EndSessionRequest $request
     * @return json
     */
     public function end(EndSessionRequest $request)
     {
         try {
-            $cashGame = auth()->user()->liveCashGame() ?? $this->throwLiveCashGameNotStartedException();
+            $cash_game = auth()->user()->liveCashGame() ?? $this->throwLiveCashGameNotStartedException();
 
-            $cashGame->endAndCashOut($request->end_time, $request->amount ?? 0);
+            $cash_game->endAndCashOut($request->end_time, $request->amount ?? 0);
 
             return response()->json([
                 'success' => true,
                 'status' => 'live',
-                'cash_game' => $cashGame
+                'cash_game' => $cash_game->fresh()
             ]);
             
         } catch(\Exception $e) {

@@ -333,14 +333,14 @@
 				<div class="flex flex-col justify-center flex-1">
 					<div class="flex flex-col mb-2">
 						<input
-							v-model="session.cash_out_model.amount"
+							v-model="session.cash_out.amount"
 							type="number"
 							min="0"
 							class="p-1"
-							:class="{'error-input' : errors['cash_out_model.amount']}"
-							@input="delete errors['cash_out_model.amount']"
+							:class="{'error-input' : errors['cash_out.amount']}"
+							@input="delete errors['cash_out.amount']"
 						>
-						<span v-if="errors['cash_out_model.amount']" class="error-message">{{ errors['cash_out_model.amount'][0] }}</span>
+						<span v-if="errors['cash_out.amount']" class="error-message">{{ errors['cash_out.amount'][0] }}</span>
 					</div>
 				</div>
 			</div>
@@ -509,7 +509,7 @@ export default {
 				variant_id: 0,
 				limit_id: 0,
 				expenses: [],
-				cash_out_model: { amount: 0 },
+				cash_out: { amount: 0 },
 				comments: ''
 			},
 			cash_game: {

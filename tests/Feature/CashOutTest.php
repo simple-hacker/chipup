@@ -35,8 +35,8 @@ class CashOutTest extends TestCase
                 ->assertOk()
                 ->assertJsonStructure(['success', 'transaction']);;
 
-        $this->assertInstanceOf(CashOut::class, $cash_game->cashOutModel);
-        $this->assertEquals(500, $cash_game->cashOutModel()->first()->amount);
+        $this->assertInstanceOf(CashOut::class, $cash_game->cashOut);
+        $this->assertEquals(500, $cash_game->cashOut()->first()->amount);
     }
 
     public function testACashOutCannotBeAddedToACashGameThatDoesNotExist()
@@ -75,7 +75,7 @@ class CashOutTest extends TestCase
                 ])->assertStatus(422);
 
         // There should only be one instance of CashOut, and the CashGame profit will only be the first CashOut
-        $this->assertInstanceOf(CashOut::class, $cash_game->cashOutModel);
+        $this->assertInstanceOf(CashOut::class, $cash_game->cashOut);
         $this->assertCount(1, CashOut::all());
         $this->assertEquals(500, $cash_game->fresh()->profit);
     }
@@ -90,7 +90,7 @@ class CashOutTest extends TestCase
             'amount' => 500
         ]);
 
-        $cash_out = $cash_game->cashOutModel;
+        $cash_out = $cash_game->cashOut;
         
         $this->getJson(route('cashout.view', [
                     'cash_out' => $cash_out
@@ -109,7 +109,7 @@ class CashOutTest extends TestCase
             'amount' => 500
         ]);
 
-        $cash_out = $cash_game->cashOutModel;
+        $cash_out = $cash_game->cashOut;
         
         // Change amount from 500 to 1000
         $response = $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), [
@@ -132,7 +132,7 @@ class CashOutTest extends TestCase
             'amount' => 500
         ]);
 
-        $cash_out = $cash_game->cashOutModel()->first();
+        $cash_out = $cash_game->cashOut()->first();
         
         // Change amount from 500 to 1000
         $this->deleteJson(route('cashout.update', ['cash_out' => $cash_out]))
@@ -143,7 +143,7 @@ class CashOutTest extends TestCase
                 ]);
 
         $this->assertCount(0, CashOut::all());
-        $this->assertEmpty($cash_game->fresh()->cashOutModel);
+        $this->assertEmpty($cash_game->fresh()->cashOut);
     }
 
     public function testCashOutAmountIsValidForAdd()
@@ -182,9 +182,9 @@ class CashOutTest extends TestCase
                 ])
                 ->assertStatus(422);
 
-        // Need to delete the cashOutModel for the test because we can only have one which was made in
+        // Need to delete the cashOut for the test because we can only have one which was made in
         // the earlier okay assertion above.
-        $cash_game->cashOutModel->delete();
+        $cash_game->cashOut->delete();
 
         // Zero should be okay
         // NOTE: 2020-06-01 Zero is no invalid on front end, though valid backend.
@@ -205,7 +205,7 @@ class CashOutTest extends TestCase
             'game_type' => $cash_game->game_type,
             'amount' => 500
         ]);
-        $cash_out = $cash_game->cashOutModel()->first();
+        $cash_out = $cash_game->cashOut()->first();
 
         // Empty POST data is OK because it doesn't change anything.
         $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), [])->assertOk();
@@ -235,7 +235,7 @@ class CashOutTest extends TestCase
                     'game_type' => $cash_game->game_type,    
                     'amount' => 500
                 ]);
-        $cash_out = $cash_game->cashOutModel()->first();
+        $cash_out = $cash_game->cashOut()->first();
 
         // Create and sign in the second user
         $user2 = $this->signIn();

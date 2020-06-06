@@ -106,7 +106,7 @@ class TournamentTest extends TestCase
 
         // Get the basic tournament attributes
         $tournament_attributes = $attributes;
-        unset($tournament_attributes['buy_in'], $tournament_attributes['expenses'], $tournament_attributes['cash_out_model'], $tournament_attributes['rebuys'], $tournament_attributes['add_ons']);
+        unset($tournament_attributes['buy_in'], $tournament_attributes['expenses'], $tournament_attributes['cash_out'], $tournament_attributes['rebuys'], $tournament_attributes['add_ons']);
 
         $tournament = $user->tournaments()->first();
 
@@ -115,7 +115,7 @@ class TournamentTest extends TestCase
         // $this->assertDatabaseHas('tournaments', $tournament_attributes);
         $this->assertInstanceOf(BuyIn::class, $tournament->buyIn);
         $this->assertCount(2, $tournament->expenses);
-        $this->assertInstanceOf(CashOut::class, $tournament->cashOutModel);
+        $this->assertInstanceOf(CashOut::class, $tournament->cashOut);
     }
 
     // Required data must be valid when creating when creating
@@ -644,10 +644,10 @@ class TournamentTest extends TestCase
         $user = $this->signIn();
 
         $attributes = $this->getTournamentAttributes();
-        $attributes['cash_out_model'] = ['amount' => 555];
+        $attributes['cash_out'] = ['amount' => 555];
         $this->postJson(route('tournament.create'), $attributes)->assertOk();
 
-        $this->assertEquals(555, $user->tournaments->first()->cashOutModel->amount);
+        $this->assertEquals(555, $user->tournaments->first()->cashOut->amount);
     }
 
     // If CashOut not supplied then a CashOut is created with amount zero
@@ -656,12 +656,12 @@ class TournamentTest extends TestCase
         $user = $this->signIn();
 
         $attributes = $this->getTournamentAttributes();
-        unset($attributes['cash_out_model']);
+        unset($attributes['cash_out']);
         $this->postJson(route('tournament.create'), $attributes)->assertOk();
 
         // Assert CashOut Transaction was created and amount equal to 0
-        $this->assertInstanceOf(CashOut::class, $user->tournaments->first()->cashOutModel);
-        $this->assertEquals(0, $user->tournaments->first()->cashOutModel->amount);
+        $this->assertInstanceOf(CashOut::class, $user->tournaments->first()->cashOut);
+        $this->assertEquals(0, $user->tournaments->first()->cashOut->amount);
     }
 
     // Cash Out amount can be zero
@@ -670,10 +670,10 @@ class TournamentTest extends TestCase
         $user = $this->signIn();
 
         $attributes = $this->getTournamentAttributes();
-        $attributes['cash_out_model'] = ['amount' => 0];
+        $attributes['cash_out'] = ['amount' => 0];
         $this->postJson(route('tournament.create'), $attributes)->assertOk();
 
-        $this->assertEquals(0, $user->tournaments->first()->cashOutModel->amount);
+        $this->assertEquals(0, $user->tournaments->first()->cashOut->amount);
     }
 
     // Cash Out must be valid
@@ -684,15 +684,15 @@ class TournamentTest extends TestCase
         $attributes = $this->getTournamentAttributes();
         
         // CashOut amount must be a number
-        $attributes['cash_out_model'] = ['amount' => 'Not a number'];
+        $attributes['cash_out'] = ['amount' => 'Not a number'];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
 
         // CashOut amount must be positive
-        $attributes['cash_out_model'] = ['amount' => -100];
+        $attributes['cash_out'] = ['amount' => -100];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
 
         // CashOut can be an empty array as it default to zero
-        $attributes['cash_out_model'] = [];
+        $attributes['cash_out'] = [];
         $this->postJson(route('tournament.create'), $attributes)->assertOk();
     }
 

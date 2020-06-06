@@ -20,7 +20,7 @@ export default {
             end_time: moment.utc().format(),
             comments: '',
             buy_ins: [],
-            cash_out_model: {
+            cash_out: {
                 amount: 0
             },
             expenses: [],

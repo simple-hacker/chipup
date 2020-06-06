@@ -11,6 +11,5 @@ class RebuyController extends GameTransactionController
     public function __construct()
     {
         $this->transaction_type = 'rebuy';
-        $this->transaction_relationship = 'rebuys';
     }
 }

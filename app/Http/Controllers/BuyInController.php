@@ -11,6 +11,5 @@ class BuyInController extends GameTransactionController
     public function __construct()
     {
         $this->transaction_type = 'buyIn';
-        $this->transaction_relationship = 'buyIns';
     }
 }

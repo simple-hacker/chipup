@@ -8,7 +8,7 @@ class CashGame extends Game
 {
     protected $guarded = [];
 
-    protected $with = ['stake', 'variant', 'limit', 'table_size', 'buyIns', 'expenses', 'cashOutModel'];
+    protected $with = ['stake', 'variant', 'limit', 'table_size', 'buyIns', 'expenses', 'cashOut'];
 
     /**
     * Extends parent's deleteGameTransactions to include Tournament relationships.

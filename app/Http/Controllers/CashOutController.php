@@ -11,6 +11,5 @@ class CashOutController extends GameTransactionController
     public function __construct()
     {
         $this->transaction_type = 'cashOut';
-        $this->transaction_relationship = 'cashOutModel';
     }
 }

@@ -334,18 +334,18 @@ class LiveCashGameTest extends TestCase
                 ->assertOk();
     }
 
-    // Trying to view a Live CashGame when one has not been started is invalid
+    // Trying to view a Live CashGame when one has not been started is valid but returns empty json.
     public function testCannotViewLiveCashGameIfNotBeenStarted()
     {
         $user = $this->signIn();
         // Don't start CashGame
 
         $this->getJson(route('cash.live.current'))
-                ->assertStatus(422)
-                ->assertJsonStructure(['success', 'message'])
+                ->assertOk()
+                ->assertJsonStructure(['success', 'cash_game'])
                 ->assertJson([
-                    'success' => false,
-                    'message' => "You have not started a Cash Game."
+                    'success' => true,
+                    'cash_game' => []
                 ]);
                             
         $this->assertEmpty($user->liveCashGame());
@@ -505,9 +505,9 @@ class LiveCashGameTest extends TestCase
         // Assert end_time is now as end_time was not provided.
         $this->assertEquals($cashGame->end_time, Carbon::now()->toDateTimeString());
         // Check CashOut transaction was completed.
-        $this->assertInstanceOf(CashOut::class, $cashGame->cashOutModel);
+        $this->assertInstanceOf(CashOut::class, $cashGame->cashOut);
         // Check the amount of the Cash Out is 100.
-        $this->assertEquals(100, $cashGame->cashOutModel->amount);
+        $this->assertEquals(100, $cashGame->cashOut->amount);
 
     }
 
@@ -641,9 +641,9 @@ class LiveCashGameTest extends TestCase
 
         $cashGame = $user->cashGames()->first();
         // Check CashOut transaction was completed.
-        $this->assertInstanceOf(CashOut::class, $cashGame->cashOutModel);
+        $this->assertInstanceOf(CashOut::class, $cashGame->cashOut);
         // Check the amount of the BuyIn is zero.
-        $this->assertEquals(0, $cashGame->cashOutModel->amount);
+        $this->assertEquals(0, $cashGame->cashOut->amount);
     }
     
     // Cash out amount must be valid

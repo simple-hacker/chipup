@@ -200,7 +200,7 @@ class TournamentTest extends TestCase
         $tournament->addBuyIn(10000);
         $this->assertNull($tournament->fresh()->end_time);
 
-        $tournament->cashOut(30000);
+        $tournament->addCashOut(30000);
         $this->assertEquals(20000, $tournament->fresh()->profit);
     }
 
@@ -212,11 +212,11 @@ class TournamentTest extends TestCase
         try{
             $tournament = $this->startLiveTournament();
 
-            $tournament->cashOut(10000);
-            $tournament->cashOut(10000);
+            $tournament->addCashOut(10000);
+            $tournament->addCashOut(10000);
         } finally {
-            $this->assertCount(1, $tournament->cashOutModel()->get());
-            $this->assertInstanceOf(CashOut::class, $tournament->cashOutModel);
+            $this->assertCount(1, $tournament->cashOut()->get());
+            $this->assertInstanceOf(CashOut::class, $tournament->cashOut);
         }
     }
 
@@ -230,7 +230,7 @@ class TournamentTest extends TestCase
         $tournament->addRebuy(1000);
         $tournament->addRebuy(1000);
         $tournament->addAddOn(5000);
-        $tournament->cashOut(1000);
+        $tournament->addCashOut(1000);
 
         //Tournament profit should be -1000 -50 -200 -1000 -1000 + 1000 -5000 = -7250
         $this->assertEquals(-7250, $tournament->fresh()->profit);
@@ -239,7 +239,7 @@ class TournamentTest extends TestCase
         $this->assertCount(2, $tournament->expenses);
         $this->assertCount(2, $tournament->rebuys);
         $this->assertCount(1, $tournament->addOns);
-        $this->assertCount(1, $tournament->cashOutModel()->get());
+        $this->assertCount(1, $tournament->cashOut()->get());
 
         // Change the first Expense to 500 instead of 50
         $tournament->expenses->first()->update([
@@ -258,7 +258,7 @@ class TournamentTest extends TestCase
         $tournament->addOns->first()->delete();
 
         // Update the cashOut value to 4000.
-        $tournament->cashOutModel->update([
+        $tournament->cashOut->update([
             'amount' => 4000
         ]);
 
@@ -302,7 +302,7 @@ class TournamentTest extends TestCase
         
         
         // Testing Positive transaction as well.
-        $tournament->cashOut(2000);
+        $tournament->addCashOut(2000);
         // We're back to the original 5000, but we cashed out for 2000.  Bankroll = 7000
         $this->assertEquals(7000, $user->fresh()->bankroll);
         
@@ -319,7 +319,7 @@ class TournamentTest extends TestCase
         $tournament->addExpense(200);
         $tournament->addRebuy(1000);
         $tournament->addAddOn(500);
-        $tournament->cashOut(1000);
+        $tournament->addCashOut(1000);
 
         // Check that users bankroll is 7750 (10000-1000-50--1000-500+1000)
         $this->assertEquals(8250, $user->fresh()->bankroll);
@@ -334,7 +334,7 @@ class TournamentTest extends TestCase
         
         // Test again with positive profit
         $tournament2 = $user->startTournament($this->getLiveTournamentAttributes());
-        $tournament2->cashOut(10000);
+        $tournament2->addCashOut(10000);
         // Orignal bankroll 10000 + cashOut 10000 = 20000
         $this->assertEquals(20000, $user->fresh()->bankroll);
 
@@ -353,12 +353,12 @@ class TournamentTest extends TestCase
         $tournament->addRebuy(1000);
         $tournament->addAddOn(500);
         $tournament->addAddOn(500);
-        $tournament->cashOut(1000);
+        $tournament->addCashOut(1000);
         $tournament->refresh();
         // Make sure counts and bankroll are correct.
         $this->assertCount(1, $tournament->buyIns);
         $this->assertCount(2, $tournament->expenses);
-        $this->assertCount(1, $tournament->cashOutModel()->get());
+        $this->assertCount(1, $tournament->cashOut()->get());
         $this->assertCount(2, $tournament->rebuys);
         $this->assertCount(2, $tournament->addOns);
         $this->assertEquals(-3250, $tournament->profit);

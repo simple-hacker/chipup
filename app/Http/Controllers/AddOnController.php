@@ -11,6 +11,5 @@ class AddOnController extends GameTransactionController
     public function __construct()
     {
         $this->transaction_type = 'addOn';
-        $this->transaction_relationship = 'addOns';
     }
 }

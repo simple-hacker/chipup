@@ -20,7 +20,7 @@ class GameController extends Controller
     */
     public function removeTransactionsFromRequest($validatedRequest) : Array
     {
-        unset($validatedRequest['buy_ins'], $validatedRequest['buy_in'], $validatedRequest['cash_out_model'], $validatedRequest['expenses'], $validatedRequest['rebuys'], $validatedRequest['add_ons']);
+        unset($validatedRequest['buy_ins'], $validatedRequest['buy_in'], $validatedRequest['cash_out'], $validatedRequest['expenses'], $validatedRequest['rebuys'], $validatedRequest['add_ons']);
         return $validatedRequest;
     }
 
@@ -84,8 +84,8 @@ class GameController extends Controller
     */
     public function createCashOutFromRequest($game)
     {
-        $cash_out = request()->cash_out_model['amount'] ?? 0;
-        $game->cashOut($cash_out);
+        $cash_out = request()->cash_out['amount'] ?? 0;
+        $game->addCashOut($cash_out);
     }
 
     /**

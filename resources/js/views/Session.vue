@@ -350,13 +350,13 @@
 					CASH OUT
 				-->
 				<div
-					v-if="session.cash_out_model || editing"
+					v-if="session.cash_out || editing"
 					class="col-span-6 md:col-span-3 flex flex-col order-4 md:order-3 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 				>
 					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Cash Out</div>
-					<transaction-summary v-if="session.cash_out_model" :transaction="session.cash_out_model" :transaction-type="'cashout'" :game-id="session.id"></transaction-summary>
+					<transaction-summary v-if="session.cash_out" :transaction="session.cash_out" :transaction-type="'cashout'" :game-id="session.id"></transaction-summary>
 					<div
-						v-if="editing && !session.cash_out_model"
+						v-if="editing && !session.cash_out"
 						@click="addTransaction('cashout', { amount: 0 })"
 						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
@@ -585,7 +585,7 @@ export default {
 			}
 		},
 		profit() {
-			return (this.session) ? this.session.profit : 0
+			return this.session?.profit ?? 0
 		},
 		formattedProfit() {
 			return Vue.prototype.currency.format(this.profit)
@@ -596,17 +596,18 @@ export default {
 		},
 		buyInsTotal() {
 			if (this.session) {
-				let buyInTotal = (this.session.buy_ins) ? this.session.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) : 0
+				let buyInTotal = this.session?.buy_in?.amount ?? 0
+				let buyInsTotal = (this.session.buy_ins) ? this.session.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) : 0
 				let addOnTotal = (this.session.add_ons) ? this.session.add_ons.reduce((total, add_ons) => total + add_ons.amount, 0) : 0
 				let rebuyTotal = (this.session.rebuys) ? this.session.rebuys.reduce((total, rebuys) => total + rebuys.amount, 0) : 0
 				let expenseTotal = (this.session.expenses) ? this.session.expenses.reduce((total, expenses) => total + expenses.amount, 0) : 0
-				return buyInTotal + addOnTotal + rebuyTotal + expenseTotal
+				return buyInTotal + buyInsTotal + addOnTotal + rebuyTotal + expenseTotal
 			} else {
 				return 0
 			}
 		},
 		cashOutTotal() {
-			let amount  = (this.session) ? this.session.cash_out_model.amount : 0
+			let amount = this.session?.cash_out?.amount ?? 0
 			return this.formatCurrency(amount)
 		},
 		runTimeHours() {

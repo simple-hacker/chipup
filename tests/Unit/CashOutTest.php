@@ -13,7 +13,7 @@ class CashOutTest extends TestCase
     {
         $cash_game = $this->startLiveCashGame();
         $cash_game->addBuyIn(10000);
-        $cash_game->cashOut(30000);
+        $cash_game->addCashOut(30000);
         $this->assertEquals(20000, $cash_game->fresh()->profit);
     }
 
@@ -21,7 +21,7 @@ class CashOutTest extends TestCase
     {
         $tournament = $this->startLiveTournament();
         $tournament->addBuyIn(10000);
-        $tournament->cashOut(30000);
+        $tournament->addCashOut(30000);
         $this->assertEquals(20000, $tournament->fresh()->profit);
     }
 
@@ -31,7 +31,7 @@ class CashOutTest extends TestCase
         $cash_game = $this->startLiveCashGame();
 
         $cash_game->addBuyIn(10000);
-        $cash_out = $cash_game->cashOut(30000);
+        $cash_out = $cash_game->addCashOut(30000);
         // -10,000 + 30,000 = 20,000
         $this->assertEquals(20000, $cash_game->fresh()->profit);
 
@@ -49,7 +49,7 @@ class CashOutTest extends TestCase
         $cash_game = $this->startLiveCashGame();
         
         $cash_game->addBuyIn(10000);
-        $cash_out = $cash_game->cashOut(30000);
+        $cash_out = $cash_game->addCashOut(30000);
         // -10,000 + 30,000 = 20,000
         $this->assertEquals(20000, $cash_game->fresh()->profit);
 

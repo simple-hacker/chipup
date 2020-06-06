@@ -370,18 +370,18 @@ class LiveTournamentTest extends TestCase
                 ->assertOk();
     }
 
-    // Trying to view a Live Tournament when one has not been started is invalid
+    // Trying to view a Live Tournament when one has not been started is valid and returns empty
     public function testCannotViewLiveTournamentIfNotBeenStarted()
     {
         $user = $this->signIn();
         // Don't start Tournament
 
         $this->getJson(route('tournament.live.current'))
-                ->assertStatus(422)
-                ->assertJsonStructure(['success', 'message'])
+                ->assertOk()
+                ->assertJsonStructure(['success', 'tournament'])
                 ->assertJson([
-                    'success' => false,
-                    'message' => "You have not started a Tournament."
+                    'success' => true,
+                    'tournament' => []
                 ]);
                             
         $this->assertEmpty($user->liveTournament());
@@ -587,9 +587,9 @@ class LiveTournamentTest extends TestCase
         // Assert end_time is now as end_time was not provided.
         $this->assertEquals($tournament->end_time, Carbon::now()->toDateTimeString());
         // Check CashOut transaction was completed.
-        $this->assertInstanceOf(CashOut::class, $tournament->cashOutModel);
+        $this->assertInstanceOf(CashOut::class, $tournament->cashOut);
         // Check the amount of the Cash Out is 100.
-        $this->assertEquals(100, $tournament->cashOutModel->amount);
+        $this->assertEquals(100, $tournament->cashOut->amount);
 
     }
 
@@ -723,9 +723,9 @@ class LiveTournamentTest extends TestCase
 
         $tournament = $user->tournaments()->first();
         // Check CashOut transaction was completed.
-        $this->assertInstanceOf(CashOut::class, $tournament->cashOutModel);
+        $this->assertInstanceOf(CashOut::class, $tournament->cashOut);
         // Check the amount of the BuyIn is zero.
-        $this->assertEquals(0, $tournament->cashOutModel->amount);
+        $this->assertEquals(0, $tournament->cashOut->amount);
     }
     
     // Cash out amount must be valid

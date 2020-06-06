@@ -43,7 +43,7 @@ class LiveTournamentController extends GameController
     public function current()
     {
         try {
-            $tournament = auth()->user()->liveTournament() ?? $this->throwLiveTournamentNotStartedException();
+            $tournament = auth()->user()->liveTournament() ?? [];
 
             return response()->json([
                 'success' => true,

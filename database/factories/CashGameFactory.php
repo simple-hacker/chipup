@@ -44,5 +44,5 @@ $factory->afterCreating(CashGame::class, function ($cash_game, $faker) {
     }
 
     // Cash Out Between £0 and £1000
-    $cash_game->cashOut($faker->numberBetween(0, 1000));
+    $cash_game->addCashOut($faker->numberBetween(0, 1000));
 });
