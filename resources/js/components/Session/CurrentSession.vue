@@ -319,17 +319,18 @@ export default {
 		}
 	},
 	created() {
-		this.editLiveSession = this.editStateLiveSession()
+		this.editLiveSession = this.getEditSession()
 	},
 	computed: {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
 		...mapState('live', ['liveSession']),
 		buyInsTotal() {
-			let buyInTotal = (this.liveSession.buy_ins) ? this.liveSession.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) : 0
+			let buyInTotal = this.liveSession?.buy_in?.amount ?? 0
+			let buyInsTotal = (this.liveSession.buy_ins) ? this.liveSession.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) : 0
 			let addOnTotal = (this.liveSession.add_ons) ? this.liveSession.add_ons.reduce((total, add_ons) => total + add_ons.amount, 0) : 0
 			let rebuyTotal = (this.liveSession.rebuys) ? this.liveSession.rebuys.reduce((total, rebuys) => total + rebuys.amount, 0) : 0
 			let expenseTotal = (this.liveSession.expenses) ? this.liveSession.expenses.reduce((total, expenses) => total + expenses.amount, 0) : 0
-			return buyInTotal + addOnTotal + rebuyTotal + expenseTotal
+			return buyInTotal + buyInsTotal + addOnTotal + rebuyTotal + expenseTotal
 		},
 		formattedBuyIns() {
 			return this.formatCurrency(this.buyInsTotal * -1)
@@ -337,21 +338,17 @@ export default {
 	},
 	methods: {
 		...mapActions('live', ['updateLiveSession']),
-		editStateLiveSession() {
+		getEditSession() {
+			let liveSession = JSON.parse(JSON.stringify(this.liveSession))
 			return {
-				id: this.liveSession.id,
-				location: this.liveSession.location,
-				stake_id: this.liveSession.stake_id,
-				limit_id: this.liveSession.limit_id,
-				variant_id: this.liveSession.variant_id,
-				table_size_id: this.liveSession.table_size_id,
-				start_time: moment.utc(this.liveSession.start_time).format(),
-				comments: this.liveSession.comments,
+				...liveSession,
+				start_time: moment.utc(liveSession.start_time).format(),
+				end_time: moment.utc(liveSession.end_time).format(),
 			}
 		},
 		cancelChanges() {
 			this.editing = false
-			this.editLiveSession = this.editStateLiveSession()
+			this.editLiveSession = this.getEditSession()
 		},
 		saveSession() {
 			this.updateLiveSession(this.editLiveSession)

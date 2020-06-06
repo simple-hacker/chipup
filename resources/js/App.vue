@@ -96,9 +96,9 @@ export default {
         ...mapState('live', ['liveSession']),
         ...mapGetters('live', ['sessionInProgress']),
         runTime() {
-			const start_time = moment.utc(this.liveSession.start_time)
+			let start_time = moment.utc(this.liveSession.start_time)
 			let diff = this.now.diff(start_time, 'hours', true)
-			return moment.duration(diff, 'hours').format("hh:mm", { trim: false})
+			return moment.duration(diff, 'hours').format("hh:mm:ss", { trim: false})
 		}
     },
     watch: {
@@ -108,7 +108,7 @@ export default {
             if (running) {
                 this.runTimeInterval = setInterval(() => {
                     this.now = moment().utc()
-                }, 60000)
+                }, 1000)
             } else {
                 clearInterval(this.runTimeInterval)
                 this.runTimeInterval = null
