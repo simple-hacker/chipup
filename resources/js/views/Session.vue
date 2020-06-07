@@ -446,7 +446,7 @@
 					<div class="flex flex-col border border-muted-dark rounded-lg">
 						<div class="flex justify-between border border-muted-dark p-3">
 							<span>Duration</span>
-							<span class="text-lg font-semibold text-green-500" v-text="runTime">
+							<span class="text-lg font-semibold text-green-500" v-text="duration">
 							</span>
 						</div>
 						<div class="flex justify-between border border-muted-dark p-3">
@@ -591,8 +591,8 @@ export default {
 			return Vue.prototype.currency.format(this.profit)
 		},
 		roi() {
-			const buy_inTotal = (this.buyInsTotal < 1) ? 1 : this.buyInsTotal
-			return this.profit / buy_inTotal
+			const buyInsTotal = (this.buyInsTotal < 1) ? 1 : this.buyInsTotal
+			return this.profit / buyInsTotal
 		},
 		buyInsTotal() {
 			if (this.session) {
@@ -610,16 +610,16 @@ export default {
 			let amount = this.session?.cash_out?.amount ?? 0
 			return this.formatCurrency(amount)
 		},
-		runTimeHours() {
+		durationHours() {
 			const end_time = moment.utc(this.session.end_time)
 			const start_time = moment.utc(this.session.start_time)
 			return end_time.diff(start_time, 'hours', true)
 		},
-		runTime() {
-			return moment.duration(this.runTimeHours, 'hours').format("h [hours] m [mins]")
+		duration() {
+			return moment.duration(this.durationHours, 'hours').format("h [hours] m [mins]")
 		},
 		profitPerHour() {
-			return (this.profit / this.runTimeHours).toFixed(2)
+			return (this.profit / this.durationHours).toFixed(2)
 		},
 	},
 	methods: {

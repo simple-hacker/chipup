@@ -3,7 +3,7 @@
 		<div class="border border-muted-dark rounded-lg">
 			<div class="flex justify-between border border-muted-dark p-3">
 				<span>Sessions</span>
-				<span class="text-lg">4</span>
+				<span class="text-lg" v-text="numberOfSessions"></span>
 			</div>
 			<div class="flex justify-between border border-muted-dark p-3">
 				<span>Profit</span>
@@ -11,7 +11,7 @@
 					<number
 						ref="stats-profit"
 						:from="0"
-						:to="1056.84"
+						:to="totalProfit"
 						:duration="1"
 						:format="(number) => '£'+number.toLocaleString()"
 						easing="Power1.easeOut"
@@ -24,7 +24,33 @@
 					<number
 						ref="stats-profit-hour"
 						:from="0"
-						:to="24.46"
+						:to="profitPerHour"
+						:duration="1"
+						:format="(number) => '£'+number.toLocaleString()"
+						easing="Power1.easeOut"
+					/>
+				</span>
+			</div>
+			<div class="flex justify-between border border-muted-dark p-3">
+				<span>Total Buy Ins</span>
+				<span class="text-lg font-semibold">
+					<number
+						ref="stats-profit-hour"
+						:from="0"
+						:to="totalBuyIns"
+						:duration="1"
+						:format="(number) => '£'+number.toLocaleString()"
+						easing="Power1.easeOut"
+					/>
+				</span>
+			</div>
+			<div class="flex justify-between border border-muted-dark p-3">
+				<span>Total Cashes</span>
+				<span class="text-lg font-semibold">
+					<number
+						ref="stats-profit-hour"
+						:from="0"
+						:to="totalCashes"
 						:duration="1"
 						:format="(number) => '£'+number.toLocaleString()"
 						easing="Power1.easeOut"
@@ -37,7 +63,7 @@
 					<number
 						ref="stats-profit-session"
 						:from="0"
-						:to="254.21"
+						:to="profitPerSession"
 						:duration="1"
 						:format="(number) => '£'+number.toLocaleString()"
 						easing="Power1.easeOut"
@@ -50,7 +76,7 @@
 					<number
 						ref="stats-average-roi"
 						:from="0"
-						:to="23.54"
+						:to="averageROI"
 						:duration="1"
 						:format="(number) => number.toFixed(2)+'%'"
 						easing="Power1.easeOut"
@@ -59,11 +85,11 @@
 			</div>
 			<div class="flex justify-between border border-muted-dark p-3">
 				<span>Average duration</span>
-				<span class="text-lg">8 hours and 43 mins</span>
+				<span class="text-lg" v-text="averageDuration"></span>
 			</div>
 			<div class="flex justify-between border border-muted-dark p-3">
 				<span>Total duration</span>
-				<span class="text-lg">43 hours and 12 mins</span>
+				<span class="text-lg" v-text="totalDuration"></span>
 			</div>
 		</div>
 		<div class="mt-4 flex justify-end">
@@ -78,8 +104,24 @@
 </template>
 
 <script>
-export default {
+import { mapGetters } from 'vuex'
 
+export default {
+	name: 'Statistics',
+	computed: {
+		...mapGetters('sessions', [
+			'numberOfSessions',
+			'totalProfit',
+			'totalDurationHours',
+			'averageDuration',
+			'totalDuration',
+			'profitPerHour',
+			'profitPerSession',
+			'totalBuyIns',
+			'totalCashes',
+			'averageROI',
+		])
+	}
 }
 </script>
 
