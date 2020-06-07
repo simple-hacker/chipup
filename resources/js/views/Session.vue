@@ -19,7 +19,7 @@
 						TOURNAMENT NAME
 					-->
 					<div
-						v-if="session.name"
+						v-if="session.name || (session.game_type === 'tournament' && editing)"
 						class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
 						<div class="w-1/6">
 							<i class="fas fa-star"></i>
@@ -174,7 +174,7 @@
 						PRIZE POOL
 					-->
 					<div
-						v-if="session.prize_pool >= 0"
+						v-if="session.game_type === 'tournament'"
 						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
 					>
 						<div class="w-1/6">
@@ -201,7 +201,7 @@
 						POSITION
 					-->
 					<div
-						v-if="session.position"
+						v-if="session.game_type === 'tournament'"
 						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
 					>
 						<div class="w-1/6">
@@ -228,7 +228,7 @@
 						ENTRIES
 					-->
 					<div
-						v-if="session.entries"
+						v-if="session.game_type === 'tournament'"
 						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
 					>
 						<div class="w-1/6">
@@ -328,7 +328,7 @@
 						<span>Add Buy In</span>
 					</div>
 				</div>
-				<!--
+				<!-- 
 					TOURNAMENT BUY IN
 				-->
 				<div
@@ -336,7 +336,7 @@
 					class="col-span-6 md:col-span-3 flex flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 				>
 					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Buy In</div>
-					<transaction-summary :transaction="session.buy_in" :transaction-type="'buyin'" :game-id="session.id"></transaction-summary>
+					<transaction-summary v-if="session.buy_in" :transaction="session.buy_in" :transaction-type="'buyin'" :game-id="session.id"></transaction-summary>
 					<div
 						v-if="editing && !session.buy_in"
 						@click="addTransaction('buyin', { amount: 0 })"

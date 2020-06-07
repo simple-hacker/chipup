@@ -55,7 +55,13 @@ export default {
             })
         },
         updateLiveSession({ commit }, session) {
-            return axios.patch('/api/live/update', session)
+            let url = ''
+            if (session.game_type === 'cash_game') {
+                url = '/api/cash/live/update'
+            } else if (session.game_type === 'tournament') {
+                url = '/api/tournament/live/update'
+            }
+            return axios.patch(url, session)
             .then(response => {
                 commit('UPDATE_LIVE_SESSION', response.data.game)
             })
@@ -64,10 +70,13 @@ export default {
             })
         },
         endLiveSession({ commit }, cashOut) {
-            return axios.post('/api/cash/live/end', cashOut)
+            return axios.post('/api/live/end', cashOut)
             .then(response => {
                 commit('END_LIVE_SESSION', response.data.game)
-                commit('cash_games/ADD_CASH_GAME', response.data.game, { root: true})
+                if (response.data.game.game_type === 'cash_game') {
+                    commit('cash_games/ADD_CASH_GAME', response.data.game, { root: true})
+                } else if (response.data.game.game_type === 'tournament')
+                    commit('tournaments/ADD_TOURNAMENT', response.data.game, { root: true})
             })
             .catch(error => {
                 throw error

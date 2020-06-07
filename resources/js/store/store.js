@@ -26,7 +26,12 @@ const store = new Vuex.Store({
         filters,
     },
     plugins: [createPersistedState({
-        paths: ['sessions.loadSessionState'],
+        paths: [
+            // 'sessions.sessions',
+            'cash_games.cash_games',
+            'tournaments.tournaments',
+            'sessions.loadSessionState',
+        ],
     })],
     state: {
         user: {

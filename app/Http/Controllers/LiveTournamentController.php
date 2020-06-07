@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EndSessionRequest;
 use App\Http\Requests\StartTournamentRequest;
 use App\Http\Requests\UpdateLiveTournamentRequest;
 
@@ -34,7 +33,7 @@ class LiveTournamentController extends LiveGameController
 
             return [
                 'success' => true,
-                'game' => $tournament
+                'game' => $tournament->fresh(),
             ];
         } catch(\Exception $e) {
             return response()->json([

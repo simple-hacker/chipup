@@ -36,7 +36,10 @@
 						</select>
 						<span v-if="errors.stake_id" class="error-message">{{ errors.stake_id[0] }}</span>
 					</div>
-					<div class="flex flex-col w-1/2 lg:w-1/4 p-1">
+					<div
+						class="flex flex-col w-1/2 p-1"
+						:class="game_type === 'cash_game' ? 'lg:w-1/4' : 'lg:w-1/2'"
+					>
 						<select
 							v-model="session.limit_id"
 							:class="{ 'error-input' : errors.limit_id }"
@@ -46,7 +49,10 @@
 						</select>
 						<span v-if="errors.limit_id" class="error-message">{{ errors.limit_id[0] }}</span>
 					</div>
-					<div class="flex flex-col w-1/2 lg:w-1/4 p-1">
+					<div
+						class="flex flex-col w-1/2 p-1"
+						:class="game_type === 'cash_game' ? 'lg:w-1/4' : 'lg:w-1/2'"
+					>
 						<select
 							v-model="session.variant_id"
 							:class="{ 'error-input' : errors.variant_id }"

@@ -13,6 +13,31 @@
 					-->
 					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2">Details</div>
 					<!--
+						NAME
+					-->
+					<div
+						v-if="liveSession.name"
+						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
+					>
+						<div class="w-1/6">
+							<i class="fas fa-map-marker-alt"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="liveSession.name"></span>
+							<div v-if="editing" class="flex flex-col">
+								<input
+									type="text"
+									v-model="editLiveSession.name"
+									placeholder="Location"
+									class="p-1 text-lg"
+									:class="{'error-input' : errors.name}"
+									@input="delete errors.name"
+								/>
+								<span v-if="errors.name" class="error-message">{{ errors.name[0] }}</span>
+							</div>						
+						</div>
+					</div>
+					<!--
 						LOCATION
 					-->
 					<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
@@ -116,7 +141,9 @@
 					<!--
 						TABLE SIZE
 					-->
-					<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
+					<div
+						v-if="liveSession.table_size"
+						class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
 						<div class="w-1/6">
 							<i class="fas fa-user-friends"></i>
 						</div>
@@ -142,8 +169,86 @@
 						</div>
 					</div>
 					<!--
+						PRIZE POOL
+					-->
+					<div
+						v-if="liveSession.game_type === 'tournament'"
+						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
+					>
+						<div class="w-1/6">
+							<i class="fas fa-money-bill-wave"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="`£${liveSession.prize_pool} prize pool`"></span>
+							<div v-if="editing" class="flex flex-col">
+								<input
+									type="number"
+									min=0
+									step=1
+									v-model="editLiveSession.prize_pool"
+									placeholder="Prize Pool"
+									class="p-1 text-lg"
+									:class="{'error-input' : errors.prize_pool}"
+									@input="delete errors.prize_pool"
+								/>
+								<span v-if="errors.prize_pool" class="error-message">{{ errors.prize_pool[0] }}</span>
+							</div>						
+						</div>
+					</div>
+					<!--
+						POSITION
+					-->
+					<div
+						v-if="liveSession.game_type === 'tournament'"
+						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
+					>
+						<div class="w-1/6">
+							<i class="fas fa-medal"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="liveSession.position"></span>
+							<div v-if="editing" class="flex flex-col">
+								<input
+									type="number"
+									min=0
+									step=1
+									v-model="editLiveSession.position"
+									placeholder="Finishing Position"
+									class="p-1 text-lg"
+									:class="{'error-input' : errors.position}"
+									@input="delete errors.position"
+								/>
+								<span v-if="errors.position" class="error-message">{{ errors.position[0] }}</span>
+							</div>						
+						</div>
+					</div>
+					<!--
 						ENTRIES
 					-->
+					<div
+						v-if="liveSession.game_type === 'tournament'"
+						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
+					>
+						<div class="w-1/6">
+							<i class="fas fa-users"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="`${liveSession.entries} entries`"></span>
+							<div v-if="editing" class="flex flex-col">
+								<input
+									type="number"
+									min=0
+									step=1
+									v-model="editLiveSession.entries"
+									placeholder="Number of Entries"
+									class="p-1 text-lg"
+									:class="{'error-input' : errors.entries}"
+									@input="delete errors.entries"
+								/>
+								<span v-if="errors.entries" class="error-message">{{ errors.entries[0] }}</span>
+							</div>						
+						</div>
+					</div>
 					<!--
 						START TIME
 					-->
@@ -173,9 +278,10 @@
 					</div>
 				</div>	
 				<!--
-					BUY INS
+					CASH BUY INS
 				-->
 				<div
+					v-if="liveSession.game_type === 'cash_game'"
 					class="col-span-6 md:col-span-3 flex flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 				>
 					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Buy Ins</div>
@@ -187,6 +293,25 @@
 						<transaction-summary :transaction="buy_in" :transaction-type="'buyin'" :game-id="liveSession.id"></transaction-summary>
 					</div>
 					<div
+						v-if="editing"
+						@click="addTransaction('buyin', { amount: 0 })"
+						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
+					>
+						<i class="fas fa-plus-circle mr-2"></i>
+						<span>Add Buy In</span>
+					</div>
+				</div>
+				<!--
+					TOURNAMENT BUY IN
+				-->
+				<div
+					v-if="liveSession.game_type === 'tournament'"
+					class="col-span-6 md:col-span-3 flex flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+				>
+					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Buy In</div>
+					<transaction-summary v-if="liveSession.buy_in" :transaction="liveSession.buy_in" :transaction-type="'buyin'" :game-id="liveSession.id"></transaction-summary>
+					<div
+						v-if="!liveSession.buy_in"
 						@click="addTransaction('buyin', { amount: 0 })"
 						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
@@ -220,6 +345,7 @@
 					REBUYS
 				-->
 				<div
+					v-if="liveSession.rebuys"
 					class="col-span-6 md:col-span-3 flex flex-col order-6 md:order-5 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 				>
 					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Rebuys</div>
@@ -242,6 +368,7 @@
 					ADD ONS
 				-->
 				<div
+					v-if="liveSession.add_ons"
 					class="col-span-6 md:col-span-3 flex flex-col order-7 md:order-6 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
 				>
 					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Add Ons</div>
@@ -385,7 +512,7 @@ export default {
                 transaction,
 				transactionType,
 				gameId: this.liveSession.id,
-                gameType: 'cash_game'
+                gameType: this.liveSession.game_type
             }, {
                 // Modal Options
                 classes: 'modal',
