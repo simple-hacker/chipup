@@ -4,12 +4,15 @@ namespace App\Abstracts;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\InvalidDateException;
 use App\Exceptions\MultipleCashOutException;
-use Illuminate\Database\Eloquent\Model;
+use ShiftOneLabs\LaravelCascadeDeletes\CascadesDeletes;
 
 abstract class Game extends Model
 {
+    use CascadesDeletes;
+
     protected $casts = [
         'user_id' => 'integer',
         'profit' => 'float',
@@ -199,22 +202,6 @@ abstract class Game extends Model
     public function cashOut()
     {
         return $this->morphOne('App\Transactions\CashOut', 'game');
-    }
-
-    /**
-    * Deletes all the GameType's GameTransactions
-    * This is fired in the GameType Model Observer.
-    * Have to do it this way because MySQL does not support Laravel polymorphic relationship 
-    *
-    * By default all Games have buyIns, expenses and a cashOut
-    * Tournaments have rebuys and addOns, those are called in the Tournament class.
-    *
-    * @return void
-    */
-    public function deleteGameTransactions()
-    {
-        $this->expenses()->delete();
-        $this->cashOut()->delete();
     }
 
     /**

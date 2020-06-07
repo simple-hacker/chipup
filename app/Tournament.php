@@ -11,6 +11,8 @@ class Tournament extends Game
 
     protected $with = ['variant', 'limit', 'table_size', 'buyIn', 'expenses', 'rebuys', 'addOns', 'cashOut'];
 
+    protected $cascadeDeletes = ['buyIn', 'expenses', 'cashOut', 'rebuys', 'addOns'];
+
     /**
     * Add a BuyIn for the tournament.
     * This updates the Tournament's profit by subtracting the BuyIn amount.
@@ -87,21 +89,6 @@ class Tournament extends Game
     public function addOns()
     {
         return $this->morphMany('App\Transactions\AddOn', 'game');
-    }
-
-
-    /**
-    * Extends parent's deleteGameTransactions to include Tournament relationships.
-    * 
-    * @return void
-    */
-    public function deleteGameTransactions()
-    {
-        $this->buyIn()->delete();
-        $this->rebuys()->delete();
-        $this->addOns()->delete();
-
-        parent::deleteGameTransactions();
     }
 
     /**

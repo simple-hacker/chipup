@@ -566,7 +566,7 @@ class CashGameTest extends TestCase
                 ->assertJsonStructure(['success', 'cash_game'])
                 ->assertJson([
                     'success' => true,
-                    'cash_game' => $cash_game->toArray()
+                    'cash_game' => $cash_game->fresh()->toArray()
                 ]);
     }
 

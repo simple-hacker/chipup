@@ -726,7 +726,7 @@ class TournamentTest extends TestCase
                 ->assertJsonStructure(['success', 'tournament'])
                 ->assertJson([
                     'success' => true,
-                    'tournament' => $tournament->toArray()
+                    'tournament' => $tournament->fresh()->toArray()
                 ]);
     }
 

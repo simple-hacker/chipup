@@ -32,20 +32,19 @@ class GameObserver
     }
 
     /**
-     * Handle the game "deleted" event.
+     * Handle the game "deleting" event.
      *
      * @param  \App\Abstracts\Game  $game
      * @return void
      */
-    public function deleted(Game $game)
+    public function deleting(Game $game)
     {
+        // This is fired just before the $game is deleted so we still have access to it's profit
+        // so we can update the user's bankroll.
         // We multiple the profit by -1
         // If the Game's profit was positive, need to subtract that amount from the bankroll
         // If the Game's profit was negative, need to add that amount to the bankroll.
-        $game->user->updateBankroll($game->profit * -1);
-
-        // Delete all GameTransactions to.
-        $game->deleteGameTransactions();
+        // $game->user->updateBankroll($game->profit * -1);
     }
 
     /**

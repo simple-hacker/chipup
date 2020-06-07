@@ -10,17 +10,7 @@ class CashGame extends Game
 
     protected $with = ['stake', 'variant', 'limit', 'table_size', 'buyIns', 'expenses', 'cashOut'];
 
-    /**
-    * Extends parent's deleteGameTransactions to include Tournament relationships.
-    * 
-    * @return void
-    */
-    public function deleteGameTransactions()
-    {
-        $this->buyIns()->delete();
-
-        parent::deleteGameTransactions();
-    }
+    protected $cascadeDeletes = ['buyIns', 'expenses', 'cashOut'];
 
     /**
     * Return the parent's stake model
