@@ -1,5 +1,5 @@
 <template>
-	<div class="bg-card rounded border border-muted-dark p-4 text-white">
+	<div class="bg-card rounded border border-muted-dark p-4 text-white mb-4">
 		<h1 class="text-lg md:text-2xl">Start a new {{ game_type_label }}</h1>
     	<hr class="mb-4 border border-muted-dark">
 		<div @click="switchGameType" class="text-center font-bold text-green-500 p-3 cursor-pointer">

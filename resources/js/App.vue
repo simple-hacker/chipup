@@ -22,7 +22,7 @@
         </nav>
 
         <div class="flex flex-1 flex-col lg:flex-row lg:relative overflow-hidden">
-            <div ref="scroll" class="flex-1 justify-center pt-4 px-2 w-full lg:px-4 lg:order-last overflow-y-auto scrolling-touch">
+            <div ref="scroll" class="flex-1 justify-center pt-4 px-2 w-full lg:px-4 lg:order-last overflow-y-auto scrolling-touch mb-1">
                 <transition name="fade" mode="out-in">
                     <router-view></router-view>
                 </transition>
