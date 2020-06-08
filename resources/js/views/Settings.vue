@@ -274,7 +274,6 @@ export default {
             this.$store.dispatch('updateDefaultValues', this.default_values)
             .then(response => {
                 this.$snotify.success('Saved default values.')
-                this.default_values = JSON.parse(JSON.stringify(this.user.default_values))
                 this.errors = {}
                 this.updatingDefaultValues = false
             })
@@ -286,8 +285,12 @@ export default {
         },
     },
     created() {
-        this.email = JSON.parse(JSON.stringify(this.user.email)),
-        this.default_values = JSON.parse(JSON.stringify(this.user.default_values))
+        this.email = this.user.email ?? ''
+        this.default_values.default_stake_id = this.user.default_stake_id ?? 1
+        this.default_values.default_limit_id = this.user.default_limit_id ?? 1
+        this.default_values.default_variant_id = this.user.default_variant_id ?? 1
+        this.default_values.default_table_size_id = this.user.default_table_size_id ?? 1
+        this.default_values.default_location = this.user.default_location ?? ''
     },
 }
 </script>

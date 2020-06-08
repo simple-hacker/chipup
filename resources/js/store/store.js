@@ -35,61 +35,36 @@ const store = new Vuex.Store({
         ],
     })],
     state: {
-        user: {
-            email: "example@email.com",
-            default_values: {
-                default_stake_id: 3,
-                default_limit_id: 2,
-                default_variant_id: 3,
-                default_table_size_id: 2,
-                default_location: 'Las Vegas',
-            }
-        },
-        stakes: [
-            { id: 1, stake: "1/1", small_blind: 1, big_blind: 1 },
-            { id: 2, stake: "1/2", small_blind: 1, big_blind: 2 },
-            { id: 3, stake: "1/3", small_blind: 1, big_blind: 3 },
-            { id: 4, stake: "2/4", small_blind: 2, big_blind: 4 },
-        ],
-        limits: [
-            { id: 1, limit: "No Limit"},
-            { id: 2, limit: "Pot Limit"},
-            { id: 3, limit: "Limit"},
-            { id: 4, limit: "Mixed Limit"},
-            { id: 5, limit: "Spread Limit"},
-        ],
-        variants: [
-            { id: 1, variant: "Texas Holdem" },
-            { id: 2, variant: "Omaha Hi" },
-            { id: 3, variant: "Omaha Hi-Lo" },
-            { id: 4, variant: "Short Deck" },
-            { id: 5, variant: "6+" },
-            { id: 6, variant: "Razz" },
-            { id: 7, variant: "HORSE" },
-            { id: 8, variant: "7-Card Stud" },
-            { id: 9, variant: "2-7 Triple Draw" },
-            { id: 10, variant: "5-Card Draw" },
-            { id: 11, variant: "5-Card Omaha" },
-            { id: 12, variant: "Badugi" },
-            { id: 13, variant: "Stud 8" },
-            { id: 14, variant: "Dealer\'s Choice" },
-        ],
-        table_sizes: [
-            { id: 1, table_size: "Full Ring" },
-            { id: 2, table_size: "6 Max" },
-            { id: 3, table_size: "8 Max" },
-            { id: 4, table_size: "Heads Up" }
-        ]
+        user: {},
+        stakes: [],
+        limits: [],
+        variants: [],
+        table_sizes: [],
     },
     mutations: {
+        SET_USER(state, user) {
+            state.user = user
+        },
         SET_EMAIL(state, email) {
             state.user.email = email
         },
         SET_DEFAULT_VALUES(state, default_values) {
-            state.user.default_values = default_values
+            Object.keys(default_values).forEach(variable => {
+                state.user[variable] = default_values[variable]
+            })
+        },
+        SET_VARIABLES(state, variables) {
+            state.stakes = variables.stakes
+            state.limits = variables.limits
+            state.variants = variables.variants
+            state.table_sizes = variables.table_sizes
         }
     },
     actions: {
+        populateState({ commit }, payload) {
+            commit('SET_USER', payload.user)
+            commit('SET_VARIABLES', payload.variables)
+        },
         updateEmailAddress({ commit }, email) {
             return axios.post('/settings/email', { email: email })
             .then(response => {

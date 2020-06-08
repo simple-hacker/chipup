@@ -17,7 +17,13 @@
 </head>
 <body class="bg-background">
     <div id="app">
-        <app></app>
+        <app
+            :user="{{ $user }}"
+            :stakes="{{ $stakes }}"
+            :limits="{{ $limits }}"
+            :variants="{{ $variants }}"
+            :table_sizes="{{ $table_sizes }}"
+        ></app>
     </div>
 </body>
 </html>

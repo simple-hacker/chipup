@@ -164,7 +164,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
+		...mapState(['user', 'stakes', 'limits', 'variants', 'table_sizes']),
 		liveSession() {
 			if (this.game_type === 'cash_game') {
 				return {...this.session, ...this.cash_game}
@@ -212,7 +212,14 @@ export default {
 				this.errors = error.response.data.errors
 			})
 		},
-    }
+	},
+	created() {
+		this.session.location = this.user.default_location ?? ''
+		this.session.limit_id = this.user.default_limit_id ?? 1
+		this.session.variant_id = this.user.default_variant_id ?? 1
+		this.cash_game.stake_id = this.user.default_stake_id ?? 1
+		this.cash_game.table_size_id = this.user.default_table_size_id ?? 1
+	},
 }
 </script>
 

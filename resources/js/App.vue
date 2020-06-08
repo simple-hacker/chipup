@@ -85,6 +85,7 @@ import { mapState, mapGetters } from 'vuex'
 
 export default {
     name: 'App',
+    props: ['user', 'stakes', 'limits', 'variants', 'table_sizes'],
     data(){
         return {
             sessionsScrollTo: 0,
@@ -99,7 +100,15 @@ export default {
 			let start_time = moment.utc(this.liveSession.start_time)
 			let diff = this.now.diff(start_time, 'hours', true)
 			return moment.duration(diff, 'hours').format("hh:mm:ss", { trim: false})
-		}
+        },
+        variables() {
+            return {
+                stakes: this.stakes,
+                limits: this.limits,
+                variants: this.variants,
+                table_sizes: this.table_sizes,
+            }
+        }
     },
     watch: {
         sessionInProgress: function(running) {
@@ -115,13 +124,14 @@ export default {
             }
         }
     },
-    beforeCreate() {
+    created() {
+        this.$store.dispatch('populateState', { user: this.user, variables: this.variables })
         this.$store.dispatch('bankroll/getBankrollTransactions')
         this.$store.dispatch('cash_games/getCashGames')
         this.$store.dispatch('tournaments/getTournaments')
         this.$store.dispatch('live/currentLiveSession')
-    },
-    created() {
+
+
         // App uses main-content ref=scroll as a scrollable div for main content, where as vue-router uses window.scrollTop for scrollBehaviour
         // which is always at 0,0 because it's fixed and overflow is hidden.
         // Code found on https://github.com/vuejs/vue-router/issues/1187
