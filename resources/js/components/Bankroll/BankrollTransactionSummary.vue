@@ -23,7 +23,7 @@ export default {
 			return moment.utc(this.bankrollTransaction.date).format("dddd, Do MMMM YYYY")
 		},
 		transactionAmount() {
-			return Vue.prototype.currency.format(this.bankrollTransaction.amount);
+			return this.$currency.format(this.bankrollTransaction.amount);
 		}
 	}
 }
