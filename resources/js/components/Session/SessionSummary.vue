@@ -33,7 +33,7 @@ export default {
 			return this.session.profit
 		},
 		formattedProfit() {
-			return Vue.prototype.currency.format(this.profit)
+			return this.$currency.format(this.profit)
 		},
 		date() {
 			return moment(this.session.start_time).format("dddd, Do MMMM YYYY")

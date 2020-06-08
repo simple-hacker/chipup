@@ -19,7 +19,7 @@ export default {
                 yaxis: {
                     labels: {
                         formatter: function (val, opts) {
-                            return Vue.prototype.currency.format(val);
+                            return Vue.prototype.$currency.format(val);
                         },
                     },
                     title: {
@@ -33,7 +33,7 @@ export default {
                 dataLabels: {
                     enabled: true,
                     formatter: function (val, opts) {
-                        return Vue.prototype.currency.format(val);
+                        return Vue.prototype.$currency.format(val);
                     },
                 },
                 tooltip: {

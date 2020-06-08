@@ -27,12 +27,15 @@ export default {
         totalProfit: (state, getters) => {
             return getters.sessions.reduce((total, session) => total + session.profit, 0)
         },
-        totalDurationHours: (state, getters) => {
+        totalDuration: (state, getters) => {
             return getters.sessions.reduce((total, session) => {
             	const end_time = moment.utc(session.end_time)
             	const start_time = moment.utc(session.start_time)
                 return total + end_time.diff(start_time, 'hours', true)
             }, 0)
+        },
+        averageDuration: (state, getters) => {
+            return getters.totalDuration / getters.numberOfSessions
         },
         totalBuyIns: (state, getters) => {
             return getters.sessions.reduce((total, session) => {
@@ -51,16 +54,10 @@ export default {
             return getters.totalProfit / getters.totalBuyIns
         },
         profitPerHour: (state, getters) => {
-            return getters.totalProfit / getters.totalDurationHours
+            return getters.totalProfit / getters.totalDuration
         },
         profitPerSession: (state, getters) => {
             return getters.totalProfit / getters.numberOfSessions
-        },
-        averageDuration: (state, getters) => {
-            return moment.duration(getters.totalDurationHours / getters.numberOfSessions, 'hours').format("d [days] h [hours] m [mins]")
-        },
-        totalDuration: (state, getters) => {
-            return moment.duration(getters.totalDurationHours, 'hours').format("d [days] h [hours] m [mins]")
         },
     },
     mutations: {

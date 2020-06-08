@@ -73,7 +73,6 @@ const store = new Vuex.Store({
             { id: 4, table_size: "Heads Up" }
         ]
     },
-    
 })
 
 export default store

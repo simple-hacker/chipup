@@ -446,43 +446,60 @@
 					<div class="flex flex-col border border-muted-dark rounded-lg">
 						<div class="flex justify-between border border-muted-dark p-3">
 							<span>Duration</span>
-							<span class="text-lg font-semibold text-green-500" v-text="duration">
+							<span class="text-lg font-semibold">
+								<number
+									ref="stats-profit-session"
+									:from="0"
+									:to="duration"
+									:duration="2"
+									:format="(amount) => formatDuration(amount)"
+									easing="Power1.easeOut"
+								/>
 							</span>
 						</div>
 						<div class="flex justify-between border border-muted-dark p-3">
 							<span>Profit</span>
-							<span class="text-lg font-semibold text-green-500">
+							<span
+								class="text-lg font-semibold"
+								:class="(profit > 0) ? 'text-green-500' : 'text-red-500'"
+							>
 								<number
-									ref="stats-profit-session"
+									ref="stats-profit"
 									:from="0"
 									:to="profit"
-									:duration="1"
-									:format="(number) => '£'+number.toLocaleString()"
+									:duration="2"
+									:format="(amount) => formatCurrency(amount)"
 									easing="Power1.easeOut"
 								/>
 							</span>
 						</div>
 						<div class="flex justify-between border border-muted-dark p-3">
 							<span>Profit / hour</span>
-							<span class="text-lg font-semibold text-green-500">
+							<span
+								class="text-lg font-semibold"
+								:class="(profitPerHour > 0) ? 'text-green-500' : 'text-red-500'"
+							>
 								<number
-									ref="stats-profit-session"
+									ref="stats-profit-hour"
 									:from="0"
 									:to="profitPerHour"
-									:duration="1"
-									:format="(number) => '£'+number.toLocaleString()"
+									:duration="2"
+									:format="(amount) => formatCurrency(amount)"
 									easing="Power1.easeOut"
 								/>
 							</span>
 						</div>
 						<div class="flex justify-between border border-muted-dark p-3">
 							<span>ROI</span>
-							<span class="text-lg font-semibold text-green-500">
+							<span
+								class="text-lg font-semibold"
+								:class="(roi > 0) ? 'text-green-500' : 'text-red-500'"
+							>
 								<number
 									ref="stats-average-roi"
 									:from="0"
 									:to="roi"
-									:duration="1"
+									:duration="2"
 									:format="(number) => number.toFixed(2)+'%'"
 									easing="Power1.easeOut"
 								/>
@@ -588,7 +605,7 @@ export default {
 			return this.session?.profit ?? 0
 		},
 		formattedProfit() {
-			return Vue.prototype.currency.format(this.profit)
+			return this.$currency.format(this.profit)
 		},
 		roi() {
 			const buyInsTotal = (this.buyInsTotal < 1) ? 1 : this.buyInsTotal
@@ -610,16 +627,16 @@ export default {
 			let amount = this.session?.cash_out?.amount ?? 0
 			return this.formatCurrency(amount)
 		},
-		durationHours() {
+		duration() {
 			const end_time = moment.utc(this.session.end_time)
 			const start_time = moment.utc(this.session.start_time)
 			return end_time.diff(start_time, 'hours', true)
 		},
-		duration() {
-			return moment.duration(this.durationHours, 'hours').format("h [hours] m [mins]")
-		},
+		// duration() {
+		// 	return moment.duration(this.duration, 'hours').format("h [hours] m [mins]")
+		// },
 		profitPerHour() {
-			return (this.profit / this.durationHours).toFixed(2)
+			return (this.profit / this.duration).toFixed(2)
 		},
 	},
 	methods: {
@@ -675,7 +692,10 @@ export default {
 			})
         },
 		formatCurrency(amount) {
-			return Vue.prototype.currency.format(amount)
+			return this.$currency.format(amount)
+		},
+		formatDuration(time) {
+			return moment.duration(time, 'hours').format("h [hours] m [mins]")
 		},
 		formatDate(date) {
 			return moment.utc(date).local().format("dddd Do MMMM, HH:mm")
