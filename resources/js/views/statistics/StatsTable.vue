@@ -17,7 +17,7 @@
 				<span>Profit</span>
 				<span
 					class="text-lg font-semibold"
-					:class="(totalProfit > 0) ? 'text-green-500' : 'text-red-500'"
+					:class="(totalProfit < 0) ? 'text-red-500' : 'text-green-500'"
 				>
 					<number
 						ref="stats-profit"
@@ -33,7 +33,7 @@
 				<span>Profit / hour</span>
 				<span
 					class="text-lg font-semibold"
-					:class="(profitPerHour > 0) ? 'text-green-500' : 'text-red-500'"
+					:class="(profitPerHour < 0) ? 'text-red-500' : 'text-green-500'"
 				>
 					<number
 						ref="stats-profit-hour"
@@ -75,7 +75,7 @@
 				<span>Profit / session</span>
 				<span
 					class="text-lg font-semibold"
-					:class="(profitPerSession > 0) ? 'text-green-500' : 'text-red-500'"
+					:class="(profitPerSession < 0) ? 'text-red-500' : 'text-green-500'"
 				>
 					<number
 						ref="stats-profit-session"
@@ -91,7 +91,7 @@
 				<span>Average ROI</span>
 				<span
 					class="text-lg font-semibold"
-					:class="(averageROI > 0) ? 'text-green-500' : 'text-red-500'"
+					:class="(averageROI < 0) ? 'text-red-500' : 'text-green-500'"
 				>
 					<number
 						ref="stats-average-roi"

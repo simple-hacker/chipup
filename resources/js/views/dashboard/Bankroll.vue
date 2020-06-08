@@ -2,7 +2,7 @@
 	<div class="flex flex-col">
 		<div
 			class="w-full text-5xl sm:text-6xl xl:text-5xl font-extrabold text-center"
-			:class="(bankroll > 0) ? 'text-green-500' : 'text-red-500'"
+			:class="(bankroll < 0) ? 'text-red-500' : 'text-green-500'"
 		>
 			<number
 				ref="dashboard-bankroll"

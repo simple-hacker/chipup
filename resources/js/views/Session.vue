@@ -2,7 +2,7 @@
 	<div class="flex flex-col xxl:w-2/3 xxl:mx-auto w-full h-full text-white">
 		<div class="flex-1">	
 			<div class="text-center text-6xl font-bold"
-				:class="(profit > 0) ? 'text-green-500' : 'text-red-500'"
+				:class="(profit < 0) ? 'text-red-500' : 'text-green-500'"
 			>
 				{{ formattedProfit }}
 			</div>
@@ -461,7 +461,7 @@
 							<span>Profit</span>
 							<span
 								class="text-lg font-semibold"
-								:class="(profit > 0) ? 'text-green-500' : 'text-red-500'"
+								:class="(profit < 0) ? 'text-red-500' : 'text-green-500'"
 							>
 								<number
 									ref="stats-profit"
@@ -477,7 +477,7 @@
 							<span>Profit / hour</span>
 							<span
 								class="text-lg font-semibold"
-								:class="(profitPerHour > 0) ? 'text-green-500' : 'text-red-500'"
+								:class="(profitPerHour < 0) ? 'text-red-500' : 'text-green-500'"
 							>
 								<number
 									ref="stats-profit-hour"
@@ -493,7 +493,7 @@
 							<span>ROI</span>
 							<span
 								class="text-lg font-semibold"
-								:class="(roi > 0) ? 'text-green-500' : 'text-red-500'"
+								:class="(roi < 0) ? 'text-red-500' : 'text-green-500'"
 							>
 								<number
 									ref="stats-average-roi"
