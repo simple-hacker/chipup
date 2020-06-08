@@ -13,8 +13,8 @@ use Illuminate\Support\Carbon;
 
 $factory->define(CashGame::class, function (Faker $faker) {
 
-    $start_time = Carbon::now()->subHours(rand(1, 43800));
-    $end_time = $start_time->copy()->addMinutes(rand(10, 2880));
+    $start_time = Carbon::now()->subHours(rand(1, 17520));
+    $end_time = $start_time->copy()->addMinutes(rand(10, 1440));
 
     return [
         'user_id' => factory('App\User')->create(),
