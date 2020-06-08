@@ -19,6 +19,11 @@ Route::get('/', function () {
 Route::get('/setup', 'SetupController@index')->name('setup.index')->middleware(['auth', 'setup.incomplete']);
 Route::post('/setup', 'SetupController@complete')->name('setup.complete')->middleware(['auth', 'setup.incomplete']);
 
+
+Route::post('/settings/email', 'SettingsController@updateEmailAddress')->name('settings.email')->middleware(['auth', 'setup.complete']);
+Route::post('/settings/defaults', 'SettingsController@updateDefaultValues')->name('settings.defaults')->middleware(['auth', 'setup.complete']);
+Route::post('/settings/password', 'SettingsController@updatePassword')->name('settings.password')->middleware(['auth', 'setup.complete']);
+
 Auth::routes();
 
 Route::get('login/{provider}', 'Auth\SocialLoginController@redirectToProvider');

@@ -57,9 +57,7 @@ export default {
             .then(response => {
                 commit('ASSIGN_CASH_GAMES', response.data.cash_games)
             })
-            .catch(error => {
-                throw error
-            })
+            .catch(error => { throw error })
         },
         addCashGame({ commit }, cash_game) {
             return axios.post('/api/cash', {
@@ -68,9 +66,7 @@ export default {
             .then(response => {
                 commit('ADD_CASH_GAME', response.data.cash_game)
             })
-            .catch(error => {
-                throw error
-            })
+            .catch(error => { throw error })
         },
         updateCashGame({ commit }, cash_game) {
             return axios.patch('/api/cash/'+cash_game.id, {
@@ -79,18 +75,14 @@ export default {
             .then(response => {
                 commit('UPDATE_CASH_GAME', response.data.cash_game)
             })
-            .catch(error => {
-                throw error
-            })
+            .catch(error => { throw error })
         },
         destroyCashGame({ commit }, cash_game) {
             return axios.delete('/api/cash/'+cash_game.id)
             .then(response => {
                 commit('REMOVE_CASH_GAME', cash_game)
             })
-            .catch(error => {
-                throw error
-            })
+            .catch(error => { throw error })
         }
     }
 }

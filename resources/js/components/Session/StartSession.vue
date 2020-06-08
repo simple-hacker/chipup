@@ -205,6 +205,7 @@ export default {
 			})
 			.then(response => {
 				this.$snotify.success('Good luck!')
+				this.errors = {}
 			})
 			.catch(error => {
 				this.$snotify.error('Error: '+error.response.data.message)

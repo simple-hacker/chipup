@@ -16,7 +16,7 @@ class SetupComplete
     public function handle($request, Closure $next)
     {
         // If user has not completed setup then redirect to route setup.index
-        if (! $request->user()->setup_complete) {
+        if (! auth()->user()->setup_complete) {
             return redirect(route('setup.index'));
         }
 

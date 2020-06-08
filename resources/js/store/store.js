@@ -11,6 +11,7 @@ import sessions from '@modules/sessions'
 import transactions from '@modules/transactions'
 import live from '@modules/live'
 import filters from '@modules/filters'
+import Axios from 'axios'
 
 Vue.use(Vuex)
 
@@ -35,7 +36,14 @@ const store = new Vuex.Store({
     })],
     state: {
         user: {
-            email: "example@email.com"
+            email: "example@email.com",
+            default_values: {
+                default_stake_id: 3,
+                default_limit_id: 2,
+                default_variant_id: 3,
+                default_table_size_id: 2,
+                default_location: 'Las Vegas',
+            }
         },
         stakes: [
             { id: 1, stake: "1/1", small_blind: 1, big_blind: 1 },
@@ -73,6 +81,38 @@ const store = new Vuex.Store({
             { id: 4, table_size: "Heads Up" }
         ]
     },
+    mutations: {
+        SET_EMAIL(state, email) {
+            state.user.email = email
+        },
+        SET_DEFAULT_VALUES(state, default_values) {
+            state.user.default_values = default_values
+        }
+    },
+    actions: {
+        updateEmailAddress({ commit }, email) {
+            return axios.post('/settings/email', { email: email })
+            .then(response => {
+                if (response.data.success === true) {
+                    commit('SET_EMAIL', email)
+                } else {
+                    reject({response: {data: { message: 'Something went wrong.'}}})
+                }
+            })
+            .catch(error => { throw error })
+        },
+        updateDefaultValues({ commit }, default_values) {
+            return axios.post('/settings/defaults', default_values)
+            .then(response => {
+                if (response.data.success === true) {
+                    commit('SET_DEFAULT_VALUES', default_values)
+                } else {
+                    reject({response: {data: { message: 'Something went wrong.'}}})
+                }
+            })
+            .catch(error => { throw error })
+        }
+    }
 })
 
 export default store
