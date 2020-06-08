@@ -54,7 +54,7 @@ import VShowSlide from 'v-show-slide'
 Vue.use(VShowSlide)
 
 
-Vue.prototype.currency = new Intl.NumberFormat('en-GB', {
+Vue.prototype.$currency = new Intl.NumberFormat('en-GB', {
     style: 'currency',
     currency: 'GBP',
     minimumFractionDigits: 2

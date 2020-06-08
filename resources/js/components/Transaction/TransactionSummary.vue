@@ -50,7 +50,7 @@ export default {
             })
         },
         formatCurrency(amount) {
-			return Vue.prototype.currency.format(amount)
+			return this.$currency.format(amount)
 		},
     }
 }

@@ -16,8 +16,9 @@ export default {
         withdrawalsTotal: (state, getters) => {
             return getters.withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0)
         },
-        bankroll: state => {
-            return state.bankrollTransactions.reduce((total, transaction) => total + transaction.amount, 0)
+        bankroll: (state, getters, rootState, rootGetters) => {
+            // Bankroll is the total number of despoits, subtract total withdrawals, add totalProfit in sessions.js
+            return getters.depositsTotal + getters.withdrawalsTotal + rootGetters['sessions/totalProfit']
         }
     },
     mutations: {

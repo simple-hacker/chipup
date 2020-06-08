@@ -1,12 +1,15 @@
 <template>
 	<div class="flex flex-col">
-		<div class="w-full text-5xl sm:text-6xl xl:text-5xl text-green-500 font-extrabold text-center">
+		<div
+			class="w-full text-5xl sm:text-6xl xl:text-5xl font-extrabold text-center"
+			:class="(bankroll < 0) ? 'text-red-500' : 'text-green-500'"
+		>
 			<number
 				ref="dashboard-bankroll"
 				:from="0"
 				:to="bankroll"
-				:duration="1"
-				:format="(number) => '£'+number.toLocaleString()"
+				:duration="2"
+				:format="amount => formatCurrency(amount)"
 				easing="Power1.easeOut"
 			/>
 		</div>
@@ -35,7 +38,7 @@ export default {
 				dataLabels: {
                     enabled: true,
                     formatter: function (val, opts) {
-						return Vue.prototype.currency.format(val);
+						return Vue.prototype.$currency.format(val);
                     },
                 },
 				xaxis: {
@@ -76,9 +79,11 @@ export default {
 				height: 'auto',
 			});
 		},
+		formatCurrency(amount) {
+			return this.$currency.format(amount)
+		}
 	},
 	computed: {
-		...mapState(['bankroll']),
 		...mapGetters('bankroll', ['bankroll', 'depositsTotal', 'withdrawalsTotal']),
 		series() {
 			return [
