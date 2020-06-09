@@ -10,6 +10,7 @@ import tournaments from '@modules/tournaments'
 import sessions from '@modules/sessions'
 import transactions from '@modules/transactions'
 import live from '@modules/live'
+import filtered_sessions from '@modules/filtered_sessions'
 import filters from '@modules/filters'
 
 Vue.use(Vuex)
@@ -23,6 +24,7 @@ const store = new Vuex.Store({
         sessions,
         transactions,
         live,
+        filtered_sessions,
         filters,
     },
     plugins: [createPersistedState({

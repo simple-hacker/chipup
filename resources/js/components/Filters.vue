@@ -15,7 +15,7 @@
                 <div class="flex md:justify-around">
                     <div class="w-1/2 md:w-auto flex items-center mr-1">
                         <span class="hidden md:block"><i class="fas fa-calendar-alt fa-lg"></i></span>
-                        <span class="mx-3 text-sm md:text-lg">From</span>
+                        <span class="mx-3 text-sm sm:text-base md:text-lg">From</span>
                         <datetime
                             input-id="filterFromDate"
                             v-model="filterFromDate"
@@ -28,7 +28,7 @@
                     </div>
                     <div class="w-1/2 md:w-auto flex items-center ml-1">
                         <span class="hidden md:block"><i class="fas fa-calendar-alt fa-lg"></i></span>
-                        <span class="mx-3 text-sm md:text-lg">To</span>
+                        <span class="mx-3 text-sm sm:text-base md:text-lg">To</span>
                         <datetime
                             input-id="filterToDate"
                             v-model="filterToDate"
@@ -51,14 +51,14 @@
                         v-if="cash_games.length > 0"
                         class="mb-1"
                     >
-                        <label class="mr-3 text-sm md:text-lg">Cash Games</label>
+                        <label class="mr-3 text-sm sm:text-base md:text-lg">Cash Games</label>
                         <toggle-button v-model="filterCashGames" :height="26" color="#38a169"/>
                     </div>
                     <div
                         v-if="tournaments.length > 0"
                         class="mb-1"
                     >
-                        <label class="mr-3 text-sm md:text-lg">Tournaments</label>
+                        <label class="mr-3 text-sm sm:text-base md:text-lg">Tournaments</label>
                         <toggle-button v-model="filterTournaments" :height="26" color="#38a169"/>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
                         <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Stakes</h2>
                         <div class="flex flex-wrap">
                             <div v-for="(stake, index) in cashGameStakeFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
-                                <label class="mr-3 text-sm md:text-lg">{{ stake }}</label>
+                                <label class="mr-3 text-sm sm:text-base md:text-lg">{{ stake }}</label>
                                 <toggle-button :value="true" :height="26" color="#38a169"/>
                             </div>
                         </div>
@@ -119,7 +119,7 @@
                         <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Limits</h2>
                         <div class="flex flex-wrap">
                             <div v-for="(limit, index) in cashGameLimitFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
-                                <label class="mr-3 text-sm md:text-lg">{{ limit }}</label>
+                                <label class="mr-3 text-sm sm:text-base md:text-lg">{{ limit }}</label>
                                 <toggle-button :value="true" :height="26" color="#38a169"/>
                             </div>
                         </div>
@@ -131,7 +131,7 @@
                         <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Variant</h2>
                         <div class="flex flex-wrap">
                             <div v-for="(variant, index) in cashGameVariantFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
-                                <label class="mr-3 text-sm md:text-lg">{{ variant }}</label>
+                                <label class="mr-3 text-sm sm:text-base md:text-lg">{{ variant }}</label>
                                 <toggle-button :value="true" :height="26" color="#38a169"/>
                             </div>
                         </div>
@@ -143,7 +143,7 @@
                         <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Table Size</h2>
                         <div class="flex flex-wrap">
                             <div v-for="(table_size, index) in cashGameTableSizeFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
-                                <label class="mr-3 text-sm md:text-lg">{{ table_size }}</label>
+                                <label class="mr-3 text-sm sm:text-base md:text-lg">{{ table_size }}</label>
                                 <toggle-button :value="true" :height="26" color="#38a169"/>
                             </div>
                         </div>
@@ -194,7 +194,7 @@
                         <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Limits</h2>
                         <div class="flex flex-wrap">
                             <div v-for="(limit, index) in tournamentLimitFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
-                                <label class="mr-3 text-sm md:text-lg">{{ limit }}</label>
+                                <label class="mr-3 text-sm sm:text-base md:text-lg">{{ limit }}</label>
                                 <toggle-button :value="true" :height="26" color="#38a169"/>
                             </div>
                         </div>
@@ -206,7 +206,7 @@
                         <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Variant</h2>
                         <div class="flex flex-wrap">
                             <div v-for="(variant, index) in tournamentVariantFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
-                                <label class="mr-3 text-sm md:text-lg">{{ variant }}</label>
+                                <label class="mr-3 text-sm sm:text-base md:text-lg">{{ variant }}</label>
                                 <toggle-button :value="true" :height="26" color="#38a169"/>
                             </div>
                         </div>
@@ -220,7 +220,7 @@
                 <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-3">Locations</h2>
                 <div class="flex flex-wrap justify-around">
                     <div v-for="location in locationFilters" :key="location" class="mb-1">
-                        <label class="mr-3 text-sm md:text-lg">{{ location }}</label>
+                        <label class="mr-3 text-sm sm:text-base md:text-lg">{{ location }}</label>
                         <toggle-button :value="true" :height="26" color="#38a169"/>
                     </div>
                 </div>

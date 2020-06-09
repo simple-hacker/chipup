@@ -19,9 +19,6 @@ export default {
         },
     },
     getters: {
-        filteredSessions: (state, getters, rootState, rootGetters) => {
-            return rootGetters['sessions/sessions']
-        },
         profitRange: (state, getters, rootState, rootGetters) => {
             const profits = rootGetters['sessions/sessions'].map(session => { return session?.profit ?? 0 })
 
@@ -34,7 +31,7 @@ export default {
             
             return [0, 0]
         },
-        cashGameStakeFilters: (state, getters, rootState, rootGetters) => {
+        cashGameStakeFilters: (state, getters, rootState) => {
             let stakes =  rootState.cash_games.cash_games
                             .map(session => {
                                 return session?.stake
@@ -45,7 +42,7 @@ export default {
 
             return [...new Set(stakes)]
         },
-        cashGameLimitFilters: (state, getters, rootState, rootGetters) => {
+        cashGameLimitFilters: (state, getters, rootState) => {
             let limits =  rootState.cash_games.cash_games
                             .map(session => {
                                 return session?.limit
@@ -56,7 +53,7 @@ export default {
 
             return [...new Set(limits)]
         },
-        cashGameVariantFilters: (state, getters, rootState, rootGetters) => {
+        cashGameVariantFilters: (state, getters, rootState) => {
             let variants =  rootState.cash_games.cash_games
                             .map(session => {
                                 return session?.variant
@@ -67,7 +64,7 @@ export default {
 
             return [...new Set(variants)]
         },
-        cashGameTableSizeFilters: (state, getters, rootState, rootGetters) => {
+        cashGameTableSizeFilters: (state, getters, rootState) => {
             let table_sizes =  rootState.cash_games.cash_games
                             .map(session => {
                                 return session?.table_size
@@ -78,7 +75,7 @@ export default {
 
             return [...new Set(table_sizes)]
         },
-        tournamentBuyInRange: (state, getters, rootState, rootGetters) => {
+        tournamentBuyInRange: (state, getters, rootState) => {
             const buyIns = rootState.tournaments.tournaments.map(session => { return session?.buy_in?.amount ?? 0 })
 
             if (buyIns.length > 0) {
@@ -87,7 +84,7 @@ export default {
             
             return [0, 0]
         },
-        tournamentLimitFilters: (state, getters, rootState, rootGetters) => {
+        tournamentLimitFilters: (state, getters, rootState) => {
             let limits =  rootState.tournaments.tournaments
                             .map(session => {
                                 return session?.limit
@@ -98,7 +95,7 @@ export default {
 
             return [...new Set(limits)]
         },
-        tournamentVariantFilters: (state, getters, rootState, rootGetters) => {
+        tournamentVariantFilters: (state, getters, rootState) => {
             let variants =  rootState.tournaments.tournaments
                             .map(session => {
                                 return session?.variant

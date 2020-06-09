@@ -16,10 +16,10 @@
             </div>
         </router-link>
         <div
-            v-if="sessions.length > 0"
+            v-if="filteredSessions.length > 0"
             class="col-span-4 grid grid-cols-4 grid-2 md:gap-3 xxl:grid-4 bg-background rounded border border-card p-1 text-white"
         >
-            <div v-for="session in sessions"
+            <div v-for="session in filteredSessions"
                 :key="`${session.game_type}_${session.id}`"
                 class="col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0"
             >
@@ -44,7 +44,8 @@ export default {
     name: 'Sessions',
 	components: { FilterBar, SessionSummary},
 	computed: {
-		...mapGetters('sessions', ['sessions'])
+		...mapGetters('sessions', ['sessions']),
+		...mapGetters('filtered_sessions', ['filteredSessions'])
     },
 }
 </script>

@@ -141,7 +141,7 @@ import { mapGetters } from 'vuex'
 export default {
 	name: 'StatsTable',
 	computed: {
-		...mapGetters('sessions', [
+		...mapGetters('filtered_sessions', [
 			'numberOfSessions',
 			'totalProfit',
 			'totalDuration',
