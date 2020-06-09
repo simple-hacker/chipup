@@ -21,7 +21,7 @@
                             v-model="filters.fromDate"
                             type="date"
                             input-class="w-full p-2"
-                            :max-datetime="maxDateTime"
+                            :max-datetime="maxFromDateTime"
                             auto
                             title="Filter from"
                             class="w-full bg-muted-light border border-muted-dark rounded border theme-green"
@@ -35,6 +35,7 @@
                             v-model="filters.toDate"
                             type="date"
                             input-class="w-full p-2"
+                            :min-datetime="filters.fromDate"
                             :max-datetime="maxDateTime"
                             auto
                             title="Filter to"
@@ -259,23 +260,33 @@ export default {
                 borderColor: '#246844'
             },
             filters: {},
+            errors: {},
         }
     },
     computed: {
         ...mapState('cash_games', ['cash_games']),
         ...mapState('tournaments', ['tournaments']),
         ...mapGetters('filters', [
-                'unfilteredFilters',
-                'profitRange',
-                'cashGameStakeFilters',
-                'cashGameLimitFilters',
-                'cashGameVariantFilters',
-                'cashGameTableSizeFilters',
-                'tournamentBuyInRange',
-                'tournamentLimitFilters',
-                'tournamentVariantFilters',
-                'locationFilters'
-            ]),
+            'unfilteredFilters',
+            'profitRange',
+            'cashGameStakeFilters',
+            'cashGameLimitFilters',
+            'cashGameVariantFilters',
+            'cashGameTableSizeFilters',
+            'tournamentBuyInRange',
+            'tournamentLimitFilters',
+            'tournamentVariantFilters',
+            'locationFilters'
+        ]),
+        maxFromDateTime() {
+            return moment(this.filters.toDate).format() < moment().format() ? moment(this.filters.toDate).format() : moment().format()
+        },
+        noGameTypesSelected() {
+            return !(this.filters.gameTypes.length > 0)
+        },
+        invalidDates() {
+            return this.filters.toDate < this.filters.fromDate
+        }
     },
     watch: {
         // If check Cash Games add cash_games to filters.game_type array, else minimize Cash Game Filters and remove from filters.game_type
@@ -313,7 +324,9 @@ export default {
     },
     methods: {
         applyFilters() {
-            this.$emit('close')
+            // console.log(this.noGameTypesSelected)
+            console.log(this.invalidDates)
+            // this.$emit('close')
         },
         formatCurrency(amount) {
 			return this.$currency.format(amount)

@@ -266,7 +266,7 @@
 									input-id="start_time"
 									type="datetime"
 									:minute-step="5"
-									:max-datetime="maxDateTime"
+									:max-datetime="maxStartDateTime"
 									auto
 									placeholder="Start Date and Time"
 									title="Start Date and Time"
@@ -293,6 +293,7 @@
 									input-id="end_time"
 									type="datetime"
 									:minute-step="5"
+									:min-datetime="editSession.start_time"
 									:max-datetime="maxDateTime"
 									auto
 									placeholder="End Date and Time"
@@ -603,6 +604,9 @@ export default {
 			} else if (this.loadSession.game_type === 'tournament') {
 				return this.getTournamentById(this.loadSession.id)
 			}
+		},
+		maxStartDateTime() {
+			return moment(this.editSession.end_time).format() < moment().format() ? moment(this.editSession.end_time).format() : moment().format()
 		},
 		profit() {
 			return this.session?.profit ?? 0

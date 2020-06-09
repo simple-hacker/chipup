@@ -239,7 +239,7 @@
 							input-id="start_time"
 							type="datetime"
 							:minute-step="5"
-							:max-datetime="maxDateTime"
+							:max-datetime="maxStartDateTime"
 							auto
 							placeholder="Start Date and Time"
 							title="Start Date and Time"
@@ -263,6 +263,7 @@
 							input-id="end_time"
 							type="datetime"
 							:minute-step="5"
+							:min-datetime="session.start_time"
 							:max-datetime="maxDateTime"
 							auto
 							placeholder="End Date and Time"
@@ -550,6 +551,9 @@ export default {
 				return 'Tournament'
 			}
 		},
+		maxStartDateTime() {
+			return moment(this.session.end_time).format() < moment().format() ? moment(this.session.end_time).format() : moment().format()
+		}
 	},
 	methods: {
 		...mapActions('cash_games', ['addCashGame']),
