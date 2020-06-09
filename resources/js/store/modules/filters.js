@@ -19,6 +19,26 @@ export default {
         },
     },
     getters: {
+        unfilteredFilters: (state, getters) => {
+            return {
+                fromDate: '',
+                toDate: '',
+                gameTypes: ['cash_games', 'tournaments'],
+                profitRange: getters.profitRange,
+                cashGameFilters: {
+                    stakes: getters.cashGameStakeFilters,
+                    limits: getters.cashGameLimitFilters,
+                    variants: getters.cashGameVariantFilters,
+                    table_sizes: getters.cashGameTableSizeFilters,
+                },
+                tournamentFilters: {
+                    buyInRange: getters.tournamentBuyInRange,
+                    limits: getters.tournamentLimitFilters,
+                    variants: getters.tournamentVariantFilters
+                },
+                locations: getters.locationFilters
+            }
+        },
         profitRange: (state, getters, rootState, rootGetters) => {
             const profits = rootGetters['sessions/sessions'].map(session => { return session?.profit ?? 0 })
 

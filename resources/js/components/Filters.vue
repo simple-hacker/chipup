@@ -18,9 +18,10 @@
                         <span class="mx-3 text-sm sm:text-base md:text-lg">From</span>
                         <datetime
                             input-id="filterFromDate"
-                            v-model="filterFromDate"
+                            v-model="filters.fromDate"
                             type="date"
                             input-class="w-full p-2"
+                            :max-datetime="maxDateTime"
                             auto
                             title="Filter from"
                             class="w-full bg-muted-light border border-muted-dark rounded border theme-green"
@@ -31,9 +32,10 @@
                         <span class="mx-3 text-sm sm:text-base md:text-lg">To</span>
                         <datetime
                             input-id="filterToDate"
-                            v-model="filterToDate"
+                            v-model="filters.toDate"
                             type="date"
                             input-class="w-full p-2"
+                            :max-datetime="maxDateTime"
                             auto
                             title="Filter to"
                             class="w-full bg-muted-light border border-muted-dark rounded border theme-green"
@@ -70,7 +72,7 @@
                 <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Profit Range</h2>
                 <vue-range-slider
                     ref="profit-slider"
-                    v-model="profitRangeValue"
+                    v-model="filters.profitRange"
                     :min="profitRange[0]"
                     :max="profitRange[1]"
                     :process-style="sliderStyle"
@@ -108,7 +110,7 @@
                         <div class="flex flex-wrap">
                             <div v-for="(stake, index) in cashGameStakeFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
                                 <label class="mr-3 text-sm sm:text-base md:text-lg">{{ stake }}</label>
-                                <toggle-button :value="true" :height="26" color="#38a169"/>
+                                <toggle-button @change="filterCashGameVariable('stakes', stake, $event.value)" :value="true" :height="26" color="#38a169"/>
                             </div>
                         </div>
                     </div>
@@ -120,7 +122,7 @@
                         <div class="flex flex-wrap">
                             <div v-for="(limit, index) in cashGameLimitFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
                                 <label class="mr-3 text-sm sm:text-base md:text-lg">{{ limit }}</label>
-                                <toggle-button :value="true" :height="26" color="#38a169"/>
+                                <toggle-button @change="filterCashGameVariable('limits', limit, $event.value)" :value="true" :height="26" color="#38a169"/>
                             </div>
                         </div>
                     </div>
@@ -132,7 +134,7 @@
                         <div class="flex flex-wrap">
                             <div v-for="(variant, index) in cashGameVariantFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
                                 <label class="mr-3 text-sm sm:text-base md:text-lg">{{ variant }}</label>
-                                <toggle-button :value="true" :height="26" color="#38a169"/>
+                                <toggle-button @change="filterCashGameVariable('variants', variant, $event.value)" :value="true" :height="26" color="#38a169"/>
                             </div>
                         </div>
                     </div>
@@ -144,7 +146,7 @@
                         <div class="flex flex-wrap">
                             <div v-for="(table_size, index) in cashGameTableSizeFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
                                 <label class="mr-3 text-sm sm:text-base md:text-lg">{{ table_size }}</label>
-                                <toggle-button :value="true" :height="26" color="#38a169"/>
+                                <toggle-button @change="filterCashGameVariable('table_sizes', table_size, $event.value)" :value="true" :height="26" color="#38a169"/>
                             </div>
                         </div>
                     </div>
@@ -179,7 +181,7 @@
                         <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Buy In Range</h2>
                         <vue-range-slider
                             ref="buy-in-slider"
-                            v-model="tournamentsBuyInRangeValue"
+                            v-model="filters.tournamentFilters.buyInRange"
                             :min="tournamentBuyInRange[0]"
                             :max="tournamentBuyInRange[1]"
                             :process-style="sliderStyle"
@@ -195,7 +197,7 @@
                         <div class="flex flex-wrap">
                             <div v-for="(limit, index) in tournamentLimitFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
                                 <label class="mr-3 text-sm sm:text-base md:text-lg">{{ limit }}</label>
-                                <toggle-button :value="true" :height="26" color="#38a169"/>
+                                <toggle-button @change="filterTournamentVariable('limits', limit, $event.value)" :value="true" :height="26" color="#38a169"/>
                             </div>
                         </div>
                     </div>
@@ -207,7 +209,7 @@
                         <div class="flex flex-wrap">
                             <div v-for="(variant, index) in tournamentVariantFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
                                 <label class="mr-3 text-sm sm:text-base md:text-lg">{{ variant }}</label>
-                                <toggle-button :value="true" :height="26" color="#38a169"/>
+                                <toggle-button @change="filterTournamentVariable('variants', variant, $event.value)" :value="true" :height="26" color="#38a169"/>
                             </div>
                         </div>
                     </div>
@@ -221,7 +223,7 @@
                 <div class="flex flex-wrap justify-around">
                     <div v-for="location in locationFilters" :key="location" class="mb-1">
                         <label class="mr-3 text-sm sm:text-base md:text-lg">{{ location }}</label>
-                        <toggle-button :value="true" :height="26" color="#38a169"/>
+                        <toggle-button @change="filterLocations(location)" :value="true" :height="26" color="#38a169"/>
                     </div>
                 </div>
             </div>
@@ -233,6 +235,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { mapState, mapGetters } from 'vuex'
 
 import VueRangeSlider from 'vue-range-component'
@@ -243,12 +246,11 @@ export default {
     components: { VueRangeSlider },
     data() {
         return {
+            maxDateTime: moment.utc().format(),
             showCashGameFilters: false,
             showTournamentFilters: false,
             filterCashGames: true,
             filterTournaments: true,
-            profitRangeValue: [0, 0],
-            tournamentsBuyInRangeValue: [0, 0],
             sliderStyle: {
                 backgroundColor: '#38a169',
             },
@@ -256,15 +258,14 @@ export default {
                 backgroundColor: '#38a169',
                 borderColor: '#246844'
             },
-            filterFromDate: '',
-            filterToDate: '',
+            filters: {},
         }
     },
     computed: {
         ...mapState('cash_games', ['cash_games']),
         ...mapState('tournaments', ['tournaments']),
         ...mapGetters('filters', [
-                'filteredSessions',
+                'unfilteredFilters',
                 'profitRange',
                 'cashGameStakeFilters',
                 'cashGameLimitFilters',
@@ -277,15 +278,21 @@ export default {
             ]),
     },
     watch: {
-        // If uncheck Cash Games, then minimize Cash Game Filters too
+        // If check Cash Games add cash_games to filters.game_type array, else minimize Cash Game Filters and remove from filters.game_type
         filterCashGames: function(val) {
-            if (!val) {
+            if (val && !this.filters.gameTypes.includes('cash_games')) {
+                this.filters.gameTypes.push('cash_games')
+            } else {
+                this.filters.gameTypes = this.filters.gameTypes.filter(gameType => gameType !== 'cash_games')
                 this.showCashGameFilters = false
             }
         },
-        // If uncheck Tournaments, then minimize Cash Game Filters too
+        // If check Tournaments add tournaments to filters.game_type array, then minimize Tournament Filters and remove from filters.game_type
         filterTournaments: function(val) {
-            if (!val) {
+            if (val && !this.filters.gameTypes.includes('tournaments')) {
+                this.filters.gameTypes.push('tournaments')
+            } else {
+                this.filters.gameTypes = this.filters.gameTypes.filter(gameType => gameType !== 'tournaments')
                 this.showTournamentFilters = false
             }
         },
@@ -310,11 +317,45 @@ export default {
         },
         formatCurrency(amount) {
 			return this.$currency.format(amount)
-		},
+        },
+        filterCashGameVariable(variable, variableValue, toggleValue) {
+            // If toggleValue is true then button is true, else false
+            // Make sure object has the variable property and that it is an array.
+            if (this.filters.cashGameFilters.hasOwnProperty(variable) && Array.isArray(this.filters.cashGameFilters[variable])) {
+                // If toggle is true and does not already have variable in array, then add
+                if (toggleValue && !this.filters.cashGameFilters[variable].includes(variableValue)) {
+                    this.filters.cashGameFilters[variable].push(variableValue)
+                }
+                // Else toggle is false, check if variable is in array and filter out.
+                else {
+                    this.filters.cashGameFilters[variable] = this.filters.cashGameFilters[variable].filter(v => v !== variableValue)
+                }
+            }
+        },
+        filterTournamentVariable(variable, variableValue, toggleValue) {
+            // If toggleValue is true then button is true, else false
+            // Make sure object has the variable property and that it is an array.
+            if (this.filters.tournamentFilters.hasOwnProperty(variable) && Array.isArray(this.filters.tournamentFilters[variable])) {
+                // If toggle is true and does not already have variable in array, then add
+                if (toggleValue && !this.filters.tournamentFilters[variable].includes(variableValue)) {
+                    this.filters.tournamentFilters[variable].push(variableValue)
+                }
+                // Else toggle is false, check if variable is in array and filter out.
+                else {
+                    this.filters.tournamentFilters[variable] = this.filters.tournamentFilters[variable].filter(v => v !== variableValue)
+                }
+            }
+        },
+        filterLocations(location) {
+            if (this.filters.locations.includes(location)) {
+                this.filters.locations = this.filters.locations.filter(l => l !== location)
+            } else {
+                this.filters.locations.push(location)
+            }
+        },
     },
     created() {
-        this.profitRangeValue = this.profitRange
-        this.tournamentsBuyInRangeValue = this.tournamentBuyInRange
+        this.filters = this.unfilteredFilters
         this.filterCashGames = (this.cash_games.length > 0)
         this.filterTournaments = (this.tournaments.length > 0)
     }
