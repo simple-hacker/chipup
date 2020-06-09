@@ -11,7 +11,6 @@ import sessions from '@modules/sessions'
 import transactions from '@modules/transactions'
 import live from '@modules/live'
 import filters from '@modules/filters'
-import Axios from 'axios'
 
 Vue.use(Vuex)
 

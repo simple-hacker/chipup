@@ -1,7 +1,7 @@
 <template>
     <div class="w-full grid grid-cols-4 gap-4">
         <div class="col-span-4 bg-background rounded border border-card p-1 text-white">
-            <filters />
+            <filter-bar />
         </div>
         <router-link
             :to="{ name: 'createsession' }"
@@ -34,12 +34,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Filters from '@components/Filters'
+import FilterBar from '@components/FilterBar'
 import SessionSummary from '@components/Session/SessionSummary'
 
 export default {
     name: 'Sessions',
-	components: { Filters, SessionSummary},
+	components: { FilterBar, SessionSummary},
 	computed: {
 		...mapGetters('sessions', ['sessions'])
     },

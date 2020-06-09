@@ -1,7 +1,7 @@
 <template>
     <div class="w-full grid grid-cols-4 gap-4">
         <div class="col-span-4 bg-background rounded border border-card p-1 text-white">
-            <filters />
+            <filter-bar />
         </div>
         <div class="col-span-4 xl:col-span-2 xxl:col-span-1 bg-card rounded border border-muted-dark mb-3 p-4 text-white">
             <stats-table />
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import Filters from '@components/Filters'
+import FilterBar from '@components/FilterBar'
 import StatsTable from '@views/statistics/StatsTable'
 import ProfitLineChart from '@views/statistics/ProfitLineChart'
 import LocationsPieChart from '@views/statistics/LocationsPieChart'
@@ -45,7 +45,7 @@ import GameTypesProfitBarChart from '@views/statistics/GameTypesProfitBarChart'
 
 export default {
     name: 'Statistics',
-    components: {Filters, StatsTable, ProfitLineChart, LocationsPieChart, LocationsProfitBarChart, GameTypesPieChart, GameTypesProfitBarChart},
+    components: {FilterBar, StatsTable, ProfitLineChart, LocationsPieChart, LocationsProfitBarChart, GameTypesPieChart, GameTypesProfitBarChart},
 }
 </script>
 
