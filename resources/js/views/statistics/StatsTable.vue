@@ -130,14 +130,6 @@
 				</span>
 			</div>
 		</div>
-		<div class="mt-4 flex justify-end">
-			<router-link
-				:to="{ name: 'statistics' }"
-				class="btn btn-green"
-			>
-			View more statistics
-			</router-link>
-		</div>
 	</div>
 </template>
 

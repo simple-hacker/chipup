@@ -1,6 +1,9 @@
 <template>
     <div class="w-full grid grid-cols-4 gap-4">
-        <div class="col-span-4 bg-background rounded border border-card p-1 text-white">
+        <div
+            v-if="sessions.length > 0"
+            class="col-span-4 bg-background rounded border border-card p-1 text-white"
+        >
             <filter-bar />
         </div>
         <div class="col-span-4 xl:col-span-2 xxl:col-span-1 bg-card rounded border border-muted-dark mb-3 p-4 text-white">
@@ -35,6 +38,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import FilterBar from '@components/FilterBar'
 import StatsTable from '@views/statistics/StatsTable'
 import ProfitLineChart from '@views/statistics/ProfitLineChart'
@@ -46,21 +51,24 @@ import GameTypesProfitBarChart from '@views/statistics/GameTypesProfitBarChart'
 export default {
     name: 'Statistics',
     components: {FilterBar, StatsTable, ProfitLineChart, LocationsPieChart, LocationsProfitBarChart, GameTypesPieChart, GameTypesProfitBarChart},
+    computed: {
+		...mapGetters('sessions', ['sessions'])
+    },
 }
 </script>
 
 <style scoped>
-.slide-enter-active,
-.slide-leave-active {
-    transition-duration: 0.30s;
-    transition-property: all;
-    transition-timing-function: ease;
-}
+    .slide-enter-active,
+    .slide-leave-active {
+        transition-duration: 0.30s;
+        transition-property: all;
+        transition-timing-function: ease;
+    }
 
-.slide-enter,
-.slide-leave-active {
-    opacity: 0;
-    transform: translateY(-100px);
-    margin-bottom: -100px;
-}
+    .slide-enter,
+    .slide-leave-active {
+        opacity: 0;
+        transform: translateY(-100px);
+        margin-bottom: -100px;
+    }
 </style>

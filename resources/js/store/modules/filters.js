@@ -22,8 +22,20 @@ export default {
         filteredSessions: (state, getters, rootState, rootGetters) => {
             return rootGetters['sessions/sessions']
         },
-        stakeFilters: (state, getters, rootState, rootGetters) => {
-            let stakes =  rootGetters['sessions/sessions']
+        profitRange: (state, getters, rootState, rootGetters) => {
+            const profits = rootGetters['sessions/sessions'].map(session => { return session?.profit ?? 0 })
+
+            if (profits.length > 0) {
+                const minProfit = Math.min(...profits) ?? 0
+                const maxProfit = Math.max(...profits) ?? 0
+
+                return [minProfit, maxProfit]
+            }
+            
+            return [0, 0]
+        },
+        cashGameStakeFilters: (state, getters, rootState, rootGetters) => {
+            let stakes =  rootState.cash_games.cash_games
                             .map(session => {
                                 return session?.stake
                             })
@@ -33,8 +45,8 @@ export default {
 
             return [...new Set(stakes)]
         },
-        limitFilters: (state, getters, rootState, rootGetters) => {
-            let limits =  rootGetters['sessions/sessions']
+        cashGameLimitFilters: (state, getters, rootState, rootGetters) => {
+            let limits =  rootState.cash_games.cash_games
                             .map(session => {
                                 return session?.limit
                             })
@@ -44,8 +56,8 @@ export default {
 
             return [...new Set(limits)]
         },
-        variantFilters: (state, getters, rootState, rootGetters) => {
-            let variants =  rootGetters['sessions/sessions']
+        cashGameVariantFilters: (state, getters, rootState, rootGetters) => {
+            let variants =  rootState.cash_games.cash_games
                             .map(session => {
                                 return session?.variant
                             })
@@ -55,8 +67,8 @@ export default {
 
             return [...new Set(variants)]
         },
-        tableSizeFilters: (state, getters, rootState, rootGetters) => {
-            let table_sizes =  rootGetters['sessions/sessions']
+        cashGameTableSizeFilters: (state, getters, rootState, rootGetters) => {
+            let table_sizes =  rootState.cash_games.cash_games
                             .map(session => {
                                 return session?.table_size
                             })
@@ -65,6 +77,37 @@ export default {
                             .map(table_size => table_size.table_size)
 
             return [...new Set(table_sizes)]
+        },
+        tournamentBuyInRange: (state, getters, rootState, rootGetters) => {
+            const buyIns = rootState.tournaments.tournaments.map(session => { return session?.buy_in?.amount ?? 0 })
+
+            if (buyIns.length > 0) {
+                return [0, Math.max(...buyIns) ?? 0]
+            }
+            
+            return [0, 0]
+        },
+        tournamentLimitFilters: (state, getters, rootState, rootGetters) => {
+            let limits =  rootState.tournaments.tournaments
+                            .map(session => {
+                                return session?.limit
+                            })
+                            .sort((a, b) => a.id - b.id)
+                            .filter(limit => limit)
+                            .map(limit => limit.limit)
+
+            return [...new Set(limits)]
+        },
+        tournamentVariantFilters: (state, getters, rootState, rootGetters) => {
+            let variants =  rootState.tournaments.tournaments
+                            .map(session => {
+                                return session?.variant
+                            })
+                            .sort((a, b) => a.id - b.id)
+                            .filter(variant => variant)
+                            .map(variant => variant.variant)
+
+            return [...new Set(variants)]
         },
         locationFilters: (state, getters, rootState, rootGetters) => {
             let locations =  rootGetters['sessions/sessions']
