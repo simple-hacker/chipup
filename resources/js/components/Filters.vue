@@ -54,8 +54,8 @@
             <div class="col-span-4 md:col-span-1 border border-muted-dark p-1 md:p-3">
                 <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Stakes</h2>
                 <div class="flex flex-wrap">
-                    <div v-for="stake in stakes" :key="stake.id" class="w-1/3 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between py-1 px-3">
-                        <label class="mr-3 text-sm md:text-lg">{{ stake.stake }}</label>
+                    <div v-for="(stake, index) in stakeFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between py-1 px-3">
+                        <label class="mr-3 text-sm md:text-lg">{{ stake }}</label>
                         <toggle-button :value="true" :height="26" color="#38a169"/>
                     </div>
                 </div>
@@ -63,8 +63,8 @@
             <div class="col-span-4 md:col-span-1 border border-muted-dark p-1 md:p-3">
                 <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Limits</h2>
                 <div class="flex flex-wrap">
-                    <div v-for="limit in limits" :key="limit.id" class="w-1/3 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between py-1 px-3">
-                        <label class="mr-3 text-sm md:text-lg">{{ limit.limit }}</label>
+                    <div v-for="(limit, index) in limitFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between py-1 px-3">
+                        <label class="mr-3 text-sm md:text-lg">{{ limit }}</label>
                         <toggle-button :value="true" :height="26" color="#38a169"/>
                     </div>
                 </div>
@@ -72,8 +72,8 @@
             <div class="col-span-4 md:col-span-1 border border-muted-dark p-1 md:p-3">
                 <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Variant</h2>
                 <div class="flex flex-wrap">
-                    <div v-for="variant in variants" :key="variant.id" class="w-1/3 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between py-1 px-3">
-                        <label class="mr-3 text-sm md:text-lg">{{ variant.variant }}</label>
+                    <div v-for="(variant, index) in variantFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between py-1 px-3">
+                        <label class="mr-3 text-sm md:text-lg">{{ variant }}</label>
                         <toggle-button :value="true" :height="26" color="#38a169"/>
                     </div>
                 </div>
@@ -81,8 +81,8 @@
             <div class="col-span-4 md:col-span-1 border border-muted-dark p-1 md:p-3">
                 <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Table Size</h2>
                 <div class="flex flex-wrap">
-                    <div v-for="table_size in table_sizes" :key="table_size.id" class="w-1/3 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between py-1 px-3">
-                        <label class="mr-3 text-sm md:text-lg">{{ table_size.table_size }}</label>
+                    <div v-for="(table_size, index) in tableSizeFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between py-1 px-3">
+                        <label class="mr-3 text-sm md:text-lg">{{ table_size }}</label>
                         <toggle-button :value="true" :height="26" color="#38a169"/>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
             <div class="col-span-4 border border-muted-dark p-1 md:p-3">
                 <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-3">Locations</h2>
                 <div class="flex flex-wrap justify-around">
-                    <div v-for="location in locations" :key="location" class="mb-1">
+                    <div v-for="location in locationFilters" :key="location" class="mb-1">
                         <label class="mr-3 text-sm md:text-lg">{{ location }}</label>
                         <toggle-button :value="true" :height="26" color="#38a169"/>
                     </div>
@@ -112,31 +112,10 @@ export default {
         return {
             filterFromDate: '',
             filterToDate: '',
-            stakes: [
-				{id: 1, stake: '1/1'},
-				{id: 2, stake: '1/2'},
-				{id: 3, stake: '2/4'},
-			],
-			limits: [
-				{id: 1, limit: 'No Limit'},
-				{id: 2, limit: 'Pot Limit'},
-				{id: 3, limit: 'Limit'},
-			],
-			variants: [
-				{id: 1, variant: 'Holdem'},
-				{id: 2, variant: 'Omaha'},
-				{id: 3, variant: 'Stud8'},
-			],
-			table_sizes: [
-				{id: 1, table_size: 'Full-Ring'},
-				{id: 2, table_size: 'Mixed'},
-				{id: 3, table_size: 'Heads Up'},
-            ],
-            locations: ['CasinoMK', 'Luton Groveners', 'Las Vegas']
         }
     },
     computed: {
-        ...mapGetters('filters', ['filteredSessions', 'stakeFilters']),
+        ...mapGetters('filters', ['filteredSessions', 'stakeFilters', 'limitFilters', 'variantFilters', 'tableSizeFilters', 'locationFilters']),
     },
     methods: {
         applyFilters() {
@@ -145,7 +124,7 @@ export default {
     },
     created() {
         console.log(this.filteredSessions)
-        console.log(this.stakeFilters)
+        console.log(this.locationFilters)
     }
 }
 </script>
