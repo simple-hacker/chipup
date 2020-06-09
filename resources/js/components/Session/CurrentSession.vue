@@ -265,6 +265,7 @@
 									type="datetime"
 									:minute-step="5"
 									:flow="['time']"
+									:max-datetime="maxDateTime"
 									auto
 									placeholder="Start Date and Time"
 									title="Start Date and Time"
@@ -445,6 +446,7 @@ export default {
 			editLiveSession: {},
 			editing: false,
 			errors: {},
+			maxDateTime: moment().format(),
 		}
 	},
 	created() {
@@ -490,7 +492,7 @@ export default {
 			})
 		},
 		formatCurrency(amount) {
-			return Vue.prototype.currency.format(amount)
+			return this.$currency.format(amount)
 		},
 		formatDate(date) {
 			return moment.utc(date).local().format("dddd Do MMMM, HH:mm")

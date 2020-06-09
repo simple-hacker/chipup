@@ -246,7 +246,7 @@ export default {
     components: { VueRangeSlider },
     data() {
         return {
-            maxDateTime: moment.utc().format(),
+            maxDateTime: moment().format(),
             showCashGameFilters: false,
             showTournamentFilters: false,
             filterCashGames: true,

@@ -24,6 +24,7 @@
                 type="datetime"
                 :minute-step="5"
                 :flow="['time']"
+                :max-datetime="maxDateTime"
                 placeholder="End At"
                 title="End Live Session At"
                 auto
@@ -59,7 +60,8 @@ export default {
                 end_time: moment().format(),
                 amount: 0
             },
-            errors: {}
+            errors: {},
+            maxDateTime: moment().format(),
         }
     },
     methods: {

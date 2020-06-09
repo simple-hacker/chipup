@@ -112,6 +112,7 @@
 						type="datetime"
 						:minute-step="5"
 						:flow="['time']"
+						:max-datetime="maxDateTime"
 						placeholder="Start Time"
 						title="Start Live Session At"
 						auto
@@ -146,6 +147,7 @@ export default {
 		return {
 			errors: {},
 			game_type: 'cash_game',
+			maxDateTime: moment().format(),
 			session: {
 				location: '',
 				limit_id: 1,

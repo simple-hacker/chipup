@@ -239,6 +239,7 @@
 							input-id="start_time"
 							type="datetime"
 							:minute-step="5"
+							:max-datetime="maxDateTime"
 							auto
 							placeholder="Start Date and Time"
 							title="Start Date and Time"
@@ -262,6 +263,7 @@
 							input-id="end_time"
 							type="datetime"
 							:minute-step="5"
+							:max-datetime="maxDateTime"
 							auto
 							placeholder="End Date and Time"
 							title="End Date and Time"
@@ -528,7 +530,8 @@ export default {
 				rebuys: [],
 				add_ons: [],
 			},
-			errors: {}
+			errors: {},
+			maxDateTime: moment().format(),
 		}
 	},
 	computed: {

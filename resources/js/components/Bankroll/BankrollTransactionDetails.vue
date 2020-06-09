@@ -9,6 +9,7 @@
                         v-model="editBankrollTransaction.date"
                         type="date"
                         value-zone="local"
+                        :max-datetime="maxDateTime"
                         auto
                         title="Bankroll Transaction Date"
                         class="w-full bg-muted-light border border-muted-dark rounded border theme-green"
@@ -71,6 +72,7 @@ export default {
                 comments: this.bankrollTransaction.comments,
             },
             errors: {},
+            maxDateTime: moment().format(),
         }
     },
     methods: {
