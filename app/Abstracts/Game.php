@@ -61,16 +61,6 @@ abstract class Game extends Model
     }
 
     /**
-    * Return the parent's table size model
-    * 
-    * @return belongsTo
-    */
-    public function table_size()
-    {
-        return $this->belongsTo('App\Attributes\TableSize');
-    }
-
-    /**
     * End the Game by updating the end_time to the current time or given time.
     * 
     * @param Carbon end_time

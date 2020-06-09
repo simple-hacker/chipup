@@ -9,7 +9,7 @@ class Tournament extends Game
 {
     protected $guarded = [];
 
-    protected $with = ['variant', 'limit', 'table_size', 'buyIn', 'expenses', 'rebuys', 'addOns', 'cashOut'];
+    protected $with = ['variant', 'limit', 'buyIn', 'expenses', 'rebuys', 'addOns', 'cashOut'];
 
     protected $cascadeDeletes = ['buyIn', 'expenses', 'cashOut', 'rebuys', 'addOns'];
 
