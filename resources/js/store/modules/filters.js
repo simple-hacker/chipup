@@ -23,7 +23,7 @@ export default {
             return {
                 fromDate: '',
                 toDate: '',
-                gameTypes: ['cash_games', 'tournaments'],
+                gameTypes: [...getters.gameTypes],
                 profitRange: getters.profitRange,
                 cashGameFilters: {
                     stakes: getters.cashGameStakeFilters,
@@ -38,6 +38,13 @@ export default {
                 },
                 locations: getters.locationFilters
             }
+        },
+        gameTypes: (state, getters, rootState, rootGetters) => {
+            const gameTypes = rootGetters['sessions/sessions']
+                                .map(session => { return session?.game_type ?? '' })
+                                .filter(gameType => gameType) // Remove undefined
+
+            return [...new Set(gameTypes)]
         },
         profitRange: (state, getters, rootState, rootGetters) => {
             const profits = rootGetters['sessions/sessions'].map(session => { return session?.profit ?? 0 })
@@ -57,7 +64,7 @@ export default {
                                 return session?.stake
                             })
                             .sort((a, b) => a.id - b.id)
-                            .filter(stake => stake)
+                            .filter(stake => stake) // Remove undefined
                             .map(stake => stake.stake)
 
             return [...new Set(stakes)]
