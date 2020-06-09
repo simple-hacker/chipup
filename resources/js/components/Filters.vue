@@ -60,8 +60,9 @@
                     <div class="mb-1">
                         <label class="mr-3 text-sm sm:text-base md:text-lg">Cash Games</label>
                         <toggle-button
-                            @change="filterGameTypesVariable('cash_game', $event.value)"
+                            @change="filterGameTypeVariable('cash_game', $event.value)"
                             :value="filters.gameTypes.includes('cash_game')"
+                            :sync="true"
                             :height="26"
                             color="#38a169"
                         />
@@ -69,8 +70,9 @@
                     <div class="mb-1">
                         <label class="mr-3 text-sm sm:text-base md:text-lg">Tournaments</label>
                         <toggle-button
-                            @change="filterGameTypesVariable('tournament', $event.value)"
+                            @change="filterGameTypeVariable('tournament', $event.value)"
                             :value="filters.gameTypes.includes('tournament')"
+                            :sync="true"
                             :height="26"
                             color="#38a169"
                         />
@@ -125,6 +127,7 @@
                                 <toggle-button
                                     @change="filterCashGameVariable('stakes', stake, $event.value)"
                                     :value="filters.cashGameFilters.stakes.includes(stake)"
+                                    :sync="true"
                                     :height="26"
                                     color="#38a169"
                                 />
@@ -142,6 +145,7 @@
                                 <toggle-button
                                     @change="filterCashGameVariable('limits', limit, $event.value)"
                                     :value="filters.cashGameFilters.limits.includes(limit)"
+                                    :sync="true"
                                     :height="26"
                                     color="#38a169"
                                 />
@@ -159,6 +163,7 @@
                                 <toggle-button
                                     @change="filterCashGameVariable('variants', variant, $event.value)"
                                     :value="filters.cashGameFilters.variants.includes(variant)"
+                                    :sync="true"
                                     :height="26"
                                     color="#38a169"
                                 />
@@ -176,6 +181,7 @@
                                 <toggle-button
                                     @change="filterCashGameVariable('table_sizes', table_size, $event.value)"
                                     :value="filters.cashGameFilters.table_sizes.includes(table_size)"
+                                    :sync="true"
                                     :height="26"
                                     color="#38a169"
                                 />
@@ -232,6 +238,7 @@
                                 <toggle-button
                                     @change="filterTournamentVariable('limits', limit, $event.value)"
                                     :value="filters.tournamentFilters.limits.includes(limit)"
+                                    :sync="true"
                                     :height="26"
                                     color="#38a169"
                                 />
@@ -249,6 +256,7 @@
                                 <toggle-button
                                     @change="filterTournamentVariable('variants', variant, $event.value)"
                                     :value="filters.tournamentFilters.variants.includes(variant)"
+                                    :sync="true"
                                     :height="26"
                                     color="#38a169"
                                 />
@@ -268,6 +276,7 @@
                         <toggle-button
                             @change="filterLocations(location)"
                             :value="filters.locations.includes(location)"
+                            :sync="true"
                             :height="26"
                             color="#38a169"
                         />
@@ -363,19 +372,25 @@ export default {
             }
         },
         resetFilters() {
-            this.filters = this.unfilteredFilters
+            this.filters = JSON.parse(JSON.stringify(this.unfilteredFilters))
         },
         formatCurrency(amount) {
 			return this.$currency.format(amount)
         },
-        filterGameTypesVariable(gameType, toggleValue) {
+        filterGameTypeVariable(gameType, toggleValue) {
             if (toggleValue && !this.filters.gameTypes.includes(gameType)) {
                 this.filters.gameTypes.push(gameType)
             } else {
                 this.filters.gameTypes = this.filters.gameTypes.filter(v => v !== gameType)
                 // Minimize filters so they appear minimized if user left them open and then reselects gametype.
-                if (gameType === 'cash_game') this.showCashGameFilters = false
-                if (gameType === 'tournament') this.showTournamentFilters = false
+                if (gameType === 'cash_game') {
+                    this.showCashGameFilters = false
+                    this.filters.cashGameFilters = JSON.parse(JSON.stringify(this.unfilteredFilters.cashGameFilters))
+                }
+                if (gameType === 'tournament') {
+                    this.showTournamentFilters = false
+                    this.filters.tournamentFilters = JSON.parse(JSON.stringify(this.unfilteredFilters.tournamentFilters))
+                }
             }
         },
         filterCashGameVariable(variable, variableValue, toggleValue) {
@@ -415,7 +430,7 @@ export default {
         },
     },
     created() {
-        this.filters = this.unfilteredFilters
+        this.filters = JSON.parse(JSON.stringify(this.unfilteredFilters))
         this.filterCashGames = this.filters.gameTypes.includes('cash_game')
         this.filterTournaments = this.filters.gameTypes.includes('tournament')
     }
