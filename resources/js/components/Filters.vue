@@ -229,7 +229,14 @@
                 </div>
             </div>
             <div class="col-span-4 border border-muted-dark flex justify-center">
-                <button @click.prevent="applyFilters" type="button" class="btn btn-green w-full">Apply Filters</button>
+                <button
+                    @click.prevent="applyFilters"
+                    :disabled="noGameTypesSelected"
+                    type="button"
+                    class="btn btn-green w-full disabled:bg-gray-500 disabled:border-gray-700 disabled:opacity-75"
+                >
+                    Apply Filters
+                </button>
             </div>
         </div>
     </div>
@@ -324,9 +331,11 @@ export default {
     },
     methods: {
         applyFilters() {
-            // console.log(this.noGameTypesSelected)
-            console.log(this.invalidDates)
-            // this.$emit('close')
+            // Apply button disables if no game types are selected, but user can still inspect element and remove disabled attribute
+            // Include the validation here before applying filters
+            if (!this.invalidDates && !this.noGameTypesSelected) {
+                this.$emit('close')
+            }
         },
         formatCurrency(amount) {
 			return this.$currency.format(amount)

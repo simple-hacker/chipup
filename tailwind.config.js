@@ -44,6 +44,9 @@ module.exports = {
       },
     },
   },
-  variants: {},
+  variants: {
+    backgroundColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
+    borderColor: ['disabled'],
+  },
   plugins: [],
 }
