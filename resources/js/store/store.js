@@ -33,6 +33,7 @@ const store = new Vuex.Store({
             'cash_games.cash_games',
             'tournaments.tournaments',
             'sessions.loadSessionState',
+            'filtered_sessions.currentFilters'
         ],
     })],
     state: {

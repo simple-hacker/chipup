@@ -2,7 +2,9 @@ import moment from 'moment'
 
 export default {
     namespaced: true,
-    state: {},
+    state: {
+        currentFilters: {}
+    },
     getters: {
         filteredCashGames: (state, getters, rootState) => {
             return rootState.cash_games.cash_games
@@ -51,5 +53,21 @@ export default {
         profitPerSession: (state, getters) => {
             return getters.totalProfit / getters.numberOfSessions
         },
+    },
+    mutations: {
+        APPLY_FILTERS(state, filters) {
+            state.currentFilters = filters
+        },
+        RESET_FILTERS(state, unfilteredFilters) {
+            state.currentFilters = unfilteredFilters
+        }
+    },
+    actions: {
+        applyFilters({ commit }, filters) {
+            commit('APPLY_FILTERS', filters)
+        },
+        resetFilters({ commit }, unfilteredFilters) {
+            commit('RESET_FILTERS', unfilteredFilters)
+        }
     }
 }

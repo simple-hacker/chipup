@@ -9,7 +9,7 @@
                 @click="resetFilters"
                 class="cursor-pointer rounded hover:bg-green-400 p-1"
             >
-                <i class="fas fa-check-double"></i>
+                <i class="fas fa-undo-alt"></i>
                 <span class="text-sm">Set to default filters</span>
             </div>
 		</div>
@@ -285,7 +285,7 @@
             </div>
             <div class="col-span-4 border border-muted-dark flex justify-center">
                 <button
-                    @click.prevent="applyFilters"
+                    @click.prevent="submitFilters"
                     :disabled="noGameTypesSelected"
                     type="button"
                     class="btn btn-green w-full disabled:bg-gray-500 disabled:border-gray-700 disabled:opacity-75"
@@ -299,7 +299,7 @@
 
 <script>
 import moment from 'moment'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 import VueRangeSlider from 'vue-range-component'
 import 'vue-range-component/dist/vue-range-slider.css'
@@ -324,6 +324,7 @@ export default {
         }
     },
     computed: {
+        ...mapState('filtered_sessions', ['currentFilters']),
         ...mapGetters('filters', [
             'unfilteredFilters',
             'gameTypes',
@@ -364,11 +365,18 @@ export default {
         }
     },
     methods: {
-        applyFilters() {
+        ...mapActions('filtered_sessions', ['applyFilters']),
+        submitFilters() {
             // Apply button disables if no game types are selected, but user can still inspect element and remove disabled attribute
             // Include the validation here before applying filters
             if (!this.invalidDates && !this.noGameTypesSelected) {
-                this.$emit('close')
+                this.applyFilters(this.filters)
+                .then(response => {
+                    this.$emit('close')
+                })
+                .catch(error => {
+                    this.$snotify.error(error)
+                })
             }
         },
         resetFilters() {
@@ -430,7 +438,7 @@ export default {
         },
     },
     created() {
-        this.filters = JSON.parse(JSON.stringify(this.unfilteredFilters))
+        this.filters = JSON.parse(JSON.stringify(this.currentFilters))
         this.filterCashGames = this.filters.gameTypes.includes('cash_game')
         this.filterTournaments = this.filters.gameTypes.includes('tournament')
     }

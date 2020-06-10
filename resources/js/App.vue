@@ -96,6 +96,7 @@ export default {
     computed: {
         ...mapState('live', ['liveSession']),
         ...mapGetters('live', ['sessionInProgress']),
+        ...mapGetters('filters', ['unfilteredFilters']),
         runTime() {
 			let start_time = moment.utc(this.liveSession.start_time)
 			let diff = this.now.diff(start_time, 'hours', true)
@@ -131,6 +132,12 @@ export default {
         this.$store.dispatch('tournaments/getTournaments')
         this.$store.dispatch('live/currentLiveSession')
 
+        // By default currentFilters is set to an empty object.
+        // If reloading the page and currentFilters is an empty object, then populate with the default unfilteredFilters
+        // Else currentFilters will be the persisted currentFilters state, so filters are saved on page reloads.
+        if (Object.keys(this.$store.state.filtered_sessions.currentFilters).length === 0) {
+            this.$store.dispatch('filtered_sessions/resetFilters', this.unfilteredFilters)
+        }
 
         // App uses main-content ref=scroll as a scrollable div for main content, where as vue-router uses window.scrollTop for scrollBehaviour
         // which is always at 0,0 because it's fixed and overflow is hidden.
