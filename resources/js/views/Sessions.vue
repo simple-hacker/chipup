@@ -30,7 +30,7 @@
             v-else
             class="col-span-4 flex bg-muted-dark border border-muted-dark shadow justify-center items-center my-2 p-4"
         >
-            <div class="text-white uppercase">You do not have any sessions yet.</div>
+            <div class="text-white uppercase" v-text="emptySessionsMessage"></div>
         </div>
     </div>
 </template>
@@ -45,7 +45,11 @@ export default {
 	components: { FilterBar, SessionSummary},
 	computed: {
 		...mapGetters('sessions', ['sessions']),
-		...mapGetters('filtered_sessions', ['filteredSessions'])
+        ...mapGetters('filtered_sessions', ['filteredSessions']),
+        emptySessionsMessage() {
+            // This is displayed if user does not have any sessions that match the filter
+            return (this.sessions.length > 0) ? 'You do not have any sessions that match those filters.' : 'You have not created any sessions yet.'
+        }
     },
 }
 </script>

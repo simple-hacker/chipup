@@ -349,7 +349,11 @@ export default {
             return !(this.filters.gameTypes.length > 0)
         },
         invalidDates() {
-            return this.filters.toDate < this.filters.fromDate
+            if (this.filters.fromDate && this.filters.toDate) {
+                return this.filters.toDate < this.filters.fromDate
+            }
+
+            return false
         }
     },
     watch: {

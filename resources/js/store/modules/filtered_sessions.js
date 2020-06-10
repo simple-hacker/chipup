@@ -6,14 +6,74 @@ export default {
         currentFilters: {}
     },
     getters: {
+        //NOTE: If I start getting errors it could be because currentFilters object keys don't exist
+        // as it wasn't loaded properly so defaults to {} as above.
         filteredCashGames: (state, getters, rootState) => {
-            return rootState.cash_games.cash_games
+            // If cash_game is not included in filters then return empty object
+            if (! state.currentFilters.gameTypes.includes('cash_game')) {
+                return []
+            }
+
+            // Else continue applying filters.
+            const filtered = rootState.cash_games.cash_games.filter(session => {
+                // Session profit must be equal and between profitRange
+                const validProfitRange = (state.currentFilters.profitRange && session.profit >= state.currentFilters.profitRange[0] && session.profit <= state.currentFilters.profitRange[1])
+                // If validFromDate is set, session start_time must be greater than or equal to fromDate, else just return true
+                const validFromDate = state.currentFilters.fromDate ? moment.utc(session.start_time) >= moment(state.currentFilters.fromDate) : true
+                // If validToDate is set, session start_time must be less than or equal to toDate, else just return true
+                const validToDate = state.currentFilters?.toDate ? moment.utc(session.start_time) <= moment(state.currentFilters.toDate) : true
+                // Valid location
+                const validLocation = state.currentFilters?.locations.includes(session.location)
+                // Valid stakes
+                const validStake = state.currentFilters?.cashGameFilters?.stakes.includes(session.stake.stake)
+                // Valid limits
+                const validLimit = state.currentFilters?.cashGameFilters?.limits.includes(session.limit.limit)
+                // Valid variants
+                const validVariant = state.currentFilters?.cashGameFilters?.variants.includes(session.variant.variant)
+                // Valid table_sizes
+                const validTableSize = state.currentFilters?.cashGameFilters?.table_sizes.includes(session.table_size.table_size)
+
+                return validProfitRange && validFromDate && validToDate && validLocation && validStake && validLimit && validVariant && validTableSize
+            })
+
+            return filtered
         },
         filteredTournaments: (state, getters, rootState) => {
-            return rootState.tournaments.tournaments
+            // If tournament is not included in filters then return empty object
+            if (! state.currentFilters.gameTypes.includes('tournament')) {
+                return []
+            }
+
+            // Else continue applying filters.
+            const filtered = rootState.tournaments.tournaments.filter(session => {
+                // Session profit must be equal and between profitRange
+                const validProfitRange = (state.currentFilters.profitRange && session.profit >= state.currentFilters.profitRange[0] && session.profit <= state.currentFilters.profitRange[1])
+                // If validFromDate is set, session start_time must be greater than or equal to fromDate, else just return true
+                const validFromDate = state.currentFilters.fromDate ? moment.utc(session.start_time) >= moment(state.currentFilters.fromDate) : true
+                // If validToDate is set, session start_time must be less than or equal to toDate, else just return true
+                const validToDate = state.currentFilters?.toDate ? moment.utc(session.start_time) <= moment(state.currentFilters.toDate) : true
+                // Valid location
+                const validLocation = state.currentFilters?.locations.includes(session.location)
+                // Valid BuyIn Range
+                // Add up the buy in, add ons and rebuys
+                const sessionBuyIn = session?.buy_in?.amount ?? 0
+                const sessionRebuys = session?.rebuys.reduce((total, rebuy) => total + rebuy.amount, 0) ?? 0
+                const sessionAddOns = session?.add_ons.reduce((total, add_on) => total + add_on.amount, 0) ?? 0
+                const totalBuyIn = sessionBuyIn + sessionRebuys + sessionAddOns
+                const validBuyInRange = (state.currentFilters.tournamentFilters.buyInRange && totalBuyIn >= state.currentFilters.tournamentFilters.buyInRange[0] && totalBuyIn <= state.currentFilters.tournamentFilters.buyInRange[1])
+                // Valid limits
+                const validLimit = state.currentFilters?.tournamentFilters?.limits.includes(session.limit.limit)
+                // Valid variants
+                const validVariant = state.currentFilters?.tournamentFilters?.variants.includes(session.variant.variant)
+
+                return validProfitRange && validFromDate && validToDate && validLocation && validBuyInRange && validLimit && validVariant
+            })
+
+            // Else continue applying filters.
+            return filtered
         },
         filteredSessions: (state, getters, rootState) => {
-            return [...getters.filteredCashGames, ...getters.filteredTournaments]
+            return [...getters.filteredCashGames, ...getters.filteredTournaments].sort(rootState.filters.sortByDate)
         },
         numberOfSessions: (state, getters) => {
             return getters.filteredSessions.length
