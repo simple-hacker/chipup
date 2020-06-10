@@ -15,8 +15,8 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body class="bg-background">
-    <div id="app">
+<body>
+    <div id="app" class="bg-background">
         <app
             :user="{{ $user }}"
             :stakes="{{ $stakes }}"
