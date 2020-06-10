@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'Chart',
     data () {
@@ -12,40 +14,56 @@ export default {
 			options: {
 				chart: {
 					id: 'profit',
+					type: 'area',
 					foreColor: '#FFFFFF',
 					toolbar: {
 						show: true,
 						tools: {
 							download: false,
 							selection: false,
-							zoom: false,
 							zoomin: true,
 							zoomout: true,
 							pan: true,
-							reset: false,
 							customIcons: []
 						},
 					},
 				},
 				xaxis: {
-					categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
+					type: 'datetime'
 				},
-				colors: ['#48bb78'],
+				colors: ['#48BB78', '#4851BB', '#BBB248', '#BB488B'],
 				grid: {
 					borderColor: '#38393D',
 				},
 				tooltip: {
 					theme: false,
+					shared: true,
+					followCursor: true,
 				}
 			},
-			series: [
+		}
+	},
+	computed: {
+		...mapGetters('sessions', ['sessionsProfitSeries']),
+		...mapGetters('cash_games', ['cashGamesProfitSeries']),
+		...mapGetters('tournaments', ['tournamentsProfitSeries']),
+		series() {
+			return [
 				{
 					name: 'Total Profit',
-					data: [15000, 10500, 18500, 15500, 21000, 25500, 23400]
+					data: this.sessionsProfitSeries
+				},
+				{
+					name: 'Cash Games Profit',
+					data: this.cashGamesProfitSeries
+				},
+				{
+					name: 'Tournament Profit',
+					data: this.tournamentsProfitSeries
 				},
 			]
 		}
-    },
+	},
 }
 </script>
 

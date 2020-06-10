@@ -29,7 +29,21 @@ export default {
         getCashGameById: (state) => (id) => {
             let cash_game = state.cash_games.find(cash_game => cash_game.id === id)
             return cash_game ?? state.defaultCashGame
-        }
+        },
+        cashGamesProfitSeries: (state, getters, rootState) => {
+            return [...state.cash_games].reverse().reduce((series, session, index) => {
+                        // Get the previous profit of the series so we can add on to the runing total.  Default to 0 on invalid index.
+                        // y property of the series is profit
+                        let runningTotal = series[index -1]?.y ?? 0
+                        // Push new object in to series array, where x is the date of the session
+                        // and y is the runningTotal adding on the current session's profit.
+                        series.push({
+                            x: moment.utc(session.start_time).format(),
+                            y: runningTotal + session.profit
+                        })
+                        return series
+                    }, [])
+        },
     },
     mutations: {
         ASSIGN_CASH_GAMES(state, cash_games) {

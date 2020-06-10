@@ -12,7 +12,7 @@ export default {
             let startTimeB = new Date(b.start_time)
             return startTimeA < startTimeB ? 1 : -1
         },
-        sortByDateDesc: (a , b) => {
+        sortByDateAsc: (a , b) => {
             let startTimeA = new Date(a.start_time)
             let startTimeB = new Date(b.start_time)
             return startTimeA > startTimeB ? 1 : -1
