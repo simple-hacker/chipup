@@ -60,6 +60,11 @@ Vue.prototype.$currency = new Intl.NumberFormat('en-GB', {
     minimumFractionDigits: 2
 })
 
+// Only import the isEqual function from loadash.
+// Used for comparing two objects.
+import isEqual from 'lodash.isequal'
+Vue.use(isEqual)
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

@@ -6,10 +6,11 @@
 				<i class="fas fa-filter"></i>
 			</div>
             <div
+                v-if="showRevert"
                 @click="resetFilters"
-                class="cursor-pointer rounded hover:bg-green-400 p-1"
+                class="flex items-center cursor-pointer rounded hover:bg-green-400 p-2"
             >
-                <i class="fas fa-undo-alt"></i>
+                <i class="fas fa-check-double mr-3"></i>
                 <span class="text-sm">Set to default filters</span>
             </div>
 		</div>
@@ -288,7 +289,7 @@
                     @click.prevent="submitFilters"
                     :disabled="noGameTypesSelected"
                     type="button"
-                    class="btn btn-green w-full disabled:bg-gray-500 disabled:border-gray-700 disabled:opacity-75"
+                    class="btn btn-green w-full p-3 text-base font-medium disabled:bg-gray-500 disabled:border-gray-700 disabled:opacity-75"
                 >
                     Apply Filters
                 </button>
@@ -338,6 +339,9 @@ export default {
             'tournamentVariantFilters',
             'locationFilters'
         ]),
+        showRevert() {
+            return ! _.isEqual(this.filters, this.unfilteredFilters)
+        },
         maxFromDateTime() {
             return moment(this.filters.toDate).format() < moment().format() ? moment(this.filters.toDate).format() : moment().format()
         },
@@ -362,7 +366,7 @@ export default {
             if (val && this.showCashGameFilters) {
                 this.showCashGameFilters = false
             }
-        }
+        },
     },
     methods: {
         ...mapActions('filtered_sessions', ['applyFilters']),
