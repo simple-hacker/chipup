@@ -5,13 +5,21 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'GameTypesPieChart',
     data() {
         return {
-            series: [65, 15],
             options: {
-                labels: ["1/2 NL Holdem", "1/1 Pot Limit Omaha"],
+                chart: {
+					id: 'gameTypesPieChart',
+                    foreColor: '#FFFFFF',
+                    toolbar: {
+                        show: false
+                    }
+                },
+                labels: [],
                 legend: {
                     show: true,
                     position: 'bottom',
@@ -29,6 +37,15 @@ export default {
                 }
             },
         }
+    },
+    computed: {
+        ...mapGetters('filtered_sessions', ['gameTypeSeries']),
+        series() {
+            return this.gameTypeSeries?.counts ?? []
+        }
+    },
+    created() {
+        this.options.labels = this.gameTypeSeries?.game_types ?? []
     }
 }
 </script>

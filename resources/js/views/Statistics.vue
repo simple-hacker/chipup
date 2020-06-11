@@ -23,6 +23,31 @@
                 </div>
             </div>
         </div>
+        <div
+            v-if="filteredCashGames.length > 0"
+            class="col-span-4 xl:col-span-2 bg-card rounded border border-muted-dark mb-3 p-4 text-white"
+        >
+            <h1 class="text-3xl font-bold">By Stakes</h1>
+            <div class="mt-3 flex flex-col md:flex-row w-full">
+                <div class="flex-1">
+                    <stakes-profit-bar-chart />
+                </div>
+                <div class="flex-1">
+                    <stakes-pie-chart />
+                </div>
+            </div>
+        </div>
+        <div class="col-span-4 xl:col-span-2 bg-card rounded border border-muted-dark mb-3 p-4 text-white">
+            <h1 class="text-3xl font-bold">By Variant</h1>
+            <div class="mt-3 flex flex-col md:flex-row w-full">
+                <div class="flex-1">
+                    <variants-profit-bar-chart />
+                </div>
+                <div class="flex-1">
+                    <variants-pie-chart />
+                </div>
+            </div>
+        </div>
         <div class="col-span-4 xl:col-span-2 bg-card rounded border border-muted-dark mb-3 p-4 text-white">
             <h1 class="text-3xl font-bold">By Locations</h1>
             <div class="mt-3 flex flex-col md:flex-row w-full">
@@ -43,16 +68,33 @@ import { mapGetters } from 'vuex'
 import FilterBar from '@components/FilterBar'
 import StatsTable from '@views/statistics/StatsTable'
 import ProfitLineChart from '@views/statistics/ProfitLineChart'
-import LocationsPieChart from '@views/statistics/LocationsPieChart'
-import LocationsProfitBarChart from '@views/statistics/LocationsProfitBarChart'
 import GameTypesPieChart from '@views/statistics/GameTypesPieChart'
 import GameTypesProfitBarChart from '@views/statistics/GameTypesProfitBarChart'
+import StakesPieChart from '@views/statistics/StakesPieChart'
+import StakesProfitBarChart from '@views/statistics/StakesProfitBarChart'
+import VariantsPieChart from '@views/statistics/VariantsPieChart'
+import VariantsProfitBarChart from '@views/statistics/VariantsProfitBarChart'
+import LocationsPieChart from '@views/statistics/LocationsPieChart'
+import LocationsProfitBarChart from '@views/statistics/LocationsProfitBarChart'
 
 export default {
     name: 'Statistics',
-    components: {FilterBar, StatsTable, ProfitLineChart, LocationsPieChart, LocationsProfitBarChart, GameTypesPieChart, GameTypesProfitBarChart},
+    components: {
+        FilterBar,
+        StatsTable,
+        ProfitLineChart,
+        GameTypesPieChart,
+        GameTypesProfitBarChart,
+        StakesPieChart,
+        StakesProfitBarChart,
+        VariantsPieChart,
+        VariantsProfitBarChart,
+        LocationsPieChart,
+        LocationsProfitBarChart,
+    },
     computed: {
-		...mapGetters('sessions', ['sessions'])
+        ...mapGetters('sessions', ['sessions']),
+        ...mapGetters('filtered_sessions', ['filteredCashGames']),
     },
 }
 </script>

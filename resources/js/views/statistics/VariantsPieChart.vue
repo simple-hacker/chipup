@@ -8,12 +8,12 @@
 import { mapGetters } from 'vuex'
 
 export default {
-    name: 'LocationsPieChart',
+    name: 'VariantsPieChart',
     data() {
         return {
             options: {
                 chart: {
-					id: 'locationsPieChart',
+					id: 'variantsPieChart',
                     foreColor: '#FFFFFF',
                     toolbar: {
                         show: false
@@ -30,7 +30,7 @@ export default {
                 theme: {
                     monochrome: {
                         enabled: true,
-                        color: '#BB488B',
+                        color: '#BBB248',
                         shadeTo: 'light',
                         shadeIntensity: 0.75
                     }
@@ -39,13 +39,13 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('filtered_sessions', ['locationSeries']),
+        ...mapGetters('filtered_sessions', ['variantSeries']),
         series() {
-            return Object.values(this.locationSeries?.counts) ?? []
+            return Object.values(this.variantSeries?.counts) ?? []
         }
     },
     created() {
-        this.options.labels = Object.keys(this.locationSeries?.counts) ?? []
+        this.options.labels = Object.keys(this.variantSeries?.counts) ?? []
     }
 }
 </script>

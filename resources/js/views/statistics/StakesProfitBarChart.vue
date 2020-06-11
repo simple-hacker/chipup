@@ -8,12 +8,12 @@
 import { mapGetters } from 'vuex'
 
 export default {
-    name: 'LocationsProfitBarChart',
+    name: 'StakesProfitBarChart',
     data() {
         return {
             options: {
                 chart: {
-					id: 'locationsProfitBarChart',
+					id: 'stakesProfitBarChart',
                     foreColor: '#FFFFFF',
                     toolbar: {
                         show: false
@@ -62,18 +62,18 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('filtered_sessions', ['locationSeries']),
+        ...mapGetters('filtered_sessions', ['stakeSeries']),
         series() {
             return [
                 {
                     name:'Profit',
-                    data: Object.values(this.locationSeries?.profits) ?? []
+                    data: Object.values(this.stakeSeries.profits) ?? []
                 }
             ]
         }
     },
     created() {
-        this.options.labels = Object.keys(this.locationSeries?.profits) ?? []
+        this.options.labels = Object.keys(this.stakeSeries.profits) ?? []
     }
 }
 </script>

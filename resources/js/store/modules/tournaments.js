@@ -31,8 +31,10 @@ export default {
             let tournament = state.tournaments.find(tournament => tournament.id === id)
             return tournament ?? state.defaultTournament
         },
-        tournamentsProfitSeries: (state, getters, rootState) => {
-            return [...state.tournaments].reverse().reduce((series, session, index) => {
+        tournamentsProfitSeries: (state) => {
+            return [...state.tournaments]
+                    .reverse()
+                    .reduce((series, session, index) => {
                         // Get the previous profit of the series so we can add on to the runing total.  Default to 0 on invalid index.
                         // y property of the series is profit
                         let runningTotal = series[index -1]?.y ?? 0

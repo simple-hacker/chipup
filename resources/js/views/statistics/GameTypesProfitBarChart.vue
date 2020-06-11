@@ -5,15 +5,19 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'GameTypesProfitBarChart',
     data() {
         return {
-            series: [{name:'Profit', data: [250,-218]}],
             options: {
                 chart: {
-					id: 'locationBarChart',
-					foreColor: '#FFFFFF',
+					id: 'gameTypesProfitBarChart',
+                    foreColor: '#FFFFFF',
+                    toolbar: {
+                        show: false
+                    }
                 },
                 colors: ['#38a169'],
                 yaxis: {
@@ -26,7 +30,7 @@ export default {
                         text: 'Profit'
                     }
                 },
-                labels: ["1/2 NL Holdem", "1/1 Pot Limit Omaha"],
+                labels: [],
                 grid: {
 					borderColor: '#38393D'
                 },
@@ -56,6 +60,20 @@ export default {
                 },
             },
         }
+    },
+    computed: {
+        ...mapGetters('filtered_sessions', ['gameTypeSeries']),
+        series() {
+            return [
+                {
+                    name:'Profit',
+                    data: this.gameTypeSeries?.profits ?? []
+                }
+            ]
+        }
+    },
+    created() {
+        this.options.labels = this.gameTypeSeries?.game_types ?? []
     }
 }
 </script>

@@ -24,20 +24,6 @@ export default {
         numberOfSessions: (state, getters) => {
             return getters.sessions.length
         },
-        sessionsProfitSeries: (state, getters) => {
-            return getters.sessions.reverse().reduce((series, session, index) => {
-                    // Get the previous profit of the series so we can add on to the runing total.  Default to 0 on invalid index.
-                    // y property of the series is profit
-                    let runningTotal = series[index -1]?.y ?? 0
-                    // Push new object in to series array, where x is the date of the session
-                    // and y is the runningTotal adding on the current session's profit.
-                    series.push({
-                        x: moment.utc(session.start_time).format(),
-                        y: runningTotal + session.profit
-                    })
-                    return series
-                }, [])
-        },
         totalProfit: (state, getters) => {
             return getters.sessions.reduce((total, session) => total + session.profit, 0)
         },
@@ -72,6 +58,20 @@ export default {
         },
         profitPerSession: (state, getters) => {
             return getters.totalProfit / getters.numberOfSessions
+        },
+        sessionsProfitSeries: (state, getters) => {
+            return getters.sessions.reverse().reduce((series, session, index) => {
+                    // Get the previous profit of the series so we can add on to the runing total.  Default to 0 on invalid index.
+                    // y property of the series is profit
+                    let runningTotal = series[index -1]?.y ?? 0
+                    // Push new object in to series array, where x is the date of the session
+                    // and y is the runningTotal adding on the current session's profit.
+                    series.push({
+                        x: moment.utc(session.start_time).format(),
+                        y: runningTotal + session.profit
+                    })
+                    return series
+                }, [])
         },
     },
     mutations: {

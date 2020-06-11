@@ -30,8 +30,10 @@ export default {
             let cash_game = state.cash_games.find(cash_game => cash_game.id === id)
             return cash_game ?? state.defaultCashGame
         },
-        cashGamesProfitSeries: (state, getters, rootState) => {
-            return [...state.cash_games].reverse().reduce((series, session, index) => {
+        cashGamesProfitSeries: (state) => {
+            return [...state.cash_games]
+                    .reverse()
+                    .reduce((series, session, index) => {
                         // Get the previous profit of the series so we can add on to the runing total.  Default to 0 on invalid index.
                         // y property of the series is profit
                         let runningTotal = series[index -1]?.y ?? 0
