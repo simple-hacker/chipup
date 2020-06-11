@@ -14,12 +14,11 @@ mix.webpackConfig({
 });
 
 require('laravel-mix-tailwind');
-require('laravel-mix-purgecss');
+// require('laravel-mix-purgecss');
 
 
 mix.js('resources/js/app.js', 'public/js')
    .js('resources/js/setup.js', 'public/js')
    .js('resources/js/welcome.js', 'public/js')
    .sass('resources/sass/app.scss', 'public/css')
-   .tailwind('./tailwind.config.js')
-   .purgeCss();
+   .tailwind('./tailwind.config.js');
