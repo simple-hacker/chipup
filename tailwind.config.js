@@ -1,4 +1,9 @@
 module.exports = {
+  purge: [
+      './resources/**/*.blade.php',
+      './resources/**/*.vue',
+      './resources/**/*.js',
+  ],
   theme: {
     screens: {
       'sm': '640px',

@@ -13,12 +13,21 @@ mix.webpackConfig({
    },
 });
 
-require('laravel-mix-tailwind');
-// require('laravel-mix-purgecss');
+// require('laravel-mix-tailwind');
+
+const tailwindcss = require('tailwindcss');
+
+require('laravel-mix-purgecss');
 
 
 mix.js('resources/js/app.js', 'public/js')
    .js('resources/js/setup.js', 'public/js')
    .js('resources/js/welcome.js', 'public/js')
    .sass('resources/sass/app.scss', 'public/css')
-   .tailwind('./tailwind.config.js');
+   .options({
+         processCssUrls: false,
+         postCss: [ tailwindcss('./tailwind.config.js') ],
+         terser: {
+            extractComments: false // Disable Licence files
+         }
+   });

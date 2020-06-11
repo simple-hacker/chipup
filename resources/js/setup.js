@@ -12,7 +12,12 @@ window.Vue = require('vue')
 import Snotify from 'vue-snotify'
 Vue.use(Snotify)
 
-Vue.component('poker-setup', require('./components/PokerSetup.vue').default)
+import VueFormWizard from 'vue-form-wizard'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
+import '@fortawesome/fontawesome-free/css/all.css'
+Vue.use(VueFormWizard)
+
+import PokerSetup from '@/components/PokerSetup'
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -22,4 +27,5 @@ Vue.component('poker-setup', require('./components/PokerSetup.vue').default)
 
 const app = new Vue({
     el: '#app',
+    components: { PokerSetup }
 });

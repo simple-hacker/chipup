@@ -80,11 +80,11 @@ Vue.use(isEqual)
 // Vue.component('register-form', require('./components/RegisterForm.vue').default)
 
 
-import App from '@/App.vue'
-import NotFound from '@/NotFound.vue'
+import App from '@/App'
+import NotFound from '@/NotFound'
 
-import routes from '@/routes.js'
-import store from '@store/store.js'
+import routes from '@/routes'
+import store from '@store/store'
 
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
