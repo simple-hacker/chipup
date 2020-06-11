@@ -31,6 +31,16 @@ export default {
 				xaxis: {
 					type: 'datetime'
 				},
+				yaxis: {
+                    labels: {
+                        formatter: function (val, opts) {
+                            return Vue.prototype.$currency.format(val);
+                        },
+                    },
+                    title: {
+                        text: 'Profit'
+                    }
+                },
 				colors: ['#48BB78', '#4851BB', '#BBB248', '#BB488B'],
 				grid: {
 					borderColor: '#38393D',
