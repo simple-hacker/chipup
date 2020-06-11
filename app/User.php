@@ -196,7 +196,7 @@ class User extends Authenticatable
     */
     public function tournaments()
     {
-        return $this->hasMany('App\Tournament');
+        return $this->hasMany('App\Tournament')->orderByDesc('start_time');;
     }
 
     /**
