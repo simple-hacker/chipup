@@ -9,17 +9,18 @@ import { mapGetters } from 'vuex'
 
 export default {
     name: 'VariantsPieChart',
-    data() {
-        return {
-            options: {
+    computed: {
+        ...mapGetters('filtered_sessions', ['variantSeries']),
+        options() {
+            return {
                 chart: {
-					id: 'variantsPieChart',
+                    id: 'variantsPieChart',
                     foreColor: '#FFFFFF',
                     toolbar: {
                         show: false
                     }
                 },
-                labels: [],
+                labels: Object.keys(this.variantSeries?.counts) ?? [],
                 legend: {
                     show: true,
                     position: 'bottom',
@@ -35,18 +36,12 @@ export default {
                         shadeIntensity: 0.75
                     }
                 }
-            },
-        }
-    },
-    computed: {
-        ...mapGetters('filtered_sessions', ['variantSeries']),
-        series() {
+            }
+        },
+            series() {
             return Object.values(this.variantSeries?.counts) ?? []
         }
     },
-    created() {
-        this.options.labels = Object.keys(this.variantSeries?.counts) ?? []
-    }
 }
 </script>
 

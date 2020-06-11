@@ -3,7 +3,7 @@
         <div class="col-span-4 xl:col-span-3 p-2 bg-card border border-muted-dark rounded shadow">
 			<chart/>
         </div>
-        <div class="col-span-4 md:col-span-2 xl:col-span-1 xl:order-first p-2 bg-card border border-muted-dark rounded shadow">
+        <div class="col-span-4 md:col-span-2 xl:col-span-1 order-first md:order-none xl:order-first p-2 bg-card border border-muted-dark rounded shadow">
             <bankroll/>
         </div>
         <div class="col-span-4 md:col-span-2 p-2 bg-card border border-muted-dark rounded shadow">

@@ -9,17 +9,18 @@ import { mapGetters } from 'vuex'
 
 export default {
     name: 'StakesPieChart',
-    data() {
-        return {
-            options: {
+    computed: {
+        ...mapGetters('filtered_sessions', ['stakeSeries']),
+        options() {
+            return {
                 chart: {
-					id: 'stakesPieChart',
+                    id: 'stakesPieChart',
                     foreColor: '#FFFFFF',
                     toolbar: {
                         show: false
                     }
                 },
-                labels: [],
+                labels: Object.keys(this.stakeSeries.counts) ?? [],
                 legend: {
                     show: true,
                     position: 'bottom',
@@ -35,18 +36,12 @@ export default {
                         shadeIntensity: 0.75
                     }
                 }
-            },
-        }
-    },
-    computed: {
-        ...mapGetters('filtered_sessions', ['stakeSeries']),
+            }
+        },
         series() {
             return Object.values(this.stakeSeries.counts) ?? []
         }
     },
-    created() {
-        this.options.labels = Object.keys(this.stakeSeries.counts) ?? []
-    }
 }
 </script>
 

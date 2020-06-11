@@ -11,7 +11,13 @@ export default {
     name: 'StakesProfitBarChart',
     data() {
         return {
-            options: {
+            
+        }
+    },
+    computed: {
+        ...mapGetters('filtered_sessions', ['stakeSeries']),
+        options() {
+            return {
                 chart: {
 					id: 'stakesProfitBarChart',
                     foreColor: '#FFFFFF',
@@ -30,7 +36,7 @@ export default {
                         text: 'Profit'
                     }
                 },
-                labels: [],
+                labels: Object.keys(this.stakeSeries.profits) ?? [],
                 grid: {
 					borderColor: '#38393D'
                 },
@@ -58,11 +64,8 @@ export default {
                         },
                     }
                 },
-            },
-        }
-    },
-    computed: {
-        ...mapGetters('filtered_sessions', ['stakeSeries']),
+            }
+        },
         series() {
             return [
                 {
@@ -72,9 +75,6 @@ export default {
             ]
         }
     },
-    created() {
-        this.options.labels = Object.keys(this.stakeSeries.profits) ?? []
-    }
 }
 </script>
 

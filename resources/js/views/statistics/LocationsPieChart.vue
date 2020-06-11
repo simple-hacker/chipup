@@ -9,17 +9,18 @@ import { mapGetters } from 'vuex'
 
 export default {
     name: 'LocationsPieChart',
-    data() {
+    computed: {
+        ...mapGetters('filtered_sessions', ['locationSeries']),
+        options() {
         return {
-            options: {
                 chart: {
-					id: 'locationsPieChart',
+                    id: 'locationsPieChart',
                     foreColor: '#FFFFFF',
                     toolbar: {
                         show: false
                     }
                 },
-                labels: [],
+                labels: Object.keys(this.locationSeries?.counts) ?? [],
                 legend: {
                     show: true,
                     position: 'bottom',
@@ -35,18 +36,12 @@ export default {
                         shadeIntensity: 0.75
                     }
                 }
-            },
-        }
-    },
-    computed: {
-        ...mapGetters('filtered_sessions', ['locationSeries']),
+            }
+        },
         series() {
             return Object.values(this.locationSeries?.counts) ?? []
         }
     },
-    created() {
-        this.options.labels = Object.keys(this.locationSeries?.counts) ?? []
-    }
 }
 </script>
 

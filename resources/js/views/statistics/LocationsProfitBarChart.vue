@@ -9,11 +9,12 @@ import { mapGetters } from 'vuex'
 
 export default {
     name: 'LocationsProfitBarChart',
-    data() {
-        return {
-            options: {
+    computed: {
+        ...mapGetters('filtered_sessions', ['locationSeries']),
+        options() {
+            return {
                 chart: {
-					id: 'locationsProfitBarChart',
+                    id: 'locationsProfitBarChart',
                     foreColor: '#FFFFFF',
                     toolbar: {
                         show: false
@@ -30,9 +31,9 @@ export default {
                         text: 'Profit'
                     }
                 },
-                labels: [],
+                labels: Object.keys(this.locationSeries?.profits) ?? [],
                 grid: {
-					borderColor: '#38393D'
+                    borderColor: '#38393D'
                 },
                 dataLabels: {
                     enabled: true,
@@ -41,8 +42,8 @@ export default {
                     },
                 },
                 tooltip: {
-					theme: false,
-				},
+                    theme: false,
+                },
                 plotOptions: {
                     bar: {
                         colors: {
@@ -57,12 +58,9 @@ export default {
                             }]
                         },
                     }
-                },
-            },
-        }
-    },
-    computed: {
-        ...mapGetters('filtered_sessions', ['locationSeries']),
+                }
+            }
+        },
         series() {
             return [
                 {
@@ -72,9 +70,6 @@ export default {
             ]
         }
     },
-    created() {
-        this.options.labels = Object.keys(this.locationSeries?.profits) ?? []
-    }
 }
 </script>
 
