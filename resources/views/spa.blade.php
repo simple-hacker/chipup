@@ -9,6 +9,10 @@
 
     <title>{{ config('app.name', 'Poker') }}</title>
 
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}">
+    <link rel="alternate icon" href="{{ asset('favico.ico') }}">
+
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
