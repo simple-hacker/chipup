@@ -3,7 +3,7 @@
 		<div
 			v-if="sessions.length > 0"
 		>
-			<div v-for="session in sessions.slice(0, 8)"
+			<div v-for="session in sessions.slice(0,8)"
 				:key="`${session.game_type}_${session.id}`"
 				class="mb-2">
 				<session-summary :session="session"></session-summary>

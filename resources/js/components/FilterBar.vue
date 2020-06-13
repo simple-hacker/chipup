@@ -2,20 +2,20 @@
 	<div>
 		<div
 			@click.self="showFilters"
-			class="flex justify-between items-center p-3 rounded cursor-pointer text-xl font-medium font-bold"
-			:class="filtersApplied ? 'bg-green-500 hover:bg-green-600' : 'bg-muted-dark hover:bg-muted-light'"
+			class="flex justify-between items-center p-3 rounded cursor-pointer text-white"
+			:class="filtersApplied ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-gray-450'"
 		>
 			<div class="flex items-center">
-				<h1 class="mr-4">Filters</h1>
+				<h1 class="mr-4 uppercase text-xl font-medium tracking-widest">Filters</h1>
 				<i class="fas fa-filter"></i>
 			</div>
 			<div
 				v-if="filtersApplied"
                 @click.prevent="removeFilters"
-                class="flex items-center cursor-pointer rounded hover:bg-green-400 p-2"
+                class="flex items-center cursor-pointer rounded hover:bg-green-500 p-2"
             >
                 <i class="fas fa-times mr-3"></i>
-                <span class="text-sm">Remove filters</span>
+                <span class="text-sm uppercase tracking-wide font-medium">Remove filters</span>
             </div>
 		</div>
 	</div>

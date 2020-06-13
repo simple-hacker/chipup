@@ -1,22 +1,18 @@
 <template>
-	<div class="flex flex-col text-white">
-		<div class="border border-muted-dark rounded-lg">
-			<div class="flex justify-between border border-muted-dark p-3">
-				<span>Sessions</span>
-				<span class="text-lg">
-					<number
-						ref="stats-sessions"
-						:from="0"
-						:to="numberOfSessions"
-						:duration="2"
-						easing="Power1.easeOut"
-					/>
-				</span>
-			</div>
-			<div class="flex justify-between border border-muted-dark p-3">
-				<span>Profit</span>
-				<span
-					class="text-lg font-semibold"
+	<div
+		class="flex flex-wrap border-b-16 rounded bg-gray-500"
+		:class="totalProfit < 0 ? 'border-red-500' : 'border-green-500'"
+	>
+		<!--
+			PROFIT
+		-->
+		<div class="w-full md:w-1/2 xl:w-1/4 card-highlighted rounded-tl flex md:flex-col p-3">
+			<div class="flex flex-col flex-1">
+				<h2 class="uppercase text-gray-200 font-extrabold tracking-wider">
+					Total Profit
+				</h2>
+				<div
+					class="text-3xl sm:text-4xl font-semibold"
 					:class="(totalProfit < 0) ? 'text-red-500' : 'text-green-500'"
 				>
 					<number
@@ -27,12 +23,29 @@
 						:format="(amount) => formatCurrency(amount)"
 						easing="Power1.easeOut"
 					/>
-				</span>
+				</div>
 			</div>
-			<div class="flex justify-between border border-muted-dark p-3">
-				<span>Profit / hour</span>
-				<span
-					class="text-lg font-semibold"
+			<div class="flex flex-col flex-1">
+				<div class="flex flex-col mb-2">
+					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Cash Games Profit</span>
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="formatCurrency(cashGameProfit)"></span>
+				</div>
+				<div class="flex flex-col">
+					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Tournament Profit</span>
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="formatCurrency(tournamentProfit)"></span>
+				</div>
+			</div>
+		</div>
+		<!--
+			PROFIT/HOUR
+		-->
+		<div class="w-full md:w-1/2 xl:w-1/4 card-highlighted md:rounded-tr xl:rounded-none flex md:flex-col p-3">
+			<div class="flex flex-col flex-1">
+				<h2 class="uppercase text-gray-200 font-extrabold tracking-wider">
+					Profit/Hour
+				</h2>
+				<div
+					class="text-3xl sm:text-4xl font-semibold"
 					:class="(profitPerHour < 0) ? 'text-red-500' : 'text-green-500'"
 				>
 					<number
@@ -43,38 +56,29 @@
 						:format="(amount) => formatCurrency(amount)"
 						easing="Power1.easeOut"
 					/>
-				</span>
+				</div>
 			</div>
-			<div class="flex justify-between border border-muted-dark p-3">
-				<span>Total Buy Ins</span>
-				<span class="text-lg font-semibold">
-					<number
-						ref="stats-total-buyins"
-						:from="0"
-						:to="totalBuyIns"
-						:duration="2"
-						:format="(amount) => formatCurrency(amount)"
-						easing="Power1.easeOut"
-					/>
-				</span>
+			<div class="flex flex-col flex-1">
+				<div class="flex flex-col mb-2">
+					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Average Duration</span>
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="formatDuration(averageDuration)"></span>
+				</div>
+				<div class="flex flex-col">
+					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Total Duration</span>
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="formatDuration(totalDuration)"></span>
+				</div>
 			</div>
-			<div class="flex justify-between border border-muted-dark p-3">
-				<span>Total Cashes</span>
-				<span class="text-lg font-semibold">
-					<number
-						ref="stats-total-cashes"
-						:from="0"
-						:to="totalCashes"
-						:duration="2"
-						:format="(amount) => formatCurrency(amount)"
-						easing="Power1.easeOut"
-					/>
-				</span>
-			</div>
-			<div class="flex justify-between border border-muted-dark p-3">
-				<span>Profit / session</span>
-				<span
-					class="text-lg font-semibold"
+		</div>
+		<!--
+			PROFIT/SESSION
+		-->
+		<div class="w-full md:w-1/2 xl:w-1/4 card-highlighted flex md:flex-col p-3">
+			<div class="flex flex-col flex-1">
+				<h2 class="uppercase text-gray-200 font-extrabold tracking-wider">
+					Profit/Session
+				</h2>
+				<div
+					class="text-3xl sm:text-4xl font-semibold"
 					:class="(profitPerSession < 0) ? 'text-red-500' : 'text-green-500'"
 				>
 					<number
@@ -85,49 +89,54 @@
 						:format="(amount) => formatCurrency(amount)"
 						easing="Power1.easeOut"
 					/>
-				</span>
+				</div>
 			</div>
-			<div class="flex justify-between border border-muted-dark p-3">
-				<span>Average ROI</span>
-				<span
-					class="text-lg font-semibold"
-					:class="(averageROI < 0) ? 'text-red-500' : 'text-green-500'"
+			<div class="flex flex-col flex-1">
+				<div class="flex items-baseline mb-1">
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100 mr-1" v-text="numberOfSessions"></span>
+					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Sessions</span>
+				</div>
+				<div class="flex items-baseline mb-1">
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100 mr-1" v-text="filteredCashGames.length"></span>
+					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Cash Games</span>
+				</div>
+				<div class="flex items-baseline">
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100 mr-1" v-text="filteredTournaments.length"></span>
+					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Tournaments</span>
+				</div>
+			</div>
+		</div>
+		<!--
+			ROI
+		-->
+		<div class="w-full md:w-1/2 xl:w-1/4 card-highlighted xl:rounded-r flex md:flex-col p-3">
+			<div class="flex flex-col flex-1">
+				<h2 class="uppercase text-gray-200 font-extrabold tracking-wider">
+					ROI
+				</h2>
+				<div
+					class="text-3xl sm:text-4xl font-semibold"
+					:class="(roi < 0) ? 'text-red-500' : 'text-green-500'"
 				>
 					<number
 						ref="stats-average-roi"
 						:from="0"
-						:to="averageROI"
+						:to="roi"
 						:duration="2"
 						:format="(number) => number.toFixed(2)+'%'"
 						easing="Power1.easeOut"
 					/>
-				</span>
+				</div>
 			</div>
-			<div class="flex justify-between border border-muted-dark p-3">
-				<span>Average duration</span>
-				<span class="text-lg">
-					<number
-						ref="stats-profit-session"
-						:from="0"
-						:to="averageDuration"
-						:duration="2"
-						:format="(time) => formatDuration(time)"
-						easing="Power1.easeOut"
-					/>
-				</span>
-			</div>
-			<div class="flex justify-between border border-muted-dark p-3">
-				<span>Total duration</span>
-				<span class="text-lg">
-					<number
-						ref="stats-profit-session"
-						:from="0"
-						:to="totalDuration"
-						:duration="2"
-						:format="(time) => formatDuration(time)"
-						easing="Power1.easeOut"
-					/>
-				</span>
+			<div class="flex flex-col flex-1">
+				<div class="flex flex-col mb-2">
+					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Total Buy Ins</span>
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="formatCurrency(totalBuyIns)"></span>
+				</div>
+				<div class="flex flex-col">
+					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Total Cashes</span>
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="formatCurrency(totalCashes)"></span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -143,6 +152,10 @@ export default {
 	computed: {
 		...mapGetters('filtered_sessions', [
 			'numberOfSessions',
+			'filteredCashGames',
+			'filteredTournaments',
+			'cashGameProfit',
+			'tournamentProfit',
 			'totalProfit',
 			'totalDuration',
 			'averageDuration',
@@ -150,7 +163,7 @@ export default {
 			'profitPerSession',
 			'totalBuyIns',
 			'totalCashes',
-			'averageROI',
+			'roi',
 		])
 	},
 	methods: {

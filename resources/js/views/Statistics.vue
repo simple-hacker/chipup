@@ -2,17 +2,17 @@
     <div class="w-full grid grid-cols-4 gap-4">
         <div
             v-if="sessions.length > 0"
-            class="col-span-4 bg-background rounded border border-card p-1 text-white"
+            class="col-span-4"
         >
             <filter-bar />
         </div>
-        <div class="col-span-4 xl:col-span-2 xxl:col-span-1 bg-card rounded border border-muted-dark mb-3 p-4 text-white">
+        <div class="col-span-4">
             <stats-table />
         </div>
-        <div class="col-span-4 xl:col-span-2 xxl:col-span-3 bg-card rounded border border-muted-dark mb-3 p-4 text-white">
+        <div class="col-span-4 card">
             <profit-line-chart />
         </div>
-        <div class="col-span-4 xl:col-span-2 bg-card rounded border border-muted-dark mb-3 p-4 text-white">
+        <div class="col-span-4 xl:col-span-2 card">
             <h1 class="text-3xl font-bold">By Game Type</h1>
             <div class="mt-3 flex flex-col md:flex-row w-full">
                 <div class="flex-1">
@@ -25,7 +25,7 @@
         </div>
         <div
             v-if="filteredCashGames.length > 0"
-            class="col-span-4 xl:col-span-2 bg-card rounded border border-muted-dark mb-3 p-4 text-white"
+            class="col-span-4 xl:col-span-2 card"
         >
             <h1 class="text-3xl font-bold">By Stakes</h1>
             <div class="mt-3 flex flex-col md:flex-row w-full">
@@ -37,7 +37,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-span-4 xl:col-span-2 bg-card rounded border border-muted-dark mb-3 p-4 text-white">
+        <div class="col-span-4 xl:col-span-2 card">
             <h1 class="text-3xl font-bold">By Variant</h1>
             <div class="mt-3 flex flex-col md:flex-row w-full">
                 <div class="flex-1">
@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-span-4 xl:col-span-2 bg-card rounded border border-muted-dark mb-3 p-4 text-white">
+        <div class="col-span-4 xl:col-span-2 card">
             <h1 class="text-3xl font-bold">By Locations</h1>
             <div class="mt-3 flex flex-col md:flex-row w-full">
                 <div class="flex-1">

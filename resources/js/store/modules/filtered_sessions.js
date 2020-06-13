@@ -78,6 +78,12 @@ export default {
         numberOfSessions: (state, getters) => {
             return getters.filteredSessions.length
         },
+        cashGameProfit: (state, getters) => {
+            return getters.filteredCashGames.reduce((total, session) => total + session.profit, 0)
+        },
+        tournamentProfit: (state, getters) => {
+            return getters.filteredTournaments.reduce((total, session) => total + session.profit, 0)
+        },
         totalProfit: (state, getters) => {
             return getters.filteredSessions.reduce((total, session) => total + session.profit, 0)
         },
@@ -104,7 +110,7 @@ export default {
         totalCashes: (state, getters) => {
             return getters.filteredSessions.reduce((total, session) => total + (session.cash_out?.amount ?? 0), 0)
         },
-        averageROI: (state, getters) => {
+        roi: (state, getters) => {
             return (getters.totalProfit / getters.totalBuyIns) * 100
         },
         profitPerHour: (state, getters) => {

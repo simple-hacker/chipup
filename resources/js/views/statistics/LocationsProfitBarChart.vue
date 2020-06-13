@@ -24,7 +24,7 @@ export default {
                 yaxis: {
                     labels: {
                         formatter: function (val, opts) {
-                            return Vue.prototype.$currency.format(val);
+                            return Vue.prototype.$currencyNoDecimal.format(val);
                         },
                     },
                     title: {
