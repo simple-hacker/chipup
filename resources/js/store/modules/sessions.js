@@ -10,7 +10,7 @@ export default {
             return [
                 ...rootState.cash_games.cash_games,
                 ...rootState.tournaments.tournaments
-            ].sort(rootState.filters.sortByDateDesc)
+            ].sort(rootState.filters.sortByDate)
         },
         getSession: (state, getters, rootState, rootGetters) => (id, game_type) => {
             if (game_type === 'cash_game') {
@@ -60,7 +60,9 @@ export default {
             return getters.totalProfit / getters.numberOfSessions
         },
         sessionsProfitSeries: (state, getters) => {
-            return getters.sessions.reverse().reduce((series, session, index) => {
+            // Have to spread operator here because it's actually altering the order of the state when displaying individual sessions sorted by date desc
+            // Need to reverse because series needs to be added up over time
+            return [...getters.sessions].reverse().reduce((series, session, index) => {
                     // Get the previous profit of the series so we can add on to the runing total.  Default to 0 on invalid index.
                     // y property of the series is profit
                     let runningTotal = series[index -1]?.y ?? 0
