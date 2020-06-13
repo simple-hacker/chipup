@@ -66,7 +66,7 @@ export default {
                 // Valid variants
                 const validVariant = state.currentFilters?.tournamentFilters?.variants.includes(session.variant.variant)
 
-                return validProfitRange && validFromDate && validToDate && validLocation && validBuyInRange && validLimit && validVariant
+                return validProfitRange && validFromDate && validToDate && validLocation && validLimit && validVariant && validBuyInRange
             })
 
             // Else continue applying filters.
@@ -105,7 +105,7 @@ export default {
             return getters.filteredSessions.reduce((total, session) => total + (session.cash_out?.amount ?? 0), 0)
         },
         averageROI: (state, getters) => {
-            return getters.totalProfit / getters.totalBuyIns
+            return (getters.totalProfit / getters.totalBuyIns) * 100
         },
         profitPerHour: (state, getters) => {
             return getters.totalProfit / getters.totalDuration
@@ -114,7 +114,7 @@ export default {
             return getters.totalProfit / getters.numberOfSessions
         },
         sessionsProfitSeries: (state, getters) => {
-            return getters.filteredSessions
+            return [...getters.filteredSessions]
                     .reverse()
                     .reduce((series, session, index) => {
                         // Get the previous profit of the series so we can add on to the runing total.  Default to 0 on invalid index.
@@ -130,7 +130,7 @@ export default {
                     }, [])
         },
         cashGamesProfitSeries: (state, getters, rootState) => {
-            return getters.filteredCashGames
+            return [...getters.filteredCashGames]
                     .sort(rootState.filters.sortByDateAsc)
                     .reduce((series, session, index) => {
                         // Get the previous profit of the series so we can add on to the runing total.  Default to 0 on invalid index.
@@ -146,7 +146,7 @@ export default {
                     }, [])
         },
         tournamentsProfitSeries: (state, getters, rootState) => {
-            return getters.filteredTournaments
+            return [...getters.filteredTournaments]
                     .sort(rootState.filters.sortByDateAsc)
                     .reduce((series, session, index) => {
                         // Get the previous profit of the series so we can add on to the runing total.  Default to 0 on invalid index.
