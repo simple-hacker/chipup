@@ -2,7 +2,7 @@
     <div>
         <form-wizard ref="formwizard" title="" subtitle="" color="#409858" errorColor="#aa332e" class="text-white">
             <tab-content title="Bankroll" icon="fas fa-dollar-sign" :beforeChange="bankrollMustBePositive">
-                <div class="flex flex-col">
+                <div class="flex flex-col h-56">
                     <p class="text-lg md:text-2xl mb-5">What is your starting bankroll?</p>
                     <div class="flex flex-col items-center">
                         <input
@@ -19,7 +19,7 @@
                 </div>
             </tab-content>
             <tab-content title="Stake" icon="fas fa-coins">
-                <div class="flex flex-col">
+                <div class="flex flex-col h-56">
                     <p class="text-lg md:text-2xl mb-5">What stakes do you usually play?</p>
                     <div class="flex flex-col items-center">
                         <select v-model="default_stake" class="w-full md:w-3/4 p-3 mb-2" :class="{ 'error-input' : errors.default_stake_id }">
@@ -30,7 +30,7 @@
                 </div>
             </tab-content>
             <tab-content title="Game Type" icon="fas fa-star">
-                <div class="flex flex-col">
+                <div class="flex flex-col h-56">
                     <p class="text-lg md:text-2xl mb-5">What game type do you usually play?</p>
                     <div class="flex flex-col items-center">
                         <select v-model="default_limit" class="w-full md:w-3/4 p-3 mb-2" :class="{ 'error-input' : errors.default_limit_id }">
@@ -53,7 +53,7 @@
                 </div>
             </tab-content>
             <tab-content title="Location" icon="fas fa-map-marker-alt">
-                <div class="flex flex-col">
+                <div class="flex flex-col h-56">
                     <p class="text-lg md:text-2xl mb-5">Where do you usually play?</p>
                     <div class="flex flex-col items-center">
                         <input v-model="location" type="text" placeholder="Enter location" class="w-full md:w-3/4 p-3 mb-2" :class="{ 'error-input' : errors.default_location }"/>

@@ -66,11 +66,11 @@
 }
 
 .error-message {
-    @apply text-sm text-red-700 my-1;
+    @apply text-sm text-red-500 font-medium tracking-wide my-1;
 }
 
 .error-input {
-    @apply border-red-700 border-2;
+    @apply border-red-500 border-2;
 }
 
 .modal {
@@ -81,7 +81,21 @@
 }
 
 input, select, textarea {
-    @apply w-full bg-gray-500 border border-gray-600 rounded p-3;
+    @apply w-full bg-gray-500 border border-gray-600 text-white rounded p-3;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    border: 1px solid hsl(225, 7%, 13%);
+    -webkit-text-fill-color: white;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
 @import "tailwindcss/utilities";

@@ -19,17 +19,39 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-900">
     <div id="app">
 
         <div class="flex flex-col xl:flex-row h-screen w-full">
-            <div class="hidden xl:block xl:w-3/5 h-1/2 bg-cover bg-right" style="background-image: url('images/background.jpg')">
-            </div>
-            <div class="h-screen w-full xl:w-2/5 h-1/2 flex flex-col justify-center items-center bg-gray-200 xl:bg-black bg-cover bg-right background-image">
-                <div class="flex flex-col items-center bg-gray-100 rounded shadow border border-black w-3/4 p-2">
-                    <h1 class="text-black text-4xl w-full text-center font-bold mb-3 border-b">{{ config('app.name', 'Poker') }}</h1>
+            <div class="hidden xl:block xl:w-3/5 h-1/2 bg-cover bg-right" style="background-image: url('images/background.jpg')"></div>
+            <div class="h-screen w-full xl:w-2/5 h-1/2 flex flex-col justify-center items-center bg-gray-800">
+
+                <div class="flex flex-col items-center bg-gray-600 rounded-t w-5/6 p-3 pb-6">
+                    <img src="{{ asset('images/logo.svg') }}" width="75px" alt="Poker Logo">
+                    <h1 class="text-4xl w-full text-center font-bold mb-3 text-white">{{ config('app.name', 'Poker') }}</h1>
                     @yield('form')
                 </div>
+                @guest
+                    @yield('link')
+                @endguest
+
+
+
+
+
+                {{-- <div class="flex flex-col w-full justify-center shadow-2xl">
+                    <div class="flex flex-col items-center bg-gray-600 rounded-t border border-gray-900 w-5/6 p-3">
+                        <img src="{{ asset('images/logo.svg') }}" width="75px" alt="Poker Logo">
+                        <h1 class="text-4xl w-full text-center font-bold mb-3 text-white">{{ config('app.name', 'Poker') }}</h1>
+                        @yield('form')
+                    </div>
+                    <div class="">
+                        @yield('link')
+                    </div>
+                </div> --}}
+
+
+
             </div>
         </div>
 
