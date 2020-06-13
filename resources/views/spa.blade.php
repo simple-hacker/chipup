@@ -20,7 +20,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div id="app" class="bg-background">
+    <div id="app" class="bg-gray-900">
         <app
             :user="{{ $user }}"
             :stakes="{{ $stakes }}"

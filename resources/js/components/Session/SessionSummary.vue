@@ -1,13 +1,13 @@
 <template>
 	<div 
 		@click="showSessionDetails()"
-		class="flex justify-between p-3 md:p-4 border border-muted-dark shadow bg-card hover:bg-muted-dark cursor-pointer text-white">
-		<div class="flex flex-1 items-center">
+		class="flex justify-between items-center p-3 md:p-4 bg-gray-500 hover:bg-gray-450 rounded border border-gray-600 shadow hover:shadow-2xl cursor-pointer text-white"
+	>
 			<i v-if="session.game_type === 'cash_game'" class="fas fa-money-bill fa-lg sm:fa-2x mr-4"></i>
 			<i v-if="session.game_type === 'tournament'" class="fas fa-trophy fa-lg sm:fa-2x mr-4"></i>
 			<div class="flex-col flex-1">
 				<div class="uppercase">{{ date }}</div>
-				<div class="text-sm text-gray-600">{{ session.location }}</div>
+				<div class="text-sm tracking-wide text-gray-300 font-medium">{{ session.location }}</div>
 			</div>
 			<div
 				class="text-lg sm:text-2xl font-bold items-center"
@@ -15,7 +15,6 @@
 			>
 				{{ formattedProfit }}
 			</div>
-		</div>
 	</div>
 </template>
 

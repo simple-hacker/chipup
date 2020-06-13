@@ -10,7 +10,7 @@ export default {
             return [
                 ...rootState.cash_games.cash_games,
                 ...rootState.tournaments.tournaments
-            ].sort(rootState.filters.sortByDate)
+            ].sort(rootState.filters.sortByDateDesc)
         },
         getSession: (state, getters, rootState, rootGetters) => (id, game_type) => {
             if (game_type === 'cash_game') {
@@ -50,8 +50,8 @@ export default {
         totalCashes: (state, getters) => {
             return getters.sessions.reduce((total, session) => total + (session.cash_out?.amount ?? 0), 0)
         },
-        averageROI: (state, getters) => {
-            return getters.totalProfit / getters.totalBuyIns
+        roi: (state, getters) => {
+            return (getters.totalProfit / getters.totalBuyIns) * 100
         },
         profitPerHour: (state, getters) => {
             return getters.totalProfit / getters.totalDuration

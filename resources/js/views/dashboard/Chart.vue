@@ -1,6 +1,6 @@
 <template>
   <div>
-    <apexchart type="line" width="100%" height="500px" :options="options" :series="series"></apexchart>
+    <apexchart type="line" :options="options" :series="series"></apexchart>
   </div>
 </template>
 
@@ -27,6 +27,8 @@ export default {
 							customIcons: []
 						},
 					},
+					height: '100%',
+					width: '100%',
 				},
 				xaxis: {
 					type: 'datetime'
@@ -34,7 +36,7 @@ export default {
 				yaxis: {
                     labels: {
                         formatter: function (val, opts) {
-                            return Vue.prototype.$currency.format(val);
+                            return Vue.prototype.$currencyNoDecimal.format(val);
                         },
                     },
                     title: {
@@ -74,6 +76,15 @@ export default {
 			]
 		}
 	},
+	methods: {
+		formatCurrency(amount) {
+			return new Intl.NumberFormat('en-GB', {
+				style: 'currency',
+				currency: 'GBP',
+				minimumFractionDigits: 2
+			}).format(0)
+		}
+	}
 }
 </script>
 

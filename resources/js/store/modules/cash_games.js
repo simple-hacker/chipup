@@ -30,6 +30,9 @@ export default {
             let cash_game = state.cash_games.find(cash_game => cash_game.id === id)
             return cash_game ?? state.defaultCashGame
         },
+        cashGameProfit: state => {
+            return state.cash_games.reduce((total, session) => total + session.profit, 0)
+        },
         cashGamesProfitSeries: (state) => {
             return [...state.cash_games]
                     .reverse()

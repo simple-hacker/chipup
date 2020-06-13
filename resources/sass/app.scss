@@ -2,24 +2,67 @@
 
 @import "tailwindcss/components";
 
+// Need nav-link here so we can control the icon colour of the vue's active-link prop
+.nav-link {
+    @apply text-white;
+    & > i {
+        @apply text-gray-300;
+    }
+
+    &:hover {
+        @apply bg-green-400 text-green-900;
+        & > i {
+            @apply text-green-600;
+        }
+    }
+    &:focus {
+        @apply bg-green-500 text-green-900;
+        & > i {
+            @apply text-green-600;
+        }
+    }
+
+}
+
+.nav-link-active {
+    @apply bg-green-500 text-green-900;
+    & > i {
+        @apply text-green-800;
+    }
+}
+
+.card {
+    @apply bg-gray-600 text-gray-100 rounded shadow-inner p-2;
+}
+
+.card-highlighted {
+    @apply bg-gray-500 text-gray-100 shadow-inner;
+}
+
+.card-green {
+    @apply bg-green-500 text-green-200 shadow-inner;
+}
+
+.card-red {
+    @apply bg-red-500 text-red-900 shadow-inner;
+}
+
 .btn {
-    @apply py-2 px-4 uppercase text-white text-sm text-center;
+    @apply py-3 px-4 rounded uppercase text-sm text-center tracking-wide font-medium border;
 }
 
 .btn-green {
-    @apply bg-green-600 border border-green-700;
-}
-
-.btn-green:hover {
-    @apply bg-green-700;
+    @apply bg-green-500 border-green-700 text-white;
+    &:hover {
+        @apply bg-green-600;
+    }
 }
 
 .btn-red {
-    @apply bg-red-600 border border-red-700;
-}
-
-.btn-red:hover {
-    @apply bg-red-700;
+    @apply bg-red-500 border-red-700 text-white;
+    &:hover {
+        @apply bg-red-600;
+    }
 }
 
 .error-message {
@@ -31,14 +74,14 @@
 }
 
 .modal {
-    @apply bg-background text-white p-1 rounded-lg border border-muted-dark;
+    @apply bg-gray-800 text-white p-1 rounded-lg border border-gray-900;
     @screen md {
         @apply p-3;
     }
 }
 
 input, select, textarea {
-    @apply w-full bg-muted-light border border-muted-dark rounded p-3;
+    @apply w-full bg-gray-500 border border-gray-600 rounded p-3;
 }
 
 @import "tailwindcss/utilities";

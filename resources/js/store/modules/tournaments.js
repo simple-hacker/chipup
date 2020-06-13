@@ -27,9 +27,12 @@ export default {
         }
     },
     getters: {
-        getTournamentById: (state) => (id) => {
+        getTournamentById: state => id => {
             let tournament = state.tournaments.find(tournament => tournament.id === id)
             return tournament ?? state.defaultTournament
+        },
+        tournamentProfit: state => {
+            return state.tournaments.reduce((total, session) => total + session.profit, 0)
         },
         tournamentsProfitSeries: (state) => {
             return [...state.tournaments]

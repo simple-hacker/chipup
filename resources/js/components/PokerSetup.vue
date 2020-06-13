@@ -90,7 +90,7 @@
         },
         data() {
             return {
-                bankroll: 1000,
+                bankroll: 0,
                 location: '',
                 default_stake: 1,
                 default_limit: 1,

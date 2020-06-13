@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col h-screen">
         <!-- Top Nav -->
-        <nav aria-label="top-navigation" class="sticky top-0 z-50 flex justify-between items-center px-3 py-2 bg-card border-b-2 border-background">
+        <nav aria-label="top-navigation" class="sticky top-0 z-50 flex justify-between items-center px-3 py-2 bg-gray-700 border-gray-800 border-b-2">
             <h1 class="text-2xl font-bold text-white">
                 <router-link
                     :to="{ name: 'dashboard' }"
@@ -29,42 +29,42 @@
             </div>
 
             <!-- Bottom Nav -->
-            <nav aria-label="bottom-navigation" class="sticky bottom-0 p-2 flex justify-around items-center bg-card border-t-2 border-background lg:order-first lg:flex-col lg:justify-start lg:items-start lg:w-1/6 lg:max-w-nav lg:p-2 xl:p-3 lg:border-none">
+            <nav aria-label="bottom-navigation" class="bg-gray-700 border-gray-800 border-t-2 sticky bottom-0 p-2 flex justify-around items-center lg:order-first lg:flex-col lg:justify-start lg:items-start lg:w-1/6 lg:max-w-nav lg:p-2 xl:p-3 lg:border-none">
                 <router-link
                     :to="{ name: 'live' }"
-                    class="w-1/6 flex justify-center items-center rounded-lg p-4 text-white hover:bg-green-500 hover:text-muted-dark focus:bg-green-500 focus:text-muted-dark flex lg:w-full lg:justify-start lg:p-3 lg:mb-2"
-                    :active-class="'bg-green-600 text-muted-dark'"
+                    class="nav-link flex w-1/6 justify-center items-center rounded p-4 lg:w-full lg:justify-start lg:p-3 lg:mb-2"
+                    :active-class="'nav-link-active'"
                 >
-                    <i class="fas fa-plus fa-lg lg:w-1/5 lg:mr-2 text-muted-light"></i><span class="hidden lg:block text-lg font-medium">Session</span>
+                    <i class="fas fa-plus fa-lg lg:w-1/5 lg:mr-2"></i><span class="hidden lg:block text-lg font-medium">Live</span>
                 </router-link>
                 <router-link
                     :to="{ name: 'statistics' }"
-                    class="w-1/6 flex justify-center items-center rounded-lg p-4 text-white hover:bg-green-500 hover:text-muted-dark focus:bg-green-500 focus:text-muted-dark flex lg:w-full lg:justify-start lg:p-3 lg:mb-2"
-                    :active-class="'bg-green-600 text-muted-dark'"
+                    class="nav-link flex w-1/6 justify-center items-center rounded p-4 lg:w-full lg:justify-start lg:p-3 lg:mb-2"
+                    :active-class="'nav-link-active'"
                 >
-                    <i class="fas fa-chart-line fa-lg lg:w-1/5 lg:mr-2 text-muted-light"></i><span class="hidden lg:block text-lg font-medium">Statistics</span>
+                    <i class="fas fa-chart-line fa-lg lg:w-1/5 lg:mr-2"></i><span class="hidden lg:block text-lg font-medium">Statistics</span>
                 </router-link>
                 <router-link
                     :to="{ name: 'dashboard' }"
-                    class="w-1/6 flex justify-center items-center rounded-lg p-4 text-white hover:bg-green-500 hover:text-muted-dark focus:bg-green-500 focus:text-muted-dark flex lg:w-full lg:justify-start lg:p-3 lg:mb-2 lg:order-first"
+                    class="nav-link flex w-1/6 justify-center items-center rounded p-4 lg:w-full lg:justify-start lg:p-3 lg:mb-2 lg:order-first"
                     exact
-                    :active-class="'bg-green-600 text-muted-dark'"
+                    :active-class="'nav-link-active'"
                 >
-                    <i class="fas fa-th-large fa-lg lg:w-1/5 lg:mr-2 text-muted-light"></i><span class="hidden lg:block text-lg font-medium">Dashboard</span>
+                    <i class="fas fa-th-large fa-lg lg:w-1/5 lg:mr-2"></i><span class="hidden lg:block text-lg font-medium">Dashboard</span>
                 </router-link>
                 <router-link
                     :to="{ name: 'sessions' }"
-                    class="w-1/6 flex justify-center items-center rounded-lg p-4 text-white hover:bg-green-500 hover:text-muted-dark focus:bg-green-500 focus:text-muted-dark flex lg:w-full lg:justify-start lg:p-3 lg:mb-2"
-                    :active-class="'bg-green-600 text-muted-dark'"
+                    class="nav-link flex w-1/6 justify-center items-center rounded p-4 lg:w-full lg:justify-start lg:p-3 lg:mb-2"
+                    :active-class="'nav-link-active'"
                 >
-                    <i class="fas fa-bars fa-lg lg:w-1/5 lg:mr-2 text-muted-light"></i><span class="hidden lg:block text-lg font-medium">Sessions</span>
+                    <i class="fas fa-bars fa-lg lg:w-1/5 lg:mr-2"></i><span class="hidden lg:block text-lg font-medium">Sessions</span>
                 </router-link>
                 <router-link
                     :to="{ name: 'settings' }"
-                    class="w-1/6 flex justify-center items-center rounded-lg p-4 text-white hover:bg-green-500 hover:text-muted-dark focus:bg-green-500 focus:text-muted-dark flex lg:w-full lg:justify-start lg:p-3 lg:mb-2"
-                    :active-class="'bg-green-600 text-muted-dark'"
+                    class="nav-link flex w-1/6 justify-center items-center rounded p-4 lg:w-full lg:justify-start lg:p-3 lg:mb-2"
+                    :active-class="'nav-link-active'"
                 >
-                    <i class="fas fa-cog fa-lg lg:w-1/5 lg:mr-2 text-muted-light"></i><span class="hidden lg:block text-lg font-medium">Settings</span>
+                    <i class="fas fa-cog fa-lg lg:w-1/5 lg:mr-2"></i><span class="hidden lg:block text-lg font-medium">Settings</span>
                 </router-link>
             </nav>
             
