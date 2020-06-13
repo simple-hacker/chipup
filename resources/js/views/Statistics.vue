@@ -12,8 +12,8 @@
         <div class="col-span-4 card">
             <profit-line-chart />
         </div>
-        <div class="col-span-4 xl:col-span-2 card">
-            <h1 class="text-3xl font-bold">By Game Type</h1>
+        <div class="col-span-4 xl:col-span-2 card flex flex-col p-4">
+            <h1 class="p-1 uppercase tracking-wider text-2xl font-bold text-gray-100 border-b border-gray-400">By Game Type</h1>
             <div class="mt-3 flex flex-col md:flex-row w-full">
                 <div class="flex-1">
                     <game-types-profit-bar-chart />
@@ -25,9 +25,8 @@
         </div>
         <div
             v-if="filteredCashGames.length > 0"
-            class="col-span-4 xl:col-span-2 card"
-        >
-            <h1 class="text-3xl font-bold">By Stakes</h1>
+            class="col-span-4 xl:col-span-2 card flex flex-col p-4">
+            <h1 class="p-1 uppercase tracking-wider text-2xl font-bold text-gray-100 border-b border-gray-400">By Stake</h1>
             <div class="mt-3 flex flex-col md:flex-row w-full">
                 <div class="flex-1">
                     <stakes-profit-bar-chart />
@@ -37,8 +36,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-span-4 xl:col-span-2 card">
-            <h1 class="text-3xl font-bold">By Variant</h1>
+        <div class="col-span-4 xl:col-span-2 card flex flex-col p-4">
+            <h1 class="p-1 uppercase tracking-wider text-2xl font-bold text-gray-100 border-b border-gray-400">By Variant</h1>
             <div class="mt-3 flex flex-col md:flex-row w-full">
                 <div class="flex-1">
                     <variants-profit-bar-chart />
@@ -48,8 +47,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-span-4 xl:col-span-2 card">
-            <h1 class="text-3xl font-bold">By Locations</h1>
+        <div class="col-span-4 xl:col-span-2 card flex flex-col p-4">
+            <h1 class="p-1 uppercase tracking-wider text-2xl font-bold text-gray-100 border-b border-gray-400">By Location</h1>
             <div class="mt-3 flex flex-col md:flex-row w-full">
                 <div class="flex-1">
                     <locations-profit-bar-chart />

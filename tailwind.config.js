@@ -99,7 +99,7 @@ module.exports = {
   },
   variants: {
     backgroundColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
-    borderColor: ['disabled'],
+    borderColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
   },
   plugins: [],
 }

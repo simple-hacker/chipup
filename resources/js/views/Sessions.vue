@@ -10,14 +10,14 @@
             :to="{ name: 'createsession' }"
             class="col-span-4 mb-2 md:mb-0 flex flex-1"
         >
-            <div class="flex p-4 border border-muted-dark shadow bg-card hover:bg-muted-dark cursor-pointer justify-center items-center w-full text-white">
+            <div class="flex p-4 justify-center items-center w-full bg-gray-500 hover:bg-gray-450 rounded border-b-8 border-green-500 hover:border-green-400 shadow hover:shadow-2xl cursor-pointer text-white">
                 <i class="fas fa-plus-circle fa-lgx mr-3"></i>
                 <div class="text-white text-lg uppercase">Add New Session</div>
             </div>
         </router-link>
         <div
             v-if="filteredSessions.length > 0"
-            class="col-span-4 grid grid-cols-4 grid-2 md:gap-3 xxl:grid-4 bg-background rounded border border-card p-1 text-white"
+            class="col-span-4 grid grid-cols-4 grid-2 md:gap-3 xxl:grid-4 card"
         >
             <div v-for="session in filteredSessions"
                 :key="`${session.game_type}_${session.id}`"
@@ -28,7 +28,7 @@
         </div>
         <div
             v-else
-            class="col-span-4 flex bg-muted-dark border border-muted-dark shadow justify-center items-center my-2 p-4"
+            class="col-span-4 flex card"
         >
             <div class="text-white uppercase" v-text="emptySessionsMessage"></div>
         </div>
