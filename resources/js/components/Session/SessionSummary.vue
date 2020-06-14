@@ -1,7 +1,8 @@
 <template>
 	<div 
 		@click="showSessionDetails()"
-		class="flex justify-between items-center p-3 md:p-4 bg-gray-500 hover:bg-gray-450 rounded border border-gray-600 shadow hover:shadow-2xl cursor-pointer text-white"
+		class="flex justify-between items-center p-3 md:p-4 bg-gray-500 hover:bg-gray-450 rounded border-r-4 shadow hover:shadow-2xl cursor-pointer text-white"
+		:class="(session.profit < 0) ? 'border-red-500' : 'border-green-500'"
 	>
 			<i v-if="session.game_type === 'cash_game'" class="fas fa-money-bill fa-lg sm:fa-2x mr-4"></i>
 			<i v-if="session.game_type === 'tournament'" class="fas fa-trophy fa-lg sm:fa-2x mr-4"></i>
