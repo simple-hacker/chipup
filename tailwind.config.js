@@ -98,8 +98,9 @@ module.exports = {
     },
   },
   variants: {
-    backgroundColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
-    borderColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
+    backgroundColor: ['responsive', 'hover', 'focus', 'active', 'disabled', 'group-hover'],
+    borderColor: ['responsive', 'hover', 'focus', 'active', 'disabled', 'group-hover'],
+    textColor: ['responsive', 'hover', 'focus', 'active', 'disabled', 'group-hover'],
   },
   plugins: [],
 }

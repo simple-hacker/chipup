@@ -3,7 +3,7 @@
         @click="showTransactionDetails(transaction)"
         @mouseover="showEdit = true"
         @mouseleave="showEdit = false"
-        class="relative flex justify-center items-center p-3 md:p-4 bg-gray-500 hover:bg-gray-450 rounded border-r-4 shadow hover:shadow-2xl cursor-pointer text-white text-lg"
+        class="relative flex justify-center items-center p-3 md:p-4 bg-gray-500 hover:bg-gray-450 rounded border-r-4 border-gray-400 hover:border-gray-300 shadow hover:shadow-2xl cursor-pointer text-white text-lg"
     >
         <div
             v-text="formatCurrency(transaction.amount)">

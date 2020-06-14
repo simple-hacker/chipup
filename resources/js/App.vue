@@ -35,7 +35,9 @@
                     class="nav-link flex w-1/6 justify-center items-center rounded p-4 lg:w-full lg:justify-start lg:p-3 lg:mb-2"
                     :active-class="'nav-link-active'"
                 >
-                    <i class="fas fa-plus fa-lg lg:w-1/5 lg:mr-2"></i><span class="hidden lg:block text-lg font-medium">Live</span>
+                    <i v-if="!sessionInProgress" class="fas fa-plus fa-lg lg:w-1/5 lg:mr-2"></i>
+                    <i v-if="sessionInProgress" class="text-white fas fa-circle-notch fa-spin lg:w-1/5 lg:mr-2"></i>
+                    <span class="hidden lg:block text-lg font-medium">Live</span>
                 </router-link>
                 <router-link
                     :to="{ name: 'statistics' }"

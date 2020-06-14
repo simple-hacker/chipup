@@ -111,299 +111,319 @@
 			DETAILS
 		-->
 		<div class="col-span-4 md:col-span-2 md:row-span-3 flex flex-col rounded-lg card p-3 text-lg text-white">
-			<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Details</h2>
-			<div class="bg-gray-500 rounded shadow p-2">
-				<!--
-					TOURNAMENT NAME
-				-->
-				<div
-					v-if="session.name || (session.game_type === 'tournament' && editing)"
-					class="mb-2 md:mb-0 flex items-center p-0 md:p-2"
-				>
-					<div class="w-1/6 flex justify-center">
-						<i class="fas fa-star"></i>
-					</div>
-					<div class="w-full">
-						<span v-if="!editing" v-text="session.name"></span>
-						<div v-if="editing" class="flex flex-col">
-							<input
-								type="text"
-								v-model="editSession.name"
-								placeholder="Tournament name"
-								class="p-1 md:p-2 bg-gray-450 text-lg"
-								:class="{'error-input' : errors.name}"
-								@input="delete errors.name"
-							/>
-							<span v-if="errors.name" class="error-message">{{ errors.name[0] }}</span>
-						</div>						
-					</div>
-				</div>
-				<!--
-					LOCATION
-				-->
-				<div class="mb-2 md:mb-0 flex items-center p-0 md:p-2">
-					<div class="w-1/6 flex justify-center">
-						<i class="fas fa-map-marker-alt"></i>
-					</div>
-					<div class="w-full">
-						<span v-if="!editing" v-text="session.location"></span>
-						<div v-if="editing" class="flex flex-col">
-							<input
-								type="text"
-								v-model="editSession.location"
-								placeholder="Location"
-								class="p-1 md:p-2 bg-gray-450 text-lg"
-								:class="{'error-input' : errors.location}"
-								@input="delete errors.location"
-							/>
-							<span v-if="errors.location" class="error-message">{{ errors.location[0] }}</span>
-						</div>						
-					</div>
-				</div>
-				<!--
-					STAKE
-				-->
-				<div
-					v-if="session.stake"
-					class="mb-2 md:mb-0 flex items-center p-0 md:p-2"
-				>
-					<div class="w-1/6 flex justify-center">
-						<i class="fas fa-coins"></i>
-					</div>
-					<div class="w-full">
-						<span v-if="!editing" v-text="session.stake.stake"></span>
-						<div v-if="editing" class="flex flex-col">
-							<select
-								v-model="editSession.stake_id"
-								class="p-1 md:p-2 bg-gray-450 text-lg mr-1"
-								:class="{'error-input' : errors.stake_id}"
-								@input="delete errors.stake_id"
-							>
-								<option
-									v-for="stake in stakes"
-									:key="stake.id"
-									:value="stake.id"
-									v-text="stake.stake"
-								>
-								</option>
-							</select>
-							<span v-if="errors.stake_id" class="error-message">{{ errors.stake_id[0] }}</span>
+			<div class="mb-2">
+				<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Played</h2>
+				<div class="bg-gray-500 rounded shadow p-1">
+					<!--
+						STAKE
+					-->
+					<div
+						v-if="session.stake"
+						class="flex items-center p-1 md:p-2"
+					>
+						<div class="w-1/6 flex justify-center">
+							<i class="fas fa-coins"></i>
 						</div>
-					</div>
-				</div>
-				<!--
-					LIMIT AND VARIANT
-				-->
-				<div class="mb-2 md:mb-0 flex items-center p-0 md:p-2">
-					<div class="w-1/6 flex justify-center">
-						<i class="fas fa-stream"></i>
-					</div>
-					<div class="w-full">
-						<span v-if="!editing" v-text="`${session.limit.limit} ${session.variant.variant}`"></span>
-						<div v-if="editing" class="flex w-full">
-							<div class="flex flex-1 flex-col">
+						<div class="w-full">
+							<span v-if="!editing" v-text="session.stake.stake"></span>
+							<div v-if="editing" class="flex flex-col">
 								<select
-									v-model="editSession.limit_id"
+									v-model="editSession.stake_id"
 									class="p-1 md:p-2 bg-gray-450 text-lg mr-1"
-									:class="{'error-input' : errors.limit_id}"
-									@input="delete errors.limit_id"
+									:class="{'error-input' : errors.stake_id}"
+									@input="delete errors.stake_id"
 								>
 									<option
-										v-for="limit in limits"
-										:key="limit.id"
-										:value="limit.id"
-										v-text="limit.limit"
+										v-for="stake in stakes"
+										:key="stake.id"
+										:value="stake.id"
+										v-text="stake.stake"
 									>
 									</option>
 								</select>
-								<span v-if="errors.limit_id" class="error-message">{{ errors.limit_id[0] }}</span>
+								<span v-if="errors.stake_id" class="error-message">{{ errors.stake_id[0] }}</span>
 							</div>
-							<div class="flex flex-1 flex-col">
+						</div>
+					</div>
+					<!--
+						LIMIT AND VARIANT
+					-->
+					<div class="flex items-center p-1 md:p-2">
+						<div class="w-1/6 flex justify-center">
+							<i class="fas fa-stream"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="`${session.limit.limit} ${session.variant.variant}`"></span>
+							<div v-if="editing" class="flex w-full">
+								<div class="flex flex-1 flex-col">
+									<select
+										v-model="editSession.limit_id"
+										class="p-1 md:p-2 bg-gray-450 text-lg mr-1"
+										:class="{'error-input' : errors.limit_id}"
+										@input="delete errors.limit_id"
+									>
+										<option
+											v-for="limit in limits"
+											:key="limit.id"
+											:value="limit.id"
+											v-text="limit.limit"
+										>
+										</option>
+									</select>
+									<span v-if="errors.limit_id" class="error-message">{{ errors.limit_id[0] }}</span>
+								</div>
+								<div class="flex flex-1 flex-col">
+									<select
+										v-model="editSession.variant_id"
+										class="p-1 md:p-2 bg-gray-450 text-lg"
+										:class="{'error-input' : errors.variant_id}"
+										@input="delete errors.variant_id"
+									>
+										<option
+											v-for="variant in variants"
+											:key="variant.id"
+											:value="variant.id"
+											v-text="variant.variant"
+										>
+										</option>
+									</select>
+									<span v-if="errors.variant_id" class="error-message">{{ errors.variant_id[0] }}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--
+						TABLE SIZE
+					-->
+					<div
+						v-if="session.table_size"
+						class="flex items-center p-1 md:p-2"
+					>
+						<div class="w-1/6 flex justify-center">
+							<i class="fas fa-user-friends"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="session.table_size.table_size"></span>
+							<div v-if="editing" class="flex flex-col">
 								<select
-									v-model="editSession.variant_id"
-									class="p-1 md:p-2 bg-gray-450 text-lg"
-									:class="{'error-input' : errors.variant_id}"
-									@input="delete errors.variant_id"
+									v-model="editSession.table_size_id"
+									class="p-1 md:p-2 bg-gray-450 text-lg mr-1"
+									:class="{'error-input' : errors.table_size_id}"
+									@input="delete errors.table_size_id"
 								>
 									<option
-										v-for="variant in variants"
-										:key="variant.id"
-										:value="variant.id"
-										v-text="variant.variant"
+										v-for="table_size in table_sizes"
+										:key="table_size.id"
+										:value="table_size.id"
+										v-text="table_size.table_size"
 									>
 									</option>
 								</select>
-								<span v-if="errors.variant_id" class="error-message">{{ errors.variant_id[0] }}</span>
+								<span v-if="errors.table_size_id" class="error-message">{{ errors.table_size_id[0] }}</span>
 							</div>
 						</div>
 					</div>
 				</div>
-				<!--
-					TABLE SIZE
-				-->
-				<div
-					v-if="session.table_size"
-					class="mb-2 md:mb-0 flex items-center p-0 md:p-2"
-				>
-					<div class="w-1/6 flex justify-center">
-						<i class="fas fa-user-friends"></i>
-					</div>
-					<div class="w-full">
-						<span v-if="!editing" v-text="session.table_size.table_size"></span>
-						<div v-if="editing" class="flex flex-col">
-							<select
-								v-model="editSession.table_size_id"
-								class="p-1 md:p-2 bg-gray-450 text-lg mr-1"
-								:class="{'error-input' : errors.table_size_id}"
-								@input="delete errors.table_size_id"
-							>
-								<option
-									v-for="table_size in table_sizes"
-									:key="table_size.id"
-									:value="table_size.id"
-									v-text="table_size.table_size"
-								>
-								</option>
-							</select>
-							<span v-if="errors.table_size_id" class="error-message">{{ errors.table_size_id[0] }}</span>
+			</div>
+			<div class="mb-2">
+				<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Played At</h2>
+				<div class="bg-gray-500 rounded shadow p-1">
+					<!--
+						LOCATION
+					-->
+					<div class="flex items-center p-1 md:p-2">
+						<div class="w-1/6 flex justify-center">
+							<i class="fas fa-map-marker-alt"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="session.location"></span>
+							<div v-if="editing" class="flex flex-col">
+								<input
+									type="text"
+									v-model="editSession.location"
+									placeholder="Location"
+									class="p-1 md:p-2 bg-gray-450 text-lg"
+									:class="{'error-input' : errors.location}"
+									@input="delete errors.location"
+								/>
+								<span v-if="errors.location" class="error-message">{{ errors.location[0] }}</span>
+							</div>						
 						</div>
 					</div>
 				</div>
-				<!--
-					PRIZE POOL
-				-->
-				<div
-					v-if="session.game_type === 'tournament'"
-					class="mb-2 md:mb-0 flex items-center p-0 md:p-2"
-				>
-					<div class="w-1/6 flex justify-center">
-						<i class="fas fa-money-bill-wave"></i>
+			</div>
+			<div
+				v-if="session.game_type === 'tournament'"
+				class="mb-2"
+			>
+				<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Tournament Info</h2>
+				<div class="bg-gray-500 rounded shadow p-1">
+					<!--
+						TOURNAMENT NAME
+					-->
+					<div
+						v-if="session.name || (session.game_type === 'tournament' && editing)"
+						class="flex items-center p-1 md:p-2"
+					>
+						<div class="w-1/6 flex justify-center">
+							<i class="fas fa-star"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="session.name"></span>
+							<div v-if="editing" class="flex flex-col">
+								<input
+									type="text"
+									v-model="editSession.name"
+									placeholder="Tournament name"
+									class="p-1 md:p-2 bg-gray-450 text-lg"
+									:class="{'error-input' : errors.name}"
+									@input="delete errors.name"
+								/>
+								<span v-if="errors.name" class="error-message">{{ errors.name[0] }}</span>
+							</div>						
+						</div>
 					</div>
-					<div class="w-full">
-						<span v-if="!editing" v-text="`£${session.prize_pool} prize pool`"></span>
-						<div v-if="editing" class="flex flex-col">
-							<input
-								type="number"
-								min=0
-								step=1
-								v-model="editSession.prize_pool"
-								placeholder="Prize Pool"
-								class="p-1 md:p-2 bg-gray-450 text-lg"
-								:class="{'error-input' : errors.prize_pool}"
-								@input="delete errors.prize_pool"
-							/>
-							<span v-if="errors.prize_pool" class="error-message">{{ errors.prize_pool[0] }}</span>
-						</div>						
+					<!--
+						PRIZE POOL
+					-->
+					<div
+						v-if="session.game_type === 'tournament'"
+						class="flex items-center p-1 md:p-2"
+					>
+						<div class="w-1/6 flex justify-center">
+							<i class="fas fa-money-bill-wave"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="`£${session.prize_pool} prize pool`"></span>
+							<div v-if="editing" class="flex flex-col">
+								<input
+									type="number"
+									min=0
+									step=1
+									v-model="editSession.prize_pool"
+									placeholder="Prize Pool"
+									class="p-1 md:p-2 bg-gray-450 text-lg"
+									:class="{'error-input' : errors.prize_pool}"
+									@input="delete errors.prize_pool"
+								/>
+								<span v-if="errors.prize_pool" class="error-message">{{ errors.prize_pool[0] }}</span>
+							</div>						
+						</div>
 					</div>
-				</div>
-				<!--
-					POSITION
-				-->
-				<div
-					v-if="session.game_type === 'tournament'"
-					class="mb-2 md:mb-0 flex items-center p-0 md:p-2"
-				>
-					<div class="w-1/6 flex justify-center">
-						<i class="fas fa-medal"></i>
+					<!--
+						POSITION
+					-->
+					<div
+						v-if="session.game_type === 'tournament'"
+						class="flex items-center p-1 md:p-2"
+					>
+						<div class="w-1/6 flex justify-center">
+							<i class="fas fa-medal"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="session.position"></span>
+							<div v-if="editing" class="flex flex-col">
+								<input
+									type="number"
+									min=0
+									step=1
+									v-model="editSession.position"
+									placeholder="Finishing Position"
+									class="p-1 md:p-2 bg-gray-450 text-lg"
+									:class="{'error-input' : errors.position}"
+									@input="delete errors.position"
+								/>
+								<span v-if="errors.position" class="error-message">{{ errors.position[0] }}</span>
+							</div>						
+						</div>
 					</div>
-					<div class="w-full">
-						<span v-if="!editing" v-text="session.position"></span>
-						<div v-if="editing" class="flex flex-col">
-							<input
-								type="number"
-								min=0
-								step=1
-								v-model="editSession.position"
-								placeholder="Finishing Position"
-								class="p-1 md:p-2 bg-gray-450 text-lg"
-								:class="{'error-input' : errors.position}"
-								@input="delete errors.position"
-							/>
-							<span v-if="errors.position" class="error-message">{{ errors.position[0] }}</span>
-						</div>						
-					</div>
-				</div>
-				<!--
-					ENTRIES
-				-->
-				<div
-					v-if="session.game_type === 'tournament'"
-					class="mb-2 md:mb-0 flex items-center p-0 md:p-2"
-				>
-					<div class="w-1/6 flex justify-center">
-						<i class="fas fa-users"></i>
-					</div>
-					<div class="w-full">
-						<span v-if="!editing" v-text="`${session.entries} entries`"></span>
-						<div v-if="editing" class="flex flex-col">
-							<input
-								type="number"
-								min=0
-								step=1
-								v-model="editSession.entries"
-								placeholder="Number of Entries"
-								class="p-1 md:p-2 bg-gray-450 text-lg"
-								:class="{'error-input' : errors.entries}"
-								@input="delete errors.entries"
-							/>
-							<span v-if="errors.entries" class="error-message">{{ errors.entries[0] }}</span>
-						</div>						
-					</div>
-				</div>
-				<!--
-					START TIME
-				-->
-				<div class="mb-2 md:mb-0 flex items-center p-0 md:p-2">
-					<div class="w-1/6 flex justify-center">
-						<i class="far fa-clock"></i>
-					</div>
-					<div class="w-full">
-						<span v-if="!editing" v-text="formatDate(session.start_time)"></span>
-						<div v-if="editing" class="flex flex-col">
-							<datetime
-								v-model="editSession.start_time"
-								input-id="start_time"
-								type="datetime"
-								:minute-step="5"
-								:max-datetime="maxStartDateTime"
-								auto
-								placeholder="Start Date and Time"
-								title="Start Date and Time"
-								class="theme-green"
-								:input-class="{'error-input' : errors.start_time, 'p-1 bg-gray-450' : true}"
-								@input="delete errors.start_time"
-							></datetime>
-							<span v-if="errors.start_time" class="error-message">{{ errors.start_time[0] }}</span>
+					<!--
+						ENTRIES
+					-->
+					<div
+						v-if="session.game_type === 'tournament'"
+						class="flex items-center p-1 md:p-2"
+					>
+						<div class="w-1/6 flex justify-center">
+							<i class="fas fa-users"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="`${session.entries} entries`"></span>
+							<div v-if="editing" class="flex flex-col">
+								<input
+									type="number"
+									min=0
+									step=1
+									v-model="editSession.entries"
+									placeholder="Number of Entries"
+									class="p-1 md:p-2 bg-gray-450 text-lg"
+									:class="{'error-input' : errors.entries}"
+									@input="delete errors.entries"
+								/>
+								<span v-if="errors.entries" class="error-message">{{ errors.entries[0] }}</span>
+							</div>						
 						</div>
 					</div>
 				</div>
-				<!--
-					END TIME
-				-->
-				<div class="mb-2 md:mb-0 flex items-center p-0 md:p-2">
-					<div class="w-1/6 flex justify-center">
-						<i class="fas fa-clock"></i>
-					</div>
-					<div class="w-full">
-						<span v-if="!editing" v-text="formatDate(session.end_time)"></span>
-						<div v-if="editing" class="flex flex-col">
-							<datetime
-								v-model="editSession.end_time"
-								input-id="end_time"
-								type="datetime"
-								:minute-step="5"
-								:min-datetime="editSession.start_time"
-								:max-datetime="maxDateTime"
-								auto
-								placeholder="End Date and Time"
-								title="End Date and Time"
-								class="theme-green"
-								:input-class="{'error-input' : errors.end_time, 'p-1 bg-gray-450' : true}"
-								@input="delete errors.end_time"
-							></datetime>
-							<span v-if="errors.end_time" class="error-message">{{ errors.end_time[0] }}</span>
+			</div>
+			<div class="mb-2">
+				<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Times</h2>
+				<div class="bg-gray-500 rounded shadow p-1">
+					<!--
+						START TIME
+					-->
+					<div class="flex items-center p-1 md:p-2">
+						<div class="w-1/6 flex justify-center">
+							<i class="far fa-clock"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="formatDate(session.start_time)"></span>
+							<div v-if="editing" class="flex flex-col">
+								<datetime
+									v-model="editSession.start_time"
+									input-id="start_time"
+									type="datetime"
+									:minute-step="5"
+									:max-datetime="maxStartDateTime"
+									auto
+									placeholder="Start Date and Time"
+									title="Start Date and Time"
+									class="theme-green"
+									:input-class="{'error-input' : errors.start_time, 'p-1 bg-gray-450' : true}"
+									@input="delete errors.start_time"
+								></datetime>
+								<span v-if="errors.start_time" class="error-message">{{ errors.start_time[0] }}</span>
+							</div>
 						</div>
 					</div>
+					<!--
+						END TIME
+					-->
+					<div class="flex items-center p-1 md:p-2">
+						<div class="w-1/6 flex justify-center">
+							<i class="fas fa-clock"></i>
+						</div>
+						<div class="w-full">
+							<span v-if="!editing" v-text="formatDate(session.end_time)"></span>
+							<div v-if="editing" class="flex flex-col">
+								<datetime
+									v-model="editSession.end_time"
+									input-id="end_time"
+									type="datetime"
+									:minute-step="5"
+									:min-datetime="editSession.start_time"
+									:max-datetime="maxDateTime"
+									auto
+									placeholder="End Date and Time"
+									title="End Date and Time"
+									class="theme-green"
+									:input-class="{'error-input' : errors.end_time, 'p-1 bg-gray-450' : true}"
+									@input="delete errors.end_time"
+								></datetime>
+								<span v-if="errors.end_time" class="error-message">{{ errors.end_time[0] }}</span>
+							</div>
+						</div>
+					</div>	
 				</div>
 			</div>
 			<!--
@@ -411,10 +431,10 @@
 			-->
 			<div
 				v-if="session.comments || editing"
-				class="mt-4"
+				class="flex flex-col flex-1"
 			>
 				<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Comments</h2>
-				<div class="bg-gray-500 rounded shadow p-2 flex-1">
+				<div class="bg-gray-500 rounded shadow p-2 flex-1 text-base">
 					<div
 						v-if="!editing"
 						v-text="editSession.comments"
@@ -422,7 +442,7 @@
 					<textarea
 						v-if="editing"
 						v-model="editSession.comments"
-						name="comments" cols="30" rows="6"
+						name="comments" cols="30" rows="5"
 						class="bg-gray-450"
 						:class="{'error-input' : errors.comments}"
 						@input="delete errors.comments"
@@ -430,12 +450,20 @@
 					<span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
 				</div>
 			</div>
+			<div class="flex mt-3 pin-b">
+				<button @click.prevent="deleteSession" type="button" class="btn btn-red mr-1"><i class="fas fa-trash"></i></button>
+				<button v-if="!editing" @click.prevent="editing = true" type="button" class="btn btn-green mr-1"><i class="fas fa-edit mr-2"></i><span>Edit</span></button>
+				<div v-if="editing" class="flex">
+					<button @click.prevent="saveSession" type="button" class="btn btn-green mr-1"><i class="fas fa-edit mr-2"></i><span>Save Changes</span></button>
+					<div @click.prevent="cancelChanges" class="btn btn-gray"><i class="fas fa-undo mr-2"></i><span>Cancel</span></div>
+				</div>
+			</div>
 		</div>
 		<!--
 			CASH BUY INS
 		-->
 		<div
-			v-if="session.game_type === 'cash_game' && ((session.buy_ins && session.buy_ins.length > 0) || editing)"
+			v-if="session.game_type === 'cash_game'"
 			class="col-span-4 md:col-span-2 flex flex-col card"
 		>
 			<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1 p-1">Buy Ins</h2>
@@ -447,9 +475,8 @@
 				<transaction-summary :transaction="buy_in" :transaction-type="'buyin'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				v-if="editing"
 				@click="addTransaction('buyin', { amount: 0 })"
-				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 shadow p-3 cursor-pointer text-white text-center"
+				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
 				<span>Add Buy In</span>
@@ -459,15 +486,15 @@
 			TOURNAMENT BUY IN
 		-->
 		<div
-			v-if="session.game_type === 'tournament' && (session.buy_in || editing)" 
+			v-if="session.game_type === 'tournament'" 
 			class="col-span-4 md:col-span-2 flex flex-col card"
 		>
 			<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1 p-1">Buy In</h2>
 			<transaction-summary v-if="session.buy_in" :transaction="session.buy_in" :transaction-type="'buyin'" :game-id="session.id"></transaction-summary>
 			<div
-				v-if="editing && !session.buy_in"
+				v-if="!session.buy_in"
 				@click="addTransaction('buyin', { amount: 0 })"
-				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 shadow p-3 cursor-pointer text-white text-center"
+				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
 				<span>Add Buy In</span>
@@ -477,15 +504,14 @@
 			CASH OUT
 		-->
 		<div
-			v-if="session.cash_out || editing"
 			class="col-span-4 md:col-span-2 flex flex-col card"
 		>
 			<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1 p-1">Cash Out</h2>
 			<transaction-summary v-if="session.cash_out" :transaction="session.cash_out" :transaction-type="'cashout'" :game-id="session.id"></transaction-summary>
 			<div
-				v-if="editing && !session.cash_out"
+				v-if="!session.cash_out"
 				@click="addTransaction('cashout', { amount: 0 })"
-				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-green-500 shadow p-3 cursor-pointer text-white text-center"
+				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-green-500 hover:border-green-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
 				<span>Add Cash Out</span>
@@ -495,7 +521,6 @@
 			EXPENSES
 		-->
 		<div
-			v-if="(session.expenses && session.expenses.length > 0) || editing" 
 			class="col-span-4 md:col-span-2 flex flex-col card"
 		>
 			<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1 p-1">Expenses</h2>
@@ -507,9 +532,8 @@
 				<transaction-summary :transaction="expense" :transaction-type="'expense'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				v-if="editing"
 				@click="addTransaction('expense', { amount: 0, comments: '' })"
-				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 shadow p-3 cursor-pointer text-white text-center"
+				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
 				<span>Add Expense</span>
@@ -519,7 +543,7 @@
 			REBUYS
 		-->
 		<div
-			v-if="session.game_type === 'tournament' && ((session.rebuys && session.rebuys.length > 0) || editing)" 
+			v-if="session.game_type === 'tournament'"
 			class="col-span-4 md:col-span-2 flex flex-col card"
 		>
 			<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1 p-1">Rebuys</h2>
@@ -531,9 +555,8 @@
 				<transaction-summary :transaction="rebuy" :transaction-type="'rebuy'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				v-if="editing"
 				@click="addTransaction('rebuy', { amount: 0 })"
-				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 shadow p-3 cursor-pointer text-white text-center"
+				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
 				<span>Add Rebuy</span>
@@ -543,7 +566,7 @@
 			ADD ONS
 		-->
 		<div
-			v-if="session.game_type === 'tournament' && ((session.add_ons && session.add_ons.length > 0) || editing)" 
+			v-if="session.game_type === 'tournament'"
 			class="col-span-4 md:col-span-2 flex flex-col card"
 		>
 			<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1 p-1">Add Ons</h2>
@@ -555,14 +578,15 @@
 				<transaction-summary :transaction="add_on" :transaction-type="'addon'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				v-if="editing"
 				@click="addTransaction('addon', { amount: 0 })"
-				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 shadow p-3 cursor-pointer text-white text-center"
+				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
 				<span>Add Add On</span>
 			</div>
 		</div>
+		<!-- SPACER FOR MOBILE -->
+		<div class="col-span-4 mb-2"></div>
 	</div>
 </template>
 
@@ -583,7 +607,7 @@ export default {
 	data() {
 		return {
 			editSession: {},
-			editing: true,
+			editing: false,
 			errors: {},
 			loadSession: {},
 			maxDateTime: moment().format(),

@@ -6,7 +6,7 @@
 .nav-link {
     @apply text-white;
     & > i {
-        @apply text-gray-300;
+        @apply text-center text-gray-300;
     }
 
     &:hover {
@@ -48,20 +48,30 @@
 }
 
 .btn {
-    @apply py-3 px-4 rounded uppercase text-sm text-center tracking-wide font-medium border;
+    @apply py-3 px-4 rounded uppercase text-sm text-center tracking-wide font-medium cursor-pointer shadow;
+    &:hover {
+        @apply shadow-2xl
+    }
+}
+
+.btn-gray {
+    @apply bg-gray-500 text-white;
+    &:hover {
+        @apply bg-gray-450;
+    }
 }
 
 .btn-green {
-    @apply bg-green-500 border-green-700 text-white;
+    @apply bg-green-500 text-white;
     &:hover {
-        @apply bg-green-600;
+        @apply bg-green-400;
     }
 }
 
 .btn-red {
-    @apply bg-red-500 border-red-700 text-white;
+    @apply bg-red-500 text-white;
     &:hover {
-        @apply bg-red-600;
+        @apply bg-red-400;
     }
 }
 
