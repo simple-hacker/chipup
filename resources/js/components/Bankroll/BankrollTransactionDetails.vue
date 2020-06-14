@@ -1,55 +1,46 @@
 <template>
     <div class="flex flex-col">
-        <h1 class="border-b border-muted-dark text-xl font-medium p-1 mb-4 md:mb-3">Edit Bankroll Transaction</h1>
-        <div class="flex flex-col items-center p-2">
-            <div class="flex w-full items-center mb-3">
-                <div class="w-1/4 font-medium">Date</div>
-                <div class="w-3/4">
-                    <datetime
-                        v-model="editBankrollTransaction.date"
-                        type="date"
-                        value-zone="local"
-                        :max-datetime="maxDateTime"
-                        auto
-                        title="Bankroll Transaction Date"
-                        class="w-full bg-muted-light border border-muted-dark rounded border theme-green"
-                        :input-class="{'error-input' : errors.date, 'w-full p-3' : true}"
-                        @input="delete errors.date"
-                    ></datetime>
-                    <span v-if="errors.date" class="error-message">{{ errors.date[0] }}</span>
-                </div>
-
+        <h2 class="uppercase text-lg text-gray-200 font-extrabold tracking-wider mb-3">Edit Bankroll Transaction</h2>
+        <div class="flex flex-col items-center">
+            <div class="w-2/3 mx-auto mb-3">
+                <datetime
+                    v-model="editBankrollTransaction.date"
+                    type="date"
+                    value-zone="local"
+                    :max-datetime="maxDateTime"
+                    auto
+                    title="Bankroll Transaction Date"
+                    class="theme-green"
+                    :input-class="{'error-input' : errors.date, 'w-full p-3' : true}"
+                    @input="delete errors.date"
+                ></datetime>
+                <span v-if="errors.date" class="error-message">{{ errors.date[0] }}</span>
             </div>
-            <div class="flex w-full items-center mb-3">
-                <div class="w-1/4 font-medium">Amount</div>
-                <div class="w-3/4">
-                    <input
-                        v-model="editBankrollTransaction.amount"
-                        type="number"
-                        step="0.01"
-                        :class="{ 'error-input' : errors.amount }"
-                        @input="delete errors.amount"
-                    />
-                    <span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
-                </div>
+            <div class="w-2/3 mx-auto mb-3">
+                <input
+                    v-model="editBankrollTransaction.amount"
+                    type="number"
+                    step="0.01"
+                    class="text-2xl"
+                    :class="{ 'error-input' : errors.amount }"
+                    @input="delete errors.amount"
+                />
+                <span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
             </div>
-            <div class="flex w-full items-center mb-3">
-                <div class="w-1/4 font-medium">Comments</div>
-                <div class="w-3/4">
-                    <textarea
-                        v-model="editBankrollTransaction.comments"
-                        placeholder="Comments"
-                        rows=4
-                        :class="{ 'error-input' : errors.comments }"
-                        @input="delete errors.comments"
-                    ></textarea>
-                    <span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
-                </div>
+            <div class="w-2/3 mx-auto mb-3">
+                <textarea
+                    v-model="editBankrollTransaction.comments"
+                    placeholder="Comments"
+                    rows=4
+                    :class="{ 'error-input' : errors.comments }"
+                    @input="delete errors.comments"
+                ></textarea>
+                <span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
             </div>
         </div>
-        <div class="flex justify-between p-2">
-			<button @click.prevent="deleteTransaction" type="button" class="bg-red-500 hover:bg-red-600 focus:bg-red-600 rounded text-white text-sm px-4 py-2"><i class="fas fa-trash mr-3"></i><span>Delete</span></button>
-			<button @click.prevent="saveTransaction" type="button" class="bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2"><i class="fas fa-check mr-3"></i><span>Save Changes</span></button>
+        <div class="flex justify-between">
+			<button @click.prevent="deleteTransaction" type="button" class="btn btn-red"><i class="fas fa-trash mr-3"></i><span>Delete</span></button>
+			<button @click.prevent="saveTransaction" type="button" class="btn btn-green"><i class="fas fa-check mr-3"></i><span>Save Changes</span></button>
 		</div>
     </div>
 </template>

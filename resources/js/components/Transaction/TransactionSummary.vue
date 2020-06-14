@@ -3,7 +3,8 @@
         @click="showTransactionDetails(transaction)"
         @mouseover="showEdit = true"
         @mouseleave="showEdit = false"
-        class="relative flex justify-center items-center p-3 md:p-4 bg-gray-500 hover:bg-gray-450 rounded border-r-4 border-gray-400 hover:border-gray-300 shadow hover:shadow-2xl cursor-pointer text-white text-lg"
+        class="relative flex justify-center items-center p-3 md:p-4 bg-gray-500 hover:bg-gray-450 rounded border-r-4 shadow hover:shadow-2xl cursor-pointer text-white text-lg"
+        :class="this.transactionType === 'cashout' ? 'border-green-500 hover:border-green-400' : 'border-red-500 hover:border-red-400'"
     >
         <div
             v-text="formatCurrency(transaction.amount)">
@@ -35,15 +36,16 @@ export default {
     },
     methods: {
         showTransactionDetails(transaction) {
+            const modalClass = (this.transactionType === 'cashout') ? 'modal-green' : 'modal-red'
+
             this.$modal.show(TransactionDetails, {
                 // Modal props
                 transaction: JSON.parse(JSON.stringify(this.transaction)),
                 transactionType: this.transactionType,
                 gameId: this.gameId,
-                gameType: 'cash_game'
             }, {
                 // Modal Options
-                classes: 'modal',
+                classes: ['modal', modalClass],
                 height: 'auto',
                 width: '95%',
                 maxWidth: 600,
@@ -52,7 +54,7 @@ export default {
         formatCurrency(amount) {
 			return this.$currency.format(amount)
 		},
-    }
+    },
 }
 </script>
 

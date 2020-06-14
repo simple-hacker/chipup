@@ -1,16 +1,17 @@
 <template>
     <div class="w-full grid grid-cols-4 gap-4 pb-4 text-white">
-        <div class="col-span-4 md:col-span-2 p-2 md:p-4 bg-card border border-muted-dark rounded shadow">
-            <h2 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-4 md:mb-3">Account Settings</h2>
-            <div class="flex flex-col mb-6">
+        <div class="col-span-4 md:col-span-2 flex flex-col bg-gray-700 p-2 rounded shadow-inner">
+            <h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Account Settings</h2>
+            <div class="flex flex-col bg-gray-600 rounded shadow p-2 mb-3">
                 <form @submit.prevent="updateEmailAddress()">
                     <div class="flex justify-between items-center">
-                        <h3 class="hidden md:block font-medium">Change Email</h3>
+                        <h3 class="hidden md:block uppercase text-white text-base font-medium">Change Email</h3>
                         <div class="flex flex-col w-full md:w-1/2">
                             <input
                                 v-model="email"
                                 type="text"
                                 placeholder="Enter email"
+                                class="p-2 bg-gray-500 text-lg"
                                 :class="{'error-input' : errors.email}"
                                 @input="delete errors.email"
                             />
@@ -27,15 +28,16 @@
                     <span v-if="!updatingEmail">Update Email</span>
                 </button>
             </div>
-            <div class="flex flex-col">
+            <div class="flex flex-col bg-gray-600 rounded shadow p-2">
                 <form @submit.prevent="updatePassword()">
                     <div class="flex justify-between items-center mb-2">
-                        <h3 class="hidden md:block font-medium">Current Password</h3>
+                        <h3 class="hidden md:block uppercase text-white text-base font-medium">Current Password</h3>
                         <div class="flex flex-col w-full md:w-1/2">
                             <input
                                 v-model="password.current_password"
                                 type="password"
                                 placeholder="Current password"
+                                class="p-2 bg-gray-500 text-lg"
                                 :class="{'error-input' : errors.current_password}"
                                 @input="delete errors.current_password"
                             />
@@ -43,12 +45,13 @@
                         </div>
                     </div>
                     <div class="flex justify-between items-center mb-2">
-                        <h3 class="hidden md:block font-medium">New Password</h3>
+                        <h3 class="hidden md:block uppercase text-white text-base font-medium">New Password</h3>
                         <div class="flex flex-col w-full md:w-1/2">
                             <input
                                 v-model="password.new_password"
                                 type="password"
                                 placeholder="New password"
+                                class="p-2 bg-gray-500 text-lg"
                                 :class="{'error-input' : errors.new_password}"
                                 @input="delete errors.new_password"
                             />
@@ -56,12 +59,13 @@
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
-                        <h3 class="hidden md:block font-medium">Confirm New Password</h3>
+                        <h3 class="hidden md:block uppercase text-white text-base font-medium">Confirm New Password</h3>
                         <div class="flex flex-col w-full md:w-1/2">
                             <input
                                 v-model="password.new_password_confirmation"
                                 type="password"
                                 placeholder="Confirm new password"
+                                class="p-2 bg-gray-500 text-lg"
                                 :class="{'error-input' : errors.new_password_confirmation}"
                                 @input="delete errors.new_password_confirmation"
                             />
@@ -79,14 +83,18 @@
                 </button>
             </div>
         </div>
-        <div class="col-span-4 md:col-span-2 flex flex-col p-2 md:p-4 bg-card border border-muted-dark rounded shadow">
+        <div class="col-span-4 md:col-span-2 flex flex-col bg-gray-700 p-2 rounded shadow-inner">
+            <h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Default Values</h2>
             <form @submit.prevent="updateDefaultValues()">
-                <h2 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-4 md:mb-3">Default Values</h2>
-                <div class="flex-1">
+                <div class="flex flex-col flex-1 bg-gray-600 rounded shadow p-2">
                     <div class="flex justify-between items-center mb-2">
-                        <h3 class="hidden md:block font-medium">Stake</h3>
+                        <h3 class="hidden md:block uppercase text-white text-base font-medium">Default Stake</h3>
                         <div class="flex flex-col w-full md:w-1/2">
-                            <select v-model="default_values.default_stake_id" :class="{ 'error-input' : errors.default_stake_id }">
+                            <select
+                                v-model="default_values.default_stake_id"
+                                class="p-2 bg-gray-500 text-lg"
+                                :class="{ 'error-input' : errors.default_stake_id }"
+                            >
                                 <option
                                     v-for="stake in stakes"
                                     :key="stake.id"
@@ -101,9 +109,13 @@
                         </div>
                     </div>
                     <div class="flex justify-between items-center mb-2">
-                        <h3 class="hidden md:block font-medium">Limit</h3>
+                        <h3 class="hidden md:block uppercase text-white text-base font-medium">Default Limit</h3>
                         <div class="flex flex-col w-full md:w-1/2">
-                            <select v-model="default_values.default_limit_id" :class="{ 'error-input' : errors.default_limit_id }">
+                            <select
+                                v-model="default_values.default_limit_id"
+                                class="p-2 bg-gray-500 text-lg"
+                                :class="{ 'error-input' : errors.default_limit_id }"
+                            >
                                 <option
                                     v-for="limit in limits"
                                     :key="limit.id"
@@ -118,9 +130,13 @@
                         </div>
                     </div>
                     <div class="flex justify-between items-center mb-2">
-                        <h3 class="hidden md:block font-medium">Variant</h3>
+                        <h3 class="hidden md:block uppercase text-white text-base font-medium">Default Variant</h3>
                         <div class="flex flex-col w-full md:w-1/2">
-                            <select v-model="default_values.default_variant_id" :class="{ 'error-input' : errors.default_variant_id }">
+                            <select
+                                v-model="default_values.default_variant_id"
+                                class="p-2 bg-gray-500 text-lg"
+                                :class="{ 'error-input' : errors.default_variant_id }"
+                            >
                                 <option
                                     v-for="variant in variants"
                                     :key="variant.id"
@@ -135,9 +151,13 @@
                         </div>
                     </div>
                     <div class="flex justify-between items-center mb-2">
-                        <h3 class="hidden md:block font-medium">Table Size</h3>
+                        <h3 class="hidden md:block uppercase text-white text-base font-medium">Default Table Size</h3>
                         <div class="flex flex-col w-full md:w-1/2">
-                            <select v-model="default_values.default_table_size_id" :class="{ 'error-input' : errors.default_table_size_id }">
+                            <select
+                                v-model="default_values.default_table_size_id"
+                                class="p-2 bg-gray-500 text-lg"
+                                :class="{ 'error-input' : errors.default_table_size_id }"
+                            >
                                 <option
                                     v-for="table_size in table_sizes"
                                     :key="table_size.id"
@@ -152,40 +172,41 @@
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
-                        <h3 class="hidden md:block font-medium">Location</h3>
+                        <h3 class="hidden md:block uppercase text-white text-base font-medium">Default Location</h3>
                         <div class="flex flex-col w-full md:w-1/2">
                             <input
                                 v-model="default_values.default_location"
                                 type="text"
                                 placeholder="Location"
+                                class="p-2 bg-gray-500 text-lg"
                                 :class="{'error-input' : errors.default_location}"
                                 @input="delete errors.default_location"
                             />
                             <span v-if="errors.default_location" class="error-message">{{ errors.default_location[0] }}</span>
                         </div>
                     </div>
+                    <button
+                        @click="updateDefaultValues()"
+                        type="button"
+                        class="w-full md:w-1/2 btn btn-green self-end mt-3"
+                    >
+                        <span v-if="updatingDefaultValues"><i class="fas fa-circle-notch fa-spin"></i></span>
+                        <span v-if="!updatingDefaultValues">Update Default Values</span>
+                    </button>
                 </div>
             </form>
-            <button
-                @click="updateDefaultValues()"
-                type="button"
-                class="w-full md:w-1/2 btn btn-green self-end mt-3"
-            >
-                <span v-if="updatingDefaultValues"><i class="fas fa-circle-notch fa-spin"></i></span>
-                <span v-if="!updatingDefaultValues">Update Default Values</span>
-            </button>
         </div>
-        <div class="col-span-4 p-2 bg-card border border-muted-dark rounded shadow">
-            <h2 class="w-full border-b border-muted-dark text-xl font-medium p-1 mb-1 md:mb-3">Bankroll</h2>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="col-span-2 md:col-span-1 p-3 md:p-1">
+        <div class="col-span-4 bg-gray-700 p-2 rounded shadow-inner">
+            <h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Bankroll Management</h2>
+            <div class="grid grid-cols-2 gap-1 md:gap-4">
+                <div class="col-span-2 md:col-span-1 p-1">
                     <bankroll-transaction />
                 </div>
-                <div class="col-span-2 md:col-span-1 mt-4 md:mt-0 p-1 md:p-2 h-96 overflow-y-auto scrolling-touch border border-background">
+                <div class="col-span-2 md:col-span-1 mt-4 md:mt-0 md:p-2 h-96 overflow-y-auto scrolling-touch card">
                     <div v-for="bankrollTransaction in bankrollTransactions"
                         :key="bankrollTransaction.id"
-                        @click.prevent="showTransactionDetails(bankrollTransaction)"
-                        class="mb-2">
+                        class="mb-2"
+                    >
                         <bankroll-transaction-summary :bankrollTransaction="bankrollTransaction"></bankroll-transaction-summary>
                     </div>
                 </div>
@@ -198,11 +219,10 @@
 import { mapState } from 'vuex'
 import BankrollTransaction from '@components/Bankroll/BankrollTransaction'
 import BankrollTransactionSummary from '@components/Bankroll/BankrollTransactionSummary'
-import BankrollTransactionDetails from '@components/Bankroll/BankrollTransactionDetails'
 
 export default {
     name: 'Settings',
-    components: { BankrollTransaction, BankrollTransactionSummary, BankrollTransactionDetails },
+    components: { BankrollTransaction, BankrollTransactionSummary },
     data() {
         return {
             email: '',
@@ -223,18 +243,6 @@ export default {
         ...mapState('bankroll', ['bankrollTransactions']),
     },
     methods: {
-        showTransactionDetails: function (bankrollTransaction) {
-            this.$modal.show(BankrollTransactionDetails, {
-                // Modal props
-                bankrollTransaction,
-            }, {
-                // Modal Options
-                classes: 'modal',
-                height: 'auto',
-                width: '95%',
-                maxWidth: 600,
-            })
-        },
         updateEmailAddress() {
             this.updatingEmail = true
             this.$store.dispatch('updateEmailAddress', this.email)

@@ -129,7 +129,7 @@
 							<div v-if="editing" class="flex flex-col">
 								<select
 									v-model="editSession.stake_id"
-									class="p-1 md:p-2 bg-gray-450 text-lg mr-1"
+									class="p-1 md:p-2 bg-gray-600 text-lg"
 									:class="{'error-input' : errors.stake_id}"
 									@input="delete errors.stake_id"
 								>
@@ -158,7 +158,7 @@
 								<div class="flex flex-1 flex-col">
 									<select
 										v-model="editSession.limit_id"
-										class="p-1 md:p-2 bg-gray-450 text-lg mr-1"
+										class="p-1 md:p-2 bg-gray-600 text-lg mr-1"
 										:class="{'error-input' : errors.limit_id}"
 										@input="delete errors.limit_id"
 									>
@@ -175,7 +175,7 @@
 								<div class="flex flex-1 flex-col">
 									<select
 										v-model="editSession.variant_id"
-										class="p-1 md:p-2 bg-gray-450 text-lg"
+										class="p-1 md:p-2 bg-gray-600 text-lg"
 										:class="{'error-input' : errors.variant_id}"
 										@input="delete errors.variant_id"
 									>
@@ -207,7 +207,7 @@
 							<div v-if="editing" class="flex flex-col">
 								<select
 									v-model="editSession.table_size_id"
-									class="p-1 md:p-2 bg-gray-450 text-lg mr-1"
+									class="p-1 md:p-2 bg-gray-600 text-lg"
 									:class="{'error-input' : errors.table_size_id}"
 									@input="delete errors.table_size_id"
 								>
@@ -242,7 +242,7 @@
 									type="text"
 									v-model="editSession.location"
 									placeholder="Location"
-									class="p-1 md:p-2 bg-gray-450 text-lg"
+									class="p-1 md:p-2 bg-gray-600 text-lg"
 									:class="{'error-input' : errors.location}"
 									@input="delete errors.location"
 								/>
@@ -275,7 +275,7 @@
 									type="text"
 									v-model="editSession.name"
 									placeholder="Tournament name"
-									class="p-1 md:p-2 bg-gray-450 text-lg"
+									class="p-1 md:p-2 bg-gray-600 text-lg"
 									:class="{'error-input' : errors.name}"
 									@input="delete errors.name"
 								/>
@@ -302,7 +302,7 @@
 									step=1
 									v-model="editSession.prize_pool"
 									placeholder="Prize Pool"
-									class="p-1 md:p-2 bg-gray-450 text-lg"
+									class="p-1 md:p-2 bg-gray-600 text-lg"
 									:class="{'error-input' : errors.prize_pool}"
 									@input="delete errors.prize_pool"
 								/>
@@ -329,7 +329,7 @@
 									step=1
 									v-model="editSession.position"
 									placeholder="Finishing Position"
-									class="p-1 md:p-2 bg-gray-450 text-lg"
+									class="p-1 md:p-2 bg-gray-600 text-lg"
 									:class="{'error-input' : errors.position}"
 									@input="delete errors.position"
 								/>
@@ -356,7 +356,7 @@
 									step=1
 									v-model="editSession.entries"
 									placeholder="Number of Entries"
-									class="p-1 md:p-2 bg-gray-450 text-lg"
+									class="p-1 md:p-2 bg-gray-600 text-lg"
 									:class="{'error-input' : errors.entries}"
 									@input="delete errors.entries"
 								/>
@@ -389,7 +389,7 @@
 									placeholder="Start Date and Time"
 									title="Start Date and Time"
 									class="theme-green"
-									:input-class="{'error-input' : errors.start_time, 'p-1 bg-gray-450' : true}"
+									:input-class="{'error-input' : errors.start_time, 'p-1 bg-gray-600' : true}"
 									@input="delete errors.start_time"
 								></datetime>
 								<span v-if="errors.start_time" class="error-message">{{ errors.start_time[0] }}</span>
@@ -417,7 +417,7 @@
 									placeholder="End Date and Time"
 									title="End Date and Time"
 									class="theme-green"
-									:input-class="{'error-input' : errors.end_time, 'p-1 bg-gray-450' : true}"
+									:input-class="{'error-input' : errors.end_time, 'p-1 bg-gray-600' : true}"
 									@input="delete errors.end_time"
 								></datetime>
 								<span v-if="errors.end_time" class="error-message">{{ errors.end_time[0] }}</span>
@@ -443,19 +443,20 @@
 						v-if="editing"
 						v-model="editSession.comments"
 						name="comments" cols="30" rows="5"
-						class="bg-gray-450"
+						class="bg-gray-600"
 						:class="{'error-input' : errors.comments}"
+						placeholder="Comments"
 						@input="delete errors.comments"
 					></textarea>
 					<span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
 				</div>
 			</div>
 			<div class="flex mt-3 pin-b">
-				<button @click.prevent="deleteSession" type="button" class="btn btn-red mr-1"><i class="fas fa-trash"></i></button>
-				<button v-if="!editing" @click.prevent="editing = true" type="button" class="btn btn-green mr-1"><i class="fas fa-edit mr-2"></i><span>Edit</span></button>
+				<button @click.prevent="deleteSession" type="button" class="btn btn-red mr-1 py-2 px-3 md:py-3 md:px-4"><i class="fas fa-trash"></i></button>
+				<button v-if="!editing" @click.prevent="editing = true" type="button" class="btn btn-green mr-1 py-2 px-3 md:py-3 md:px-4"><i class="fas fa-edit mr-2"></i><span>Edit</span></button>
 				<div v-if="editing" class="flex">
-					<button @click.prevent="saveSession" type="button" class="btn btn-green mr-1"><i class="fas fa-edit mr-2"></i><span>Save Changes</span></button>
-					<div @click.prevent="cancelChanges" class="btn btn-gray"><i class="fas fa-undo mr-2"></i><span>Cancel</span></div>
+					<button @click.prevent="saveSession" type="button" class="btn btn-green mr-1 py-2 px-3 md:py-3 md:px-4"><i class="fas fa-edit mr-2"></i><span>Save Changes</span></button>
+					<div @click.prevent="cancelChanges" class="btn btn-gray py-2 px-3 md:py-3 md:px-4"><i class="fas fa-undo mr-2"></i><span>Cancel</span></div>
 				</div>
 			</div>
 		</div>
@@ -776,6 +777,7 @@ export default {
 			return moment.utc(date).local().format("dddd Do MMMM, HH:mm")
 		},
 		addTransaction(transactionType, transaction) {
+			const modalClass = (transactionType === 'cashout') ? 'modal-green' : 'modal-red'
 			this.$modal.show(TransactionDetails, {
                 // Modal props
                 transaction,
@@ -784,7 +786,7 @@ export default {
                 gameType: this.session.game_type
             }, {
                 // Modal Options
-                classes: 'modal',
+                classes: ['modal', modalClass],
                 height: 'auto',
                 width: '95%',
                 maxWidth: 600,

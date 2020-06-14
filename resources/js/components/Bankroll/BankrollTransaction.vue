@@ -1,13 +1,46 @@
 <template>
-	<div class="flex flex-col relative">
-		<div v-if="closeBtn" class="absolute top-0 right-0">
-			<button @click="$emit('close')" class="hover:text-muted-light cursor-pointer">
-				<i class="fas fa-times-circle fa-2x"></i>
-			</button>
+	<div class="flex flex-col">
+		<div class="flex flex-col bg-gray-600 rounded shadow p-2">
+            <div class="w-2/3 mx-auto">
+                <input
+					v-model="amount"
+					type="number"
+					class="p-2 bg-gray-500 text-2xl"
+					:class="{ 'error-input' : errors.amount }"
+					@input="delete errors.amount"
+				>
+                <span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
+            </div>
+            <div class="w-2/3 mx-auto mt-3">
+                <textarea
+					v-model="comments"
+					placeholder="Add comments"
+					rows=4
+					class="p-2 bg-gray-500"
+					:class="{ 'error-input' : errors.amount }"
+					@input="delete errors.comments"
+				></textarea>
+                <span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
+			</div>
+			<div class="mt-2 flex p-2">
+				<button
+					@click.prevent="addTransaction(withdrawalAmount)"
+					type="button"
+					class="btn btn-red flex-1 mr-1"
+				>
+					Withdraw
+				</button>
+				<button
+					@click.prevent="addTransaction(amount)"
+					type="button"
+					class="btn btn-green flex-1 ml-1"
+				>
+					Deposit
+				</button>
+			</div>
 		</div>
-		<h1 v-if="title" v-text="title" class="text-2xl font-semibold mb-6"></h1>
 
-		<div class="flex w-full justify-center mb-4">
+		<!-- <div class="flex w-full justify-center mb-4">
 			<span class="text-4xl font-bold mr-3">£</span>
 			<div class="w-1/2 flex-col">
 				<input
@@ -34,7 +67,7 @@
 		<div class="flex justify-around">
 			<button @click.prevent="addTransaction(withdrawalAmount)" class="w-1/3 p-3 text-lg uppercase font-bold rounded text-white capitalize bg-red-500">Withdraw</button>
 			<button @click.prevent="addTransaction(amount)" class="w-1/3 p-3 text-lg uppercase font-bold rounded text-white capitalize bg-green-500">Deposit</button>
-		</div>
+		</div> -->
 	</div>
 </template>
 
@@ -43,7 +76,6 @@ import { mapActions } from 'vuex'
 
 export default {
 	name: 'BankrollTransaction',
-	props: ['title', 'closeBtn'],
     data() {
 		return {
 			amount: 0,
@@ -83,11 +115,4 @@ export default {
 </script>
 
 <style scoped>
-	.fade-enter-active, .fade-leave-active {
-		transition: background-color 0.25s ease-out;
-	}
-
-	.fade-enter, .fade-leave-to {
-		background-color: 0;
-	}
 </style>

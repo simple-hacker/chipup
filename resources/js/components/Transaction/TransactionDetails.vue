@@ -1,52 +1,50 @@
 <template>
-    <div class="flex flex-col">
-        <div v-text="title" class="text-2xl capitalize mb-5 border-b border-muted-light"></div>
-        <div class="w-2/3 mx-auto">
-            <input
-                v-model="transaction.amount"
-                type="number"
-                min=0
-                :class="{'error-input' : errors.amount}"
-                @input="delete errors.amount"
-            >
-            <span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
-        </div>
-        <div
-            v-if="transaction.hasOwnProperty('comments')"
-            class="w-2/3 mx-auto mt-3"
-        >
-            <textarea
-                v-model="transaction.comments"
-                row=4
-                placeholder="Add comments"
-                class="rounded border border-muted-dark p-2"
-                :class="{'error-input' : errors.comments}"
-                @input="delete errors.comments"
-            >
-            </textarea>
-            <span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
-        </div>
-        <div class="flex justify-between mt-3 p-2">
-            <div>
-                <button
-                    v-if="transaction.id"
-                    @click.prevent="deleteTransaction"
-                    type="button"
-                    class="bg-red-500 hover:bg-red-600 focus:bg-red-600 rounded text-white text-sm px-4 py-2"
+    <div>
+        <h2 v-text="title" class="uppercase text-lg text-gray-200 font-extrabold tracking-wider mb-3"></h2>
+        <div class="flex flex-col">
+            <div class="w-2/3 mx-auto">
+                <input
+                    v-model="transaction.amount"
+                    type="number"
+                    min=0
+                    class="text-2xl"
+                    :class="{'error-input' : errors.amount}"
+                    @input="delete errors.amount"
                 >
-                    <i class="fas fa-trash mr-3"></i><span>Delete</span>
-                </button>
+                <span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
             </div>
-            <div>
-                <button
-                    @click.prevent="saveTransaction"
-                    type="button"
-                    class="bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2"
+            <div
+                v-if="transaction.hasOwnProperty('comments')"
+                class="w-2/3 mx-auto mt-3"
+            >
+                <textarea
+                    v-model="transaction.comments"
+                    name="comments" cols="30" rows="5"
+                    placeholder="Add comments"
+                    :class="{'error-input' : errors.comments}"
+                    @input="delete errors.comments"
                 >
-                    <i class="fas fa-check mr-3"></i><span v-text="saveButtonText"></span>
-                </button>
+                </textarea>
+                <span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
             </div>
-		</div>
+        </div>
+        <div class="mt-2 flex justify-between p-2">
+            <button
+                v-if="transaction.id"
+                @click.prevent="deleteTransaction"
+                type="button"
+                class="btn btn-red"
+            >
+                <i class="fas fa-trash mr-3"></i><span>Delete</span>
+            </button>
+            <button
+                @click.prevent="saveTransaction"
+                type="button"
+                class="btn btn-green"
+            >
+                <i class="fas fa-check mr-3"></i><span v-text="saveButtonText"></span>
+            </button>
+        </div>
     </div>
 </template>
 

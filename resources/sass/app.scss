@@ -48,30 +48,34 @@
 }
 
 .btn {
-    @apply py-3 px-4 rounded uppercase text-sm text-center tracking-wide font-medium cursor-pointer shadow;
-    &:hover {
-        @apply shadow-2xl
+    @apply py-2 px-3 rounded uppercase text-sm text-center tracking-wide font-medium cursor-pointer shadow;
+    @screen md {
+        @apply py-3 px-4;
     }
-}
 
-.btn-gray {
-    @apply bg-gray-500 text-white;
     &:hover {
-        @apply bg-gray-450;
+        @apply shadow-2xl;
     }
-}
 
-.btn-green {
-    @apply bg-green-500 text-white;
-    &:hover {
-        @apply bg-green-400;
+    &.btn-gray {
+        @apply bg-gray-500 text-white;
+        &:hover {
+            @apply bg-gray-450;
+        }
     }
-}
-
-.btn-red {
-    @apply bg-red-500 text-white;
-    &:hover {
-        @apply bg-red-400;
+    
+    &.btn-green {
+        @apply bg-green-500 text-white;
+        &:hover {
+            @apply bg-green-400;
+        }
+    }
+    
+    &.btn-red {
+        @apply bg-red-500 text-white;
+        &:hover {
+            @apply bg-red-400;
+        }
     }
 }
 
@@ -84,14 +88,22 @@
 }
 
 .modal {
-    @apply bg-gray-800 text-white p-1 rounded-lg border border-gray-900;
+    @apply bg-gray-700 text-white p-2 rounded-lg border-b-8;
     @screen md {
-        @apply p-3;
+        @apply p-4;
+    }
+
+    &.modal-green {
+        @apply border-green-500;
+    }
+
+    &.modal-red {
+        @apply border-red-500;
     }
 }
 
 input, select, textarea {
-    @apply w-full bg-gray-500 border border-gray-600 text-white rounded p-3;
+    @apply w-full bg-gray-500 border border-gray-600 text-white rounded shadow p-3;
 }
 
 input:-webkit-autofill,
@@ -128,7 +140,7 @@ select:-webkit-autofill:focus {
 
 // vue-js-modal
 .v--modal-overlay {
-    background-color: rgba(22, 23, 27, 0.93) !important;
+    background-color: hsla(225, 0%, 5%, 0.95) !important;
 }
 
 // vue-datetime picker theme
