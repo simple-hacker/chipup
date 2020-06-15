@@ -40,7 +40,7 @@ export default {
 		showFilters() {
 			this.$modal.show(Filters, {}, {
                 // Modal Options
-                classes: 'modal',
+                classes: 'modal modal-green',
                 height: 'auto',
 				width: '95%',
 				scrollable: true,

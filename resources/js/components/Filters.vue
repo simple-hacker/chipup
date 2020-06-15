@@ -1,8 +1,8 @@
 <template>
     <div class="flex-col">
-        <div class="flex justify-between items-center p-3 rounded text-lg :mdtext-xl font-medium font-bold bg-green-500">
+        <div class="flex justify-between items-center p-2 md:p-3 rounded-t text-base md:text-lg font-medium font-bold bg-green-500">
 			<div class="flex items-center">
-				<h1 class="mr-4">Filters</h1>
+				<h1 class="uppercase text-white font-extrabold tracking-wider mr-4">Filters</h1>
 				<i class="fas fa-filter"></i>
 			</div>
             <div
@@ -18,9 +18,9 @@
             <!--
                 DATES
             -->
-            <div class="col-span-4 lg:col-span-3 xxl:col-span-2 border border-muted-dark p-1 md:p-3">
-                <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Dates</h2>
-                <div class="flex md:justify-around">
+            <div class="col-span-4 lg:col-span-3 xxl:col-span-2 card">
+                <h2 class="text-sm md:text-base uppercase text-gray-200 font-extrabold tracking-wider mb-1">Dates</h2>
+                <div class="flex md:justify-around bg-gray-500 rounded shadow-2xl px-1 py-2 md:p-2">
                     <div class="w-1/2 md:w-auto flex items-center mr-1">
                         <span class="hidden md:block"><i class="fas fa-calendar-alt fa-lg"></i></span>
                         <span class="mx-3 text-sm sm:text-base md:text-lg">From</span>
@@ -28,11 +28,11 @@
                             input-id="filterFromDate"
                             v-model="filters.fromDate"
                             type="date"
-                            input-class="w-full p-2"
+                            input-class="w-full p-2 bg-gray-600"
                             :max-datetime="maxFromDateTime"
                             auto
                             title="Filter from"
-                            class="w-full bg-muted-light border border-muted-dark rounded border theme-green"
+                            class="theme-green"
                         ></datetime>
                     </div>
                     <div class="w-1/2 md:w-auto flex items-center ml-1">
@@ -42,12 +42,12 @@
                             input-id="filterToDate"
                             v-model="filters.toDate"
                             type="date"
-                            input-class="w-full p-2"
+                            input-class="w-full p-2 bg-gray-600"
                             :min-datetime="filters.fromDate"
                             :max-datetime="maxDateTime"
                             auto
                             title="Filter to"
-                            class="w-full bg-muted-light border border-muted-dark rounded border theme-green"
+                            class="theme-green"
                         ></datetime>
                     </div>
                 </div>
@@ -55,9 +55,9 @@
             <!--
                 GAME TYPE
             -->
-            <div class="col-span-4 lg:col-span-1 xxl:col-span-2 border border-muted-dark p-1 md:p-3">
-                <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-3">Game Type</h2>
-                <div class="flex flex-wrap justify-around">
+            <div class="col-span-4 lg:col-span-1 xxl:col-span-2 card">
+                <h2 class="text-sm md:text-base uppercase text-gray-200 font-extrabold tracking-wider mb-1">Game Type</h2>
+                <div class="flex flex-wrap justify-around bg-gray-500 rounded shadow-2xl px-1 py-2 md:p-2">
                     <div class="mb-1">
                         <label class="mr-3 text-sm sm:text-base md:text-lg">Cash Games</label>
                         <toggle-button
@@ -83,17 +83,19 @@
             <!--
                 PROFIT RANGE
             -->
-            <div class="col-span-4 border border-muted-dark p-1 md:p-3">
-                <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Profit Range</h2>
-                <vue-range-slider
-                    ref="profit-slider"
-                    v-model="filters.profitRange"
-                    :min="profitRange[0]"
-                    :max="profitRange[1]"
-                    :process-style="sliderStyle"
-                    :tooltip-style="sliderToolTipStyle"
-                    :formatter="value => formatCurrency(value)"
-                ></vue-range-slider>
+            <div class="col-span-4 card">
+                <h2 class="text-sm md:text-base uppercase text-gray-200 font-extrabold tracking-wider mb-1">Profit Range</h2>
+                <div class="bg-gray-500 rounded shadow-2xl px-1 py-2 md:p-2">
+                    <vue-range-slider
+                        ref="profit-slider"
+                        v-model="filters.profitRange"
+                        :min="profitRange[0]"
+                        :max="profitRange[1]"
+                        :process-style="sliderStyle"
+                        :tooltip-style="sliderToolTipStyle"
+                        :formatter="value => formatCurrency(value)"
+                    ></vue-range-slider>
+                </div>
             </div>
             <!--
                 CASH GAME FILTERS
@@ -104,11 +106,11 @@
             >
                 <div
                     @click.prevent="showCashGameFilters = ! showCashGameFilters"
-                    class="w-full flex justify-between items-center p-2 md:p-3 cursor-pointer text-base md:text-lg font-medium"
-                    :class="showCashGameFilters ? 'bg-green-500 hover:bg-green-600' : 'bg-muted-dark hover:bg-muted-light'"
+                    class="w-full flex justify-between items-center p-2 md:p-3 cursor-pointer text-sm md:text-base font-medium shadow-2xl"
+                    :class="showCashGameFilters ? 'bg-green-500 hover:bg-green-600 rounded-t' : 'bg-gray-450 hover:bg-gray-500 rounded'"
                 >
                     <div class="flex items-center">
-                        <h1 class="mr-4">Cash Game Filters</h1>
+                        <h1 class="uppercase text-white font-extrabold tracking-wider mr-4">Cash Game Filters</h1>
                         <i class="fas fa-filter"></i>
                     </div>
                     <div>
@@ -116,13 +118,13 @@
                         <i v-show="showCashGameFilters" class="fas fa-chevron-up fa-lg"></i>
                     </div>
                 </div>
-                <div v-show-slide="showCashGameFilters" class="flex flex-wrap">
+                <div v-show-slide="showCashGameFilters" class="grid grid-cols-4 gap-2">
                     <!--
                         CASH GAME STAKES
                     -->
-                    <div class="w-full sm:w-1/2 md:w-1/4 border border-muted-dark p-1 md:p-3">
-                        <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Stakes</h2>
-                        <div class="flex flex-wrap">
+                    <div class="col-span-4 sm:col-span-2 md:col-span-1 card">
+                        <h2 class="text-sm md:text-base uppercase text-gray-200 font-extrabold tracking-wider mb-1">Stakes</h2>
+                        <div class="flex flex-wrap bg-gray-500 rounded shadow-2xl px-1 py-2 md:p-2 flex-1 content-start">
                             <div v-for="(stake, index) in cashGameStakeFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
                                 <label class="mr-3 text-sm sm:text-base md:text-lg">{{ stake }}</label>
                                 <toggle-button
@@ -138,9 +140,9 @@
                     <!--
                         CASH GAME LIMITS
                     -->
-                    <div class="w-full sm:w-1/2 md:w-1/4 border border-muted-dark p-1 md:p-3">
-                        <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Limits</h2>
-                        <div class="flex flex-wrap">
+                    <div class="col-span-4 sm:col-span-2 md:col-span-1 card">
+                        <h2 class="text-sm md:text-base uppercase text-gray-200 font-extrabold tracking-wider mb-1">Limits</h2>
+                        <div class="flex flex-wrap bg-gray-500 rounded shadow-2xl px-1 py-2 md:p-2 flex-1 content-start">
                             <div v-for="(limit, index) in cashGameLimitFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
                                 <label class="mr-3 text-sm sm:text-base md:text-lg">{{ limit }}</label>
                                 <toggle-button
@@ -156,9 +158,9 @@
                     <!--
                         CASH GAME VARIANTS
                     -->
-                    <div class="w-full sm:w-1/2 md:w-1/4 border border-muted-dark p-1 md:p-3">
-                        <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Variant</h2>
-                        <div class="flex flex-wrap">
+                    <div class="col-span-4 sm:col-span-2 md:col-span-1 card">
+                        <h2 class="text-sm md:text-base uppercase text-gray-200 font-extrabold tracking-wider mb-1">Variant</h2>
+                        <div class="flex flex-wrap bg-gray-500 rounded shadow-2xl px-1 py-2 md:p-2 flex-1 content-start">
                             <div v-for="(variant, index) in cashGameVariantFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
                                 <label class="mr-3 text-sm sm:text-base md:text-lg">{{ variant }}</label>
                                 <toggle-button
@@ -174,9 +176,9 @@
                     <!--
                         CASH GAME TABLE SIZE
                     -->
-                    <div class="w-full sm:w-1/2 md:w-1/4 border border-muted-dark p-1 md:p-3">
-                        <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Table Size</h2>
-                        <div class="flex flex-wrap">
+                    <div class="col-span-4 sm:col-span-2 md:col-span-1 card">
+                        <h2 class="text-sm md:text-base uppercase text-gray-200 font-extrabold tracking-wider mb-1">Table Size</h2>
+                        <div class="flex flex-wrap bg-gray-500 rounded shadow-2xl px-1 py-2 md:p-2 flex-1 content-start">
                             <div v-for="(table_size, index) in cashGameTableSizeFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
                                 <label class="mr-3 text-sm sm:text-base md:text-lg">{{ table_size }}</label>
                                 <toggle-button
@@ -200,11 +202,11 @@
             >
                 <div
                     @click.prevent="showTournamentFilters = ! showTournamentFilters"
-                    class="w-full flex justify-between items-center p-2 md:p-3 cursor-pointer text-base md:text-lg font-medium"
-                    :class="showTournamentFilters ? 'bg-green-500 hover:bg-green-600' : 'bg-muted-dark hover:bg-muted-light'"
+                    class="w-full flex justify-between items-center p-2 md:p-3 cursor-pointer text-sm md:text-base font-medium rounded shadow-2xl"
+                    :class="showTournamentFilters ? 'bg-green-500 hover:bg-green-600 rounded-t' : 'bg-gray-450 hover:bg-gray-500 rounded'"
                 >
                     <div class="flex items-center">
-                        <h1 class="mr-4">Tournament Filters</h1>
+                        <h1 class="uppercase text-white font-extrabold tracking-wider mr-4">Tournament Filters</h1>
                         <i class="fas fa-filter"></i>
                     </div>
                     <div>
@@ -212,28 +214,30 @@
                         <i v-show="showTournamentFilters" class="fas fa-chevron-up fa-lg"></i>
                     </div>
                 </div>
-                <div v-show-slide="showTournamentFilters" class="flex flex-wrap">
+                <div v-show-slide="showTournamentFilters" class="grid grid-cols-4 gap-2">
                     <!--
                         TOURNAMENT BUY IN RANGE
                     -->
-                    <div class="w-full border border-muted-dark p-1 md:p-3">
-                        <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Buy In Range</h2>
-                        <vue-range-slider
-                            ref="buy-in-slider"
-                            v-model="filters.tournamentFilters.buyInRange"
-                            :min="tournamentBuyInRange[0]"
-                            :max="tournamentBuyInRange[1]"
-                            :process-style="sliderStyle"
-                            :tooltip-style="sliderToolTipStyle"
-                            :formatter="value => formatCurrency(value)"
-                        ></vue-range-slider>
+                    <div class="col-span-4 card">
+                        <h2 class="text-sm md:text-base uppercase text-gray-200 font-extrabold tracking-wider mb-1">Buy In Range</h2>
+                        <div class="bg-gray-500 rounded shadow-2xl px-1 py-2 md:p-2">
+                            <vue-range-slider
+                                ref="buy-in-slider"
+                                v-model="filters.tournamentFilters.buyInRange"
+                                :min="tournamentBuyInRange[0]"
+                                :max="tournamentBuyInRange[1]"
+                                :process-style="sliderStyle"
+                                :tooltip-style="sliderToolTipStyle"
+                                :formatter="value => formatCurrency(value)"
+                            ></vue-range-slider>
+                        </div>
                     </div>
                     <!--
                         TOURNAMENT LIMITS
                     -->
-                    <div class="w-full sm:w-1/2 border border-muted-dark p-1 md:p-3">
-                        <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Limits</h2>
-                        <div class="flex flex-wrap">
+                    <div class="col-span-4 md:col-span-2 card">
+                        <h2 class="text-sm md:text-base uppercase text-gray-200 font-extrabold tracking-wider mb-1">Limits</h2>
+                        <div class="flex flex-wrap bg-gray-500 rounded shadow-2xl px-1 py-2 md:p-2 flex-1 content-start">
                             <div v-for="(limit, index) in tournamentLimitFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
                                 <label class="mr-3 text-sm sm:text-base md:text-lg">{{ limit }}</label>
                                 <toggle-button
@@ -249,9 +253,9 @@
                     <!--
                         TOURNAMENT VARIANTS
                     -->
-                    <div class="w-full sm:w-1/2 border border-muted-dark p-1 md:p-3">
-                        <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-1 md:mb-3">Variant</h2>
-                        <div class="flex flex-wrap">
+                    <div class="col-span-4 md:col-span-2 card">
+                        <h2 class="text-sm md:text-base uppercase text-gray-200 font-extrabold tracking-wider mb-1">Variant</h2>
+                        <div class="flex flex-wrap bg-gray-500 rounded shadow-2xl px-1 py-2 md:p-2 flex-1 content-start">
                             <div v-for="(variant, index) in tournamentVariantFilters" :key="index" class="w-1/2 md:w-full xl:w-1/2 xxl:w-1/3 flex justify-between items-center py-1 px-3">
                                 <label class="mr-3 text-sm sm:text-base md:text-lg">{{ variant }}</label>
                                 <toggle-button
@@ -269,10 +273,10 @@
             <!--
                 LOCATIONS
             -->
-            <div class="col-span-4 border border-muted-dark p-1 md:p-3">
-                <h2 class="w-full border-b border-muted-dark text-lg md:text-xl font-medium p-1 mb-3">Locations</h2>
-                <div class="flex flex-wrap justify-around">
-                    <div v-for="location in locationFilters" :key="location" class="mb-1">
+            <div class="col-span-4 card">
+                <h2 class="text-sm md:text-base uppercase text-gray-200 font-extrabold tracking-wider mb-1">Locations</h2>
+                <div class="flex flex-wrap md:justify-around bg-gray-500 rounded shadow-2xl px-1 py-2 md:p-2">
+                    <div v-for="location in locationFilters" :key="location" class="w-full md:w-auto flex justify-between items-center py-1 px-3">
                         <label class="mr-3 text-sm sm:text-base md:text-lg">{{ location }}</label>
                         <toggle-button
                             @change="filterLocations(location)"
@@ -284,12 +288,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-span-4 border border-muted-dark flex justify-center">
+            <div class="col-span-4 flex justify-center">
                 <button
                     @click.prevent="submitFilters"
                     :disabled="noGameTypesSelected"
                     type="button"
-                    class="btn btn-green w-full p-3 text-base font-medium disabled:bg-gray-500 disabled:border-gray-700 disabled:opacity-75"
+                    class="btn btn-green w-full disabled:bg-gray-500 disabled:border-gray-700 disabled:opacity-75"
                 >
                     Apply Filters
                 </button>

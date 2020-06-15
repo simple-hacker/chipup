@@ -21,7 +21,7 @@
         >
             <div v-for="session in filteredSessions"
                 :key="`${session.game_type}_${session.id}`"
-                class="col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0"
+                class="col-span-4 md:col-span-2 xxl:col-span-1 mb-2 md:mb-0 flex flex-col"
             >
                 <session-summary :session="session"></session-summary>
             </div>
@@ -50,7 +50,7 @@ export default {
             // This is displayed if user does not have any sessions that match the filter
             return (this.sessions.length > 0) ? 'You do not have any sessions that match those filters.' : 'You have not created any sessions yet.'
         }
-    },
+    }
 }
 </script>
 
