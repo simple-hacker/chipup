@@ -8,31 +8,27 @@
 				class="mb-2">
 				<session-summary :session="session"></session-summary>
 			</div>
+			<div class="mt-4 flex justify-end">
+				<router-link
+					:to="{ name: 'sessions' }"
+					class="btn btn-green"
+				>
+				View all sessions
+				</router-link>
+			</div>
 		</div>
-		<div
-			v-else
-			class="flex p-4 border border-muted-dark shadow bg-muted-dark justify-center items-center w-full"
-		>
-			<div class="text-white uppercase">You do not have any sessions yet.</div>
-		</div>
-		<div class="mt-4 flex justify-end">
-			<router-link
-				:to="{ name: 'sessions' }"
-				class="btn btn-green"
-			>
-			View all sessions
-			</router-link>
-		</div>
+		<empty-sessions v-else></empty-sessions>
 	</div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import SessionSummary from '@components/Session/SessionSummary'
+import EmptySessions from '@components/Session/EmptySessions'
 
 export default {
 	name: 'Sessions',
-	components: { SessionSummary },
+	components: { SessionSummary, EmptySessions },
 	computed: {
         ...mapGetters('sessions', ['sessions']),
 	},

@@ -1,5 +1,8 @@
 <template>
-    <div class="w-full grid grid-cols-4 gap-4">
+    <div
+        v-if="sessions.length > 0"
+        class="w-full grid grid-cols-4 gap-4"
+    >
         <div
             v-if="sessions.length > 0"
             class="col-span-4"
@@ -59,11 +62,18 @@
             </div>
         </div>
     </div>
+    <div
+        v-else
+        class="card"
+    >
+        <empty-sessions></empty-sessions>
+    </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 
+import EmptySessions from '@components/Session/EmptySessions'
 import FilterBar from '@components/FilterBar'
 import StatsTable from '@views/statistics/StatsTable'
 import ProfitLineChart from '@views/statistics/ProfitLineChart'
@@ -79,6 +89,7 @@ import LocationsProfitBarChart from '@views/statistics/LocationsProfitBarChart'
 export default {
     name: 'Statistics',
     components: {
+        EmptySessions,
         FilterBar,
         StatsTable,
         ProfitLineChart,
