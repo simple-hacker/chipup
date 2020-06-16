@@ -1,9 +1,9 @@
 <template>
 	<div class="flex flex-col w-full xxl:w-3/5 xxl:mx-auto card text-white border-b-8 border-green-500 p-0">
 		<h1 class="bg-gray-700 rounded-t text-center py-3 uppercase text-2xl md:text-4xl tracking-wider font-semibold text-white border-b-2 border-green-500">Create Session</h1>
-		<form-wizard ref="createSession" @on-complete="addSession" @on-change="scrollToTop" title="" subtitle="" color="#00AD71" errorColor="#F45757" class="text-white">
+		<form-wizard ref="createSession" @on-complete="addSession" @on-change="scrollToTop" finishButtonText="Create Session" title="" subtitle="" color="#00AD71" errorColor="#F45757" class="text-white">
             <tab-content title="Session" icon="fas fa-star">
-				<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">What game type are you playing?</h2>
+				<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">What did you play?</h2>
                 <div class="flex flex-col md:flex-row justify-around py-4">
 					<button
 						@click="switchGameType('cash_game')"
@@ -257,7 +257,7 @@
 						<div class="flex justify-center items-center">
 							<div
 								@click="cash_game.buy_ins.push({ amount: 0})"
-								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-2 cursor-pointer text-white text-center"
+								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 cursor-pointer text-white text-center"
 							>
 								<i class="fas fa-plus-circle mr-2"></i>
 								<span>Add Buy In</span>
@@ -317,7 +317,7 @@
 						<div class="flex justify-center items-center">
 							<div
 								@click="tournament.rebuys.push({ amount: 0})"
-								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-2 cursor-pointer text-white text-center"
+								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 cursor-pointer text-white text-center"
 							>
 								<i class="fas fa-plus-circle mr-2"></i>
 								<span>Add Rebuy</span>
@@ -357,7 +357,7 @@
 						<div class="flex justify-center items-center">
 							<div
 								@click="tournament.add_ons.push({ amount: 0})"
-								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-2 cursor-pointer text-white text-center"
+								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 cursor-pointer text-white text-center"
 							>
 								<i class="fas fa-plus-circle mr-2"></i>
 								<span>Add Add On</span>
@@ -405,7 +405,7 @@
 						<div class="flex justify-center items-center">
 							<div
 								@click="session.expenses.push({ amount: 0, comments: ''})"
-								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-2 cursor-pointer text-white text-center"
+								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 cursor-pointer text-white text-center"
 							>
 								<i class="fas fa-plus-circle mr-2"></i>
 								<span>Add Expense</span>
@@ -550,13 +550,6 @@ export default {
 	},
 	computed: {
 		...mapState(['user', 'stakes', 'limits', 'variants', 'table_sizes']),
-		gameTypeLabel() {
-			if (this.game_type === 'cash_game') {
-				return 'Cash Game'
-			} else {
-				return 'Tournament'
-			}
-		},
 		maxStartDateTime() {
 			return moment(this.session.end_time).format() < moment().format() ? moment(this.session.end_time).format() : moment().format()
 		}

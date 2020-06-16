@@ -18,8 +18,15 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 // vue-snotify
-import Snotify from 'vue-snotify'
-Vue.use(Snotify)
+import Snotify, { SnotifyPosition } from 'vue-snotify'
+
+const options = {
+  toast: {
+    position: SnotifyPosition.centerTop
+  }
+}
+
+Vue.use(Snotify, options)
 
 // vue-datetime
 import Datetime from 'vue-datetime'
