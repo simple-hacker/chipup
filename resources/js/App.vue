@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col h-screen">
+    <div class="flex flex-col h-full">
         <!-- Top Nav -->
         <nav aria-label="top-navigation" class="sticky top-0 z-50 flex justify-between items-center px-3 py-2 bg-gray-700 border-gray-800 border-b-2">
             <h1 class="text-2xl font-bold text-white">
