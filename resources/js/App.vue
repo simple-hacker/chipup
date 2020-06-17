@@ -17,7 +17,7 @@
                 :class="!sessionInProgress ? 'btn btn-green' : 'btn-red'"
 			>
                 <div v-if="!sessionInProgress">Start Session</div>
-                <div v-if="sessionInProgress"><i class="fas fa-circle-notch fa-spin mr-2"></i>{{ runTime }}</div>
+                <div v-if="sessionInProgress"><i class="fas fa-circle-notch fa-spin mr-2"></i><span v-text="runTime"></span></div>
 			</router-link>
         </nav>
 
@@ -81,9 +81,7 @@
 </template>
 
 <script>
-import moment from 'moment'
-import 'moment-duration-format'
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
     name: 'App',
@@ -91,19 +89,11 @@ export default {
     data(){
         return {
             sessionsScrollTo: 0,
-            now: moment().utc(),
-            runTimeInterval: null,
         }
     },
     computed: {
-        ...mapState('live', ['liveSession']),
-        ...mapGetters('live', ['sessionInProgress']),
+        ...mapGetters('live', ['sessionInProgress', 'runTime']),
         ...mapGetters('filters', ['unfilteredFilters']),
-        runTime() {
-			let start_time = moment.utc(this.liveSession.start_time)
-			let diff = this.now.diff(start_time, 'hours', true)
-			return moment.duration(diff, 'hours').format("hh:mm:ss", { trim: false})
-        },
         variables() {
             return {
                 stakes: this.stakes,
@@ -118,12 +108,9 @@ export default {
             // running is the updated value on watcher.
             // If sessionInProgress returns true then running else not running.
             if (running) {
-                this.runTimeInterval = setInterval(() => {
-                    this.now = moment().utc()
-                }, 1000)
+                this.$store.dispatch('live/startRunTime')
             } else {
-                clearInterval(this.runTimeInterval)
-                this.runTimeInterval = null
+                this.$store.dispatch('live/endRunTime')
             }
         }
     },
@@ -133,6 +120,10 @@ export default {
         this.$store.dispatch('cash_games/getCashGames')
         this.$store.dispatch('tournaments/getTournaments')
         this.$store.dispatch('live/currentLiveSession')
+
+        if (this.sessionInProgress) {
+            this.$store.dispatch('live/startRunTime')
+        }
 
         // By default currentFilters is set to an empty object.
         // If reloading the page and currentFilters is an empty object, then populate with the default unfilteredFilters

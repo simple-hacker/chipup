@@ -146,7 +146,7 @@
 				-->
 				<div class="w-full flex flex-wrap">
 					<div class="w-full md:w-1/3 md:order-2">
-						<span v-text="'RUNTIME'"></span>
+						<span v-text="runTime"></span>
 					</div>
 					<div class="w-1/2 md:w-1/3 md:order-1">
 						<span v-text="formattedBuyIns"></span>
@@ -414,6 +414,7 @@ export default {
 	computed: {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
 		...mapState('live', ['liveSession']),
+		...mapGetters('live', ['runTime']),
 		buyInsTotal() {
 			let buyInTotal = this.liveSession?.buy_in?.amount ?? 0
 			let buyInsTotal = (this.liveSession.buy_ins) ? this.liveSession.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) : 0
@@ -426,20 +427,6 @@ export default {
 			return this.formatCurrency(this.buyInsTotal * -1)
 		},
 	},
-	watch: {
-        sessionInProgress: function(running) {
-            // running is the updated value on watcher.
-            // If sessionInProgress returns true then running else not running.
-            if (running) {
-                this.runTimeInterval = setInterval(() => {
-                    this.now = moment().utc()
-                }, 1000)
-            } else {
-                clearInterval(this.runTimeInterval)
-                this.runTimeInterval = null
-            }
-        }
-    },
 	methods: {
 		...mapActions('live', ['updateLiveSession', 'endLiveSession']),
 		scrollToTop() {

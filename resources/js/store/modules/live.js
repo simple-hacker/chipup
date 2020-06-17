@@ -1,11 +1,21 @@
+import moment from 'moment'
+import 'moment-duration-format'
+
 export default {
     namespaced: true,
     state: {
-        liveSession: {}
+        liveSession: {},
+        now: moment().utc(),
+        runTimeInterval: null,
     },
     getters: {
         sessionInProgress: state => {
             return (Object.keys(state.liveSession).length > 0)
+        },
+        runTime: state => {
+            let start_time = moment.utc(state.liveSession.start_time)
+			let diff = moment(state.now).diff(start_time, 'hours', true)
+			return moment.duration(diff, 'hours').format("hh:mm:ss", { trim: false})
         },
         liveSessionId: state => {
             return state.liveSession.id
@@ -24,6 +34,17 @@ export default {
         UPDATE_LIVE_SESSION(state, session) {
             state.liveSession = session
         },
+        UPDATE_NOW(state) {
+            state.now = moment().utc()
+        },
+        START_RUNTIME(state, interval) {
+            state.now = moment().utc()
+            state.runTimeInterval = interval
+        },
+        END_RUNTIME(state) {
+            clearInterval(state.runTimeInterval)
+            state.runTimeInterval = null
+        }
     },
     actions: {
         startLiveSession({ commit }, {game_type, session}) {
@@ -82,6 +103,15 @@ export default {
                 throw error
             })
         },
+        startRunTime({ commit }) {
+            let interval = setInterval(() => {
+                commit('UPDATE_NOW')
+            }, 1000)
 
+            commit('START_RUNTIME', interval)
+        },
+        endRunTime({ commit }) {
+            commit('END_RUNTIME')
+        }
     }
 }

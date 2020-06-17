@@ -75,7 +75,7 @@ Vue.prototype.$currencyNoDecimal = new Intl.NumberFormat('en-GB', {
 
 // Only import the isEqual function from loadash.
 // Used for comparing two objects.
-import { isEqual, debounce} from 'lodash'
+import { isEqual, debounce } from 'lodash'
 Vue.use(isEqual, debounce)
 
 /**
