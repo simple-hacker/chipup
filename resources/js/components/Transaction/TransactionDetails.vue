@@ -28,7 +28,10 @@
                 <span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
             </div>
         </div>
-        <div class="mt-2 flex justify-between p-2">
+        <div
+            class="mt-2 flex p-2"
+            :class="transaction.id ? 'justify-between' : 'justify-end'"
+        >
             <button
                 v-if="transaction.id"
                 @click.prevent="deleteTransaction"

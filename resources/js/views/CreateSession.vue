@@ -568,16 +568,16 @@ export default {
 			let validationErrors = {}
 
 			if (this.session.location === '') {
-				validationErrors.location = ['Location cannot be empty']
+				validationErrors.location = ['Location cannot be empty.']
 			}
 			if (this.session.start_time === '') {
-				validationErrors.start_time = ['Start date and time cannot be empty']
+				validationErrors.start_time = ['Start date and time cannot be empty.']
 			}
 			if (this.game_type === 'tournament' && this.tournament.prize_pool < 0) {
-				validationErrors.prize_pool = ['Prize pool must be greater than zero']
+				validationErrors.prize_pool = ['Prize pool must be greater than zero.']
 			}
 			if (this.game_type === 'tournament' && this.tournament.entries < 0) {
-				validationErrors.entries = ['Number of entries must be greater than zero']
+				validationErrors.entries = ['Number of entries must be greater than zero.']
 			}
 
 			// Need Object.assign for reactivity to display error message and highlighting
@@ -593,7 +593,7 @@ export default {
 			if (this.game_type === 'cash_game') {
 				this.cash_game.buy_ins.forEach((buy_in, index) => {
 					if (buy_in.amount <= 0) {
-						validationErrors[`buy_ins.${index}.amount`] = ['Buy in amount must be greater than zero']
+						validationErrors[`buy_ins.${index}.amount`] = ['Buy in amount must be greater than zero.']
 					}
 				})
 			}
@@ -601,16 +601,16 @@ export default {
 			// Tournament Buy In and extra transactions
 			if (this.game_type === 'tournament') {
 				if (this.tournament.buy_in.amount < 0) {
-					validationErrors[`buy_in.amount`] = ['Buy in amount must be zero or greater']
+					validationErrors[`buy_in.amount`] = ['Buy in amount must be zero or greater.']
 				}
 				this.tournament.rebuys.forEach((rebuy, index) => {
 					if (rebuy.amount <= 0) {
-						validationErrors[`rebuys.${index}.amount`] = ['Rebuy amount must be greater than zero']
+						validationErrors[`rebuys.${index}.amount`] = ['Rebuy amount must be greater than zero.']
 					}
 				})
 				this.tournament.add_ons.forEach((add_on, index) => {
 					if (add_on.amount <= 0) {
-						validationErrors[`add_ons.${index}.amount`] = ['Add on amount must be greater than zero']
+						validationErrors[`add_ons.${index}.amount`] = ['Add on amount must be greater than zero.']
 					}
 				})
 			}
@@ -618,7 +618,7 @@ export default {
 			// Expenses
 			this.session.expenses.forEach((expense, index) => {
 				if (expense.amount <= 0) {
-					validationErrors[`expenses.${index}.amount`] = ['Expense amount must be greater than zero']
+					validationErrors[`expenses.${index}.amount`] = ['Expense amount must be greater than zero.']
 				}
 			})
 
@@ -633,16 +633,16 @@ export default {
 
 			// Cash out
 			if (this.session.cash_out.amount < 0) {
-				validationErrors[`cash_out.amount`] = ['Cash out amount must be zero or greater']
+				validationErrors[`cash_out.amount`] = ['Cash out amount must be zero or greater.']
 			}
 
 			if (this.session.end_time === '') {
-				validationErrors.end_time = ['End date and time cannot be empty']
+				validationErrors.end_time = ['End date and time cannot be empty.']
 			}
 
 			// Tournament Buy In and extra transactions
 			if (this.game_type === 'tournament' && this.tournament.position < 0) {
-				validationErrors.position = ['Position number must be greater than zero']
+				validationErrors.position = ['Position number must be greater than zero.']
 			}
 
 			// Need Object.assign for reactivity to display error message and highlighting

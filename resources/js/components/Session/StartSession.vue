@@ -1,5 +1,5 @@
 <template>
-<div class="flex flex-col w-full xxl:w-3/5 xxl:mx-auto card text-white border-b-8 border-green-500 p-0">
+	<div class="flex flex-col w-full xxl:w-3/5 xxl:mx-auto card text-white border-b-8 border-green-500 p-0">
 		<h1 class="bg-gray-700 rounded-t text-center py-3 uppercase text-2xl md:text-4xl tracking-wider font-semibold text-white border-b-2 border-green-500">Start Session</h1>
 		<form-wizard ref="createSession" @on-complete="startSession" @on-change="scrollToTop" finishButtonText="Start!" title="" subtitle="" color="#00AD71" errorColor="#F45757" class="text-white">
             <tab-content title="Session" icon="fas fa-star">
@@ -29,7 +29,7 @@
 					class="mb-3"
 				>
 					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">Where are you playing?</h2>
-					<div class="flex flex-col py-2">
+					<div class="flex flex-col">
 						<input
 							type="text"
 							v-model="session.location"
@@ -49,7 +49,7 @@
 					class="mb-3"
 				>
 					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">What is the tournament name?</h2>
-					<div class="flex flex-col py-2">
+					<div class="flex flex-col">
 						<input
 							type="text"
 							v-model="tournament.name"
@@ -69,7 +69,7 @@
 					class="mb-3"
 				>
 					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">What stakes are you playing?</h2>
-					<div class="flex flex-col py-2">
+					<div class="flex flex-col">
 						<select
 							v-model="cash_game.stake_id"
 							class="text-lg"
@@ -139,7 +139,7 @@
 					class="mb-3"
 				>
 					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">What is the ring size?</h2>
-					<div class="flex flex-col py-2">
+					<div class="flex flex-col">
 						<select
 							v-model="cash_game.table_size_id"
 							class="text-lg"
@@ -158,7 +158,7 @@
 					</div>
 				</div>
             </tab-content>
-            <tab-content :beforeChange="startValidation" title="Start" icon="fas fa-wallet">
+            <tab-content :beforeChange="startValidation" title="Start" icon="fas fa-play">
 				<!--
 					BUY IN
 				-->
@@ -166,7 +166,7 @@
 					class="mb-3"
 				>
 					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">What is your buy in?</h2>
-					<div class="flex flex-col py-2">
+					<div class="flex flex-col">
 						<input	
 							v-model="session.amount"
 							type="number"
@@ -185,7 +185,7 @@
 					class="mb-3"
 				>
 					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">When are you starting the session?</h2>
-					<div class="flex flex-col py-2">
+					<div class="flex flex-col">
 						<datetime
 							v-model="session.start_time"
 							input-id="start_time"

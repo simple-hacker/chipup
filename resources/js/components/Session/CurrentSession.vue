@@ -1,291 +1,168 @@
 <template>
-	<div class="flex flex-col xxl:w-2/3 xxl:mx-auto w-full h-full text-white">
-		<div class="flex-1">
-			<div
-				class="text-center text-6xl font-bold text-red-500"
-				v-text="formattedBuyIns"
-			>
-			</div>
-			<div class="grid grid-cols-6 gap-2 md:gap-3 mt-2 md:mt-4">
-				<div class="col-span-6 md:col-span-3 md:row-span-2 flex-col bg-card border border-muted-dark rounded-lg p-3 text-lg">
-					<!--
-						DETAILS
-					-->
-					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2">Details</div>
-					<!--
-						NAME
-					-->
-					<div
-						v-if="liveSession.name"
-						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
-					>
-						<div class="w-1/6">
-							<i class="fas fa-map-marker-alt"></i>
-						</div>
-						<div class="w-full">
-							<span v-if="!editing" v-text="liveSession.name"></span>
-							<div v-if="editing" class="flex flex-col">
-								<input
-									type="text"
-									v-model="editLiveSession.name"
-									placeholder="Location"
-									class="p-1 text-lg"
-									:class="{'error-input' : errors.name}"
-									@input="delete errors.name"
-								/>
-								<span v-if="errors.name" class="error-message">{{ errors.name[0] }}</span>
-							</div>						
-						</div>
+	<div class="flex flex-col w-full xxl:w-3/5 xxl:mx-auto card text-white border-b-8 border-green-500 p-0">
+		<h1 class="bg-gray-700 rounded-t text-center py-3 uppercase text-2xl md:text-4xl tracking-wider font-semibold text-white border-b-2 border-green-500">Current Session</h1>
+		<form-wizard ref="currentSession" @on-complete="endSessionAndCashOut" @on-change="scrollToTop" :startIndex="1" finishButtonText="Cash Out!" title="" subtitle="" color="#00AD71" errorColor="#F45757" class="text-white">
+			<!--
+				DETAILS
+			-->
+            <tab-content :beforeChange="detailsValidation" title="Session Details" icon="fas fa-info">
+				<!--
+					LOCATION
+				-->
+				<div class="mb-4">
+					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">Location</h2>
+					<div class="flex flex-col">
+						<input
+							type="text"
+							v-model="editLiveSession.location"
+							placeholder="Location"
+							class="text-lg"
+							:class="{'error-input' : errors.location}"
+							@input="delete errors.location"
+						/>
+						<span v-if="errors.location" class="error-message">{{ errors.location[0] }}</span>
 					</div>
-					<!--
-						LOCATION
-					-->
-					<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
-						<div class="w-1/6">
-							<i class="fas fa-map-marker-alt"></i>
-						</div>
-						<div class="w-full">
-							<span v-if="!editing" v-text="liveSession.location"></span>
-							<div v-if="editing" class="flex flex-col">
-								<input
-									type="text"
-									v-model="editLiveSession.location"
-									placeholder="Location"
-									class="p-1 text-lg"
-									:class="{'error-input' : errors.location}"
-									@input="delete errors.location"
-								/>
-								<span v-if="errors.location" class="error-message">{{ errors.location[0] }}</span>
-							</div>						
-						</div>
-					</div>
-					<!--
-						STAKE
-					-->
-					<!-- <div v-show-slide="game_type === 'cash_game'"> -->
+				</div>
+				<!--
+					GAME VARIABLES
+				-->
+				<div class="mb-4">
+					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">Game</h2>
+					<div class="flex grid grid-cols-4 gap-2">
 						<div
 							v-if="liveSession.stake"
-							class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
-							<div class="w-1/6">
-								<i class="fas fa-coins"></i>
-							</div>
-							<div class="w-full">
-								<span v-if="!editing" v-text="liveSession.stake.stake"></span>
-								<div v-if="editing" class="flex flex-col">
-									<select
-										v-model="editLiveSession.stake_id"
-										class="p-1 text-lg mr-1"
-										:class="{'error-input' : errors.stake_id}"
-										@input="delete errors.stake_id"
-									>
-										<option
-											v-for="stake in stakes"
-											:key="stake.id"
-											:value="stake.id"
-											v-text="stake.stake"
-										>
-										</option>
-									</select>
-									<span v-if="errors.stake_id" class="error-message">{{ errors.stake_id[0] }}</span>
-								</div>
-							</div>
-						</div>
-					<!-- </div> -->
-					<!--
-						LIMIT AND VARIANT
-					-->
-					<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
-						<div class="w-1/6">
-							<i class="fas fa-stream"></i>
-						</div>
-						<div class="w-full">
-							<span v-if="!editing" v-text="`${liveSession.limit.limit} ${liveSession.variant.variant}`"></span>
-							<div v-if="editing" class="flex w-full">
-								<div class="flex flex-1 flex-col">
-									<select
-										v-model="editLiveSession.limit_id"
-										class="p-1 text-lg mr-1"
-										:class="{'error-input' : errors.limit_id}"
-										@input="delete errors.limit_id"
-									>
-										<option
-											v-for="limit in limits"
-											:key="limit.id"
-											:value="limit.id"
-											v-text="limit.limit"
-										>
-										</option>
-									</select>
-									<span v-if="errors.limit_id" class="error-message">{{ errors.limit_id[0] }}</span>
-								</div>
-								<div class="flex flex-1 flex-col">
-									<select
-										v-model="editLiveSession.variant_id"
-										class="p-1 text-lg"
-										:class="{'error-input' : errors.variant_id}"
-										@input="delete errors.variant_id"
-									>
-										<option
-											v-for="variant in variants"
-											:key="variant.id"
-											:value="variant.id"
-											v-text="variant.variant"
-										>
-										</option>
-									</select>
-									<span v-if="errors.variant_id" class="error-message">{{ errors.variant_id[0] }}</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!--
-						TABLE SIZE
-					-->
-					<div
-						v-if="liveSession.table_size"
-						class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
-						<div class="w-1/6">
-							<i class="fas fa-user-friends"></i>
-						</div>
-						<div class="w-full">
-							<span v-if="!editing" v-text="liveSession.table_size.table_size"></span>
-							<div v-if="editing" class="flex flex-col">
-								<select
-									v-model="editLiveSession.table_size_id"
-									class="p-1 text-lg mr-1"
-									:class="{'error-input' : errors.table_size_id}"
-									@input="delete errors.table_size_id"
+							class="col-span-4 sm:col-span-2"
+							:class="{ 'md:col-span-1' : (liveSession.game_type === 'cash_game') }"
+						>
+							<select
+								v-model="editLiveSession.stake_id"
+								class="text-lg"
+								:class="{'error-input' : errors.stake_id}"
+								@input="delete errors.stake_id"
+							>
+								<option
+									v-for="stake in stakes"
+									:key="stake.id"
+									:value="stake.id"
+									v-text="stake.stake"
 								>
-									<option
-										v-for="table_size in table_sizes"
-										:key="table_size.id"
-										:value="table_size.id"
-										v-text="table_size.table_size"
-									>
-									</option>
-								</select>
-								<span v-if="errors.table_size_id" class="error-message">{{ errors.table_size_id[0] }}</span>
-							</div>
+								</option>
+							</select>
+							<span v-if="errors.stake_id" class="error-message">{{ errors.stake_id[0] }}</span>
+						</div>
+						<div
+							class="col-span-4 sm:col-span-2"
+							:class="{ 'md:col-span-1' : (liveSession.game_type === 'cash_game') }"
+						>
+							<select
+								v-model="editLiveSession.limit_id"
+								class="text-lg"
+								:class="{'error-input' : errors.limit_id}"
+								@input="delete errors.limit_id"
+							>
+								<option
+									v-for="limit in limits"
+									:key="limit.id"
+									:value="limit.id"
+									v-text="limit.limit"
+								>
+								</option>
+							</select>
+							<span v-if="errors.limit_id" class="error-message">{{ errors.limit_id[0] }}</span>
+						</div>
+						<div
+							class="col-span-4 sm:col-span-2"
+							:class="{ 'md:col-span-1' : (liveSession.game_type === 'cash_game') }"
+						>
+							<select
+								v-model="editLiveSession.variant_id"
+								class="text-lg"
+								:class="{'error-input' : errors.variant_id}"
+								@input="delete errors.variant_id"
+							>
+								<option
+									v-for="variant in variants"
+									:key="variant.id"
+									:value="variant.id"
+									v-text="variant.variant"
+								>
+								</option>
+							</select>
+							<span v-if="errors.variant_id" class="error-message">{{ errors.variant_id[0] }}</span>
+						</div>
+						<div
+							v-if="liveSession.table_size"
+							class="col-span-4 sm:col-span-2"
+							:class="{ 'md:col-span-1' : (liveSession.game_type === 'cash_game') }"
+						>
+							<select
+								v-model="editLiveSession.table_size_id"
+								class="text-lg"
+								:class="{'error-input' : errors.table_size_id}"
+								@input="delete errors.table_size_id"
+							>
+								<option
+									v-for="table_size in table_sizes"
+									:key="table_size.id"
+									:value="table_size.id"
+									v-text="table_size.table_size"
+								>
+								</option>
+							</select>
+							<span v-if="errors.table_size_id" class="error-message">{{ errors.table_size_id[0] }}</span>
 						</div>
 					</div>
-					<!--
-						PRIZE POOL
-					-->
-					<div
-						v-if="liveSession.game_type === 'tournament'"
-						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
-					>
-						<div class="w-1/6">
-							<i class="fas fa-money-bill-wave"></i>
-						</div>
-						<div class="w-full">
-							<span v-if="!editing" v-text="`£${liveSession.prize_pool} prize pool`"></span>
-							<div v-if="editing" class="flex flex-col">
-								<input
-									type="number"
-									min=0
-									step=1
-									v-model="editLiveSession.prize_pool"
-									placeholder="Prize Pool"
-									class="p-1 text-lg"
-									:class="{'error-input' : errors.prize_pool}"
-									@input="delete errors.prize_pool"
-								/>
-								<span v-if="errors.prize_pool" class="error-message">{{ errors.prize_pool[0] }}</span>
-							</div>						
-						</div>
+				</div>
+				<!--
+					START TIME
+				-->
+				<div>
+					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">Start Time</h2>
+					<div class="flex flex-col">
+						<datetime
+							v-model="editLiveSession.start_time"
+							input-id="start_time"
+							type="datetime"
+							:minute-step="5"
+							:flow="['time']"
+							:max-datetime="maxDateTime"
+							auto
+							placeholder="Start Date and Time"
+							title="Start Date and Time"
+							class="w-full theme-green"
+							:input-class="{'error-input' : errors.start_time, 'text-lg' : true}"
+							@input="delete errors.start_time"
+						></datetime>
+						<span v-if="errors.start_time" class="error-message">{{ errors.start_time[0] }}</span>
 					</div>
-					<!--
-						POSITION
-					-->
-					<div
-						v-if="liveSession.game_type === 'tournament'"
-						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
-					>
-						<div class="w-1/6">
-							<i class="fas fa-medal"></i>
-						</div>
-						<div class="w-full">
-							<span v-if="!editing" v-text="liveSession.position"></span>
-							<div v-if="editing" class="flex flex-col">
-								<input
-									type="number"
-									min=0
-									step=1
-									v-model="editLiveSession.position"
-									placeholder="Finishing Position"
-									class="p-1 text-lg"
-									:class="{'error-input' : errors.position}"
-									@input="delete errors.position"
-								/>
-								<span v-if="errors.position" class="error-message">{{ errors.position[0] }}</span>
-							</div>						
-						</div>
+				</div>
+            </tab-content>
+			<!--
+				IN PROGRESS
+			-->
+            <tab-content :beforeChange="inProgressValidation" title="In Progress" icon="fas fa-clock">
+				<!--
+					STATS
+				-->
+				<div class="w-full flex flex-wrap">
+					<div class="w-full md:w-1/3 md:order-2">
+						<span v-text="'RUNTIME'"></span>
 					</div>
-					<!--
-						ENTRIES
-					-->
-					<div
-						v-if="liveSession.game_type === 'tournament'"
-						class="mb-2 md:mb-0 flex items-start p-0 md:p-2"
-					>
-						<div class="w-1/6">
-							<i class="fas fa-users"></i>
-						</div>
-						<div class="w-full">
-							<span v-if="!editing" v-text="`${liveSession.entries} entries`"></span>
-							<div v-if="editing" class="flex flex-col">
-								<input
-									type="number"
-									min=0
-									step=1
-									v-model="editLiveSession.entries"
-									placeholder="Number of Entries"
-									class="p-1 text-lg"
-									:class="{'error-input' : errors.entries}"
-									@input="delete errors.entries"
-								/>
-								<span v-if="errors.entries" class="error-message">{{ errors.entries[0] }}</span>
-							</div>						
-						</div>
+					<div class="w-1/2 md:w-1/3 md:order-1">
+						<span v-text="formattedBuyIns"></span>
 					</div>
-					<!--
-						START TIME
-					-->
-					<div class="mb-2 md:mb-0 flex items-start p-0 md:p-2">
-						<div class="w-1/6">
-							<i class="far fa-clock"></i>
-						</div>
-						<div class="w-full">
-							<span v-if="!editing" v-text="formatDate(liveSession.start_time)"></span>
-							<div v-if="editing" class="flex flex-col">
-								<datetime
-									v-model="editLiveSession.start_time"
-									input-id="start_time"
-									type="datetime"
-									:minute-step="5"
-									:flow="['time']"
-									:max-datetime="maxDateTime"
-									auto
-									placeholder="Start Date and Time"
-									title="Start Date and Time"
-									class="w-full bg-muted-light border border-muted-dark rounded border theme-green"
-									:input-class="{'error-input' : errors.start_time, 'p-1' : true}"
-									@input="delete errors.start_time"
-								></datetime>
-								<span v-if="errors.start_time" class="error-message">{{ errors.start_time[0] }}</span>
-							</div>
-						</div>
+					<div class="w-1/2 md:w-1/3 md:order-3">
+						<span v-text="'profitPerHour'"></span>
 					</div>
-				</div>	
+				</div>
 				<!--
 					CASH BUY INS
 				-->
 				<div
 					v-if="liveSession.game_type === 'cash_game'"
-					class="col-span-6 md:col-span-3 flex flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+					class="mb-4"
 				>
-					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Buy Ins</div>
+					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Buy Ins</h2>
 					<div
 						v-for="buy_in in liveSession.buy_ins"
 						:key="buy_in.id"
@@ -294,9 +171,8 @@
 						<transaction-summary :transaction="buy_in" :transaction-type="'buyin'" :game-id="liveSession.id"></transaction-summary>
 					</div>
 					<div
-						v-if="editing"
 						@click="addTransaction('buyin', { amount: 0 })"
-						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
+						class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 					>
 						<i class="fas fa-plus-circle mr-2"></i>
 						<span>Add Buy In</span>
@@ -307,62 +183,17 @@
 				-->
 				<div
 					v-if="liveSession.game_type === 'tournament'"
-					class="col-span-6 md:col-span-3 flex flex-col order-3 md:order-2 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+					class="mb-4"
 				>
-					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Buy In</div>
+					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Buy In</h2>
 					<transaction-summary v-if="liveSession.buy_in" :transaction="liveSession.buy_in" :transaction-type="'buyin'" :game-id="liveSession.id"></transaction-summary>
 					<div
 						v-if="!liveSession.buy_in"
 						@click="addTransaction('buyin', { amount: 0 })"
-						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
+						class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 					>
 						<i class="fas fa-plus-circle mr-2"></i>
 						<span>Add Buy In</span>
-					</div>
-				</div>
-				<!--
-					EXPENSES
-				-->
-				<div
-					class="col-span-6 md:col-span-3 flex flex-col order-5 md:order-4 justify-start md:justify-start bg-card border border-muted-dark rounded-lg p-3"
-				>
-					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Expenses</div>
-					<div
-						v-for="expense in liveSession.expenses"
-						:key="expense.id"
-						class="mb-1"
-					>
-						<transaction-summary :transaction="expense" :transaction-type="'expense'" :game-id="liveSession.id"></transaction-summary>
-					</div>
-					<div
-						@click="addTransaction('expense', { amount: 0, comments: '' })"
-						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
-					>
-						<i class="fas fa-plus-circle mr-2"></i>
-						<span>Add Expense</span>
-					</div>
-				</div>
-				<!--
-					REBUYS
-				-->
-				<div
-					v-if="liveSession.rebuys"
-					class="col-span-6 md:col-span-3 flex flex-col order-6 md:order-5 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
-				>
-					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Rebuys</div>
-					<div
-						v-for="rebuy in liveSession.rebuys"
-						:key="rebuy.id"
-						class="mb-1"
-					>
-						<transaction-summary :transaction="rebuy" :transaction-type="'rebuy'" :game-id="liveSession.id"></transaction-summary>
-					</div>
-					<div
-						@click="addTransaction('rebuy', { amount: 0 })"
-						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
-					>
-						<i class="fas fa-plus-circle mr-2"></i>
-						<span>Add Rebuy</span>
 					</div>
 				</div>
 				<!--
@@ -370,9 +201,9 @@
 				-->
 				<div
 					v-if="liveSession.add_ons"
-					class="col-span-6 md:col-span-3 flex flex-col order-7 md:order-6 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3"
+					class="mb-4"
 				>
-					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-2">Add Ons</div>
+					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Add Ons</h2>
 					<div
 						v-for="add_on in liveSession.add_ons"
 						:key="add_on.id"
@@ -382,75 +213,203 @@
 					</div>
 					<div
 						@click="addTransaction('addon', { amount: 0 })"
-						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
+						class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 					>
 						<i class="fas fa-plus-circle mr-2"></i>
 						<span>Add Add On</span>
 					</div>
 				</div>
 				<!--
-					COMMENTS
+					REBUYS
 				-->
 				<div
-					v-if="liveSession.comments  || editing"
-					class="col-span-6 md:col-span-6 row-span-1 flex flex-col order-8 justify-between md:justify-start bg-card border border-muted-dark rounded-lg p-3">
-					<div class="font-semibold md:border-b md:border-muted-dark md:p-1 mb-1 md:mb-2">Comments</div>
-					<div
-						v-if="!editing"
-						v-text="editLiveSession.comments"
-					></div>
-					<textarea
-						v-if="editing"
-						v-model="editLiveSession.comments"
-						name="comments" cols="30" rows="5"
-						:class="{'error-input' : errors.comments}"
-						@input="delete errors.comments"
-					></textarea>
-					<span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
-				</div>
-			</div>
-			<div class="flex flex-col my-4">
-				<button
-					@click.prevent="cashOut"
-					type="button"
-					class="w-full bg-red-600 border border-red-700 hover:bg-red-700 rounded p-4 uppercase text-white font-bold text-center ml-1"
+					v-if="liveSession.rebuys"
+					class="mb-4"
 				>
-					Cash Out
-				</button>
-			</div>
-		</div>
-		<div class="flex my-3 pin-b">
-			<button v-if="!editing" @click.prevent="editing = true" type="button" class="bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2"><i class="fas fa-edit mr-3"></i><span>Edit</span></button>
-			<div v-if="editing" class="flex">
-				<button @click.prevent="saveSession" type="button" class="bg-green-500 hover:bg-green-600 focus:bg-green-600 rounded text-white text-sm px-4 py-2 mr-3"><i class="fas fa-edit mr-3"></i><span>Save Changes</span></button>
-				<div @click.prevent="cancelChanges" class="border border-muted-light hover:border-muted-dark hover:text-muted-light rounded text-sm px-4 py-2 cursor-pointer">Cancel</div>
-			</div>
-		</div>
+					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Rebuys</h2>
+					<div
+						v-for="rebuy in liveSession.rebuys"
+						:key="rebuy.id"
+						class="mb-1"
+					>
+						<transaction-summary :transaction="rebuy" :transaction-type="'rebuy'" :game-id="liveSession.id"></transaction-summary>
+					</div>
+					<div
+						@click="addTransaction('rebuy', { amount: 0 })"
+						class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
+					>
+						<i class="fas fa-plus-circle mr-2"></i>
+						<span>Add Rebuy</span>
+					</div>
+				</div>
+				<!--
+					EXPENSES
+				-->
+				<div class="mb-4">
+					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Expenses</h2>
+					<div
+						v-for="expense in liveSession.expenses"
+						:key="expense.id"
+						class="mb-1"
+					>
+						<transaction-summary :transaction="expense" :transaction-type="'expense'" :game-id="liveSession.id"></transaction-summary>
+					</div>
+					<div
+						@click="addTransaction('expense', { amount: 0, comments: '' })"
+						class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
+					>
+						<i class="fas fa-plus-circle mr-2"></i>
+						<span>Add Expense</span>
+					</div>
+				</div>
+				<!--
+					COMMENTS
+				-->
+				<div class="mb-4">
+					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">Comments</h2>
+					<div class="flex flex-col">
+						<textarea
+							v-model="editLiveSession.comments"
+							name="comments" cols="30" rows="5"
+							class="p-1 text-base bg-gray-500"
+							:class="{'error-input' : errors.comments}"
+							@input="updateComments"
+						></textarea>
+						<span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
+					</div>
+				</div>
+				<!--
+					PRIZE POOL
+				-->
+				<div
+					v-if="liveSession.game_type === 'tournament'"
+					class="mb-4"
+				>
+					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">What is the total prize pool?</h2>
+					<input
+						v-model="editLiveSession.prize_pool"
+						type="number"
+						min=0
+						:class="{'error-input' : errors.prize_pool}"
+						@input="updatePrizePool"
+					>
+					<span v-if="errors.prize_pool" class="error-message">{{ errors.prize_pool[0] }}</span>
+				</div>
+            </tab-content>
+			<!--
+				CASH OUT
+			-->
+            <tab-content :beforeChange="cashOutValidation" title="Cash Out" icon="fas fa-money-bill">
+				<!--
+					CASH OUT
+				-->
+				<div class="mb-4">
+					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">How much did you cash out for?</h2>
+					<input
+						v-model="cashOut.amount"
+						type="number"
+						min=0
+						:class="{'error-input' : errors.amount}"
+						@input="delete errors.amount"
+					>
+					<span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
+				</div>
+				<!--
+					POSITION
+				-->
+				<div
+					v-if="liveSession.game_type === 'tournament'"
+					class="mb-4"
+				>
+					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">What was your finishing position?</h2>
+					<input
+						v-model="tournamentCashOut.position"
+						type="number"
+						min=0
+						:class="{'error-input' : errors.position}"
+						@input="delete errors.position"
+					>
+					<span v-if="errors.position" class="error-message">{{ errors.position[0] }}</span>
+				</div>
+				<!--
+					ENTRIES
+				-->
+				<div
+					v-if="liveSession.game_type === 'tournament'"
+					class="mb-4"
+				>
+					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">How many entries were there?</h2>
+					<input
+						v-model="tournamentCashOut.entries"
+						type="number"
+						min=0
+						:class="{'error-input' : errors.entries}"
+						@input="delete errors.entries"
+					>
+					<span v-if="errors.entries" class="error-message">{{ errors.entries[0] }}</span>
+				</div>
+				<!--
+					END TIME
+				-->
+				<div class="mb-4">
+					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">When did you finish?</h2>
+					<datetime
+						v-model="cashOut.end_time"
+						input-id="end_time"
+						type="datetime"
+						:minute-step="5"
+						:flow="['time']"
+						:max-datetime="maxDateTime"
+						placeholder="End At"
+						title="End Live Session At"
+						auto
+						class="w-full theme-green"
+						:input-class="{'error-input' : errors.end_time, 'text-lg' : true}"
+						@input="delete errors.end_time"	
+					>
+					</datetime>
+					<span v-if="errors.end_time" class="error-message">{{ errors.end_time[0] }}</span>
+				</div>
+            </tab-content>
+        </form-wizard>
 	</div>
 </template>
 
 <script>
 import moment from 'moment'
 import 'moment-duration-format'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
-import CashOut from '@components/Session/CashOut'
+import { FormWizard, TabContent } from 'vue-form-wizard'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
+
 import TransactionSummary from '@components/Transaction/TransactionSummary'
 import TransactionDetails from '@components/Transaction/TransactionDetails'
 
 export default {
 	name: 'CurrentSession',
-	components: { TransactionSummary, TransactionDetails },
+	components: { FormWizard, TabContent, TransactionSummary, TransactionDetails },
 	data() {
 		return {
 			editLiveSession: {},
 			editing: false,
 			errors: {},
 			maxDateTime: moment().format(),
+			cashOut: {
+                end_time: moment().format(),
+                amount: 0
+			},
+			tournamentCashOut: {
+				position: '',
+				entries: ''
+			},
 		}
 	},
 	created() {
 		this.editLiveSession = this.getEditSession()
+	},
+	mounted() {
+		this.$refs.currentSession.activateAll()
 	},
 	computed: {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
@@ -467,8 +426,91 @@ export default {
 			return this.formatCurrency(this.buyInsTotal * -1)
 		},
 	},
+	watch: {
+        sessionInProgress: function(running) {
+            // running is the updated value on watcher.
+            // If sessionInProgress returns true then running else not running.
+            if (running) {
+                this.runTimeInterval = setInterval(() => {
+                    this.now = moment().utc()
+                }, 1000)
+            } else {
+                clearInterval(this.runTimeInterval)
+                this.runTimeInterval = null
+            }
+        }
+    },
 	methods: {
-		...mapActions('live', ['updateLiveSession']),
+		...mapActions('live', ['updateLiveSession', 'endLiveSession']),
+		scrollToTop() {
+			// Scroll to top of main content div, needed for mobiles so each step of the form scrolls to top.
+			this.$parent.$parent.$refs.scroll.scrollTop = 0
+		},
+		detailsValidation() {
+			// Front end validation
+			let validationErrors = {}
+			if (this.editLiveSession.location === '') {
+				validationErrors.location = ['Location cannot be empty.']
+			}
+			if (this.editLiveSession.start_time === '') {
+				validationErrors.start_time = ['Start date and time cannot be empty.']
+			}
+			// Need Object.assign for reactivity to display error message and highlighting
+			this.errors = Object.assign({}, validationErrors)
+
+			// If front end validation is successful, perform update on session.
+			// If updating fails return false so user cannot progress on formwizard.
+			if (Object.keys(validationErrors).length === 0) {
+				// Backend validation and update.
+				this.updateLiveSession(this.editLiveSession)
+				.then(response => {
+					// Return true because session was successfully updated and can move to next step on form.
+					this.$refs.currentSession.changeTab(this.$refs.currentSession.activeTabIndex, 1)
+				})
+				.catch(error => {
+					this.errors = error.response.data.errors
+				})
+			}
+
+			return Object.keys(validationErrors).length === 0
+		},
+		inProgressValidation() {
+			let validationErrors = {}
+
+			// Tournament BuyIn can be zero.
+			if (this.editLiveSession.prize_pool < 0) {
+				validationErrors.prize_pool = ['Prize pool amount must be zero or greater.']
+			}
+
+			// Need Object.assign for reactivity to display error message and highlighting
+			this.errors = Object.assign({}, validationErrors)
+
+            // If no keys are in validationErrors return true to go to next slide, else stop.
+			return (Object.keys(validationErrors).length === 0)
+		},
+		cashOutValidation() {
+			let validationErrors = {}
+
+			// Tournament BuyIn can be zero.
+			if (this.cashOut.amount < 0) {
+				validationErrors.cashOut.amount = ['Buy in amount must be zero or greater.']
+			}
+			if (this.game_type === 'tournament' && this.cashOut.position < 0) {
+				validationErrors.cashOut.position = ['Position must be greater than zero.']
+			}
+			if (this.game_type === 'tournament' && this.cashOut.entries < 0) {
+				validationErrors.cashOut.entries = ['Number of entires must be greater than zero.']
+			}
+			if (this.cashOut.end_time === '') {
+				validationErrors.end_time = ['End date and time cannot be empty.']
+			}
+
+			// Need Object.assign for reactivity to display error message and highlighting
+			this.errors = Object.assign({}, validationErrors)
+
+            // If no keys are in validationErrors return true to go to next slide, else stop.
+			return (Object.keys(validationErrors).length === 0)
+		},
 		getEditSession() {
 			let liveSession = JSON.parse(JSON.stringify(this.liveSession))
 			return {
@@ -477,10 +519,30 @@ export default {
 				end_time: moment.utc(liveSession.end_time).format(),
 			}
 		},
-		cancelChanges() {
-			this.editing = false
-			this.editLiveSession = this.getEditSession()
-		},
+		updateComments: _.debounce(function() {
+			delete this.errors.comments
+
+			this.updateLiveSession({
+				game_type: this.liveSession.game_type,
+				comments: this.editLiveSession.comments
+			})
+			.catch(error => {
+				this.errors = error.response.data.errors
+			})
+		}, 1000),
+		updatePrizePool: _.debounce(function() {
+			delete this.errors.prize_pool
+
+			if (this.editLiveSession.prize_pool >= 0) {
+				this.updateLiveSession({
+					game_type: this.liveSession.game_type,
+					prize_pool: this.editLiveSession.prize_pool
+				})
+				.catch(error => {
+					this.errors = error.response.data.errors
+				})
+			}
+		}, 1000),
 		saveSession() {
 			this.updateLiveSession(this.editLiveSession)
 			.then(response => {
@@ -497,18 +559,26 @@ export default {
 		formatDate(date) {
 			return moment.utc(date).local().format("dddd Do MMMM, HH:mm")
 		},
-		cashOut() {
-			this.$modal.show(CashOut, {
-				buyInTotal: this.buyInsTotal
-			}, {
-                // Modal Options
-                classes: 'modal',
-                height: 'auto',
-                width: '95%',
-                maxWidth: 600,
-            })
+		endSessionAndCashOut() {
+			let cashOutData = (this.liveSession.game_type === 'tournament') ? {...this.cashOut, ...this.tournamentCashOut} : this.cashOut
+			this.endLiveSession(cashOutData)
+			.then(response => {
+                this.$emit('close')
+                this.$router.push('sessions')               
+
+                if ((this.cashOut.amount - this.buyInTotal) > 0) {
+                    this.$snotify.success(`Nice win!`)
+                } else {
+                    this.$snotify.warning(`Better luck next time.`)
+                }
+			})
+			.catch(error => {
+				this.$snotify.error('Error: '+error.response.data.message)
+				this.errors = error.response.data.errors
+			})
 		},
 		addTransaction(transactionType, transaction) {
+			const modalClass = (transactionType === 'cashout') ? 'modal-green' : 'modal-red'
 			this.$modal.show(TransactionDetails, {
                 // Modal props
                 transaction,
@@ -517,7 +587,7 @@ export default {
                 gameType: this.liveSession.game_type
             }, {
                 // Modal Options
-                classes: 'modal',
+                classes: ['modal', modalClass],
                 height: 'auto',
                 width: '95%',
                 maxWidth: 600,
