@@ -101,8 +101,6 @@ abstract class TestCase extends BaseTestCase
             'name' => 'FU Flip',
             'variant_id' => Variant::inRandomOrder()->first()->id,
             'limit_id' => Limit::inRandomOrder()->first()->id,
-            'prize_pool' => rand(1000, 5000),
-            'entries' => rand(30,500),
             'location' => 'Casino MK',
         ];
 

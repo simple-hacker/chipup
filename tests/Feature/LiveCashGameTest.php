@@ -38,12 +38,13 @@ class LiveCashGameTest extends TestCase
     // Trying to view a Live CashGame when one has not been started is invalid
 
     // User can update live CashGame
-    // User cannot update a live cash game that does not exis
+    // User cannot update a live cash game that does not exist
     // User cannot update another user's live cash game
     // Data must be valid when updating live cash game
     // Start date cannot be in the future when updating
     // Cannot update live cash game with new times which clashes with another cash game
     // Updating live cash game's times does not clash with itself
+    // User can just update comments
 
     // User can end a live cash.
     // User can end a live cash game at a specified time
@@ -55,6 +56,7 @@ class LiveCashGameTest extends TestCase
     // If no end time is provided then CashOut at current time
     // If no cash out is provided then it defaults to 0
     // Cash out amount must be valid
+    // Position and Entries are ignored when ending a cash game
 
     /*
     * ==================================
@@ -509,6 +511,22 @@ class LiveCashGameTest extends TestCase
         $this->patchJson(route('cash.live.update'), $updateAttributes)->assertOk();
     }
 
+    // User can just update comments
+    public function testUserCanJustUpdateCommentsForLiveSession()
+    {
+        // Current Live Cash Game being updated is not included when checking for clashes
+        $user = $this->signIn();
+
+        // Start Cash Game an hour ago
+        $validAttributes = $this->getLiveCashGameAttributes();
+        $this->postJson(route('cash.live.start'), $validAttributes)->assertOk();
+
+        $comments = ['comments' => 'New comments'];
+        $this->patchJson(route('cash.live.update'), $comments)->assertOk();
+
+        $this->assertEquals($user->liveSession()->comments, 'New comments');
+    }
+
     // User can end a live cash.
     // If no end_time is provided then it defaults to now().
     public function testUserCanEndACashGame()
@@ -622,7 +640,7 @@ class LiveCashGameTest extends TestCase
         // Start one cash game at time
         $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $time->toDateTimeString()))->assertOk();
 
-        // End the cash game one second before it's start time.
+        // End the cash game one second before its start time.
         $this->postJson(route('live.end'), [
                     'end_time' => $time->copy()->subSeconds(1)->toDateTimeString(),
                     'amount' => 100
@@ -640,7 +658,7 @@ class LiveCashGameTest extends TestCase
         // Start one cash game at time
         $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes(1000, $time->toDateTimeString()))->assertOk();
 
-        // End the cash game one second before it's start time.
+        // End the cash game exactly on its start time.
         $this->postJson(route('live.end'), [
                     'end_time' => $time->toDateTimeString(),
                     'amount' => 100
@@ -681,5 +699,22 @@ class LiveCashGameTest extends TestCase
 
         // Must be a positive number
         $this->postJson(route('live.end'), ['amount' => -1000])->assertStatus(422);
+    }
+
+    // Position and Entries are ignored when ending a cash game
+    public function testPositionAndEntriesAreIgnoredWhenEndingACashGame()
+    {
+        $user = $this->signIn();
+
+        // Start one tournament
+        $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes());
+
+        $cashOutAttributes = [
+            'amount' => 100,
+            'position' => 55,
+            'entries' => 300
+        ];
+
+        $this->postJson(route('live.end'), $cashOutAttributes)->assertOk();
     }
 }

@@ -53,6 +53,13 @@ class LiveGameController extends GameController
 
             $game->endAndCashOut($request->end_time, $request->amount ?? 0);
 
+            if ($game->game_type === 'tournament') {
+                $game->update([
+                    'position' => $request->position ?? 0,
+                    'entries' => $request->entries ?? 0
+                ]);
+            }
+
             return response()->json([
                 'success' => true,
                 'status' => 'live',

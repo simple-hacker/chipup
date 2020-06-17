@@ -58,6 +58,9 @@ class LiveTournamentTest extends TestCase
     // If no end time is provided then CashOut at current time
     // If no cash out is provided then it defaults to zero
     // Cash out amount must be valid
+    // Position and Entries can be supplied along with the cash out
+    // Only Position can be supplied along with the cash out
+    // Only Entries can be supplied along with the cash out
 
     /*
     * ==================================
@@ -702,7 +705,7 @@ class LiveTournamentTest extends TestCase
         // Start one tournament at time
         $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes(1000, $time->toDateTimeString()))->assertOk();
 
-        // End the tournament one second before it's start time.
+        // End the tournament one second before its start time.
         $this->postJson(route('live.end'), [
                     'end_time' => $time->copy()->subSeconds(1)->toDateTimeString(),
                     'amount' => 100
@@ -720,7 +723,7 @@ class LiveTournamentTest extends TestCase
         // Start one tournament at time
         $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes(1000, $time->toDateTimeString()))->assertOk();
 
-        // End the tournament one second before it's start time.
+        // End the tournament exactly on its start time.
         $this->postJson(route('live.end'), [
                     'end_time' => $time->toDateTimeString(),
                     'amount' => 100
@@ -761,5 +764,67 @@ class LiveTournamentTest extends TestCase
 
         // Must be a positive number
         $this->postJson(route('live.end'), ['amount' => -1000])->assertStatus(422);
+    }
+
+    // Position and Entries can be supplied along with the cash out
+    public function testPositionAndEntriesCanBeSuppliedWithCashOutWhenEndingTournament()
+    {
+        $user = $this->signIn();
+
+        // Start one tournament
+        $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes());
+
+        $cashOutAttributes = [
+            'amount' => 100,
+            'position' => 55,
+            'entries' => 300
+        ];
+
+        $this->postJson(route('live.end'), $cashOutAttributes)->assertOk();
+
+        $tournament = $user->tournaments()->first();
+
+        $this->assertEquals(55, $tournament->position);
+        $this->assertEquals(300, $tournament->entries);
+    }
+
+    // Only Position can be supplied along with the cash out
+    public function testOnlyPositionCanBeSuppliedWithCashOutWhenEndingTournament()
+    {
+        $user = $this->signIn();
+
+        // Start one tournament
+        $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes());
+
+        $cashOutAttributes = [
+            'position' => 55,
+        ];
+
+        $this->postJson(route('live.end'), $cashOutAttributes)->assertOk();
+
+        $tournament = $user->tournaments()->first();
+
+        $this->assertEquals(55, $tournament->position);
+        $this->assertEquals(0, $tournament->entries);
+    }
+
+    // Only Entries can be supplied along with the cash out
+    public function testOnlyEntriesCanBeSuppliedWithCashOutWhenEndingTournament()
+    {
+        $user = $this->signIn();
+
+        // Start one tournament
+        $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes());
+
+        $cashOutAttributes = [
+            'entries' => 300,
+        ];
+
+        $this->postJson(route('live.end'), $cashOutAttributes)->assertOk();
+
+        $tournament = $user->tournaments()->first();
+
+        $this->assertEquals(0, $tournament->position);
+        $this->assertEquals(300, $tournament->entries);
     }
 }

@@ -15,7 +15,9 @@ class EndSessionRequest extends FormRequest
     {
         return [
             'end_time' => 'sometimes|date|before_or_equal:now',
-            'amount' => 'sometimes|numeric|min:0'
+            'amount' => 'sometimes|numeric|min:0',
+            'position' => 'sometimes|numeric|min:0',
+            'entires' => 'sometimes|numeric|min:0'
         ];
     }
 
