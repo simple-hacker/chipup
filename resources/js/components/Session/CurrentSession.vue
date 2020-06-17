@@ -144,15 +144,23 @@
 				<!--
 					STATS
 				-->
-				<div class="w-full flex flex-wrap">
-					<div class="w-full md:w-1/3 md:order-2">
-						<span v-text="runTime"></span>
+				<div class="w-full flex flex-wrap mb-4">
+					<div class="flex flex-col w-1/2 rounded-none rounded-l card card-highlighted md:p-3">
+						<h2 class="text-sm md:text-base uppercase text-gray-200 font-extrabold tracking-wider mb-1">Session Duration</h2>
+						<span class="text-3xl sm:text-5xl xl:text-6xl font-extrabold -mt-2 text-green-500" v-text="runTime"></span>
 					</div>
-					<div class="w-1/2 md:w-1/3 md:order-1">
-						<span v-text="formattedBuyIns"></span>
-					</div>
-					<div class="w-1/2 md:w-1/3 md:order-3">
-						<span v-text="'profitPerHour'"></span>
+					<div class="flex flex-col w-1/2 rounded:none rounded-r card card-highlighted md:p-3">
+						<h2 class="text-sm md:text-base uppercase text-gray-200 font-extrabold tracking-wider mb-1">Total Buy Ins</h2>
+						<div class="text-3xl sm:text-5xl xl:text-6xl font-extrabold -mt-2 text-red-500">
+							<number
+								ref="profit"
+								:from="0"
+								:to="(buyInsTotal * -1)"
+								:duration="2"
+								:format="amount => formatCurrency(amount)"
+								easing="Power1.easeOut"
+							/>
+						</div>
 					</div>
 				</div>
 				<!--
@@ -414,7 +422,7 @@ export default {
 	computed: {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
 		...mapState('live', ['liveSession']),
-		...mapGetters('live', ['runTime']),
+		...mapGetters('live', ['runTime', 'runTimeHours']),
 		buyInsTotal() {
 			let buyInTotal = this.liveSession?.buy_in?.amount ?? 0
 			let buyInsTotal = (this.liveSession.buy_ins) ? this.liveSession.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) : 0
@@ -423,8 +431,8 @@ export default {
 			let expenseTotal = (this.liveSession.expenses) ? this.liveSession.expenses.reduce((total, expenses) => total + expenses.amount, 0) : 0
 			return buyInTotal + buyInsTotal + addOnTotal + rebuyTotal + expenseTotal
 		},
-		formattedBuyIns() {
-			return this.formatCurrency(this.buyInsTotal * -1)
+		profitPerHour() {
+			return (this.buyInsTotal * -1) / this.runTimeHours
 		},
 	},
 	methods: {

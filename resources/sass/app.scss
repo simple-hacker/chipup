@@ -215,7 +215,6 @@ select:-webkit-autofill:focus {
     }
 }
 
-
 // v-dialog
 .vue-dialog {
     border: 1px solid #16171B;
@@ -233,4 +232,11 @@ select:-webkit-autofill:focus {
 .vue-dialog-button {
     background-color: #38393D !important;
     color: white !important;
+}
+
+// vue-form-wizard
+.wizard-btn {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+    text-transform: uppercase;
 }

@@ -12,10 +12,12 @@ export default {
         sessionInProgress: state => {
             return (Object.keys(state.liveSession).length > 0)
         },
-        runTime: state => {
+        runTime: (state, getters) => {
+			return moment.duration(getters.runTimeHours, 'hours').format("hh:mm:ss", { trim: false})
+        },
+        runTimeHours: state => {
             let start_time = moment.utc(state.liveSession.start_time)
-			let diff = moment(state.now).diff(start_time, 'hours', true)
-			return moment.duration(diff, 'hours').format("hh:mm:ss", { trim: false})
+			return moment(state.now).diff(start_time, 'hours', true)
         },
         liveSessionId: state => {
             return state.liveSession.id

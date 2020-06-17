@@ -59,18 +59,21 @@
 				<h2 class="uppercase text-gray-200 font-extrabold tracking-wider">
 					Profit/Hour
 				</h2>
-				<div
-					class="text-3xl sm:text-4xl font-semibold"
-					:class="(profitPerHour < 0) ? 'text-red-500' : 'text-green-500'"
-				>
-					<number
-						ref="stats-profit-hour"
-						:from="0"
-						:to="profitPerHour"
-						:duration="2"
-						:format="(amount) => formatCurrency(amount)"
-						easing="Power1.easeOut"
-					/>
+				<div class="flex items-baseline">
+					<div
+						class="text-3xl sm:text-4xl font-semibold"
+						:class="(profitPerHour < 0) ? 'text-red-500' : 'text-green-500'"
+					>
+						<number
+							ref="stats-profit-hour"
+							:from="0"
+							:to="profitPerHour"
+							:duration="2"
+							:format="(amount) => formatCurrency(amount)"
+							easing="Power1.easeOut"
+						/>
+					</div>
+					<span class="ml-2 uppercase text-sm text-gray-200 font-extrabold tracking-wider">/ hr </span>
 				</div>
 				<div class="flex flex-col mb-2">
 					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Duration</span>
