@@ -35,7 +35,7 @@
                     <input type="checkbox" name="remember" v-model="remember" class="mr-2">
                     <label for="remember" class="w-56 text-sm uppercase tracking-wider font-bold text-gray-200">Remember me</label>
                 </div>
-                <a href="/password-reset" class="text-green-500 hover:text-green-400 uppercase text-sm font-bold tracking-wide">Forgot your password?</a>
+                <a href="/password/reset" class="text-green-500 hover:text-green-400 uppercase text-sm font-bold tracking-wide">Forgot your password?</a>
             </div>
         </form>
 
