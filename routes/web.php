@@ -14,6 +14,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('login/{provider}', 'Auth\SocialLoginController@redirectToProvider');
+Route::get('login/{provider}/callback','Auth\SocialLoginController@handleProviderCallback');
+
 Auth::routes(['verify' => true]);
 
 Route::middleware('verified')->group(function() {
@@ -26,8 +29,6 @@ Route::middleware('verified')->group(function() {
     Route::post('/settings/password', 'SettingsController@updatePassword')->name('settings.password')->middleware(['auth', 'setup.complete']);
     
     
-    Route::get('login/{provider}', 'Auth\SocialLoginController@redirectToProvider');
-    Route::get('login/{provider}/callback','Auth\SocialLoginController@handleProviderCallback');
     
     // TODO: Go through application and change route('dashboard') to 'dashboard'
     // Keeping dashboard route for now because a lot of the application depends on the route name.  This was done before setting up SPA.

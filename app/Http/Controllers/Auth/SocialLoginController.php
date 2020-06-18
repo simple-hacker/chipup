@@ -45,7 +45,7 @@ class SocialLoginController extends Controller
             if (! $user) {
                 $user = User::create([
                     'email' => $socialUser->getEmail(),
-                    // 'name'  => $socialUser->getName(),
+                    'email_verified_at' => now() // Email is verified if they log in through a social site.
                 ]);
             }
 

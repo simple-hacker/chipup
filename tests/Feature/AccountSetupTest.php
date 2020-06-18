@@ -18,13 +18,13 @@ class AccountSetupTest extends TestCase
 
     public function testWhenANewUserRegistersSetUpCompleteIsFalse()
     {
-        $this->postJson('/register', [
+        $this->post('/register', [
             'name' => 'Michael',
             'email' => 'test@example.com',
             'password' => 'secret123',
             'password_confirmation' => 'secret123',
         ])
-        ->assertRedirect(route('setup.index'));
+        ->assertRedirect('/');
 
         $user = User::first();
 
@@ -33,12 +33,12 @@ class AccountSetupTest extends TestCase
 
     public function testAUserIsRedirectedToCompleteSetupAfterRegistering()
     {
-        $this->postJson('/register', [
+        $this->post('/register', [
             'email' => 'test@example.com',
             'password' => 'secret123',
             'password_confirmation' => 'secret123',
         ])
-        ->assertRedirect(route('setup.index'));
+        ->assertRedirect('/');
     }
 
     public function testAUserCanCompleteTheirSetup()
