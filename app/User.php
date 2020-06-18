@@ -2,9 +2,9 @@
 
 namespace App;
 
-use App\Abstracts\Game;
 use Illuminate\Support\Carbon;
 use App\Exceptions\SessionInProgressException;
+use App\Notifications\PokerVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -55,6 +55,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function socialLogins()
     {
         return $this->hasMany('App\SocialLogin');
+    }
+
+    /**
+     * Send the email verification notification.
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification() {
+        $this->notify(new PokerVerifyEmail);
     }
 
     /**

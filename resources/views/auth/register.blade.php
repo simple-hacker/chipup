@@ -1,7 +1,7 @@
 @extends('layouts.front')
 
 @section('form')
-    <register-form></register-form>
+    @include('components.register-form')
 @endsection
 
 @section('link')

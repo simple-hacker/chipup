@@ -5,7 +5,7 @@
     <a href="{{ route('dashboard') }}" class="w-5/6 p-4 bg-green-500 hover:bg-green-400 rounded cursor-pointer text-white uppercase text-sm font-bold tracking-wide text-center">Go To Dashboard</a>
     @endauth
     @guest
-        <login-form></login-form>
+        @include('components.login-form')
     @endguest
 @endsection
 

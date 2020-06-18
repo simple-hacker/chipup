@@ -13,11 +13,10 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}">
     <link rel="alternate icon" href="{{ asset('favico.ico') }}">
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/welcome.js') }}" defer></script>
-
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/js/fontawesome.min.js" integrity="sha256-bP9MBDJ4xkv81w/A2cgwRonMI+eelvZwm7e8rP5JIxA=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/js/brands.min.js" integrity="sha256-OjapPU7ZR5ESNNSe21vgHeQCya5MZT4Y3X94x0JrP90=" crossorigin="anonymous"></script>
 </head>
 <body class="bg-gray-900">
     <div id="app">
@@ -34,24 +33,6 @@
                 @guest
                     @yield('link')
                 @endguest
-
-
-
-
-
-                {{-- <div class="flex flex-col w-full justify-center shadow-2xl">
-                    <div class="flex flex-col items-center bg-gray-600 rounded-t border border-gray-900 w-5/6 p-3">
-                        <img src="{{ asset('images/logo.svg') }}" width="75px" alt="Poker Logo">
-                        <h1 class="text-4xl w-full text-center font-bold mb-3 text-white">{{ config('app.name', 'Poker') }}</h1>
-                        @yield('form')
-                    </div>
-                    <div class="">
-                        @yield('link')
-                    </div>
-                </div> --}}
-
-
-
             </div>
         </div>
 
