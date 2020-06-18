@@ -8,7 +8,7 @@ body *:not(html):not(style):not(br):not(tr):not(code) {
 }
 
 body {
-    background-color: hsl(225, 6%, 10%);
+    background-color: #18191B;
     color: #FFFFFF;
     height: 100%;
     hyphens: auto;
@@ -32,7 +32,7 @@ blockquote {
 }
 
 a {
-    color: hsl(159, 100%, 34%);
+    color: #00AD71;
 }
 
 a img {
@@ -42,7 +42,7 @@ a img {
 /* Typography */
 
 h1 {
-    color: hsl(225, 7%, 85%);
+    color: #D6D7DB;
     font-size: 19px;
     font-weight: bold;
     margin-top: 0;
@@ -50,7 +50,7 @@ h1 {
 }
 
 h2 {
-    color: hsl(225, 7%, 85%);
+    color: #D6D7DB;
     font-size: 16px;
     font-weight: bold;
     margin-top: 0;
@@ -58,7 +58,7 @@ h2 {
 }
 
 h3 {
-    color: hsl(225, 7%, 85%);
+    color: #D6D7DB;
     font-size: 14px;
     font-weight: bold;
     margin-top: 0;
@@ -66,7 +66,7 @@ h3 {
 }
 
 p {
-    color: hsl(225, 7%, 95%);
+    color: #F1F2F3;
     font-size: 16px;
     line-height: 1.5em;
     margin-top: 0;
@@ -84,7 +84,7 @@ img {
 /* Layout */
 
 .wrapper {
-    background-color: hsl(225, 7%, 13%);
+    background-color: #1F2023;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -119,15 +119,15 @@ img {
     font-size: 2.25rem;
     font-weight: 700;
     text-decoration: none;
-    text-shadow: 0 1px 0 hsl(225, 7%, 65%);
+    text-shadow: 0 1px 0 #A0A3AC;
 }
 
 /* Body */
 
 .body {
-    background-color: hsl(225, 6%, 10%);
-    border-bottom: 1px solid hsl(225, 6%, 7%);
-    border-top: 1px solid hsl(225, 6%, 7%);
+    background-color: #18191B;
+    border-bottom: 1px solid #111113;
+    border-top: 1px solid #111113;
     margin: 0;
     padding: 10px;
     width: 100%;
@@ -137,7 +137,7 @@ img {
 }
 
 .inner-body {
-    background-color: hsl(225, 7%, 18%);
+    background-color: #2B2C31;
     margin: 0 auto;
     padding: 0;
     width: 570px;
@@ -172,7 +172,7 @@ img {
 }
 
 .footer p {
-    color: hsl(225, 7%, 85%);
+    color: #D6D7DB;
     font-size: 12px;
     text-align: center;
 }
@@ -220,7 +220,6 @@ img {
 .button {
     border-radius: 3px;
     padding: 10px 15px 10px 15px;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16);
     color: #fff;
     display: inline-block;
     text-decoration: none;
@@ -232,38 +231,29 @@ img {
 
 .button-green,
 .button-primary {
-    background-color: hsl(159, 100%, 34%);
-    border-top: 2px solid hsl(159, 100%, 26%);
-    border-right: 2px solid hsl(159, 100%, 26%);
-    border-bottom: 2px solid hsl(159, 100%, 26%);
-    border-left: 2px solid hsl(159, 100%, 26%);
-}
-
-.button-green:hover,
-.button-primary:hover {
-    background-color: hsl(159, 100%, 42%);
-    border-top: 2px solid hsl(159, 100%, 34%);
-    border-right: 2px solid hsl(159, 100%, 34%);
-    border-bottom: 2px solid hsl(159, 100%, 34%);
-    border-left: 2px solid hsl(159, 100%, 34%);
+    background-color: #00AD71;
+    border-top: 2px solid #008556;
+    border-right: 2px solid #008556;
+    border-bottom: 2px solid #008556;
+    border-left: 2px solid #008556;
 }
 
 .button-blue,
 .button-success {
     background-color: #3490dc;
-    border-top: 10px solid #3490dc;
-    border-right: 18px solid #3490dc;
-    border-bottom: 10px solid #3490dc;
-    border-left: 18px solid #3490dc;
+    border-top: 2px solid #3490dc;
+    border-right: 2px solid #3490dc;
+    border-bottom: 2px solid #3490dc;
+    border-left: 2px solid #3490dc;
 }
 
 .button-red,
 .button-error {
-    background-color: #e3342f;
-    border-top: 10px solid #e3342f;
-    border-right: 18px solid #e3342f;
-    border-bottom: 10px solid #e3342f;
-    border-left: 18px solid #e3342f;
+    background-color: #F45757;
+    border-top: 2px solid #F12727;
+    border-right: 2px solid #F12727;
+    border-bottom: 2px solid #F12727;
+    border-left: 2px solid #F12727;
 }
 
 /* Panels */
