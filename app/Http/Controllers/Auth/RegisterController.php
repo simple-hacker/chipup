@@ -86,6 +86,6 @@ class RegisterController extends Controller
         $this->guard()->login($user);
 
         return $this->registered($request, $user)
-                        ?: redirect($this->redirectPath())->with('registered', 'Account Created!  Please verify your email address.');
+                        ?: redirect($this->redirectPath())->with('registered', 'Account created!  Please verify your email address.');
     }
 }

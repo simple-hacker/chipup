@@ -23,12 +23,9 @@ Route::middleware('verified')->group(function() {
     Route::get('/setup', 'SetupController@index')->name('setup.index')->middleware(['auth', 'setup.incomplete']);
     Route::post('/setup', 'SetupController@complete')->name('setup.complete')->middleware(['auth', 'setup.incomplete']);
     
-    
     Route::post('/settings/email', 'SettingsController@updateEmailAddress')->name('settings.email')->middleware(['auth', 'setup.complete']);
     Route::post('/settings/defaults', 'SettingsController@updateDefaultValues')->name('settings.defaults')->middleware(['auth', 'setup.complete']);
     Route::post('/settings/password', 'SettingsController@updatePassword')->name('settings.password')->middleware(['auth', 'setup.complete']);
-    
-    
     
     // TODO: Go through application and change route('dashboard') to 'dashboard'
     // Keeping dashboard route for now because a lot of the application depends on the route name.  This was done before setting up SPA.

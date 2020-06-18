@@ -22,7 +22,7 @@
     <div id="app">
 
         <div class="flex flex-col xl:flex-row h-screen w-full">
-            <div class="hidden xl:block xl:w-3/5 h-1/2 bg-cover bg-right" style="background-image: url('images/background.jpg')"></div>
+            <div class="hidden xl:block xl:w-3/5 h-1/2 bg-cover bg-right" style="background-image: url(' {{ asset('images/background.jpg') }}')"></div>
             <div class="h-screen w-full xl:w-2/5 h-1/2 flex flex-col justify-center items-center bg-gray-800">
 
                 <div class="flex flex-col items-center bg-gray-600 rounded-t w-5/6 p-3 pb-6">
