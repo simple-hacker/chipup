@@ -3,18 +3,39 @@
         <form-wizard ref="setupWizard" @on-complete="completeSetup" title="" subtitle="" finishButtonText="Complete Setup" color="#00AD71" errorColor="#F45757" class="text-white">
             <tab-content title="Bankroll" icon="fas fa-dollar-sign" :beforeChange="bankrollMustBePositive">
                 <div class="flex flex-col h-56">
-                    <p class="tracking-wide text-lg md:text-xl mb-5">What is your starting bankroll?</p>
-                    <div class="flex flex-col items-center">
-                        <input
-                            v-model="bankroll"
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            class="w-full md:w-3/4 p-3"
-                            :class="{ 'error-input' : errors.bankroll }"
-                            @input="delete errors.bankroll"
-                        />
-                        <span v-if="errors.bankroll" class="error-message">{{ errors.bankroll[0] }}</span>
+                    <div class="mb-3">
+                        <p class="tracking-wide text-lg md:text-xl mb-2">What currency would you like to use?</p>
+                        <div class="flex flex-col items-center">
+                            <select
+                                v-model="currency"
+                                class="w-full md:w-3/4 p-3 mb-2"
+                                :class="{ 'error-input' : errors.currency }"
+                            >
+                                <option
+                                    v-for="currency in currencies"
+                                    :key="currency.currency"
+                                    :value="currency.currency"
+                                    v-text="currency.currency"
+                                >
+                                </option>
+                            </select>
+                            <span v-if="errors.currency" class="error-message">{{ errors.currency[0] }}</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <p class="tracking-wide text-lg md:text-xl mb-2">What is your starting bankroll?</p>
+                        <div class="flex flex-col items-center">
+                            <input
+                                v-model="bankroll"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                class="w-full md:w-3/4 p-3"
+                                :class="{ 'error-input' : errors.bankroll }"
+                                @input="delete errors.bankroll"
+                            />
+                            <span v-if="errors.bankroll" class="error-message">{{ errors.bankroll[0] }}</span>
+                        </div>
                     </div>
                 </div>
             </tab-content>
@@ -97,9 +118,9 @@
                     <p class="tracking-wide text-lg md:text-xl mb-5">Where do you usually play?</p>
                     <div class="flex flex-col items-center">
                         <input
-                            v-model="location"
+                            v-model="default_location"
                             type="text"
-                            placeholder="Enter location"
+                            placeholder="Enter venue"
                             class="w-full md:w-3/4 p-3 mb-2"
                             :class="{ 'error-input' : errors.default_location }"
                         />
@@ -115,64 +136,69 @@
 </template>
 
 <script>
-    export default {
-        name: 'PokerSetup',
-        props: {
-            stakes: Array,
-            limits: Array,
-            variants: Array,
-            table_sizes: Array,
-        },
-        data() {
-            return {
-                bankroll: 0,
-                location: '',
-                default_stake: 1,
-                default_limit: 1,
-                default_variant: 1,
-                default_table_size: 1,
-                errors: {},
-            }
-        },
-        methods: {
-            bankrollMustBePositive() {
-                if (this.bankroll < 0) {
-                    this.errors = Object.assign({}, {bankroll: ['Bankroll amount must be zero or greater']})
-                    return false
-                }
-                
-                return true
-            },
-            completeSetup: function(){
-                axios.post('/setup', {
-                    'bankroll': this.bankroll,
-                    'default_stake_id': this.default_stake,
-                    'default_limit_id': this.default_limit,
-                    'default_variant_id': this.default_variant,
-                    'default_table_size_id': this.default_table_size,
-                    'default_location': this.location,
-                })
-                .then(response => {
-                    if (response.status === 200) {
-                        window.location = response.data.redirect
-                    }
-                })
-                .catch(error => {
-                    console.log(error)
-                    this.errors = error.response.data.errors
-                    this.$snotify.error(error.response.data.message)
-                    // Change tab index to first error.
-                    if (this.errors.bankroll) {
-                        this.$refs.setupWizard.changeTab(this.$refs.setupWizard.activeTabIndex, 0)
-                    } else if (this.errors.default_stake_id) {
-                        this.$refs.setupWizard.changeTab(this.$refs.setupWizard.activeTabIndex, 1)
-                    } else if (this.errors.default_limit_id || this.errors.default_variant_id || this.errors.default_table_size_id) {
-                        this.$refs.setupWizard.changeTab(this.$refs.setupWizard.activeTabIndex, 2)
-                    }
-                });
-            },
+import currencies from '@/currencies'
+
+export default {
+    name: 'PokerSetup',
+    props: {
+        stakes: Array,
+        limits: Array,
+        variants: Array,
+        table_sizes: Array,
+    },
+    data() {
+        return {
+            currencies: currencies,
+            bankroll: 0,
+            currency: 'GBP',
+            default_location: '',
+            default_stake: 1,
+            default_limit: 1,
+            default_variant: 1,
+            default_table_size: 1,
+            errors: {},
         }
-    }
+    },
+    methods: {
+        bankrollMustBePositive() {
+            if (this.bankroll < 0) {
+                this.errors = Object.assign({}, {bankroll: ['Bankroll amount must be zero or greater']})
+                return false
+            }
+            
+            return true
+        },
+        completeSetup: function(){
+            axios.post('/setup', {
+                'bankroll': this.bankroll,
+                'currency': this.currency,
+                'default_stake_id': this.default_stake,
+                'default_limit_id': this.default_limit,
+                'default_variant_id': this.default_variant,
+                'default_table_size_id': this.default_table_size,
+                'default_location': this.default_location,
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    window.location = response.data.redirect
+                }
+            })
+            .catch(error => {
+                console.log(error)
+                this.errors = error.response.data.errors
+                this.$snotify.error(error.response.data.message)
+                // Change tab index to first error.
+                if (this.errors.bankroll) {
+                    this.$refs.setupWizard.changeTab(this.$refs.setupWizard.activeTabIndex, 0)
+                } else if (this.errors.default_stake_id) {
+                    this.$refs.setupWizard.changeTab(this.$refs.setupWizard.activeTabIndex, 1)
+                } else if (this.errors.default_limit_id || this.errors.default_variant_id || this.errors.default_table_size_id) {
+                    this.$refs.setupWizard.changeTab(this.$refs.setupWizard.activeTabIndex, 2)
+                }
+            });
+        },
+    },
+}
 </script>
 
 <style lang="scss">

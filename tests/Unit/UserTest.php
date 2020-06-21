@@ -58,4 +58,24 @@ class UserTest extends TestCase
 
         $this->assertTrue($user->fresh()->setup_complete);
     }
+
+    public function testDefaultLocaleIsenGBP()
+    {
+        $userAttributes = factory('App\User')->raw();
+        unset($userAttributes['locale']);
+
+        $user = factory('App\User')->create($userAttributes);
+
+        $this->assertEquals('en-GB', $user->locale);
+    }
+
+    public function testDefaultCurrencyIsGBP()
+    {
+        $userAttributes = factory('App\User')->raw();
+        unset($userAttributes['currency']);
+
+        $user = factory('App\User')->create($userAttributes);
+
+        $this->assertEquals('GBP', $user->currency);
+    }
 }

@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->rememberToken();
             $table->boolean('setup_complete')->default(false);
+            $table->string('locale')->default('en-GB');
             $table->string('currency')->default('GBP');
             $table->bigInteger('bankroll')->default(0);
             $table->unsignedBigInteger('default_stake_id')->nullable();

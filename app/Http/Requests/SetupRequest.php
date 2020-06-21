@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CurrencyRule;
+use App\Rules\LocaleRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SetupRequest extends FormRequest
@@ -15,6 +17,8 @@ class SetupRequest extends FormRequest
     {
         return [
             'bankroll' => 'sometimes|numeric|min:0',
+            'locale' => ['sometimes', 'string', new LocaleRule],
+            'currency' => ['sometimes', 'string', new CurrencyRule],
             'default_stake_id' => 'sometimes|nullable|integer|exists:stakes,id',
             'default_limit_id' => 'sometimes|nullable|integer|exists:limits,id',
             'default_variant_id' => 'sometimes|nullable|integer|exists:variants,id',

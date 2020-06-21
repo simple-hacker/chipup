@@ -19,7 +19,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
+<body>   
     <div id="app" class="bg-gray-900 h-full">
         <app
             :user="{{ $user }}"

@@ -34,7 +34,9 @@ class SetupController extends Controller
     public function complete(SetupRequest $request)
     {
         // Remove bankroll from request because we add a BankrollTransaction through User.
-        auth()->user()->update($request->except('bankroll'));
+        $attributes = $request->validated();
+        unset($attributes['bankroll']);
+        auth()->user()->update($attributes);
 
         // If bankroll was supplied during setup, create the Bankroll Transaction which will also update
         // the user's bankroll.

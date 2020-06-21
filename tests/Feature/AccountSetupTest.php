@@ -43,8 +43,6 @@ class AccountSetupTest extends TestCase
 
     public function testAUserCanCompleteTheirSetup()
     {
-        // TODO:  Choose default currency
-
         $this->withoutExceptionHandling();
 
         $attributes = [
@@ -57,6 +55,8 @@ class AccountSetupTest extends TestCase
         ];
 
         $new_attributes = [
+            'locale' => 'en-GB',
+            'currency' => 'GBP',
             'bankroll' => 1000,
             'default_stake_id' => 1,
             'default_limit_id' => 1,
@@ -99,8 +99,76 @@ class AccountSetupTest extends TestCase
         $this->assertTrue($user->setup_complete);
     }
 
+    public function testUserCanChangeTheirLocale()
+    {
+        $new_attributes = [
+            'locale' => 'en-US',
+        ];
+        $user = factory('App\User')->create();
+        $this->actingAs($user);
+
+        // Make POST request to complete user's setup with new default values.
+        $this->postJson(route('setup.complete'), $new_attributes)
+                ->assertOk()
+                ->assertJsonStructure(['success', 'redirect'])
+                ->assertJson([
+                    'success' => true,
+                    'redirect' => route('dashboard')
+                ]);
+        
+        $user->refresh();
+        $this->assertEquals('en-US', $user->locale);
+    }
+
+    public function testLocaleMustBeAValidLocale()
+    {
+        $new_attributes = [
+            'locale' => 'en-XX',  // Not a valid ISO 639-2
+        ];
+        $user = factory('App\User')->create();
+        $this->actingAs($user);
+
+        // Make POST request to complete user's setup with new default values.
+        $this->postJson(route('setup.complete'), $new_attributes)->assertStatus(422);
+    }
+
+    public function testUserCanChangeTheirCurrency()
+    {
+        $new_attributes = [
+            'currency' => 'USD',
+        ];
+        $user = factory('App\User')->create();
+        $this->actingAs($user);
+
+        // Make POST request to complete user's setup with new default values.
+        $this->postJson(route('setup.complete'), $new_attributes)
+                ->assertOk()
+                ->assertJsonStructure(['success', 'redirect'])
+                ->assertJson([
+                    'success' => true,
+                    'redirect' => route('dashboard')
+                ]);
+        
+        $user->refresh();
+        $this->assertEquals('USD', $user->currency);
+    }
+
+    public function testCurrencyMustBeAValidCurrency()
+    {
+        $new_attributes = [
+            'currency' => 'ZZZ',  // Not a valid ISO 4217
+        ];
+        $user = factory('App\User')->create();
+        $this->actingAs($user);
+
+        // Make POST request to complete user's setup with new default values.
+        $this->postJson(route('setup.complete'), $new_attributes)->assertStatus(422);
+    }
+
     public function testAssertCompleteSetupDataValid()
     {
+        // $this->withoutExceptionHandling();
+
         $user = factory('App\User')->create();  // Default setup_complete is false
         $this->actingAs($user);
 
