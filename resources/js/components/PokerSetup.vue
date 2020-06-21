@@ -136,8 +136,6 @@
 </template>
 
 <script>
-import currencies from '@/currencies'
-
 export default {
     name: 'PokerSetup',
     props: {
@@ -150,6 +148,7 @@ export default {
         return {
             currencies: currencies,
             bankroll: 0,
+            locale: 'en-GB',
             currency: 'GBP',
             default_location: '',
             default_stake: 1,

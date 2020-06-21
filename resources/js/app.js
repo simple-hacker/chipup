@@ -66,9 +66,9 @@ import VShowSlide from 'v-show-slide'
 Vue.use(VShowSlide)
 
 
-Vue.prototype.$currency = new Intl.NumberFormat('de-DE', {
+Vue.prototype.$currency = new Intl.NumberFormat('en-GB', {
     style: 'currency',
-    currency: 'JPY',
+    currency: 'GBP',
     currencyDisplay: "symbol",
     minimumFractionDigits: 2
 })
@@ -107,6 +107,8 @@ import store from '@store/store'
 
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
+import { locales, currencies } from '@/currencies'
+
 export const router = new VueRouter({
     mode: 'history',
     routes,
@@ -123,4 +125,6 @@ const app = new Vue({
     components: { App, NotFound },
     router,
     store,
+    locales,
+    currencies,
 })

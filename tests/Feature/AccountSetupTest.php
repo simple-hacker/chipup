@@ -118,7 +118,7 @@ class AccountSetupTest extends TestCase
         
         $user->refresh();
         $this->assertEquals('en-US', $user->locale);
-    }
+    } 
 
     public function testLocaleMustBeAValidLocale()
     {
