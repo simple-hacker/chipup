@@ -1,56 +1,66 @@
-export const locales = {
-    'en-GB': {
-        currency: {
-            style: 'currency', currency: 'GBP'
-        }
-    },
-    'en-US': {
-        currency: {
-            style: 'currency', currency: 'USD'
-        }
-    },
-    'en-IE': {
-        currency: {
-            style: 'currency', currency: 'EUR'
-        }
-    },
-    'fr-FR': {
-        currency: {
-            style: 'currency', currency: 'EUR'
-        }
-    },
-    'de-DE': {
-        currency: {
-            style: 'currency', currency: 'EUR'
-        }
-    },
-    'pl-PL': {
-        currency: {
-            style: 'currency', currency: 'PLN'
-        }
-    },
-    'fr-CA': {
-        currency: {
-            style: 'currency', currency: 'CAD'
-        }
-    },
-    'en-CA': {
-        currency: {
-            style: 'currency', currency: 'CAD'
-        }
-    },
-    'en-AU': {
-        currency: {
-            style: 'currency', currency: 'AUD'
-        }
-    },
-}
+export const locales = [
+        {
+            code: 'en-GB',
+            currency: {
+                style: 'currency', currency: 'GBP'
+            }
+        },
+        {
+            code: 'en-US',
+            currency: {
+                style: 'currency', currency: 'USD'
+            }
+        },
+        {
+            code: 'en-IE',
+            currency: {
+                style: 'currency', currency: 'EUR'
+            }
+        },
+        {
+            code: 'fr-FR',
+            currency: {
+                style: 'currency', currency: 'EUR'
+            }
+        },
+        {
+            code: 'de-DE',
+            currency: {
+                style: 'currency', currency: 'EUR'
+            }
+        },
+        {
+            code: 'pl-PL',
+            currency: {
+                style: 'currency', currency: 'PLN'
+            }
+        },
+        {
+            code: 'fr-CA',
+            currency: {
+                style: 'currency', currency: 'CAD'
+            }
+        },
+        {
+            code: 'en-CA',
+            currency: {
+                style: 'currency', currency: 'CAD'
+            }
+        },
+        {
+            code: 'en-AU',
+            currency: {
+                style: 'currency', currency: 'AUD'
+            }
+        },
+]
 
 // Available currencies
-let availableCurrencies = Object.values(locales).reduce((currencies, locale) => {
+let availableCurrencies = locales.reduce((currencies, locale) => {
     currencies.push(locale.currency.currency)
     return currencies
 }, [])
 
-export const currencies = new Set([...availableCurrencies])
+// Convert to Set for unique values, but convert Set back to array
+export const currencies = Array.from(new Set([...availableCurrencies]))
 

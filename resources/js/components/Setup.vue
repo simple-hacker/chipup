@@ -4,21 +4,11 @@
             <tab-content title="Bankroll" icon="fas fa-dollar-sign" :beforeChange="bankrollMustBePositive">
                 <div class="flex flex-col h-56">
                     <div class="mb-3">
-                        <p class="tracking-wide text-lg md:text-xl mb-2">What currency would you like to use?</p>
+                        <p class="tracking-wide text-lg md:text-xl mb-2">Which currency would you like to use?</p>
                         <div class="flex flex-col items-center">
-                            <select
-                                v-model="currency"
-                                class="w-full md:w-3/4 p-3 mb-2"
-                                :class="{ 'error-input' : errors.currency }"
-                            >
-                                <option
-                                    v-for="currency in currencies"
-                                    :key="currency"
-                                    :value="currency"
-                                    v-text="currency"
-                                >
-                                </option>
-                            </select>
+                            <div class="w-full md:w-3/4">
+                                <locale-select v-on:locale-selected="changeLocale"></locale-select>
+                            </div>
                             <span v-if="errors.currency" class="error-message">{{ errors.currency[0] }}</span>
                         </div>
                     </div>
@@ -136,10 +126,11 @@
 </template>
 
 <script>
-import { locales, currencies } from '@/currencies'
+import LocaleSelect from '@components/LocaleSelect'
 
 export default {
     name: 'PokerSetup',
+    components: { LocaleSelect },
     props: {
         stakes: Array,
         limits: Array,
@@ -148,8 +139,6 @@ export default {
     },
     data() {
         return {
-            locales,
-            currencies,
             bankroll: 0,
             locale: 'en-GB',
             currency: 'GBP',
@@ -169,6 +158,10 @@ export default {
             }
             
             return true
+        },
+        changeLocale(locale) {
+            this.locale = locale.code
+            this.currency = locale.currency.currency
         },
         completeSetup: function(){
             axios.post('/setup', {

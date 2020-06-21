@@ -42,11 +42,6 @@ import VueApexCharts from 'vue-apexcharts'
 Vue.use(VueApexCharts)
 Vue.component('apexchart', VueApexCharts)
 
-import vCurrencySelect from 'vue-currency-select';
-Vue.use(vCurrencySelect);
-import 'vue-select/dist/vue-select.css';
-import 'currency-flags/dist/currency-flags.css'
-
 // vue-js-modal
 import VModal from 'vue-js-modal'
 Vue.use(VModal, {
