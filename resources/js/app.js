@@ -107,8 +107,6 @@ import store from '@store/store'
 
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
-import { locales, currencies } from '@/currencies'
-
 export const router = new VueRouter({
     mode: 'history',
     routes,
@@ -125,6 +123,4 @@ const app = new Vue({
     components: { App, NotFound },
     router,
     store,
-    locales,
-    currencies,
 })

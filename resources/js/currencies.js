@@ -47,9 +47,10 @@ export const locales = {
 }
 
 // Available currencies
-let availableCurrencies = numberFormats.reduce((currencies, locale) => {
+let availableCurrencies = Object.values(locales).reduce((currencies, locale) => {
     currencies.push(locale.currency.currency)
+    return currencies
 }, [])
 
-export const currencies = new Set(...currencies)
+export const currencies = new Set([...availableCurrencies])
 

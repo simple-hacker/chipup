@@ -27,13 +27,13 @@
         <p class="text-md md:text-xl text-center mb-2 text-gray-100">Let's quickly get you set up.</p>
         <p class="text-xs md:text-base text-center font-medium text-gray-300">You can change these in your settings control panel at a later date.</p>
 
-        <poker-setup
+        <setup
             class="w-full"
             v-bind:stakes="{{ $stakes }}"
             v-bind:limits="{{ $limits }}"
             v-bind:variants="{{ $variants }}"
             v-bind:table_sizes="{{ $table_sizes }}"
-        ></poker-setup>
+        ></setup>
 
     </div>
 </body>

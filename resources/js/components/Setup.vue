@@ -13,9 +13,9 @@
                             >
                                 <option
                                     v-for="currency in currencies"
-                                    :key="currency.currency"
-                                    :value="currency.currency"
-                                    v-text="currency.currency"
+                                    :key="currency"
+                                    :value="currency"
+                                    v-text="currency"
                                 >
                                 </option>
                             </select>
@@ -136,6 +136,8 @@
 </template>
 
 <script>
+import { locales, currencies } from '@/currencies'
+
 export default {
     name: 'PokerSetup',
     props: {
@@ -146,7 +148,8 @@ export default {
     },
     data() {
         return {
-            currencies: currencies,
+            locales,
+            currencies,
             bankroll: 0,
             locale: 'en-GB',
             currency: 'GBP',

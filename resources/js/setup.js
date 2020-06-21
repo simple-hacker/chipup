@@ -22,7 +22,7 @@ import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 Vue.use(VueFormWizard)
 
-import PokerSetup from '@/components/PokerSetup'
+import Setup from '@/components/Setup'
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -32,5 +32,5 @@ import PokerSetup from '@/components/PokerSetup'
 
 const app = new Vue({
     el: '#app',
-    components: { PokerSetup }
+    components: { Setup },
 });
