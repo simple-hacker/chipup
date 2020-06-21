@@ -1,62 +1,44 @@
-export const locales = [
-        {
-            code: 'en-GB',
-            currency: {
-                style: 'currency', currency: 'GBP'
-            }
+export const locales = {
+        'en-GB': {
+            currency: { style: 'currency', currency: 'GBP' },
+            currencyNoFraction: { style: 'currency', currency: 'GBP', minimumFractionDigits: 0, maximumFractionDigits: 0 }
         },
-        {
-            code: 'en-US',
-            currency: {
-                style: 'currency', currency: 'USD'
-            }
+        'en-US': {
+            currency: { style: 'currency', currency: 'USD' },
+            currencyNoFraction: { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }
         },
-        {
-            code: 'en-IE',
-            currency: {
-                style: 'currency', currency: 'EUR'
-            }
+        'en-IE': {
+            currency: { style: 'currency', currency: 'EUR' },
+            currencyNoFraction: { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }
         },
-        {
-            code: 'fr-FR',
-            currency: {
-                style: 'currency', currency: 'EUR'
-            }
+        'fr-FR': {
+            currency: { style: 'currency', currency: 'EUR' },
+            currencyNoFraction: { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }
         },
-        {
-            code: 'de-DE',
-            currency: {
-                style: 'currency', currency: 'EUR'
-            }
+        'de-DE': {
+            currency: { style: 'currency', currency: 'EUR' },
+            currencyNoFraction: { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }
         },
-        {
-            code: 'pl-PL',
-            currency: {
-                style: 'currency', currency: 'PLN'
-            }
+        'pl-PL': {
+            currency: { style: 'currency', currency: 'PLN' },
+            currencyNoFraction: { style: 'currency', currency: 'PLN', minimumFractionDigits: 0, maximumFractionDigits: 0 }
         },
-        {
-            code: 'fr-CA',
-            currency: {
-                style: 'currency', currency: 'CAD'
-            }
+        'fr-CA': {
+            currency: { style: 'currency', currency: 'CAD' },
+            currencyNoFraction: { style: 'currency', currency: 'CAD', minimumFractionDigits: 0, maximumFractionDigits: 0 }
         },
-        {
-            code: 'en-CA',
-            currency: {
-                style: 'currency', currency: 'CAD'
-            }
+        'en-CA': {
+            currency: { style: 'currency', currency: 'CAD' },
+            currencyNoFraction: { style: 'currency', currency: 'CAD', minimumFractionDigits: 0, maximumFractionDigits: 0 }
         },
-        {
-            code: 'en-AU',
-            currency: {
-                style: 'currency', currency: 'AUD'
-            }
+        'en-AU': {
+            currency: { style: 'currency', currency: 'AUD' },
+            currencyNoFraction: { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 0 }
         },
-]
+}
 
 // Available currencies
-let availableCurrencies = locales.reduce((currencies, locale) => {
+let availableCurrencies = Object.values(locales).reduce((currencies, locale) => {
     currencies.push(locale.currency.currency)
     return currencies
 }, [])

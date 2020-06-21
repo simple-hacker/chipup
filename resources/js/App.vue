@@ -87,9 +87,10 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
     name: 'App',
     props: ['user', 'stakes', 'limits', 'variants', 'table_sizes'],
-    data(){
+    data() {
         return {
             sessionsScrollTo: 0,
+            test: 'test',
         }
     },
     computed: {
@@ -132,6 +133,11 @@ export default {
         if (Object.keys(this.$store.state.filtered_sessions.currentFilters).length === 0) {
             this.$store.dispatch('filtered_sessions/resetFilters', this.unfilteredFilters)
         }
+
+        // Set the i18n locale to user preferred locale
+        // Used for displaying numbers, currencies and in the future language translations
+        this.$i18n.locale = this.user.locale
+
 
         // App uses main-content ref=scroll as a scrollable div for main content, where as vue-router uses window.scrollTop for scrollBehaviour
         // which is always at 0,0 because it's fixed and overflow is hidden.

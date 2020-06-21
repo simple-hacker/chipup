@@ -2,7 +2,7 @@
     <v-select
         class="w-full text-white"
         v-model="locale"
-        :options="locales"
+        :options="mapLocales"
         :clearable="false"
         :getOptionLabel="opt => opt.currency.currency"
         @input="$emit('locale-selected', locale)"
@@ -43,6 +43,18 @@ export default {
                     style: 'currency', currency: 'GBP'
                 }
             }
+        }
+    },
+    computed: {
+        // Need to map over locales and convert to array (for v-select) and move the key of each object to a property of its own object
+        mapLocales() {
+            return Object.keys(this.locales).reduce((locales, locale) => {
+                locales.push({
+                    code: locale,
+                    currency: this.locales[locale].currency
+                })
+                return locales
+            }, [])
         }
     },
 }

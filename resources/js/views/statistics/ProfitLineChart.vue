@@ -33,8 +33,8 @@ export default {
 				},
 				yaxis: {
                     labels: {
-                        formatter: function (val, opts) {
-                            return Vue.prototype.$currencyNoDecimal.format(val);
+                        formatter: (val, opts) => {
+                            return this.$n(val, 'currencyNoFraction')
                         },
                     },
                     title: {

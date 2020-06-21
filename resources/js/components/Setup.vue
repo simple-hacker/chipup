@@ -7,7 +7,7 @@
                         <p class="tracking-wide text-lg md:text-xl mb-2">Which currency would you like to use?</p>
                         <div class="flex flex-col items-center">
                             <div class="w-full md:w-3/4">
-                                <locale-select v-on:locale-selected="changeLocale"></locale-select>
+                                <locale-select @locale-selected="changeLocale"></locale-select>
                             </div>
                             <span v-if="errors.currency" class="error-message">{{ errors.currency[0] }}</span>
                         </div>

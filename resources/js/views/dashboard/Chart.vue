@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <apexchart type="line" :options="options" :series="series"></apexchart>
-  </div>
+	<div>
+		<apexchart type="line" :options="options" :series="series"></apexchart>
+	</div>
 </template>
 
 <script>
@@ -35,8 +35,8 @@ export default {
 				},
 				yaxis: {
                     labels: {
-                        formatter: function (val, opts) {
-                            return Vue.prototype.$currencyNoDecimal.format(val);
+                        formatter: (val, opts) => {
+                            return this.$n(val, 'currencyNoFraction')
                         },
                     },
                     title: {
@@ -74,17 +74,8 @@ export default {
 					data: this.tournamentsProfitSeries
 				},
 			]
-		}
+		},
 	},
-	methods: {
-		formatCurrency(amount) {
-			return new Intl.NumberFormat('en-GB', {
-				style: 'currency',
-				currency: 'GBP',
-				minimumFractionDigits: 2
-			}).format(0)
-		}
-	}
 }
 </script>
 

@@ -17,6 +17,10 @@ window.Vue = require('vue')
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
+// vue i18n
+import VueI18n from 'vue-i18n'
+Vue.use(VueI18n)
+
 // vue-snotify
 import Snotify, { SnotifyPosition } from 'vue-snotify'
 
@@ -102,9 +106,16 @@ import store from '@store/store'
 
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
-export const router = new VueRouter({
+const router = new VueRouter({
     mode: 'history',
     routes,
+})
+
+import { locales as numberFormats, currencies } from '@/currencies'
+
+const i18n = new VueI18n({
+    locale: 'en-GB',
+    numberFormats,
 })
 
 /**
@@ -118,4 +129,5 @@ const app = new Vue({
     components: { App, NotFound },
     router,
     store,
+    i18n
 })

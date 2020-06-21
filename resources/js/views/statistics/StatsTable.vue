@@ -20,7 +20,7 @@
 						:from="0"
 						:to="totalProfit"
 						:duration="2"
-						:format="(amount) => formatCurrency(amount)"
+						:format="(amount) => $n(amount, 'currency')"
 						easing="Power1.easeOut"
 					/>
 				</div>
@@ -28,11 +28,11 @@
 			<div class="flex flex-col flex-1">
 				<div class="flex flex-col mb-2">
 					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Cash Games Profit</span>
-					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="formatCurrency(cashGameProfit)"></span>
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="$n(cashGameProfit, 'currency')"></span>
 				</div>
 				<div class="flex flex-col">
 					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Tournament Profit</span>
-					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="formatCurrency(tournamentProfit)"></span>
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="$n(tournamentProfit, 'currency')"></span>
 				</div>
 			</div>
 		</div>
@@ -53,7 +53,7 @@
 						:from="0"
 						:to="profitPerHour"
 						:duration="2"
-						:format="(amount) => formatCurrency(amount)"
+						:format="(amount) => $n(amount, 'currency')"
 						easing="Power1.easeOut"
 					/>
 				</div>
@@ -86,7 +86,7 @@
 						:from="0"
 						:to="profitPerSession"
 						:duration="2"
-						:format="(amount) => formatCurrency(amount)"
+						:format="(amount) => $n(amount, 'currency')"
 						easing="Power1.easeOut"
 					/>
 				</div>
@@ -131,11 +131,11 @@
 			<div class="flex flex-col flex-1">
 				<div class="flex flex-col mb-2">
 					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Total Buy Ins</span>
-					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="formatCurrency(totalBuyIns)"></span>
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="$n(totalBuyIns, 'currency')"></span>
 				</div>
 				<div class="flex flex-col">
 					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Total Cashes</span>
-					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="formatCurrency(totalCashes)"></span>
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="$n(totalCashes, 'currency')"></span>
 				</div>
 			</div>
 		</div>
@@ -167,9 +167,6 @@ export default {
 		])
 	},
 	methods: {
-		formatCurrency(amount) {
-			return this.$currency.format(amount)
-		},
 		formatDuration(time) {
 			return moment.duration(time, 'hours').format("d [days] h [hours] m [mins]")
 		},

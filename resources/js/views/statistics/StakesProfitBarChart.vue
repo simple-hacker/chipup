@@ -28,8 +28,8 @@ export default {
                 colors: ['#38a169'],
                 yaxis: {
                     labels: {
-                        formatter: function (val, opts) {
-                            return Vue.prototype.$currencyNoDecimal.format(val);
+                        formatter: (val, opts) => {
+                            return this.$n(val, 'currencyNoFraction')
                         },
                     },
                     title: {
@@ -42,9 +42,9 @@ export default {
                 },
                 dataLabels: {
                     enabled: true,
-                    formatter: function (val, opts) {
-                        return Vue.prototype.$currency.format(val);
-                    },
+                    formatter: (val, opts) => {
+                            return this.$n(val, 'currency')
+                        },
                 },
                 tooltip: {
 					theme: false,

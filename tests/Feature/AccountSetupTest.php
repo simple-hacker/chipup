@@ -102,7 +102,7 @@ class AccountSetupTest extends TestCase
     public function testUserCanChangeTheirLocale()
     {
         $new_attributes = [
-            'locale' => 'en-US',
+            'locale' => 'de-DE',
         ];
         $user = factory('App\User')->create();
         $this->actingAs($user);
@@ -117,7 +117,7 @@ class AccountSetupTest extends TestCase
                 ]);
         
         $user->refresh();
-        $this->assertEquals('en-US', $user->locale);
+        $this->assertEquals('de-DE', $user->locale);
     } 
 
     public function testLocaleMustBeAValidLocale()
