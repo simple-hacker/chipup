@@ -7,6 +7,12 @@
         :getOptionLabel="opt => opt.currency.currency"
         @input="$emit('locale-selected', locale)"
     >
+        <template slot="selected-option" slot-scope="locale">
+            <div class="flex items-center">
+                <div class="currency-flag mr-3" :class="`currency-flag-${locale.currency.currency.toLowerCase()}`"></div>
+                <div class="mr-3" v-text="locale.currency.currency"></div>
+            </div>
+        </template>
         <template v-slot:option="locale">
             <div class="flex items-center">
                 <div class="currency-flag mr-3" :class="`currency-flag-${locale.currency.currency.toLowerCase()}`"></div>

@@ -15,14 +15,14 @@
                     <div class="mb-3">
                         <p class="tracking-wide text-lg md:text-xl mb-2">What is your starting bankroll?</p>
                         <div class="flex flex-col items-center">
-                            <input
+                            <currency-input
                                 v-model="bankroll"
-                                type="number"
-                                step="0.01"
-                                min="0"
                                 class="w-full md:w-3/4 p-3"
                                 :class="{ 'error-input' : errors.bankroll }"
-                                @input="delete errors.bankroll"
+                                :currency="currency"
+                                :locale="locale"
+                                :distraction-free="false"
+                                :allow-negative="false"
                             />
                             <span v-if="errors.bankroll" class="error-message">{{ errors.bankroll[0] }}</span>
                         </div>
@@ -127,10 +127,11 @@
 
 <script>
 import LocaleSelect from '@components/LocaleSelect'
+import { CurrencyInput } from 'vue-currency-input'
 
 export default {
     name: 'PokerSetup',
-    components: { LocaleSelect },
+    components: { LocaleSelect, CurrencyInput },
     props: {
         stakes: Array,
         limits: Array,
