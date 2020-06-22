@@ -2,7 +2,7 @@
     <div class="flex flex-col">
         <h2 class="uppercase text-lg text-gray-200 font-extrabold tracking-wider mb-3">Edit Bankroll Transaction</h2>
         <div class="flex flex-col items-center">
-            <div class="w-2/3 mx-auto mb-3">
+            <div class="w-5/6 mx-auto mb-3">
                 <datetime
                     v-model="editBankrollTransaction.date"
                     type="date"
@@ -16,18 +16,11 @@
                 ></datetime>
                 <span v-if="errors.date" class="error-message">{{ errors.date[0] }}</span>
             </div>
-            <div class="w-2/3 mx-auto mb-3">
-                <input
-                    v-model="editBankrollTransaction.amount"
-                    type="number"
-                    step="0.01"
-                    class="text-2xl"
-                    :class="{ 'error-input' : errors.amount }"
-                    @input="delete errors.amount"
-                />
+            <div class="w-5/6 mx-auto mb-3">
+                <transaction-amount v-model="editBankrollTransaction.transaction" :allowNegative="true"/>
                 <span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
             </div>
-            <div class="w-2/3 mx-auto mb-3">
+            <div class="w-5/6 mx-auto mb-3">
                 <textarea
                     v-model="editBankrollTransaction.comments"
                     placeholder="Comments"
@@ -46,11 +39,14 @@
 </template>
 
 <script>
+import TransactionAmount from '@components/TransactionAmount'
+
 import { mapActions } from 'vuex'
 import moment from 'moment'
 
 export default {
-	name: 'BankrollTransactionDetails',
+    name: 'BankrollTransactionDetails',
+    components: { TransactionAmount },
     props: {
 		bankrollTransaction: Object
     },
@@ -59,7 +55,10 @@ export default {
             editBankrollTransaction: {
                 id: this.bankrollTransaction.id,
                 date: moment.utc(this.bankrollTransaction.date).format(),
-                amount: this.bankrollTransaction.amount,
+                transaction: {
+                    currency: this.bankrollTransaction.currency,
+                    amount: this.bankrollTransaction.amount,
+                },
                 comments: this.bankrollTransaction.comments,
             },
             errors: {},
@@ -112,5 +111,7 @@ export default {
 </script>
 
 <style>
-
+    .v--modal-overlay .v--modal-box {
+        overflow: visible;
+    }
 </style>

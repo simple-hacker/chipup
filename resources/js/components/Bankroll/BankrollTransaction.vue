@@ -1,17 +1,11 @@
 <template>
 	<div class="flex flex-col">
 		<div class="flex flex-col bg-gray-600 rounded shadow p-2">
-            <div class="w-2/3 mx-auto">
-                <input
-					v-model="amount"
-					type="number"
-					class="p-2 bg-gray-500 text-2xl"
-					:class="{ 'error-input' : errors.amount }"
-					@input="delete errors.amount"
-				>
+            <div class="w-full">
+                <transaction-amount v-model="transaction"/>
                 <span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
             </div>
-            <div class="w-2/3 mx-auto mt-3">
+            <div class="w-full mt-3">
                 <textarea
 					v-model="comments"
 					placeholder="Add comments"
@@ -31,7 +25,7 @@
 					Withdraw
 				</button>
 				<button
-					@click.prevent="addTransaction(amount)"
+					@click.prevent="addTransaction(transaction.amount)"
 					type="button"
 					class="btn btn-green flex-1 ml-1"
 				>
@@ -43,23 +37,30 @@
 </template>
 
 <script>
+import TransactionAmount from '@components/TransactionAmount'
+
 import { mapActions } from 'vuex'
 
 export default {
 	name: 'BankrollTransaction',
+	components: { TransactionAmount },
     data() {
 		return {
-			amount: 0,
+			transaction: {
+				amount: 0,
+				currency: this.$store.state.user.currency,
+			},
 			comments: '',
 			errors: {},
 		}
 	},
 	computed: {
 		withdrawalAmount() {
-			return this.amount * -1
+			return this.transaction.amount * -1
 		}
 	},
     methods: {
+		...mapActions('bankroll', ['addBankrollTransaction']),
 		addTransaction: function(amount) {
 			this.addBankrollTransaction({
 				amount: amount,
@@ -79,8 +80,7 @@ export default {
 				this.$snotify.error(error.response.data.message)
 				this.errors = error.response.data.errors
 			})
-		},
-		...mapActions('bankroll', ['addBankrollTransaction'])
+		}
 	},
 }
 </script>

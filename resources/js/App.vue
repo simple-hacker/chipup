@@ -90,7 +90,6 @@ export default {
     data() {
         return {
             sessionsScrollTo: 0,
-            test: 'test',
         }
     },
     computed: {

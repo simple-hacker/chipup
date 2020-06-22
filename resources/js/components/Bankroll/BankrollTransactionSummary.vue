@@ -45,7 +45,8 @@ export default {
                 bankrollTransaction: this.bankrollTransaction,
             }, {
                 // Modal Options
-                classes: ['modal', modalClass],
+				classes: ['modal', modalClass],
+				style: 'overflow: visible;',
                 height: 'auto',
                 width: '95%',
                 maxWidth: 600,
