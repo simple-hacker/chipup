@@ -297,7 +297,7 @@
 							<i class="fas fa-money-bill-wave"></i>
 						</div>
 						<div class="w-full">
-							<span v-if="!editing" v-text="`£${session.prize_pool} prize pool`"></span>
+							<span v-if="!editing" v-text="`${$n(session.prize_pool, { style: 'currency', currency: session.currency })} prize pool`"></span>
 							<div v-if="editing" class="flex flex-col">
 								<input
 									type="number"
@@ -324,7 +324,7 @@
 							<i class="fas fa-medal"></i>
 						</div>
 						<div class="w-full">
-							<span v-if="!editing" v-text="session.position"></span>
+							<span v-if="!editing" v-text="$n(session.position)"></span>
 							<div v-if="editing" class="flex flex-col">
 								<input
 									type="number"
@@ -351,7 +351,7 @@
 							<i class="fas fa-users"></i>
 						</div>
 						<div class="w-full">
-							<span v-if="!editing" v-text="`${session.entries} entries`"></span>
+							<span v-if="!editing" v-text="`${$n(session.entries)} entries`"></span>
 							<div v-if="editing" class="flex flex-col">
 								<input
 									type="number"

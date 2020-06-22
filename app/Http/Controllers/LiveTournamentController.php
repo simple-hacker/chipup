@@ -29,7 +29,7 @@ class LiveTournamentController extends LiveGameController
 
             // If no BuyIn is provided still create a transaction with amount zero
             // This is because Freeroll tournaments are possible.
-            $tournament->addBuyIn($request->amount ?? 0);
+            $tournament->addBuyIn($request->amount ?? 0, $request->currency ?? auth()->user()->currency);
 
             return [
                 'success' => true,

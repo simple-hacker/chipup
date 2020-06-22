@@ -154,6 +154,7 @@ class User extends Authenticatable implements MustVerifyEmail
         // Using defaults if not set in case mistakes have been made elsewhere in app.
         return $this->cashGames()->create([
             'start_time' => $attributes['start_time'] ?? null,
+            'currency' => $attributes['currency'] ?? auth()->user()->currency,
             'stake_id' => $attributes['stake_id'] ?? $this->default_stake_id,
             'variant_id' => $attributes['variant_id'] ?? $this->default_variant_id,
             'limit_id' => $attributes['limit_id'] ?? $this->default_limit_id,
@@ -229,6 +230,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $this->tournaments()->create([
             'start_time' => $attributes['start_time'] ?? null,
+            'currency' => $attributes['currency'] ?? auth()->user()->currency,
             'name' => $attributes['name'] ?? null,
             'variant_id' => $attributes['variant_id'],
             'limit_id' => $attributes['limit_id'],

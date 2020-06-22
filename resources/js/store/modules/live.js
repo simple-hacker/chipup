@@ -49,7 +49,7 @@ export default {
         }
     },
     actions: {
-        startLiveSession({ commit }, {game_type, session}) {
+        startLiveSession({ commit }, { game_type, session }) {
             let url = ''
             if (game_type === 'cash_game') {
                 url = '/api/cash/live/start'

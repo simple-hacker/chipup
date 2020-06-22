@@ -29,7 +29,7 @@ class LiveCashGameController extends LiveGameController
             $cash_game = auth()->user()->startCashGame($request->validated());
 
             // Amount is required in request, but using null coalescing to zero just in case
-            $cash_game->addBuyIn($request->amount ?? 0);
+            $cash_game->addBuyIn($request->amount ?? 0, $request->currency ?? auth()->user()->currency);
 
             return [
                 'success' => true,

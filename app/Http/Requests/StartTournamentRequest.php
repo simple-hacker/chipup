@@ -16,6 +16,7 @@ class StartTournamentRequest extends FormRequest
         return [
             'location' => 'required|string',
             'name' => 'sometimes|nullable|string',
+            'currency' => ['sometimes', 'string', new CurrencyRule],
             'amount' => 'sometimes|numeric|min:0',
             'limit_id' => 'required|integer|exists:limits,id',
             'variant_id' => 'required|integer|exists:variants,id',

@@ -48,9 +48,6 @@ export default {
 			})
 		}
 	},
-	created() {
-		console.log(this.session)
-	}
 }
 </script>
 
