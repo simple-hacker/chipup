@@ -12,7 +12,7 @@
 		<div
 			class="text-lg md:text-xl font-bold"
 			:class="(bankrollTransaction.amount < 0) ? 'text-red-500' : 'text-green-500'"
-			v-text="transactionAmount"
+			v-text="$n(bankrollTransaction.amount, 'currency')"
 		>
 		</div>
 	</div>
@@ -33,9 +33,6 @@ export default {
 		transactionDate() {
 			return moment.utc(this.bankrollTransaction.date).format("dddd, Do MMMM YYYY")
 		},
-		transactionAmount() {
-			return this.$currency.format(this.bankrollTransaction.amount);
-		}
 	},
 	methods: {
 		showTransactionDetails() {

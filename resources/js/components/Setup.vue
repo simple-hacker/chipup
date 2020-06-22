@@ -16,7 +16,7 @@
                         <p class="tracking-wide text-lg md:text-xl mb-2">What is your starting bankroll?</p>
                         <div class="flex flex-col items-center">
                             <currency-input
-                                v-model="bankroll"
+                                v-model="setup.bankroll"
                                 class="w-full md:w-3/4 p-3"
                                 :class="{ 'error-input' : errors.bankroll }"
                                 :currency="currency"
@@ -34,7 +34,7 @@
                     <p class="tracking-wide text-lg md:text-xl mb-5">What stakes do you usually play?</p>
                     <div class="flex flex-col items-center">
                         <select
-                            v-model="default_stake"
+                            v-model="setup.default_stake_id"
                             class="w-full md:w-3/4 p-3 mb-2"
                             :class="{ 'error-input' : errors.default_stake_id }"
                         >
@@ -55,7 +55,7 @@
                     <p class="tracking-wide text-lg md:text-xl mb-5">What game type do you usually play?</p>
                     <div class="flex flex-col items-center">
                         <select
-                            v-model="default_limit"
+                            v-model="setup.default_limit_id"
                             class="w-full md:w-3/4 p-3 mb-2"
                             :class="{ 'error-input' : errors.default_limit_id }"
                         >
@@ -71,7 +71,7 @@
                     </div>
                     <div class="flex flex-col items-center">
                         <select
-                            v-model="default_variant"
+                            v-model="setup.default_variant_id"
                             class="w-full md:w-3/4 p-3 mb-2"
                             :class="{ 'error-input' : errors.default_variant_id }"
                         >
@@ -87,7 +87,7 @@
                     </div>
                     <div class="flex flex-col items-center">
                         <select
-                            v-model="default_table_size"
+                            v-model="setup.default_table_size_id"
                             class="w-full md:w-3/4 p-3 mb-2"
                             :class="{ 'error-input' : errors.default_table_size_id }"
                         >
@@ -108,7 +108,7 @@
                     <p class="tracking-wide text-lg md:text-xl mb-5">Where do you usually play?</p>
                     <div class="flex flex-col items-center">
                         <input
-                            v-model="default_location"
+                            v-model="setup.default_location"
                             type="text"
                             placeholder="Enter venue"
                             class="w-full md:w-3/4 p-3 mb-2"
@@ -140,14 +140,16 @@ export default {
     },
     data() {
         return {
-            bankroll: 0,
-            locale: 'en-GB',
-            currency: 'GBP',
-            default_location: '',
-            default_stake: 1,
-            default_limit: 1,
-            default_variant: 1,
-            default_table_size: 1,
+            setup: {
+                bankroll: 0,
+                locale: 'en-GB',
+                currency: 'GBP',
+                default_location: '',
+                default_stake_id: 1,
+                default_limit_id: 1,
+                default_variant_id: 1,
+                default_table_size_id: 1,
+            },
             errors: {},
         }
     },
@@ -161,19 +163,11 @@ export default {
             return true
         },
         changeLocale(locale) {
-            this.locale = locale.code
-            this.currency = locale.currency.currency
+            this.setup.locale = locale.code
+            this.setup.currency = locale.currency.currency
         },
         completeSetup: function(){
-            axios.post('/setup', {
-                'bankroll': this.bankroll,
-                'currency': this.currency,
-                'default_stake_id': this.default_stake,
-                'default_limit_id': this.default_limit,
-                'default_variant_id': this.default_variant,
-                'default_table_size_id': this.default_table_size,
-                'default_location': this.default_location,
-            })
+            axios.post('/setup', this.setup)
             .then(response => {
                 if (response.status === 200) {
                     window.location = response.data.redirect

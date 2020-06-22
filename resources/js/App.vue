@@ -137,7 +137,6 @@ export default {
         // Used for displaying numbers, currencies and in the future language translations
         this.$i18n.locale = this.user.locale
 
-
         // App uses main-content ref=scroll as a scrollable div for main content, where as vue-router uses window.scrollTop for scrollBehaviour
         // which is always at 0,0 because it's fixed and overflow is hidden.
         // Code found on https://github.com/vuejs/vue-router/issues/1187

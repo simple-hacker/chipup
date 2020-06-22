@@ -35,6 +35,7 @@ class SetupController extends Controller
     {
         // Remove bankroll from request because we add a BankrollTransaction through User.
         $attributes = $request->validated();
+
         unset($attributes['bankroll']);
         auth()->user()->update($attributes);
 
