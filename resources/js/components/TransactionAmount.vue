@@ -3,7 +3,7 @@
         <div class="w-full md:w-2/5 md:mr-1 mb-3 md:mb-0">
             <v-select
                 class="w-full text-white"
-                v-model="value.currency"
+                v-model="transactionCurrency"
                 :options="currencies"
                 :clearable="false"
             >
@@ -23,10 +23,10 @@
         </div>
         <div class="w-full md:w-3/5 md:ml-1">
             <currency-input
-                v-model="value.amount"
+                v-model="transactionAmount"
                 class="w-full text-2xl border-r-4"
                 :class="border"
-                :currency="value.currency"
+                :currency="transactionCurrency"
                 :locale="locale"
                 :distraction-free="false"
                 :allow-negative="allowNegative"
@@ -48,9 +48,14 @@ export default {
     name: 'TransactionAmount',
     components: { vSelect, CurrencyInput },
     props: {
-        value: {
-            type: Object,
+        currency: {
+            type: String,
             required: true
+        },
+        amount: {
+            type: Number,
+            required: true,
+            default: 0,
         },
         allowNegative: {
             type: Boolean,
@@ -70,6 +75,14 @@ export default {
         locale() {
             return this.$store.state.user.locale
         },
+        transactionCurrency: {
+            get() { return this.currency },
+            set(currency) {this.$emit('update-currency', currency)}
+        },
+        transactionAmount: {
+            get() { return this.amount },
+            set(amount) {this.$emit('update-amount', amount)}
+        }
     },
 }
 </script>

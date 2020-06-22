@@ -2,7 +2,12 @@
 	<div class="flex flex-col">
 		<div class="flex flex-col bg-gray-600 rounded shadow p-2">
             <div class="w-full">
-                <transaction-amount v-model="transaction"/>
+				<transaction-amount
+                    :currency="currency"
+                    :amount="amount"
+                    v-on:update-currency="currency = arguments[0]"
+                    v-on:update-amount="amount = arguments[0]"
+                />
                 <span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
             </div>
             <div class="w-full mt-3">
@@ -46,10 +51,8 @@ export default {
 	components: { TransactionAmount },
     data() {
 		return {
-			transaction: {
-				amount: 0,
-				currency: this.$store.state.user.currency,
-			},
+			amount: 0,
+			currency: this.$store.state.user.currency,
 			comments: '',
 			errors: {},
 		}

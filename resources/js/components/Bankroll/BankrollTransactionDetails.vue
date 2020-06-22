@@ -17,7 +17,13 @@
                 <span v-if="errors.date" class="error-message">{{ errors.date[0] }}</span>
             </div>
             <div class="w-5/6 mx-auto mb-3">
-                <transaction-amount v-model="editBankrollTransaction.transaction" :allowNegative="true"/>
+                <transaction-amount
+                    :allowNegative="true"
+                    :currency="editBankrollTransaction.currency"
+                    :amount="editBankrollTransaction.amount"
+                    v-on:update-currency="editBankrollTransaction.currency = arguments[0]"
+                    v-on:update-amount="editBankrollTransaction.amount = arguments[0]"
+                />
                 <span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
             </div>
             <div class="w-5/6 mx-auto mb-3">
@@ -55,10 +61,8 @@ export default {
             editBankrollTransaction: {
                 id: this.bankrollTransaction.id,
                 date: moment.utc(this.bankrollTransaction.date).format(),
-                transaction: {
-                    currency: this.bankrollTransaction.currency,
-                    amount: this.bankrollTransaction.amount,
-                },
+                currency: this.bankrollTransaction.currency ?? this.$store.state.user.currency,
+                amount: this.bankrollTransaction.amount,
                 comments: this.bankrollTransaction.comments,
             },
             errors: {},
