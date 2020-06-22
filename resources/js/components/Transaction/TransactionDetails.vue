@@ -2,20 +2,21 @@
     <div>
         <h2 v-text="title" class="uppercase text-lg text-gray-200 font-extrabold tracking-wider mb-3"></h2>
         <div class="flex flex-col">
-            <div class="w-2/3 mx-auto">
-                <input
-                    v-model="transaction.amount"
-                    type="number"
-                    min=0
-                    class="text-2xl"
-                    :class="{'error-input' : errors.amount}"
-                    @input="delete errors.amount"
-                >
+            <div class="w-full">
+                <transaction-amount
+                    :currency="transaction.currency"
+                    :amount="transaction.amount"
+                    :border="(transactionType === 'cashout') ? 'border-green-500' : 'border-red-500'"
+                    :error="errors.amount"
+                    v-on:clear-error="delete errors.amount"
+                    v-on:update-currency="transaction.currency = arguments[0]"
+                    v-on:update-amount="transaction.amount = arguments[0]"
+                />
                 <span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
             </div>
             <div
                 v-if="transaction.hasOwnProperty('comments')"
-                class="w-2/3 mx-auto mt-3"
+                class="w-full mt-3"
             >
                 <textarea
                     v-model="transaction.comments"
@@ -52,10 +53,13 @@
 </template>
 
 <script>
+import TransactionAmount from '@components/TransactionAmount'
+
 import { mapActions } from 'vuex'
 
 export default {
     name: 'TransactionDetails',
+    components: { TransactionAmount },
     props: {
         transaction: Object,
         transactionType: String,

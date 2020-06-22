@@ -21,6 +21,8 @@
                     :allowNegative="true"
                     :currency="editBankrollTransaction.currency"
                     :amount="editBankrollTransaction.amount"
+                    :error="errors.amount"
+                    v-on:clear-error="delete errors.amount"
                     v-on:update-currency="editBankrollTransaction.currency = arguments[0]"
                     v-on:update-amount="editBankrollTransaction.amount = arguments[0]"
                 />

@@ -13,7 +13,7 @@
 		<div
 			class="text-lg sm:text-2xl font-bold items-center"
 			:class="(session.profit < 0) ? 'text-red-500 group-hover:text-red-400' : 'text-green-500 group-hover:text-green-400'"
-			v-text="formattedProfit"
+			v-text="$n(session.profit, { style: 'currency', currency: session.currency })"
 		>
 		</div>
 	</div>
@@ -29,12 +29,6 @@ export default {
 		session: Object
 	},
 	computed: {
-		profit() {
-			return this.session.profit
-		},
-		formattedProfit() {
-			return this.$currency.format(this.profit)
-		},
 		date() {
 			return moment(this.session.start_time).format("dddd, Do MMMM YYYY")
 		}
@@ -53,6 +47,9 @@ export default {
 				}
 			})
 		}
+	},
+	created() {
+		console.log(this.session)
 	}
 }
 </script>

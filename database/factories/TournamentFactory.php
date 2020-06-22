@@ -16,7 +16,7 @@ $factory->define(Tournament::class, function (Faker $faker) {
 
     $entries = $faker->numberBetween(50, 500);
 
-    $currencies = ['GBP', 'USD', 'EUR', 'PLN', 'CAB', 'AUD'];
+    $currencies = ['GBP', 'USD', 'EUR', 'PLN', 'CAD', 'AUD'];
 
     return [
         'user_id' => factory('App\User')->create(),
@@ -36,7 +36,7 @@ $factory->define(Tournament::class, function (Faker $faker) {
 
 $factory->afterCreating(Tournament::class, function ($tournament, $faker) {
 
-    $currencies = ['GBP', 'USD', 'EUR', 'PLN', 'CAB', 'AUD'];
+    $currencies = ['GBP', 'USD', 'EUR', 'PLN', 'CAD', 'AUD'];
 
     // Add BuyIn amount between £5 and £500
     $buy_in = $faker->numberBetween(5, 500);

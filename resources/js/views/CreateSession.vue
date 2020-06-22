@@ -241,14 +241,15 @@
 						>
 							<div class="flex flex-col w-full">
 								<div class="flex">
-									<input
-										v-model="buy_in.amount"
-										type="number"
-										min="0"
-										class="text-xl border-r-4 border-red-500"
-										:class="{'error-input' : errors[`buy_ins.${index}.amount`]}"
-										@input="delete errors[`buy_ins.${index}.amount`]"
-									>
+									<transaction-amount
+										:currency="buy_in.currency"
+										:amount="buy_in.amount"
+										:border="'border-red-500'"
+										:error="errors[`buy_ins.${index}.amount`]"
+										v-on:clear-error="delete errors[`buy_ins.${index}.amount`]"
+										v-on:update-currency="buy_in.currency = arguments[0]"
+										v-on:update-amount="buy_in.amount = arguments[0]"
+									/>
 									<button v-if="index != 0" @click="cash_game.buy_ins.splice(index, 1)" class="ml-2 rounded py-2 px-3 bg-gray-450 hover:bg-gray-400"><i class="fas fa-times"></i></button>
 								</div>
 								<span v-if="errors[`buy_ins.${index}.amount`]" class="error-message">{{ errors[`buy_ins.${index}.amount`][0] }}</span>
@@ -256,7 +257,7 @@
 						</div>
 						<div class="flex justify-center items-center">
 							<div
-								@click="cash_game.buy_ins.push({ amount: 0})"
+								@click="cash_game.buy_ins.push({ amount: 0, currency: defaultCurrency })"
 								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 cursor-pointer text-white text-center"
 							>
 								<i class="fas fa-plus-circle mr-2"></i>
@@ -274,14 +275,15 @@
 				>
 					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">What was the buy in?</h2>
 					<div class="flex flex-col py-2">
-						<input	
-							v-model="tournament.buy_in.amount"
-							type="number"
-							min="0"
-							class="text-xl border-r-4 border-red-500"
-							:class="{'error-input' : errors[`buy_in.amount`]}"
-							@input="delete errors[`buy_in.amount`]"
-						>
+						<transaction-amount
+							:currency="tournament.buy_in.currency"
+							:amount="tournament.buy_in.amount"
+							:border="'border-red-500'"
+							:error="errors[`buy_in.amount`]"
+							v-on:clear-error="delete errors[`buy_in.amount`]"
+							v-on:update-currency="tournament.buy_in.currency = arguments[0]"
+							v-on:update-amount="tournament.buy_in.amount = arguments[0]"
+						/>
 						<span v-if="errors[`buy_in.amount`]" class="error-message">{{ errors[`buy_in.amount`][0] }}</span>
 					</div>
 				</div>
@@ -301,14 +303,15 @@
 						>
 							<div class="flex flex-col w-full">
 								<div class="flex">
-									<input
-										v-model="rebuy.amount"
-										type="number"
-										min="0"
-										class="text-xl border-r-4 border-red-500"
-										:class="{'error-input' : errors[`rebuys.${index}.amount`]}"
-										@input="delete errors[`rebuys.${index}.amount`]"
-									>
+									<transaction-amount
+										:currency="rebuy.currency"
+										:amount="rebuy.amount"
+										:border="'border-red-500'"
+										:error="errors[`rebuys.${index}.amount`]"
+										v-on:clear-error="delete errors[`rebuys.${index}.amount`]"
+										v-on:update-currency="rebuy.currency = arguments[0]"
+										v-on:update-amount="rebuy.amount = arguments[0]"
+									/>
 									<button @click="tournament.rebuys.splice(index, 1)" class="ml-2 rounded py-2 px-3 bg-gray-450 hover:bg-gray-400"><i class="fas fa-times"></i></button>
 								</div>
 								<span v-if="errors[`rebuys.${index}.amount`]" class="error-message">{{ errors[`rebuys.${index}.amount`][0] }}</span>
@@ -316,7 +319,7 @@
 						</div>
 						<div class="flex justify-center items-center">
 							<div
-								@click="tournament.rebuys.push({ amount: 0})"
+								@click="tournament.rebuys.push({ amount: 0, currency: defaultCurrency})"
 								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 cursor-pointer text-white text-center"
 							>
 								<i class="fas fa-plus-circle mr-2"></i>
@@ -341,14 +344,15 @@
 						>
 							<div class="flex flex-col w-full">
 								<div class="flex">
-									<input
-										v-model="add_on.amount"
-										type="number"
-										min="0"
-										class="text-xl border-r-4 border-red-500"
-										:class="{'error-input' : errors[`add_ons.${index}.amount`]}"
-										@input="delete errors[`add_ons.${index}.amount`]"
-									>
+									<transaction-amount
+										:currency="add_on.currency"
+										:amount="add_on.amount"
+										:border="'border-red-500'"
+										:error="errors[`add_ons.${index}.amount`]"
+										v-on:clear-error="delete errors[`add_ons.${index}.amount`]"
+										v-on:update-currency="add_on.currency = arguments[0]"
+										v-on:update-amount="add_on.amount = arguments[0]"
+									/>
 									<button @click="tournament.add_ons.splice(index, 1)" class="ml-2 rounded py-2 px-3 bg-gray-450 hover:bg-gray-400"><i class="fas fa-times"></i></button>
 								</div>
 								<span v-if="errors[`add_ons.${index}.amount`]" class="error-message">{{ errors[`add_ons.${index}.amount`][0] }}</span>
@@ -356,7 +360,7 @@
 						</div>
 						<div class="flex justify-center items-center">
 							<div
-								@click="tournament.add_ons.push({ amount: 0})"
+								@click="tournament.add_ons.push({ amount: 0, currency: defaultCurrency})"
 								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 cursor-pointer text-white text-center"
 							>
 								<i class="fas fa-plus-circle mr-2"></i>
@@ -380,14 +384,15 @@
 						>
 							<div class="flex flex-col w-full">
 								<div class="flex">
-									<input
-										v-model="expense.amount"
-										type="number"
-										min="0"
-										class="text-xl border-r-4 border-red-500"
-										:class="{'error-input' : errors[`expenses.${index}.amount`]}"
-										@input="delete errors[`expenses.${index}.amount`]"
-									>
+									<transaction-amount
+										:currency="expense.currency"
+										:amount="expense.amount"
+										:border="'border-red-500'"
+										:error="errors[`expenses.${index}.amount`]"
+										v-on:clear-error="delete errors[`expenses.${index}.amount`]"
+										v-on:update-currency="expense.currency = arguments[0]"
+										v-on:update-amount="expense.amount = arguments[0]"
+									/>
 									<input
 										v-model="expense.comments"
 										type="text"
@@ -404,7 +409,7 @@
 						</div>
 						<div class="flex justify-center items-center">
 							<div
-								@click="session.expenses.push({ amount: 0, comments: ''})"
+								@click="session.expenses.push({ amount: 0, currency: defaultCurrency, comments: ''})"
 								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 cursor-pointer text-white text-center"
 							>
 								<i class="fas fa-plus-circle mr-2"></i>
@@ -423,15 +428,16 @@
 				>
 					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">How much did you cash out for?</h2>
 					<div class="flex flex-col py-2">
-						<input
-							v-model="session.cash_out.amount"
-							type="number"
-							min="0"
-							class="text-xl border-r-4"
-							:class="errors['cash_out.amount'] ? 'error-input' : 'border-green-500'"
-							@input="delete errors['cash_out.amount']"
-						>
-						<span v-if="errors['cash_out.amount']" class="error-message">{{ errors['cash_out.amount'][0] }}</span>
+						<transaction-amount
+							:currency="session.cash_out.currency"
+							:amount="session.cash_out.amount"
+							:border="'border-green-500'"
+							:error="errors[`cash_out.amount`]"
+							v-on:clear-error="delete errors[`cash_out.amount`]"
+							v-on:update-currency="session.cash_out.currency = arguments[0]"
+							v-on:update-amount="session.cash_out.amount = arguments[0]"
+						/>
+						<span v-if="errors[`cash_out.amount`]" class="error-message">{{ errors[`cash_out.amount`][0] }}</span>
 					</div>
 				</div>
 				<!--
@@ -512,9 +518,11 @@ import { mapState, mapActions } from 'vuex'
 import { FormWizard, TabContent } from 'vue-form-wizard'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
+import TransactionAmount from '@components/TransactionAmount'
+
 export default {
 	name: 'CreateSession',
-	components: { FormWizard, TabContent },
+	components: { FormWizard, TabContent, TransactionAmount },
 	data() {
 		return {
 			game_type: 'cash_game',
@@ -525,14 +533,14 @@ export default {
 				limit_id: 0,
 				variant_id: 0,
 				expenses: [],
-				cash_out: { amount: 0 },
+				cash_out: { amount: 0, currency: 'GBP' },
 				comments: ''
 			},
 			cash_game: {
 				stake_id: 0,
 				table_size_id: 0,
 				buy_ins: [
-					{ amount: 0 },
+					{ amount: 0, currency: 'GBP' },
 				],
 			},
 			tournament: {
@@ -540,7 +548,7 @@ export default {
 				prize_pool: 0,
 				position: 0,
 				entries: 0,
-				buy_in: { amount: 0},
+				buy_in: { amount: 0, currency: 'GBP'},
 				rebuys: [],
 				add_ons: [],
 			},
@@ -550,6 +558,9 @@ export default {
 	},
 	computed: {
 		...mapState(['user', 'stakes', 'limits', 'variants', 'table_sizes']),
+		defaultCurrency() {
+			return this.$store.state.user?.currency ?? 'GBP'
+		},
 		maxStartDateTime() {
 			return moment(this.session.end_time).format() < moment().format() ? moment(this.session.end_time).format() : moment().format()
 		}
@@ -703,6 +714,10 @@ export default {
 		this.session.variant_id = this.user.default_variant_id ?? 1
 		this.cash_game.stake_id = this.user.default_stake_id ?? 1
 		this.cash_game.table_size_id = this.user.default_table_size_id ?? 1
+
+		this.session.cash_out.currency = this.$store.state.user.currency ?? 'GBP'
+		this.cash_game.buy_ins[0].currency = this.$store.state.user.currency ?? 'GBP'
+		this.tournament.buy_in.currency = this.$store.state.user.currency ?? 'GBP'
 	},
 }
 </script>

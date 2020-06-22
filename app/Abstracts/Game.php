@@ -228,18 +228,6 @@ abstract class Game extends Model
     }
 
     /**
-    * Return the currency format of the session.
-    * // NOTE: This method is temporary????
-    *
-    * @param Float $profit
-    * @return void
-    */
-    public function getCurrencyAttribute()
-    {
-        return 'GBP';
-    }
-
-    /**
     * Mutate profit in to currency
     *
     * @param Float $profit

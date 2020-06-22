@@ -157,7 +157,7 @@
 								:from="0"
 								:to="(buyInsTotal * -1)"
 								:duration="2"
-								:format="function(amount) { return $n(amount, { style: 'currency', currency: this.editLiveSession.currency }) }"
+								:format="function(amount) { return $n(amount, { style: 'currency', currency: editLiveSession.currency }) }"
 								easing="Power1.easeOut"
 							/>
 						</div>
@@ -313,13 +313,15 @@
 				-->
 				<div class="mb-4">
 					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">How much did you cash out for?</h2>
-					<input
-						v-model="cashOut.amount"
-						type="number"
-						min=0
-						:class="{'error-input' : errors.amount}"
-						@input="delete errors.amount"
-					>
+					<transaction-amount
+						:currency="cashOut.currency"
+						:amount="cashOut.amount"
+						:border="'border-green-500'"
+						:error="errors.amount"
+						v-on:clear-error="delete errors.amount"
+						v-on:update-currency="cashOut.currency = arguments[0]"
+						v-on:update-amount="cashOut.amount = arguments[0]"
+					/>
 					<span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
 				</div>
 				<!--
@@ -393,10 +395,11 @@ import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
 import TransactionSummary from '@components/Transaction/TransactionSummary'
 import TransactionDetails from '@components/Transaction/TransactionDetails'
+import TransactionAmount from '@components/TransactionAmount'
 
 export default {
 	name: 'CurrentSession',
-	components: { FormWizard, TabContent, TransactionSummary, TransactionDetails },
+	components: { FormWizard, TabContent, TransactionSummary, TransactionDetails, TransactionAmount },
 	data() {
 		return {
 			editLiveSession: {},
@@ -404,7 +407,8 @@ export default {
 			errors: {},
 			maxDateTime: moment().format(),
 			cashOut: {
-                end_time: moment().format(),
+				end_time: moment().format(),
+				currency: 'GBP',
                 amount: 0
 			},
 			tournamentCashOut: {
@@ -415,7 +419,7 @@ export default {
 	},
 	created() {
 		this.editLiveSession = this.getEditSession()
-		console.log(this.editLiveSession)
+		this.cashOut.currency = this.$store.state.user?.currency ?? 'GBP'
 	},
 	mounted() {
 		this.$refs.currentSession.activateAll()

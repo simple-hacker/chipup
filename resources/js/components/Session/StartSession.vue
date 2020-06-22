@@ -174,8 +174,10 @@
 							:currency="session.currency"
 							:amount="session.amount"
 							:border="'border-red-500'"
+							:error="errors.amount"
 							v-on:update-currency="session.currency = arguments[0]"
 							v-on:update-amount="session.amount = arguments[0]"
+							v-on:clear-error="delete errors.amount"
 						/>
 						<span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
 					</div>

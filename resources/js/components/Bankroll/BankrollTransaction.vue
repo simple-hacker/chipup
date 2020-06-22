@@ -5,6 +5,8 @@
 				<transaction-amount
                     :currency="currency"
                     :amount="amount"
+					:error="errors.amount"
+					v-on:clear-error="delete errors.amount"
                     v-on:update-currency="currency = arguments[0]"
                     v-on:update-amount="amount = arguments[0]"
                 />

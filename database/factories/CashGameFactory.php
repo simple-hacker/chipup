@@ -16,6 +16,8 @@ $factory->define(CashGame::class, function (Faker $faker) {
     $start_time = Carbon::now()->subHours(rand(1, 17520));
     $end_time = $start_time->copy()->addMinutes(rand(10, 1440));
 
+    $currencies = ['GBP', 'USD', 'EUR', 'PLN', 'CAD', 'AUD'];
+
     return [
         'user_id' => factory('App\User')->create(),
         'stake_id' => Stake::all()->random()->id,
@@ -26,12 +28,13 @@ $factory->define(CashGame::class, function (Faker $faker) {
         'comments' => $faker->paragraph,
         'start_time' => $start_time->toDateTimeString(),
         'end_time' => $end_time->toDateTimeString(),
+        'currency' => $faker->randomElement($currencies),
     ];
 });
 
 $factory->afterCreating(CashGame::class, function ($cash_game, $faker) {
 
-    $currencies = ['GBP', 'USD', 'EUR', 'PLN', 'CAB', 'AUD'];
+    $currencies = ['GBP', 'USD', 'EUR', 'PLN', 'CAD', 'AUD'];
 
     // Add at 1, 2 or 3 Buy Ins
     $num_buy_ins = rand(1,3);

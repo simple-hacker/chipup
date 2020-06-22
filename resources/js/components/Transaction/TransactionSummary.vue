@@ -7,7 +7,7 @@
         :class="this.transactionType === 'cashout' ? 'border-green-500 hover:border-green-400' : 'border-red-500 hover:border-red-400'"
     >
         <div
-            v-text="formatCurrency(transaction.amount)">
+            v-text="$n(transaction.amount, { style: 'currency', currency: transaction.currency })">
         </div>
         <div
             v-if="showEdit"
@@ -46,14 +46,12 @@ export default {
             }, {
                 // Modal Options
                 classes: ['modal', modalClass],
+                style: 'overflow: visible;',
                 height: 'auto',
                 width: '95%',
                 maxWidth: 600,
             })
         },
-        formatCurrency(amount) {
-			return this.$currency.format(amount)
-		},
     },
 }
 </script>

@@ -29,7 +29,7 @@
 						:from="0"
 						:to="profit"
 						:duration="2"
-						:format="amount => formatCurrency(amount)"
+						:format="amount => $n(amount, { style: 'currency', currency: session.currency })"
 						easing="Power1.easeOut"
 					/>
 				</div>
@@ -69,7 +69,7 @@
 							:from="0"
 							:to="profitPerHour"
 							:duration="2"
-							:format="(amount) => formatCurrency(amount)"
+							:format="amount => $n(amount, { style: 'currency', currency: session.currency })"
 							easing="Power1.easeOut"
 						/>
 					</div>
@@ -102,11 +102,11 @@
 				</div>
 				<div class="flex flex-col mb-2">
 					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Total Buy Ins</span>
-					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="formatCurrency(buyInsTotal)"></span>
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="$n(buyInsTotal, { style: 'currency', currency: session.currency })"></span>
 				</div>
 				<div class="flex flex-col">
 					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Total Cashes</span>
-					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="formatCurrency(cashOutTotal)"></span>
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="$n(cashOutTotal, { style: 'currency', currency: session.currency })"></span>
 				</div>
 			</div>
 		</div>
@@ -479,7 +479,7 @@
 				<transaction-summary :transaction="buy_in" :transaction-type="'buyin'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addTransaction('buyin', { amount: 0 })"
+				@click="addTransaction('buyin', { amount: 0, currency: session.currency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -497,7 +497,7 @@
 			<transaction-summary v-if="session.buy_in" :transaction="session.buy_in" :transaction-type="'buyin'" :game-id="session.id"></transaction-summary>
 			<div
 				v-if="!session.buy_in"
-				@click="addTransaction('buyin', { amount: 0 })"
+				@click="addTransaction('buyin', { amount: 0, currency: session.currency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -514,7 +514,7 @@
 			<transaction-summary v-if="session.cash_out" :transaction="session.cash_out" :transaction-type="'cashout'" :game-id="session.id"></transaction-summary>
 			<div
 				v-if="!session.cash_out"
-				@click="addTransaction('cashout', { amount: 0 })"
+				@click="addTransaction('cashout', { amount: 0, currency: session.currency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-green-500 hover:border-green-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -536,7 +536,7 @@
 				<transaction-summary :transaction="expense" :transaction-type="'expense'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addTransaction('expense', { amount: 0, comments: '' })"
+				@click="addTransaction('expense', { amount: 0, currency: session.currency, comments: '' })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -559,7 +559,7 @@
 				<transaction-summary :transaction="rebuy" :transaction-type="'rebuy'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addTransaction('rebuy', { amount: 0 })"
+				@click="addTransaction('rebuy', { amount: 0, currency: session.currency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -582,7 +582,7 @@
 				<transaction-summary :transaction="add_on" :transaction-type="'addon'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addTransaction('addon', { amount: 0 })"
+				@click="addTransaction('addon', { amount: 0, currency: session.currency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -661,9 +661,6 @@ export default {
 		},
 		profit() {
 			return this.session?.profit ?? 0
-		},
-		formattedProfit() {
-			return this.$currency.format(this.profit)
 		},
 		roi() {
 			const buyInsTotal = (this.buyInsTotal < 1) ? 1 : this.buyInsTotal
@@ -770,9 +767,6 @@ export default {
 				],
 			})
         },
-		formatCurrency(amount) {
-			return this.$currency.format(amount)
-		},
 		formatDuration(time) {
 			return moment.duration(time, 'hours').format("h [hours] m [mins]")
 		},

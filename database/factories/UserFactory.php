@@ -24,7 +24,7 @@ use Faker\Generator as Faker;
 $factory->define(User::class, function (Faker $faker) {
 
     $locales = ['en-GB', 'en-US', 'en-IE', 'fr-FR', 'de-DE', 'pl-PL', 'fr-CA', 'en-CA', 'en-AU'];
-    $currencies = ['GBP', 'USD', 'EUR', 'PLN', 'CAB', 'AUD'];
+    $currencies = ['GBP', 'USD', 'EUR', 'PLN', 'CAD', 'AUD'];
 
     
     return [

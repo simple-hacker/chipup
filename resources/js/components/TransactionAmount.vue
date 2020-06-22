@@ -1,11 +1,15 @@
 <template>
-    <div class="w-full flex flex-col md:flex-row items-center">
+    <div
+        class="w-full flex flex-col md:flex-row items-center"
+        :class="{'error-input': error}"
+    >
         <div class="w-full md:w-2/5 md:mr-1 mb-3 md:mb-0">
             <v-select
                 class="w-full text-white"
                 v-model="transactionCurrency"
                 :options="currencies"
                 :clearable="false"
+                @input="$emit('clear-error')"
             >
                 <template slot="selected-option" slot-scope="currency">
                     <div class="flex items-center">
@@ -30,6 +34,7 @@
                 :locale="locale"
                 :distraction-free="false"
                 :allow-negative="allowNegative"
+                @input="$emit('clear-error')"
             />
         </div>
     </div>
@@ -53,7 +58,6 @@ export default {
             required: true
         },
         amount: {
-            type: Number,
             required: true,
             default: 0,
         },
@@ -65,6 +69,9 @@ export default {
             type: String,
             default: 'border-gray-400'
         },
+        error: {
+            default: false
+        },
     },
     data() {
         return {
@@ -74,6 +81,14 @@ export default {
     computed: {
         locale() {
             return this.$store.state.user.locale
+        },
+        hasError: {
+            get: function () {
+                return this.error
+            },
+            set: function (value) {
+                this.hasError = value
+            },
         },
         transactionCurrency: {
             get() { return this.currency },
