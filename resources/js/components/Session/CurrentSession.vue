@@ -157,7 +157,7 @@
 								:from="0"
 								:to="(buyInsTotal * -1)"
 								:duration="2"
-								:format="amount => formatCurrency(amount)"
+								:format="function(amount) { return $n(amount, { style: 'currency', currency: this.editLiveSession.currency }) }"
 								easing="Power1.easeOut"
 							/>
 						</div>
@@ -415,6 +415,7 @@ export default {
 	},
 	created() {
 		this.editLiveSession = this.getEditSession()
+		console.log(this.editLiveSession)
 	},
 	mounted() {
 		this.$refs.currentSession.activateAll()
@@ -547,9 +548,6 @@ export default {
 				this.$snotify.error('Error: '+error.response.data.message)
 				this.errors = error.response.data.errors
 			})
-		},
-		formatCurrency(amount) {
-			return this.$currency.format(amount)
 		},
 		formatDate(date) {
 			return moment.utc(date).local().format("dddd Do MMMM, HH:mm")

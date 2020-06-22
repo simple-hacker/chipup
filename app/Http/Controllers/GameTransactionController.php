@@ -37,12 +37,12 @@ abstract class GameTransactionController extends Controller
         $this->authorize('manage', $game);
 
         try {
-            $game_transaction = $game->addTransaction($this->transaction_type, $request->amount);
+            $game_transaction = $game->addTransaction($this->transaction_type, $request->amount, $request->currency, $request->comments);
 
-            // Add Comments
-            if ($request->comments) {
-                $game_transaction->update(['comments' => $request->comments]);
-            }
+            // // Add Comments
+            // if ($request->comments) {
+            //     $game_transaction->update(['comments' => $request->comments]);
+            // }
 
             return response()->json([
                 'success' => true,

@@ -16,6 +16,8 @@ class CreateBuyInsTable extends Migration
         Schema::create('buy_ins', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->morphs('game');
+            $table->string('currency', 6);
+            $table->bigInteger('locale_amount')->default(0);
             $table->bigInteger('amount')->default(0);
             $table->timestamps();
         });

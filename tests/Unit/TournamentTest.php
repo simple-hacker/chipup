@@ -280,6 +280,8 @@ class TournamentTest extends TestCase
         $user = factory('App\User')->create([
             'bankroll' => 5000
         ]);
+        $this->signIn($user);
+
         $tournament = $user->startTournament($this->getLiveTournamentAttributes());
         $tournament->addBuyIn(1000);
 
@@ -313,6 +315,8 @@ class TournamentTest extends TestCase
         $user = factory('App\User')->create([
             'bankroll' => 10000
         ]);
+        $this->signIn($user);
+
         $tournament = $user->startTournament($this->getLiveTournamentAttributes());
         $tournament->addBuyIn(1000);
         $tournament->addExpense(50);
@@ -345,6 +349,7 @@ class TournamentTest extends TestCase
     public function testWhenATournamentIsDeletedItDeletesAllOfItsGameTransactions()
     {
         $user = factory('App\User')->create();
+        $this->signIn($user);
         $tournament = $user->startTournament($this->getLiveTournamentAttributes());
         $tournament->addBuyIn(1000);
         $tournament->addExpense(50);

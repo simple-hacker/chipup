@@ -36,7 +36,7 @@ class GameController extends Controller
         if (request()->expenses) {
             foreach (request()->expenses as $expense) {
                 // Default to 0 if no amount is supplied.
-                $game->addExpense($expense['amount'] ?? 0, $expense['comments'] ?? null);
+                $game->addExpense($expense['amount'] ?? 0, $expense['currency'] ?? auth()->user()->currency, $expense['comments'] ?? null);
             }
         }
     }

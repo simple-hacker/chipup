@@ -258,6 +258,7 @@ class ExpensesTest extends TestCase
         $this->postJson(route('expense.create'), [
             'game_id' => $cash_game->id,
             'game_type' => $cash_game->game_type,
+            'currency' => 'GBP',
             'amount' => 500,
             'comments' => 'Comment'
         ]);

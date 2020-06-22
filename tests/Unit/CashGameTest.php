@@ -216,6 +216,8 @@ class CashGameTest extends TestCase
         $user = factory('App\User')->create([
             'bankroll' => 5000
         ]);
+        $this->signIn($user);
+
         $cash_game = $user->startCashGame();
         $cash_game->addBuyIn(1000);
 
@@ -249,6 +251,8 @@ class CashGameTest extends TestCase
         $user = factory('App\User')->create([
             'bankroll' => 10000
         ]);
+        $this->signIn($user);
+
         $cash_game = $user->startCashGame();
         $cash_game->addBuyIn(1000);
         $cash_game->addExpense(50);
@@ -280,6 +284,8 @@ class CashGameTest extends TestCase
     public function testWhenACashGameIsDeletedItDeletesAllOfItsGameTransactions()
     {
         $user = factory('App\User')->create();
+        $this->signIn($user);
+        
         $cash_game = $user->startCashGame();
         $cash_game->addBuyIn(1000);
         $cash_game->addExpense(50);

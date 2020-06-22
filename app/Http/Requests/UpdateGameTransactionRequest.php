@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CurrencyRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateGameTransactionRequest extends FormRequest
@@ -15,6 +16,7 @@ class UpdateGameTransactionRequest extends FormRequest
     {
         return [
             'amount' => 'sometimes|numeric|min:0|not_in:0',
+            'currency' => ['sometimes', 'string', new CurrencyRule],
             'comments' => 'sometimes|nullable|string'
         ];
     }

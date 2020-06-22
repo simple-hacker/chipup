@@ -22,14 +22,20 @@ class Tournament extends Game
     * @param float amount
     * @return BuyIn
     */
-    public function addBuyIn(float $amount)
+    public function addBuyIn(float $amount, string $currency = null)
     {
+        if (! $currency) {
+            $currency = auth()->user()->currency;
+        }
+        
         if ($this->buyIn()->count() > 0) {
             throw new MultipleBuyInsNotAllowedException();
         }
 
         return $this->buyIn()->create([
-            'amount' => $amount
+            'amount' => $amount,
+            'currency' => $currency,
+            'locale_amount' => $amount
         ]);
     }
 
@@ -40,10 +46,16 @@ class Tournament extends Game
     * @param float amount
     * @return Rebuy
     */
-    public function addRebuy(float $amount)
+    public function addRebuy(float $amount, string $currency = null)
     {
+        if (! $currency) {
+            $currency = auth()->user()->currency;
+        }
+
         return $this->rebuys()->create([
-            'amount' => $amount
+            'amount' => $amount,
+            'currency' => $currency,
+            'locale_amount' => $amount
         ]);
     }
 
@@ -54,10 +66,16 @@ class Tournament extends Game
     * @param float amount
     * @return AddOn
     */
-    public function addAddOn(float $amount)
+    public function addAddOn(float $amount, string $currency = null)
     {
+        if (! $currency) {
+            $currency = auth()->user()->currency;
+        }
+
         return $this->addOns()->create([
-            'amount' => $amount
+            'amount' => $amount,
+            'currency' => $currency,
+            'locale_amount' => $amount
         ]);
     }
 

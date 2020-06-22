@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CurrencyRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BankrollTransactionRequest extends FormRequest
@@ -16,6 +17,7 @@ class BankrollTransactionRequest extends FormRequest
         return [
             'date' => 'sometimes|date|before:tomorrow',
             'amount' => 'required|numeric|not_in:0',
+            'currency' => ['sometimes', 'string', new CurrencyRule],
             'comments' => 'sometimes|nullable|string'
         ];
     }

@@ -158,6 +158,9 @@
 					</div>
 				</div>
             </tab-content>
+			<!--
+				START
+			-->
             <tab-content :beforeChange="startValidation" title="Start" icon="fas fa-play">
 				<!--
 					BUY IN
@@ -167,14 +170,13 @@
 				>
 					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">What is your buy in?</h2>
 					<div class="flex flex-col">
-						<input	
-							v-model="session.amount"
-							type="number"
-							min="0"
-							class="text-xl border-r-4 border-red-500"
-							:class="{'error-input' : errors.amount}"
-							@input="delete errors.amount"
-						>
+						<transaction-amount
+							:currency="session.currency"
+							:amount="session.amount"
+							:border="'border-red-500'"
+							v-on:update-currency="session.currency = arguments[0]"
+							v-on:update-amount="session.amount = arguments[0]"
+						/>
 						<span v-if="errors.amount" class="error-message">{{ errors.amount[0] }}</span>
 					</div>
 				</div>
@@ -209,8 +211,9 @@
 </template>
 
 <script>
-import moment from 'moment'
+import TransactionAmount from '@components/TransactionAmount'
 
+import moment from 'moment'
 import { mapState, mapActions } from 'vuex'
 
 import { FormWizard, TabContent } from 'vue-form-wizard'
@@ -218,7 +221,7 @@ import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
 export default {
 	name: 'StartSession',
-	components: { FormWizard, TabContent },
+	components: { FormWizard, TabContent, TransactionAmount },
     data() {
 		return {
 			errors: {},
@@ -228,6 +231,7 @@ export default {
 				location: '',
 				limit_id: 1,
 				variant_id: 1,
+				currency: 'GBP',
 				amount: 0,
 				start_time: moment().format(),
 			},
@@ -323,6 +327,8 @@ export default {
 		this.session.variant_id = this.user.default_variant_id ?? 1
 		this.cash_game.stake_id = this.user.default_stake_id ?? 1
 		this.cash_game.table_size_id = this.user.default_table_size_id ?? 1
+
+		this.session.currency = this.$store.state.user.currency ?? 'GBP'
 	},
 }
 </script>

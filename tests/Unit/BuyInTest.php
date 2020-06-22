@@ -14,10 +14,10 @@ class BuyInTest extends TestCase
         $cash_game = $this->startLiveCashGame();
 
         $this->assertEquals(0, $cash_game->profit);
-        $cash_game->addBuyIn(500);
+        $cash_game->addBuyIn(500, 'GBP');
         $this->assertEquals(-500, $cash_game->fresh()->profit);
         // Add another buy in of 1000.  Profit should now equal -1500
-        $cash_game->addBuyIn(1000);
+        $cash_game->addBuyIn(1000, 'GBP');
         $this->assertEquals(-1500, $cash_game->fresh()->profit);
     }
 
@@ -26,7 +26,7 @@ class BuyInTest extends TestCase
         $tournament = $this->startLiveTournament();
         
         $this->assertEquals(0, $tournament->profit);
-        $tournament->addBuyIn(500);
+        $tournament->addBuyIn(500, 'GBP');
         $this->assertEquals(-500, $tournament->fresh()->profit);
     }
 
@@ -35,7 +35,7 @@ class BuyInTest extends TestCase
         // Only testing CashGame which is a type of Game
         $cash_game = $this->startLiveCashGame();
 
-        $buy_in = $cash_game->addBuyIn(500);
+        $buy_in = $cash_game->addBuyIn(500, 'GBP');
         $this->assertEquals(-500, $cash_game->fresh()->profit);
 
         $buy_in->update([
@@ -51,7 +51,7 @@ class BuyInTest extends TestCase
         // Only testing CashGame which is a type of Game
         $cash_game = $this->startLiveCashGame();
 
-        $buy_in = $cash_game->addBuyIn(500);
+        $buy_in = $cash_game->addBuyIn(500, 'GBP');
         $this->assertEquals(-500, $cash_game->fresh()->profit);
 
         $buy_in->delete();

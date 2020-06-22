@@ -88,19 +88,23 @@ abstract class Game extends Model
     * @param float amount
     * @return mixed
     */
-    public function addTransaction(string $transaction_type, float $amount)
+    public function addTransaction(string $transaction_type, float $amount, string $currency = null, string $comments = null)
     {
+        if (! $currency) {
+            $currency = auth()->user()->currency;
+        }
+
         switch($transaction_type) {
             case 'buyIn':
-                return $this->addBuyIn($amount);
+                return $this->addBuyIn($amount, $currency);
             case 'expense':
-                return $this->addExpense($amount);
+                return $this->addExpense($amount, $currency, $comments);
             case 'cashOut':
-                return $this->addCashOut($amount);
+                return $this->addCashOut($amount, $currency);
             case 'rebuy':
-                return $this->addRebuy($amount);
+                return $this->addRebuy($amount, $currency);
             case 'addOn':
-                return $this->addAddOn($amount);
+                return $this->addAddOn($amount, $currency);
         }
     }
 
@@ -111,10 +115,16 @@ abstract class Game extends Model
     * @param float amount
     * @return BuyIn
     */
-    public function addBuyIn(float $amount)
+    public function addBuyIn(float $amount, string $currency = null)
     {
+        if (! $currency) {
+            $currency = auth()->user()->currency;
+        }
+
         return $this->buyIns()->create([
-            'amount' => $amount
+            'amount' => $amount,
+            'currency' => $currency,
+            'locale_amount' => $amount
         ]);
     }
 
@@ -125,10 +135,16 @@ abstract class Game extends Model
     * @param float amount
     * @return Expense
     */
-    public function addExpense(float $amount, string $comments = null)
+    public function addExpense(float $amount, string $currency = null, string $comments = null)
     {
+        if (! $currency) {
+            $currency = auth()->user()->currency;
+        }
+
         return $this->expenses()->create([
             'amount' => $amount,
+            'currency' => $currency,
+            'locale_amount' => $amount,
             'comments' => $comments
         ]);
     }
@@ -140,14 +156,20 @@ abstract class Game extends Model
     * @param float amount
     * @return CashOut
     */
-    public function addCashOut(float $amount)
+    public function addCashOut(float $amount, string $currency = null)
     {
         // if ($this->cashOut) {
         //     throw new MultipleCashOutException();
         // }
 
+        if (! $currency) {
+            $currency = auth()->user()->currency;
+        }
+
         return $this->cashOut()->create([
-            'amount' => $amount
+            'amount' => $amount,
+            'currency' => $currency,
+            'locale_amount' => $amount
         ]);
     }
 
@@ -158,10 +180,10 @@ abstract class Game extends Model
     * @param float amount
     * @return CashOut
     */
-    public function endAndCashOut($end_time = null, float $amount = 0)
+    public function endAndCashOut($end_time = null, float $amount = 0, string $currency = null)
     {
         $this->end($end_time);
-        $this->addCashOut($amount);
+        $this->addCashOut($amount, $currency);
     }
 
     /**
@@ -203,6 +225,18 @@ abstract class Game extends Model
     public function getGameTypeAttribute()
     {
         return Str::snake(class_basename($this));
+    }
+
+    /**
+    * Return the currency format of the session.
+    * // NOTE: This method is temporary????
+    *
+    * @param Float $profit
+    * @return void
+    */
+    public function getCurrencyAttribute()
+    {
+        return 'GBP';
     }
 
     /**
