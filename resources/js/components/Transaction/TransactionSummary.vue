@@ -7,7 +7,7 @@
         :class="this.transactionType === 'cashout' ? 'border-green-500 hover:border-green-400' : 'border-red-500 hover:border-red-400'"
     >
         <div
-            v-text="$n(transaction.amount, { style: 'currency', currency: transaction.currency })">
+            v-text="$n(transaction.amount, { style: 'currency', currency: transactionCurrency })">
         </div>
         <div
             v-if="showEdit"
@@ -32,6 +32,15 @@ export default {
     data() {
         return {
             showEdit: false,
+        }
+    },
+    computed: {
+        transactionCurrency() {
+            // Need to refer to this for transaction currency because when we delete a session, it tries to rerender
+            // the TransactionSummary.vue DOM even though we redirect to Sessions.vue
+            // This results in trying to display all currency values using transaction.currency which is undefined and so
+            // get lots of errors in Chrome Dev Tools.
+            return this.transaction?.currency ?? this.$store.state?.user?.currency ?? 'GBP'
         }
     },
     methods: {

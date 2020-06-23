@@ -29,7 +29,7 @@
 						:from="0"
 						:to="profit"
 						:duration="2"
-						:format="amount => $n(amount, { style: 'currency', currency: session.currency })"
+						:format="amount => $n(amount, { style: 'currency', currency: sessionCurrency })"
 						easing="Power1.easeOut"
 					/>
 				</div>
@@ -69,7 +69,7 @@
 							:from="0"
 							:to="profitPerHour"
 							:duration="2"
-							:format="amount => $n(amount, { style: 'currency', currency: session.currency })"
+							:format="amount => $n(amount, { style: 'currency', currency: sessionCurrency })"
 							easing="Power1.easeOut"
 						/>
 					</div>
@@ -102,11 +102,11 @@
 				</div>
 				<div class="flex flex-col mb-2">
 					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Total Buy Ins</span>
-					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="$n(buyInsTotal, { style: 'currency', currency: session.currency })"></span>
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="$n(buyInsTotal, { style: 'currency', currency: sessionCurrency })"></span>
 				</div>
 				<div class="flex flex-col">
 					<span class="text-sm uppercase font-bold tracking-wide text-gray-300">Total Cashes</span>
-					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="$n(cashOutTotal, { style: 'currency', currency: session.currency })"></span>
+					<span class="text-base uppercase font-bold tracking-wide text-gray-100" v-text="$n(cashOutTotal, { style: 'currency', currency: sessionCurrency })"></span>
 				</div>
 			</div>
 		</div>
@@ -297,7 +297,7 @@
 							<i class="fas fa-money-bill-wave"></i>
 						</div>
 						<div class="w-full">
-							<span v-if="!editing" v-text="`${$n(session.prize_pool, { style: 'currency', currency: session.currency })} prize pool`"></span>
+							<span v-if="!editing" v-text="`${$n(session.prize_pool, { style: 'currency', currency: sessionCurrency })} prize pool`"></span>
 							<div v-if="editing" class="flex flex-col">
 								<input
 									type="number"
@@ -479,7 +479,7 @@
 				<transaction-summary :transaction="buy_in" :transaction-type="'buyin'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addTransaction('buyin', { amount: 0, currency: session.currency })"
+				@click="addTransaction('buyin', { amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -497,7 +497,7 @@
 			<transaction-summary v-if="session.buy_in" :transaction="session.buy_in" :transaction-type="'buyin'" :game-id="session.id"></transaction-summary>
 			<div
 				v-if="!session.buy_in"
-				@click="addTransaction('buyin', { amount: 0, currency: session.currency })"
+				@click="addTransaction('buyin', { amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -514,7 +514,7 @@
 			<transaction-summary v-if="session.cash_out" :transaction="session.cash_out" :transaction-type="'cashout'" :game-id="session.id"></transaction-summary>
 			<div
 				v-if="!session.cash_out"
-				@click="addTransaction('cashout', { amount: 0, currency: session.currency })"
+				@click="addTransaction('cashout', { amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-green-500 hover:border-green-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -536,7 +536,7 @@
 				<transaction-summary :transaction="expense" :transaction-type="'expense'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addTransaction('expense', { amount: 0, currency: session.currency, comments: '' })"
+				@click="addTransaction('expense', { amount: 0, currency: sessionCurrency, comments: '' })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -559,7 +559,7 @@
 				<transaction-summary :transaction="rebuy" :transaction-type="'rebuy'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addTransaction('rebuy', { amount: 0, currency: session.currency })"
+				@click="addTransaction('rebuy', { amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -582,7 +582,7 @@
 				<transaction-summary :transaction="add_on" :transaction-type="'addon'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addTransaction('addon', { amount: 0, currency: session.currency })"
+				@click="addTransaction('addon', { amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -655,6 +655,13 @@ export default {
 			} else if (this.loadSession.game_type === 'tournament') {
 				return this.getTournamentById(this.loadSession.id)
 			}
+		},
+		sessionCurrency() {
+			// Need to refer to this for session currency because when we delete a session, it tries to rerender
+			// the Session.vue DOM even though we redirect to Sessions.vue
+			// This results in trying to display all currency values using session.currency which is undefined and so
+			// get lots of errors in Chrome Dev Tools.
+			return this.session?.currency ?? this.$store.state?.user?.currency ?? 'GBP'
 		},
 		maxStartDateTime() {
 			return moment(this.editSession.end_time).format() < moment().format() ? moment(this.editSession.end_time).format() : moment().format()
