@@ -257,7 +257,7 @@
 						</div>
 						<div class="flex justify-center items-center">
 							<div
-								@click="cash_game.buy_ins.push({ amount: 0, currency: defaultCurrency })"
+								@click="cash_game.buy_ins.push({ amount: 0, currency: sessionCurrency })"
 								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 cursor-pointer text-white text-center"
 							>
 								<i class="fas fa-plus-circle mr-2"></i>
@@ -319,7 +319,7 @@
 						</div>
 						<div class="flex justify-center items-center">
 							<div
-								@click="tournament.rebuys.push({ amount: 0, currency: defaultCurrency})"
+								@click="tournament.rebuys.push({ amount: 0, currency: sessionCurrency})"
 								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 cursor-pointer text-white text-center"
 							>
 								<i class="fas fa-plus-circle mr-2"></i>
@@ -360,7 +360,7 @@
 						</div>
 						<div class="flex justify-center items-center">
 							<div
-								@click="tournament.add_ons.push({ amount: 0, currency: defaultCurrency})"
+								@click="tournament.add_ons.push({ amount: 0, currency: sessionCurrency})"
 								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 cursor-pointer text-white text-center"
 							>
 								<i class="fas fa-plus-circle mr-2"></i>
@@ -409,7 +409,7 @@
 						</div>
 						<div class="flex justify-center items-center">
 							<div
-								@click="session.expenses.push({ amount: 0, currency: defaultCurrency, comments: ''})"
+								@click="session.expenses.push({ amount: 0, currency: sessionCurrency, comments: ''})"
 								class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 cursor-pointer text-white text-center"
 							>
 								<i class="fas fa-plus-circle mr-2"></i>
@@ -528,6 +528,7 @@ export default {
 			game_type: 'cash_game',
 			session: {
 				location: '',
+				currency: null,
 				start_time: '',
 				end_time: '',
 				limit_id: 0,
@@ -563,6 +564,44 @@ export default {
 		},
 		maxStartDateTime() {
 			return moment(this.session.end_time).format() < moment().format() ? moment(this.session.end_time).format() : moment().format()
+		},
+		sessionCurrency() {
+			return this.session?.currency ?? this.defaultCurrency
+		}
+	},
+	created() {
+		this.session.location = this.user.default_location ?? ''
+		this.session.limit_id = this.user.default_limit_id ?? 1
+		this.session.variant_id = this.user.default_variant_id ?? 1
+		this.cash_game.stake_id = this.user.default_stake_id ?? 1
+		this.cash_game.table_size_id = this.user.default_table_size_id ?? 1
+
+		this.session.cash_out.currency = this.sessionCurrency
+		this.cash_game.buy_ins[0].currency = this.sessionCurrency
+		this.tournament.buy_in.currency = this.sessionCurrency
+	},
+	watch: {
+		game_type: function(game_type) {
+			if (game_type === 'cash_game') {
+				this.session.currency = this.cash_game?.buy_ins[0]?.currency ?? this.defaultCurrency
+			} else if (game_type === 'tournament') {
+				this.session.currency = this.tournament?.buy_in?.currency ?? this.defaultCurrency
+			} else {
+				this.session.currency = this.defaultCurrency
+			}
+		},
+		'cash_game.buy_ins': {
+			handler: function (buy_ins) {
+				this.session.currency = buy_ins[0]?.currency ?? this.defaultCurrency
+				this.session.cash_out.currency = buy_ins[0]?.currency ?? this.defaultCurrency
+			},
+			deep: true
+		},
+		'tournament.buy_in.currency': {
+			handler: function (currency) {
+				this.session.currency = currency ?? this.defaultCurrency
+				this.session.cash_out.currency = currency ?? this.defaultCurrency
+			}
 		}
 	},
 	methods: {
@@ -707,17 +746,6 @@ export default {
 				this.$refs.createSession.changeTab(this.$refs.createSession.activeTabIndex, 0)
 			}
 		},
-	},
-	created() {
-		this.session.location = this.user.default_location ?? ''
-		this.session.limit_id = this.user.default_limit_id ?? 1
-		this.session.variant_id = this.user.default_variant_id ?? 1
-		this.cash_game.stake_id = this.user.default_stake_id ?? 1
-		this.cash_game.table_size_id = this.user.default_table_size_id ?? 1
-
-		this.session.cash_out.currency = this.$store.state.user.currency ?? 'GBP'
-		this.cash_game.buy_ins[0].currency = this.$store.state.user.currency ?? 'GBP'
-		this.tournament.buy_in.currency = this.$store.state.user.currency ?? 'GBP'
 	},
 }
 </script>

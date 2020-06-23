@@ -51,9 +51,9 @@ class GameController extends Controller
     {
         // Add the Rebuys.
         if (request()->rebuys) {
-            foreach (request()->rebuys as $rebuys) {
+            foreach (request()->rebuys as $rebuy) {
                 // Default to 0 if no amount is supplied.
-                $game->addRebuy($rebuys['amount'] ?? 0);
+                $game->addRebuy($rebuy['amount'] ?? 0, $rebuy['currency'] ?? auth()->user()->currency);
             }
         }
     }
@@ -68,9 +68,9 @@ class GameController extends Controller
     {
         // Add the Add On.
         if (request()->add_ons) {
-            foreach (request()->add_ons as $add_ons) {
+            foreach (request()->add_ons as $add_on) {
                 // Default to 0 if no amount is supplied.
-                $game->addAddOn($add_ons['amount'] ?? 0);
+                $game->addAddOn($add_on['amount'] ?? 0, $add_on['currency'] ?? auth()->user()->currency);
             }
         }
     }
@@ -85,7 +85,8 @@ class GameController extends Controller
     public function createCashOutFromRequest($game)
     {
         $cash_out = request()->cash_out['amount'] ?? 0;
-        $game->addCashOut($cash_out);
+        $currency = request()->cash_out['currency'] ?? auth()->user()->currency;
+        $game->addCashOut($cash_out, $currency);
     }
 
     /**

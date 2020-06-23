@@ -57,7 +57,7 @@ class CashGameController extends GameController
             // Add the BuyIns.
             // Amount is required in request, but using null coalescing to zero just in case
             foreach ($request->buy_ins as $buy_in) {
-                $cash_game->addBuyIn($buy_in['amount'] ?? 0);
+                $cash_game->addBuyIn($buy_in['amount'] ?? 0, $buy_in['currency'] ?? auth()->user()->currency);
             }
 
             $this->createExpensesFromRequest($cash_game);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CurrencyRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateCashGameRequest extends FormRequest
@@ -13,8 +14,11 @@ class CreateCashGameRequest extends FormRequest
      */
     public function rules()
     {
+        $currencyRule = new CurrencyRule;
+
         $rules = [
             'location' => 'required|string',
+            'currency' => ['required', 'string', $currencyRule],
             'stake_id' => 'required|integer|exists:stakes,id',
             'limit_id' => 'required|integer|exists:limits,id',
             'variant_id' => 'required|integer|exists:variants,id',
@@ -23,11 +27,14 @@ class CreateCashGameRequest extends FormRequest
             'end_time' =>'required|date|before_or_equal:now',
             'comments' => 'nullable|string',
 
+            'buy_ins.*.currency' => ['required', 'string', $currencyRule],
             'buy_ins.*.amount' => 'required|numeric|min:0|not_in:0',
 
+            'expenses.*.currency' => ['required_with:expenses.*.amount', 'string', $currencyRule],
             'expenses.*.amount' => 'required_with:expenses.*.comments|numeric|min:0|not_in:0',
             'expenses.*.comments' => 'sometimes|nullable|string',
 
+            'cash_out.currency' => ['sometimes', 'string', $currencyRule],
             'cash_out.amount' => 'sometimes|numeric|min:0',
         ];
 

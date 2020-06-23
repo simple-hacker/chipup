@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CurrencyRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateTournamentRequest extends FormRequest
@@ -13,8 +14,11 @@ class CreateTournamentRequest extends FormRequest
      */
     public function rules()
     {
+        $currencyRule = new CurrencyRule;
+
         $rules = [
             'location' => 'required|string',
+            'currency' => ['required', 'string', $currencyRule],
             'name' => 'sometimes|nullable|string',
             'limit_id' => 'required|integer|exists:limits,id',
             'variant_id' => 'required|integer|exists:variants,id',
@@ -25,15 +29,20 @@ class CreateTournamentRequest extends FormRequest
             'end_time' =>'required|date|before_or_equal:now',
             'comments' => 'sometimes|nullable|string',
 
+            'buy_in.currency' => ['required', 'string', $currencyRule],
             'buy_in.amount' => 'sometimes|numeric|min:0',
 
+            'expenses.*.currency' => ['required_with:expenses.*.amount', 'string', $currencyRule],
             'expenses.*.amount' => 'required_with:expenses.*.comments|numeric|min:0|not_in:0',
             'expenses.*.comments' => 'sometimes|nullable|string',
 
+            'rebuys.*.currency' => ['required_with:rebuys.*.amount', 'string', $currencyRule],
             'rebuys.*.amount' => 'sometimes|numeric|min:0|not_in:0',
 
+            'add_ons.*.currency' => ['required_with:add_ons.*.amount', 'string', $currencyRule],
             'add_ons.*.amount' => 'sometimes|numeric|min:0|not_in:0',
 
+            'cash_out.currency' => ['sometimes', 'string', $currencyRule],
             'cash_out.amount' => 'sometimes|numeric|min:0',
         ];
 
