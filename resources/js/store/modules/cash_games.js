@@ -78,21 +78,31 @@ export default {
             })
             .catch(error => { throw error })
         },
-        addCashGame({ commit }, cash_game) {
+        addCashGame({ commit, dispatch, rootGetters }, cash_game) {
             return axios.post('/api/cash', {
                 ...cash_game,
             })
             .then(response => {
+                let resetFilters = ! rootGetters['filtered_sessions/filtersApplied']
+                
                 commit('ADD_CASH_GAME', response.data.cash_game)
+
+                if (resetFilters)
+                    dispatch({ type: 'filtered_sessions/resetFilters' }, { root: true })
             })
             .catch(error => { throw error })
         },
-        updateCashGame({ commit }, cash_game) {
+        updateCashGame({ commit, dispatch, rootGetters }, cash_game) {
             return axios.patch('/api/cash/'+cash_game.id, {
                 ...cash_game,
             })
             .then(response => {
+                let resetFilters = ! rootGetters['filtered_sessions/filtersApplied']
+
                 commit('UPDATE_CASH_GAME', response.data.cash_game)
+
+                if (resetFilters)
+                    dispatch({ type: 'filtered_sessions/resetFilters' }, { root: true })
             })
             .catch(error => { throw error })
         },

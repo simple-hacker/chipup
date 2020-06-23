@@ -6,6 +6,9 @@ export default {
         currentFilters: {}
     },
     getters: {
+        filtersApplied: (state, getters, rootState, rootGetters) => {
+            return ! _.isEqual(state.currentFilters, rootGetters['filters/unfilteredFilters'])
+        },
         //NOTE: If I start getting errors it could be because currentFilters object keys don't exist
         // as it wasn't loaded properly so defaults to {} as above.
         filteredCashGames: (state, getters, rootState) => {
@@ -244,8 +247,8 @@ export default {
         applyFilters({ commit }, filters) {
             commit('APPLY_FILTERS', filters)
         },
-        resetFilters({ commit }, unfilteredFilters) {
-            commit('RESET_FILTERS', unfilteredFilters)
+        resetFilters({ commit, rootGetters }) {
+            commit('RESET_FILTERS', rootGetters['filters/unfilteredFilters'])
         }
     }
 }

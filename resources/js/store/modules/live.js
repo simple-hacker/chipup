@@ -92,14 +92,28 @@ export default {
                 throw error
             })
         },
-        endLiveSession({ commit }, cashOut) {
+        endLiveSession({ commit, dispatch, rootGetters }, cashOut) {
             return axios.post('/api/live/end', cashOut)
             .then(response => {
+                // When ending a new live session it's not included in the sessions because filters have been applied
+                // as the live session exists outside of the date, buy_in filters etc.
+                // First, determine if the user had applied filters (because we'll keep those filters applied afterwards)
+                // We'll need to reset the filters after commiting if there are NO filters currently applied.
+                // This check needs to be done here before commiting sessions to Cash Games or Tournaments
+                // as the currentFilters(=unfilteredFilters) will not equal the new unfilteredFilters after commiting.
+                let resetFilters = ! rootGetters['filtered_sessions/filtersApplied']
+                //End the Session
                 commit('END_LIVE_SESSION', response.data.game)
+                // Commit session to relevant game.
                 if (response.data.game.game_type === 'cash_game') {
-                    commit('cash_games/ADD_CASH_GAME', response.data.game, { root: true})
+                    commit('cash_games/ADD_CASH_GAME', response.data.game, { root: true })
                 } else if (response.data.game.game_type === 'tournament')
-                    commit('tournaments/ADD_TOURNAMENT', response.data.game, { root: true})
+                    commit('tournaments/ADD_TOURNAMENT', response.data.game, { root: true })
+
+                // If there were no filters applied earlier, then reset currentFilters to be the
+                // new updated unfilteredFilters
+                if (resetFilters)
+                    dispatch({ type: 'filtered_sessions/resetFilters' }, { root: true })
             })
             .catch(error => {
                 throw error

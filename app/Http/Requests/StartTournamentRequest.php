@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CurrencyRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StartTournamentRequest extends FormRequest

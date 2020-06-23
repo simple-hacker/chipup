@@ -130,7 +130,7 @@ export default {
         // If reloading the page and currentFilters is an empty object, then populate with the default unfilteredFilters
         // Else currentFilters will be the persisted currentFilters state, so filters are saved on page reloads.
         if (Object.keys(this.$store.state.filtered_sessions.currentFilters).length === 0) {
-            this.$store.dispatch('filtered_sessions/resetFilters', this.unfilteredFilters)
+            this.$store.dispatch('filtered_sessions/resetFilters')
         }
 
         // Set the i18n locale to user preferred locale

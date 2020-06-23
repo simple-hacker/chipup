@@ -81,23 +81,33 @@ export default {
                 throw error
             })
         },
-        addTournament({ commit }, tournament) {
+        addTournament({ commit, dispatch, rootGetters }, tournament) {
             return axios.post('/api/tournament', {
                 ...tournament,
             })
             .then(response => {
+                let resetFilters = ! rootGetters['filtered_sessions/filtersApplied']
+                
                 commit('ADD_TOURNAMENT', response.data.tournament)
+
+                if (resetFilters)
+                    dispatch({ type: 'filtered_sessions/resetFilters' }, { root: true })
             })
             .catch(error => {
                 throw error
             })
         },
-        updateTournament({ commit }, tournament) {
+        updateTournament({ commit, dispatch, rootGetters }, tournament) {
             return axios.patch('/api/tournament/'+tournament.id, {
                 ...tournament,
             })
             .then(response => {
+                let resetFilters = ! rootGetters['filtered_sessions/filtersApplied']
+
                 commit('UPDATE_TOURNAMENT', response.data.tournament)
+
+                if (resetFilters)
+                    dispatch({ type: 'filtered_sessions/resetFilters' }, { root: true })
             })
             .catch(error => {
                 throw error

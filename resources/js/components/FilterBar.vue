@@ -32,9 +32,7 @@ export default {
 	computed: {
 		...mapState('filtered_sessions', ['currentFilters']),
 		...mapGetters('filters', ['unfilteredFilters']),
-		filtersApplied() {
-			return ! _.isEqual(this.currentFilters, this.unfilteredFilters)
-		}
+		...mapGetters('filtered_sessions', ['filtersApplied']),
 	},
 	methods: {
 		showFilters() {
@@ -47,7 +45,7 @@ export default {
 			})
 		},
 		removeFilters() {
-			this.$store.dispatch('filtered_sessions/resetFilters', this.unfilteredFilters)
+			this.$store.dispatch('filtered_sessions/resetFilters')
 		}
 	},
 }

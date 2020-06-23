@@ -22,7 +22,7 @@ export default {
 	},
     methods: {
 		removeFilters() {
-			this.$store.dispatch('filtered_sessions/resetFilters', this.unfilteredFilters)
+			this.$store.dispatch('filtered_sessions/resetFilters')
 		}
 	},
 }
