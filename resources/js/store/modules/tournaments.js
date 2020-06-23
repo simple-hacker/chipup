@@ -113,10 +113,15 @@ export default {
                 throw error
             })
         },
-        destroyTournament({ commit }, tournament) {
+        destroyTournament({ commit, dispatch, rootGetters }, tournament) {
             return axios.delete('/api/tournament/'+tournament.id)
             .then(response => {
-                commit('REMOVE_TOURNAMENT', tournament)          
+                let resetFilters = ! rootGetters['filtered_sessions/filtersApplied']
+
+                commit('REMOVE_TOURNAMENT', tournament)
+
+                if (resetFilters)
+                    dispatch({ type: 'filtered_sessions/resetFilters' }, { root: true })
             })
             .catch(error => {
                 throw error

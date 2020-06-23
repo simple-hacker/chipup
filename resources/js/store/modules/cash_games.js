@@ -106,10 +106,15 @@ export default {
             })
             .catch(error => { throw error })
         },
-        destroyCashGame({ commit }, cash_game) {
+        destroyCashGame({ commit, dispatch, rootGetters }, cash_game) {
             return axios.delete('/api/cash/'+cash_game.id)
             .then(response => {
+                let resetFilters = ! rootGetters['filtered_sessions/filtersApplied']
+
                 commit('REMOVE_CASH_GAME', cash_game)
+
+                if (resetFilters)
+                    dispatch({ type: 'filtered_sessions/resetFilters' }, { root: true })
             })
             .catch(error => { throw error })
         }
