@@ -294,13 +294,17 @@
 					class="mb-4"
 				>
 					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">What is the total prize pool?</h2>
-					<input
+					<currency-input
 						v-model="editLiveSession.prize_pool"
-						type="number"
-						min=0
+						class="text-lg"
 						:class="{'error-input' : errors.prize_pool}"
+						:currency="editLiveSession.currency"
+						placeholder="Prize Pool"
+						:locale="locale"
+						:distraction-free="false"
+						:allow-negative="false"
 						@input="updatePrizePool"
-					>
+					/>
 					<span v-if="errors.prize_pool" class="error-message">{{ errors.prize_pool[0] }}</span>
 				</div>
             </tab-content>
@@ -332,13 +336,18 @@
 					class="mb-4"
 				>
 					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">What was your finishing position?</h2>
-					<input
+					<currency-input
 						v-model="tournamentCashOut.position"
-						type="number"
-						min=0
+						class="text-lg"
 						:class="{'error-input' : errors.position}"
+						:currency="null"
+						:precision="0"
+						placeholder="Position"
+						:locale="locale"
+						:distraction-free="false"
+						:allow-negative="false"
 						@input="delete errors.position"
-					>
+					/>
 					<span v-if="errors.position" class="error-message">{{ errors.position[0] }}</span>
 				</div>
 				<!--
@@ -349,13 +358,18 @@
 					class="mb-4"
 				>
 					<h2 class="uppercase text-gray-200 font-extrabold tracking-wider mb-1">How many entries were there?</h2>
-					<input
+					<currency-input
 						v-model="tournamentCashOut.entries"
-						type="number"
-						min=0
+						class="text-lg"
 						:class="{'error-input' : errors.entries}"
+						:currency="null"
+						:precision="0"
+						placeholder="Entries"
+						:locale="locale"
+						:distraction-free="false"
+						:allow-negative="false"
 						@input="delete errors.entries"
-					>
+					/>
 					<span v-if="errors.entries" class="error-message">{{ errors.entries[0] }}</span>
 				</div>
 				<!--
@@ -393,13 +407,15 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 import { FormWizard, TabContent } from 'vue-form-wizard'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
+import { CurrencyInput } from 'vue-currency-input'
+
 import TransactionSummary from '@components/Transaction/TransactionSummary'
 import TransactionDetails from '@components/Transaction/TransactionDetails'
 import TransactionAmount from '@components/TransactionAmount'
 
 export default {
 	name: 'CurrentSession',
-	components: { FormWizard, TabContent, TransactionSummary, TransactionDetails, TransactionAmount },
+	components: { FormWizard, TabContent, TransactionSummary, TransactionDetails, TransactionAmount, CurrencyInput },
 	data() {
 		return {
 			editLiveSession: {},
@@ -412,8 +428,8 @@ export default {
                 amount: 0
 			},
 			tournamentCashOut: {
-				position: '',
-				entries: ''
+				position: null,
+				entries: null
 			},
 		}
 	},
@@ -428,6 +444,9 @@ export default {
 		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
 		...mapState('live', ['liveSession']),
 		...mapGetters('live', ['runTime', 'runTimeHours']),
+		locale() {
+            return this.$store.state.user.locale
+        },
 		buyInsTotal() {
 			let buyInTotal = this.liveSession?.buy_in?.amount ?? 0
 			let buyInsTotal = (this.liveSession.buy_ins) ? this.liveSession.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) : 0
@@ -499,7 +518,7 @@ export default {
 				validationErrors.cashOut.position = ['Position must be greater than zero.']
 			}
 			if (this.game_type === 'tournament' && this.cashOut.entries < 0) {
-				validationErrors.cashOut.entries = ['Number of entires must be greater than zero.']
+				validationErrors.cashOut.entries = ['Number of entries must be greater than zero.']
 			}
 			if (this.cashOut.end_time === '') {
 				validationErrors.end_time = ['End date and time cannot be empty.']

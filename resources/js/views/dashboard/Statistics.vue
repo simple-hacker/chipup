@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="flex flex-col md:flex-row border-b-16 rounded-b"
-		:class="totalProfit < 0 ? 'border-red-500' : 'border-green-500'"
+		:class="bankroll < 0 ? 'border-red-500' : 'border-green-500'"
 	>
 		<!--
 			CURRENT BANKROLL

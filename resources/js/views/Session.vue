@@ -299,14 +299,15 @@
 						<div class="w-full">
 							<span v-if="!editing" v-text="`${$n(session.prize_pool, { style: 'currency', currency: sessionCurrency })} prize pool`"></span>
 							<div v-if="editing" class="flex flex-col">
-								<input
-									type="number"
-									min=0
-									step=1
+								<currency-input
 									v-model="editSession.prize_pool"
-									placeholder="Prize Pool"
 									class="p-1 md:p-2 bg-gray-450 text-lg"
 									:class="{'error-input' : errors.prize_pool}"
+									:currency="editSession.currency"
+									placeholder="Prize Pool"
+									:locale="locale"
+									:distraction-free="false"
+									:allow-negative="false"
 									@input="delete errors.prize_pool"
 								/>
 								<span v-if="errors.prize_pool" class="error-message">{{ errors.prize_pool[0] }}</span>
@@ -326,14 +327,16 @@
 						<div class="w-full">
 							<span v-if="!editing" v-text="$n(session.position)"></span>
 							<div v-if="editing" class="flex flex-col">
-								<input
-									type="number"
-									min=0
-									step=1
+								<currency-input
 									v-model="editSession.position"
-									placeholder="Finishing Position"
 									class="p-1 md:p-2 bg-gray-450 text-lg"
 									:class="{'error-input' : errors.position}"
+									:currency="null"
+									:precision="0"
+									placeholder="Position"
+									:locale="locale"
+									:distraction-free="false"
+									:allow-negative="false"
 									@input="delete errors.position"
 								/>
 								<span v-if="errors.position" class="error-message">{{ errors.position[0] }}</span>
@@ -353,14 +356,16 @@
 						<div class="w-full">
 							<span v-if="!editing" v-text="`${$n(session.entries)} entries`"></span>
 							<div v-if="editing" class="flex flex-col">
-								<input
-									type="number"
-									min=0
-									step=1
+								<currency-input
 									v-model="editSession.entries"
-									placeholder="Number of Entries"
 									class="p-1 md:p-2 bg-gray-450 text-lg"
 									:class="{'error-input' : errors.entries}"
+									:currency="null"
+									:precision="0"
+									placeholder="Entries"
+									:locale="locale"
+									:distraction-free="false"
+									:allow-negative="false"
 									@input="delete errors.entries"
 								/>
 								<span v-if="errors.entries" class="error-message">{{ errors.entries[0] }}</span>
@@ -599,12 +604,14 @@ import moment from 'moment'
 import 'moment-duration-format'
 import { mapState, mapActions, mapGetters } from 'vuex'
 
+import { CurrencyInput } from 'vue-currency-input'
+
 import TransactionSummary from '@components/Transaction/TransactionSummary'
 import TransactionDetails from '@components/Transaction/TransactionDetails'
 
 export default {
 	name: 'Session',
-	components: { TransactionSummary, TransactionDetails },
+	components: { TransactionSummary, TransactionDetails, CurrencyInput },
 	props: {
 		viewSession: Object,
 	},
@@ -649,6 +656,9 @@ export default {
 		...mapState('sessions', ['loadSessionState']),
 		...mapGetters('cash_games', ['getCashGameById']),
 		...mapGetters('tournaments', ['getTournamentById']),
+		locale() {
+            return this.$store.state.user.locale
+        },
 		session() {
 			if (this.loadSession.game_type === 'cash_game') {
 				return this.getCashGameById(this.loadSession.id)

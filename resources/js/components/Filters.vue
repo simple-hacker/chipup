@@ -58,7 +58,10 @@
             <div class="col-span-4 lg:col-span-1 xxl:col-span-2 card">
                 <h2 class="text-sm md:text-base uppercase text-gray-200 font-extrabold tracking-wider mb-1">Game Type</h2>
                 <div class="flex flex-wrap justify-around bg-gray-500 rounded shadow-2xl px-1 py-2 md:p-2">
-                    <div class="mb-1">
+                    <div
+                        v-if="gameTypes.includes('cash_game')"
+                        class="mb-1"
+                    >
                         <label class="mr-3 text-sm sm:text-base md:text-lg">Cash Games</label>
                         <toggle-button
                             @change="filterGameTypeVariable('cash_game', $event.value)"
@@ -68,7 +71,10 @@
                             color="#38a169"
                         />
                     </div>
-                    <div class="mb-1">
+                    <div
+                        v-if="gameTypes.includes('tournament')"
+                        class="mb-1"
+                    >
                         <label class="mr-3 text-sm sm:text-base md:text-lg">Tournaments</label>
                         <toggle-button
                             @change="filterGameTypeVariable('tournament', $event.value)"
@@ -93,7 +99,7 @@
                         :max="profitRange[1]"
                         :process-style="sliderStyle"
                         :tooltip-style="sliderToolTipStyle"
-                        :formatter="value => formatCurrency(value)"
+                        :formatter="value => $n(value, 'currency')"
                     ></vue-range-slider>
                 </div>
             </div>
@@ -228,7 +234,7 @@
                                 :max="tournamentBuyInRange[1]"
                                 :process-style="sliderStyle"
                                 :tooltip-style="sliderToolTipStyle"
-                                :formatter="value => formatCurrency(value)"
+                                :formatter="value => $n(value, 'currency')"
                             ></vue-range-slider>
                         </div>
                     </div>

@@ -104,9 +104,9 @@ export default {
         },
         tournamentBuyInRange: (state, getters, rootState) => {
             const buyIns = rootState.tournaments.tournaments.map(session => {
-                const sessionBuyIn = session?.buy_in?.amount ?? 0
-                const sessionRebuys = session?.rebuys.reduce((total, rebuy) => total + rebuy.amount, 0) ?? 0
-                const sessionAddOns = session?.add_ons.reduce((total, add_on) => total + add_on.amount, 0) ?? 0
+                const sessionBuyIn = session?.buy_in?.locale_amount ?? 0
+                const sessionRebuys = session?.rebuys.reduce((total, rebuy) => total + rebuy.locale_amount, 0) ?? 0
+                const sessionAddOns = session?.add_ons.reduce((total, add_on) => total + add_on.locale_amount, 0) ?? 0
                 return sessionBuyIn + sessionRebuys + sessionAddOns
             })
 
