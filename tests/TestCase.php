@@ -44,6 +44,7 @@ abstract class TestCase extends BaseTestCase
     protected function getLiveCashGameAttributes($amount = 1000, $start_time = null) {
 
         $attributes = [
+            'currency' => 'GBP',
             'amount' => $amount,
             'stake_id' => Stake::inRandomOrder()->first()->id,
             'variant_id' => Variant::inRandomOrder()->first()->id,
@@ -71,16 +72,18 @@ abstract class TestCase extends BaseTestCase
             'variant_id' => Variant::inRandomOrder()->first()->id,
             'table_size_id' => TableSize::inRandomOrder()->first()->id,
             'location' => 'CasinoMK',
+            'currency' => 'GBP',
             'end_time' => $start_time->copy()->addMinutes(30)->toDateTimeString(),
             'buy_ins' => [
-                ['amount' => $amount],
+                ['amount' => $amount, 'currency' => 'GBP'],
             ],
             'expenses' => [
-                ['amount' => 400],
-                ['amount' => 750, 'comments' => 'Tips'],
+                ['amount' => 400, 'currency' => 'GBP'],
+                ['amount' => 750, 'currency' => 'GBP', 'comments' => 'Tips'],
             ],
             'cash_out' => [
                 'amount' => 1000,
+                'currency' => 'GBP',
             ]
         ];
         
@@ -97,6 +100,7 @@ abstract class TestCase extends BaseTestCase
     protected function getLiveTournamentAttributes($amount = 1000, $start_time = null)
     {
         $attributes = [
+            'currency' => 'GBP',
             'amount' => $amount,
             'name' => 'FU Flip',
             'variant_id' => Variant::inRandomOrder()->first()->id,
@@ -119,6 +123,7 @@ abstract class TestCase extends BaseTestCase
         $attributes = [
             'start_time' => $start_time->toDateTimeString(),
             'name' => 'FU Flip',
+            'currency' => 'GBP',
             'limit_id' => 1,
             'variant_id' => 1,
             'prize_pool' => 1000,
@@ -126,19 +131,20 @@ abstract class TestCase extends BaseTestCase
             'entries' => 110,
             'location' => 'CasinoMK',
             'end_time' => $start_time->copy()->addMinutes(30)->toDateTimeString(),
-            'buy_in' => ['amount' => $amount],
+            'buy_in' => ['amount' => $amount, 'currency' => 'GBP'],
             'rebuys' => [
-                ['amount' => ($amount/2)]
+                ['amount' => ($amount/2), 'currency' => 'GBP']
             ],
             'add_ons' => [
-                ['amount' => ($amount/3)]
+                ['amount' => ($amount/3), 'currency' => 'GBP']
             ],
             'expenses' => [
-                ['amount' => 400],
-                ['amount' => 750, 'comments' => 'Tips'],
+                ['amount' => 400, 'currency' => 'GBP'],
+                ['amount' => 750, 'currency' => 'GBP', 'comments' => 'Tips'],
             ],
             'cash_out' => [
                 'amount' => 1000,
+                'currency' => 'GBP',
             ]
         ];
         

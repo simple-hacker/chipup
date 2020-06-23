@@ -423,16 +423,12 @@ class TournamentTest extends TestCase
 
         $attributes = $this->getTournamentAttributes();
         $attributes['buy_in'] = [
-            ['amount' => 100],
-            ['amount' => 50],
-            ['amount' => 75],
+            ['amount' => 100, 'currency' => 'GBP'],
+            ['amount' => 50, 'currency' => 'GBP'],
+            ['amount' => 75, 'currency' => 'GBP'],
         ];
 
-        // This is okay because the buy_in array is invalid, which then defaults to only one
-        // BuyIn transactions with amount zero.
-        $this->postJson(route('tournament.create'), $attributes)->assertOk();
-        $this->assertInstanceOf(BuyIn::class, $user->tournaments->first()->buyIn);
-        $this->assertEquals(0, $user->tournaments->first()->buyIn->amount);
+        $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
     }
 
     // BuyIn CAN be zero for freerolls
@@ -441,7 +437,7 @@ class TournamentTest extends TestCase
         $user = $this->signIn();
 
         $attributes = $this->getTournamentAttributes();
-        $attributes['buy_in'] = ['amount' => 0];
+        $attributes['buy_in'] = ['amount' => 0, 'currency' => 'GBP'];
 
         $this->postJson(route('tournament.create'), $attributes)->assertOk();
 
@@ -457,11 +453,11 @@ class TournamentTest extends TestCase
         $attributes = $this->getTournamentAttributes();
 
         // BuyIn amounts must be an integer
-        $attributes['buy_in'] = ['amount' => 'Not a number'];
+        $attributes['buy_in'] = ['amount' => 'Not a number', 'currency' => 'GBP'];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
 
         // BuyIn amounts cannot be negative
-        $attributes['buy_in'] = ['amount' => -100];
+        $attributes['buy_in'] = ['amount' => -100, 'currency' => 'GBP'];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
     }
 
@@ -473,8 +469,8 @@ class TournamentTest extends TestCase
         // Add two expenses.
         $attributes = $this->getTournamentAttributes();
         $attributes['expenses'] = [
-            ['amount' => 400],
-            ['amount' => 750, 'comments' => 'Tips'],
+            ['amount' => 400, 'currency' => 'GBP'],
+            ['amount' => 750, 'currency' => 'GBP', 'comments' => 'Tips'],
         ];
         $this->postJson(route('tournament.create'), $attributes)->assertOk();
 
@@ -504,19 +500,19 @@ class TournamentTest extends TestCase
 
         // Expense amount must be an integer
         $attributes['expenses'] = [
-            ['amount' => 'Not a number']
+            ['amount' => 'Not a number', 'currency' => 'GBP']
         ];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
 
         // Expense amount must be postive
         $attributes['expenses'] = [
-            ['amount' => -100]
+            ['amount' => -100, 'currency' => 'GBP']
         ];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
 
         // Expense amount cannot be zero
         $attributes['expenses'] = [
-            ['amount' => 0]
+            ['amount' => 0, 'currency' => 'GBP']
         ];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
 
@@ -535,8 +531,8 @@ class TournamentTest extends TestCase
         // Add two expenses.
         $attributes = $this->getTournamentAttributes();
         $attributes['rebuys'] = [
-            ['amount' => 100],
-            ['amount' => 200],
+            ['amount' => 100, 'currency' => 'GBP'],
+            ['amount' => 200, 'currency' => 'GBP'],
         ];
         $this->postJson(route('tournament.create'), $attributes)->assertOk();
 
@@ -566,19 +562,19 @@ class TournamentTest extends TestCase
 
         // Rebuy amount must be an integer
         $attributes['rebuys'] = [
-            ['amount' => 'Not a number']
+            ['amount' => 'Not a number', 'currency' => 'GBP']
         ];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
 
         // Rebuy amount must be postive
         $attributes['rebuys'] = [
-            ['amount' => -100]
+            ['amount' => -100, 'currency' => 'GBP']
         ];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
 
         // Rebuy amount cannot be zero
         $attributes['rebuys'] = [
-            ['amount' => 0]
+            ['amount' => 0, 'currency' => 'GBP']
         ];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
     }
@@ -591,8 +587,8 @@ class TournamentTest extends TestCase
         // Add two expenses.
         $attributes = $this->getTournamentAttributes();
         $attributes['add_ons'] = [
-            ['amount' => 250],
-            ['amount' => 500],
+            ['amount' => 250, 'currency' => 'GBP'],
+            ['amount' => 500, 'currency' => 'GBP'],
         ];
         $this->postJson(route('tournament.create'), $attributes)->assertOk();
 
@@ -622,19 +618,19 @@ class TournamentTest extends TestCase
 
         // Rebuy amount must be an integer
         $attributes['add_ons'] = [
-            ['amount' => 'Not a number']
+            ['amount' => 'Not a number', 'currency' => 'GBP']
         ];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
 
         // Rebuy amount must be postive
         $attributes['add_ons'] = [
-            ['amount' => -100]
+            ['amount' => -100, 'currency' => 'GBP']
         ];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
 
         // Rebuy amount cannot be zero
         $attributes['add_ons'] = [
-            ['amount' => 0]
+            ['amount' => 0, 'currency' => 'GBP']
         ];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
     }
@@ -645,7 +641,7 @@ class TournamentTest extends TestCase
         $user = $this->signIn();
 
         $attributes = $this->getTournamentAttributes();
-        $attributes['cash_out'] = ['amount' => 555];
+        $attributes['cash_out'] = ['amount' => 555, 'currency' => 'GBP'];
         $this->postJson(route('tournament.create'), $attributes)->assertOk();
 
         $this->assertEquals(555, $user->tournaments->first()->cashOut->amount);
@@ -671,7 +667,7 @@ class TournamentTest extends TestCase
         $user = $this->signIn();
 
         $attributes = $this->getTournamentAttributes();
-        $attributes['cash_out'] = ['amount' => 0];
+        $attributes['cash_out'] = ['amount' => 0, 'currency' => 'GBP'];
         $this->postJson(route('tournament.create'), $attributes)->assertOk();
 
         $this->assertEquals(0, $user->tournaments->first()->cashOut->amount);
@@ -685,11 +681,11 @@ class TournamentTest extends TestCase
         $attributes = $this->getTournamentAttributes();
         
         // CashOut amount must be a number
-        $attributes['cash_out'] = ['amount' => 'Not a number'];
+        $attributes['cash_out'] = ['amount' => 'Not a number', 'currency' => 'GBP'];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
 
         // CashOut amount must be positive
-        $attributes['cash_out'] = ['amount' => -100];
+        $attributes['cash_out'] = ['amount' => -100, 'currency' => 'GBP'];
         $this->postJson(route('tournament.create'), $attributes)->assertStatus(422);
 
         // CashOut can be an empty array as it default to zero
@@ -765,7 +761,7 @@ class TournamentTest extends TestCase
             'limit_id' => 1,
             'prize_pool' => 1000,
             'position' => 18,
-            'entires' => 143,
+            'entries' => 143,
             'name' => 'My favourite tournament',
             'location' => 'Updated Location',
             'comments' => 'Updated Comments',

@@ -18,7 +18,7 @@ class UpdateTournamentRequest extends FormRequest
             'name' => 'sometimes|nullable|string',
             'limit_id' => 'sometimes|integer|exists:limits,id',
             'variant_id' => 'sometimes|integer|exists:variants,id',
-            'prize_pool' => 'sometimes|nullable|integer|min:0',
+            'prize_pool' => 'sometimes|nullable|numeric|min:0',
             'position' => 'sometimes|nullable|integer|min:0',
             'entries' => 'sometimes|nullable|integer|min:0',
             'comments' => 'sometimes|nullable|string',

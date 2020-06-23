@@ -36,7 +36,7 @@ class TournamentController extends GameController
             // Create the Tournament with details (without transaction) from the request
             $tournamentAttributes = $this->removeTransactionsFromRequest($request->validated());
             $tournament = auth()->user()->tournaments()->create($tournamentAttributes);
-            
+
             // Add the BuyIn if provided, else create one with 0 for Freeroll
             $tournament->addBuyIn($request->buy_in['amount'] ?? 0, $request->buy_in['currency'] ?? auth()->user()->currency);
             

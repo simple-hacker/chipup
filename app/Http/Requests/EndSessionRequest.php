@@ -18,8 +18,8 @@ class EndSessionRequest extends FormRequest
             'end_time' => 'sometimes|date|before_or_equal:now',
             'currency' => ['sometimes', 'string', new CurrencyRule],
             'amount' => 'sometimes|numeric|min:0',
-            'position' => 'sometimes|numeric|min:0',
-            'entires' => 'sometimes|numeric|min:0'
+            'position' => 'sometimes|nullable|integer|min:0|not_in:0',
+            'entries' => 'sometimes|nullable|integer|min:0|not_in:0'
         ];
     }
 

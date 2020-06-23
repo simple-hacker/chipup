@@ -375,9 +375,9 @@ class CashGameTest extends TestCase
 
         $attributes = $this->getCashGameAttributes();
         $attributes['buy_ins'] = [
-            ['amount' => 100],
-            ['amount' => 50],
-            ['amount' => 75],
+            ['amount' => 100, 'currency' => 'GBP'],
+            ['amount' => 50, 'currency' => 'GBP'],
+            ['amount' => 75, 'currency' => 'GBP'],
         ];
 
         $this->postJson(route('cash.create'), $attributes)->assertOk();
@@ -391,7 +391,7 @@ class CashGameTest extends TestCase
 
         $attributes = $this->getCashGameAttributes();
         $attributes['buy_ins'] = [
-            ['amount' => 0],
+            ['amount' => 0, 'currency' => 'GBP'],
         ];
 
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
@@ -406,13 +406,13 @@ class CashGameTest extends TestCase
 
         // BuyIn amounts must be an integer
         $attributes['buy_ins'] = [
-            ['amount' => 'Not a number'],
+            ['amount' => 'Not a number', 'currency' => 'GBP'],
         ];
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
         // BuyIn amounts cannot be negative
         $attributes['buy_ins'] = [
-            ['amount' => -100],
+            ['amount' => -100, 'currency' => 'GBP'],
         ];
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
     }
@@ -425,8 +425,8 @@ class CashGameTest extends TestCase
         // Add two expenses.
         $attributes = $this->getCashGameAttributes();
         $attributes['expenses'] = [
-            ['amount' => 400],
-            ['amount' => 750, 'comments' => 'Tips'],
+            ['amount' => 400, 'currency' => 'GBP'],
+            ['amount' => 750, 'currency' => 'GBP', 'comments' => 'Tips'],
         ];
         $this->postJson(route('cash.create'), $attributes)->assertOk();
 
@@ -456,19 +456,19 @@ class CashGameTest extends TestCase
 
         // Expense amount must be an integer
         $attributes['expenses'] = [
-            ['amount' => 'Not a number']
+            ['amount' => 'Not a number', 'currency' => 'GBP']
         ];
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
         // Expense amount must be postive
         $attributes['expenses'] = [
-            ['amount' => -100]
+            ['amount' => -100, 'currency' => 'GBP']
         ];
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
         // Expense amount cannot be zero
         $attributes['expenses'] = [
-            ['amount' => 0]
+            ['amount' => 0, 'currency' => 'GBP']
         ];
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
@@ -485,7 +485,7 @@ class CashGameTest extends TestCase
         $user = $this->signIn();
 
         $attributes = $this->getCashGameAttributes();
-        $attributes['cash_out'] = ['amount' => 555];
+        $attributes['cash_out'] = ['amount' => 555, 'currency' => 'GBP'];
         $this->postJson(route('cash.create'), $attributes)->assertOk();
 
         $this->assertEquals(555, $user->cashGames->first()->cashOut->amount);
@@ -511,7 +511,7 @@ class CashGameTest extends TestCase
         $user = $this->signIn();
 
         $attributes = $this->getCashGameAttributes();
-        $attributes['cash_out'] = ['amount' => 0];
+        $attributes['cash_out'] = ['amount' => 0, 'currency' => 'GBP'];
         $this->postJson(route('cash.create'), $attributes)->assertOk();
 
         $this->assertEquals(0, $user->cashGames->first()->cashOut->amount);
@@ -525,11 +525,11 @@ class CashGameTest extends TestCase
         $attributes = $this->getCashGameAttributes();
         
         // CashOut amount must be a number
-        $attributes['cash_out'] = ['amount' => 'Not a number'];
+        $attributes['cash_out'] = ['amount' => 'Not a number', 'currency' => 'GBP'];
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
         // CashOut amount must be positive
-        $attributes['cash_out'] = ['amount' => -100];
+        $attributes['cash_out'] = ['amount' => -100, 'currency' => 'GBP'];
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
         // CashOut can be an empty array as it default to zero
