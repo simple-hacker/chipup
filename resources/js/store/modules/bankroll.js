@@ -5,16 +5,16 @@ export default {
     },
     getters: {
         deposits: state => {
-            return state.bankrollTransactions.filter(bankrollTransaction => bankrollTransaction.amount > 0)
+            return state.bankrollTransactions.filter(bankrollTransaction => bankrollTransaction.locale_amount > 0)
         },
         withdrawals: state => {
-            return state.bankrollTransactions.filter(bankrollTransaction => bankrollTransaction.amount <= 0)
+            return state.bankrollTransactions.filter(bankrollTransaction => bankrollTransaction.locale_amount <= 0)
         },
         depositsTotal: (state, getters) => {
-            return getters.deposits.reduce((total, deposit) => total + deposit.amount, 0)
+            return getters.deposits.reduce((total, deposit) => total + deposit.locale_amount, 0)
         },
         withdrawalsTotal: (state, getters) => {
-            return getters.withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0)
+            return getters.withdrawals.reduce((total, withdrawal) => total + withdrawal.locale_amount, 0)
         },
         bankroll: (state, getters, rootState, rootGetters) => {
             // Bankroll is the total number of despoits, subtract total withdrawals, add totalProfit in sessions.js
@@ -48,10 +48,7 @@ export default {
             })
         },
         addBankrollTransaction({ commit }, transaction) {
-            return axios.post('/api/bankroll', {
-                amount: transaction.amount,
-                comments: transaction.comments
-            })
+            return axios.post('/api/bankroll', transaction)
             .then(response => {
                 commit('ADD_BANKROLL_TRANSACTION', response.data.bankrollTransaction)
             })

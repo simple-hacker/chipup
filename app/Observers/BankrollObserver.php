@@ -34,13 +34,6 @@ class BankrollObserver
     public function updated(Bankroll $bankrollTransaction)
     {
         // Find the difference needed for bankroll to be accurate.
-        // NOTE: Check if currency isDirty
-        // If so remove entire converted amount from user's bankroll
-        // and then add total new converted amount to bankroll
-        // Else
-        // Find difference between old and new amount, and convert difference and update bankroll.
-
-
         $rates = ExchangeRates::first();
         $exchange = new ReversedCurrenciesExchange(new FixedExchange([
             'GBP' => $rates->rates

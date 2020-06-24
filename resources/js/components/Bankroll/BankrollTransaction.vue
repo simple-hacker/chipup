@@ -18,7 +18,7 @@
 					placeholder="Add comments"
 					rows=4
 					class="p-2 bg-gray-500"
-					:class="{ 'error-input' : errors.amount }"
+					:class="{ 'error-input' : errors.comments }"
 					@input="delete errors.comments"
 				></textarea>
                 <span v-if="errors.comments" class="error-message">{{ errors.comments[0] }}</span>
@@ -32,7 +32,7 @@
 					Withdraw
 				</button>
 				<button
-					@click.prevent="addTransaction(transaction.amount)"
+					@click.prevent="addTransaction(amount)"
 					type="button"
 					class="btn btn-green flex-1 ml-1"
 				>
@@ -61,7 +61,7 @@ export default {
 	},
 	computed: {
 		withdrawalAmount() {
-			return this.transaction.amount * -1
+			return this.amount * -1
 		}
 	},
     methods: {
@@ -69,14 +69,15 @@ export default {
 		addTransaction: function(amount) {
 			this.addBankrollTransaction({
 				amount: amount,
+				currency: this.currency,
 				comments: this.comments
 			})
 			.then(response =>{
 				this.$emit('close')
 				if (amount < 0) {
-					this.$snotify.warning(`Withdrew £`+(amount * -1).toLocaleString()+' from your bankroll.')
+					this.$snotify.warning('Withdrew '+ this.$n((amount * -1), { style: 'currency', currency : this.currency }) + ' from your bankroll.')
 				} else {
-					this.$snotify.success(`Deposited £`+parseInt(amount).toLocaleString()+' to your bankroll.')
+					this.$snotify.success('Deposited ' + this.$n(amount, { style: 'currency', currency : this.currency }) + ' to your bankroll.')
 				}
 				this.amount = 0
 				this.comments = ''

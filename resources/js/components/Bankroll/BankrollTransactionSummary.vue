@@ -12,7 +12,7 @@
 		<div
 			class="text-lg md:text-xl font-bold"
 			:class="(bankrollTransaction.amount < 0) ? 'text-red-500' : 'text-green-500'"
-			v-text="$n(bankrollTransaction.amount, 'currency')"
+			v-text="$n(bankrollTransaction.amount, { style: 'currency', currency: bankrollTransaction.currency })"
 		>
 		</div>
 	</div>

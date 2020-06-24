@@ -94,7 +94,6 @@ class User extends Authenticatable implements MustVerifyEmail
             'date' => $transaction['date'] ?? null,
             'currency' => $transaction['currency'] ?? $this->currency,
             'amount' => $transaction['amount'] ?? 0,
-            // 'locale_amount' => $transaction['amount'] ?? 0,
             'comments' => $transaction['comments'] ?? null,
         ]);
     }

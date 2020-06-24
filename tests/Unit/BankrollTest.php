@@ -240,4 +240,17 @@ class BankrollTest extends TestCase
         // Therefore bankroll should be £1,400 - £328.5715 (or original £1,000 + £71.4285) = £1,071.43
         $this->assertEquals(1071.43, $user->fresh()->bankroll);
     }
+
+    public function testTEST()
+    {
+        // Set User Default Currency to GBP and Start with a Bankroll of £1000
+        $user = factory('App\User')->create(['currency' => 'EUR', 'bankroll' => 1000]);
+
+        // 1 GBP / 1.25 USD
+        // Deposit a bankroll transaction of $500 USD = £400 GBP
+        $bankrollTransaction = $user->createBankrollTransaction(['currency' => 'GBP', 'amount' => 500]);
+
+        // Bankroll is now $1,550
+        $this->assertEquals(1550, $user->fresh()->bankroll);
+    }
 }
