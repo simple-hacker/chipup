@@ -167,8 +167,6 @@ class AccountSetupTest extends TestCase
 
     public function testAssertCompleteSetupDataValid()
     {
-        // $this->withoutExceptionHandling();
-
         $user = factory('App\User')->create();  // Default setup_complete is false
         $this->actingAs($user);
 
@@ -193,8 +191,8 @@ class AccountSetupTest extends TestCase
         // Location must be a string
         $this->postJson(route('setup.complete'), ['default_location' => 99])->assertStatus(422);
 
-        // Bankroll must be an integer.  Moved test from top to end because this completes setup for the rest of the above data.
-        // NOTE: 2020-04-29 Float numbers are now valid.
+        // // Bankroll must be an integer.  Moved test from top to end because this completes setup for the rest of the above data.
+        // // NOTE: 2020-04-29 Float numbers are now valid.
         $this->postJson(route('setup.complete'), ['bankroll' => 1.99])->assertOk();
     }
 

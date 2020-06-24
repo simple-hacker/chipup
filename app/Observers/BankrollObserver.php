@@ -2,7 +2,15 @@
 
 namespace App\Observers;
 
+use Money\Money;
+use Money\Currency;
+use Money\Converter;
+use App\ExchangeRates;
 use App\Transactions\Bankroll;
+use Money\Exchange\FixedExchange;
+use Money\Currencies\ISOCurrencies;
+use Money\Exchange\IndirectExchange;
+use Money\Exchange\ReversedCurrenciesExchange;
 
 class BankrollObserver
 {
@@ -26,7 +34,28 @@ class BankrollObserver
     public function updated(Bankroll $bankrollTransaction)
     {
         // Find the difference needed for bankroll to be accurate.
-        $amount = $bankrollTransaction->amount - ($bankrollTransaction->getOriginal('amount') / 100);
+        // NOTE: Check if currency isDirty
+        // If so remove entire converted amount from user's bankroll
+        // and then add total new converted amount to bankroll
+        // Else
+        // Find difference between old and new amount, and convert difference and update bankroll.
+
+
+        $rates = ExchangeRates::first();
+        $exchange = new ReversedCurrenciesExchange(new FixedExchange([
+            'GBP' => $rates->rates
+        ]));
+        $indirectExchange = new IndirectExchange($exchange, new ISOCurrencies);
+        $converter = new Converter(new ISOCurrencies(), $indirectExchange);
+
+
+        $originalLocaleAmount = new Money($bankrollTransaction->getOriginal('amount'), new Currency($bankrollTransaction->getOriginal('currency')));
+        $originalLocaleAmount = $converter->convert($originalLocaleAmount, new Currency($bankrollTransaction->user->currency));
+
+        $newLocaleAmount = new Money(($bankrollTransaction->amount * 100), new Currency($bankrollTransaction->currency));
+        $newLocaleAmount = $converter->convert($newLocaleAmount, new Currency($bankrollTransaction->user->currency));
+
+        $amount = ($newLocaleAmount->getAmount() - $originalLocaleAmount->getAmount()) / 100;
 
         $bankrollTransaction->user->updateBankroll($amount);
     }

@@ -2,8 +2,17 @@
 
 namespace App\Transactions;
 
+use Money\Money;
+use Money\Currency;
+use Money\Converter;
+
+use App\ExchangeRates;
 use Illuminate\Support\Carbon;
+use Money\Exchange\FixedExchange;
+use Money\Currencies\ISOCurrencies;
+use Money\Exchange\IndirectExchange;
 use Illuminate\Database\Eloquent\Model;
+use Money\Exchange\ReversedCurrenciesExchange;
 
 class Bankroll extends Model
 {
@@ -13,14 +22,13 @@ class Bankroll extends Model
 
     protected $casts = [
         'user_id' => 'integer',
-        'amount' => 'float',
     ];
 
     protected $dates = [
         'date'
     ];
 
-    protected $with = [];
+    protected $appends = ['locale_amount'];
 
     /**
     * Returns the user the Bankroll belongs to
@@ -52,14 +60,29 @@ class Bankroll extends Model
     }
 
     /**
-    * Mutate locale_amount in to currency
+    * Mutate amount in to locale currency
     *
     * @return void
     */
     public function getLocaleAmountAttribute()
     {
-        // Will do all converting here.
-        return $this->amount;
+        // TODO: Will need to do historial converting as well.
+        // $rates will be closest to $this->date
+        $rates = ExchangeRates::first();
+
+        $exchange = new ReversedCurrenciesExchange(new FixedExchange([
+            'GBP' => $rates->rates
+        ]));
+
+        $indirectExchange = new IndirectExchange($exchange, new ISOCurrencies);
+        
+        $converter = new Converter(new ISOCurrencies(), $indirectExchange);
+
+        // attributes['amount'] is the raw amount from database before being divided by 100, as Money needs an integer
+        $transactionAmount = new Money($this->attributes['amount'], new Currency($this->currency));
+
+        $localeAmount = $converter->convert($transactionAmount, new Currency($this->user->currency));
+        return $localeAmount->getAmount() / 100;
     }
 
     /**

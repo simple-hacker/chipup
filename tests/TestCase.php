@@ -8,6 +8,7 @@ use App\Attributes\Variant;
 use App\Attributes\TableSize;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use TestExchangeRatesSeeder;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -18,6 +19,7 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         $this->seed();
+        $this->seed(TestExchangeRatesSeeder::class);
     }
 
     protected function signIn($user = null)

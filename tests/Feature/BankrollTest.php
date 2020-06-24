@@ -24,6 +24,7 @@ class BankrollTest extends TestCase
         $bankrollTransaction = Bankroll::create([
             'user_id' => $user->id,
             'date' => '2020-01-01',
+            'currency' => $user->currency,
             'amount' => 1000,
         ]);
         
@@ -166,6 +167,8 @@ class BankrollTest extends TestCase
         // Instead of having separate additional, withdrawing functions, refactor to a single add transaction function that accepts postive amounts for adding, and negative amounts for withdrawals.
         // NOTE: 2020-04-29 Float numbers are now valid.
 
+        $this->withoutExceptionHandling();
+
         $user = factory('App\User')->create([
             'bankroll' => 10000  //This doesn't create a BankrollTransaction
         ]);
@@ -173,21 +176,21 @@ class BankrollTest extends TestCase
         $this->actingAs($user);
 
         // Check negative numbers for withdrawals - valid.
-        $this->postJson(route('bankroll.create'), ['amount' => -1000])->assertOk();
-        // Check float numbers - valid.
+        // $this->postJson(route('bankroll.create'), ['amount' => -1000])->assertOk();
+        // // Check float numbers - valid.
         $this->postJson(route('bankroll.create'), ['amount' => 50.82])->assertOk();
 
 
-        // Create a BankrollTransaction and get it from user.
-        $this->postJson(route('bankroll.create'), ['amount' => 500]);
+        // // Create a BankrollTransaction and get it from user.
+        // $this->postJson(route('bankroll.create'), ['amount' => 500]);
         
-        $bankrollTransaction = $user->bankrollTransactions->first();
+        // $bankrollTransaction = $user->bankrollTransactions->first();
 
-        // Check negative numbers for updates, will result in a 200
-        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), ['amount' => -1000])->assertOk();
+        // // Check negative numbers for updates, will result in a 200
+        // $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), ['amount' => -1000])->assertOk();
 
-        // Check float numbers for updates
-        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), ['amount' => 50.82])->assertOk();
+        // // Check float numbers for updates
+        // $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), ['amount' => 50.82])->assertOk();
     }
 
     public function testDateIsSetToNowWhenCreatingBankrollTransaction()
