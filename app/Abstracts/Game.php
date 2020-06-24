@@ -124,7 +124,6 @@ abstract class Game extends Model
         return $this->buyIns()->create([
             'amount' => $amount,
             'currency' => $currency,
-            'locale_amount' => $amount
         ]);
     }
 
@@ -144,7 +143,6 @@ abstract class Game extends Model
         return $this->expenses()->create([
             'amount' => $amount,
             'currency' => $currency,
-            'locale_amount' => $amount,
             'comments' => $comments
         ]);
     }
@@ -169,7 +167,6 @@ abstract class Game extends Model
         return $this->cashOut()->create([
             'amount' => $amount,
             'currency' => $currency,
-            'locale_amount' => $amount
         ]);
     }
 

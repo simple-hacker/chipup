@@ -19,7 +19,6 @@ class CreateCashGamesTable extends Migration
             $table->timestamp('start_time')->useCurrent();
             $table->timestamp('end_time')->nullable();
             $table->string('currency', 6)->nullable();
-            $table->bigInteger('locale_profit')->default(0);
             $table->bigInteger('profit')->default(0);
             $table->unsignedBigInteger('stake_id')->nullable();
             $table->unsignedBigInteger('limit_id')->nullable();

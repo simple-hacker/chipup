@@ -92,7 +92,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->bankrollTransactions()->create([
             'date' => $transaction['date'] ?? null,
-            'amount' => $transaction['amount'],
+            'currency' => $transaction['currency'] ?? $this->currency,
+            'amount' => $transaction['amount'] ?? 0,
+            // 'locale_amount' => $transaction['amount'] ?? 0,
             'comments' => $transaction['comments'] ?? null,
         ]);
     }
@@ -154,7 +156,7 @@ class User extends Authenticatable implements MustVerifyEmail
         // Using defaults if not set in case mistakes have been made elsewhere in app.
         return $this->cashGames()->create([
             'start_time' => $attributes['start_time'] ?? null,
-            'currency' => $attributes['currency'] ?? auth()->user()->currency ?? 'GBP',
+            'currency' => $attributes['currency'] ?? $this->currency ?? 'GBP',
             'stake_id' => $attributes['stake_id'] ?? $this->default_stake_id,
             'variant_id' => $attributes['variant_id'] ?? $this->default_variant_id,
             'limit_id' => $attributes['limit_id'] ?? $this->default_limit_id,
@@ -230,7 +232,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $this->tournaments()->create([
             'start_time' => $attributes['start_time'] ?? null,
-            'currency' => $attributes['currency'] ?? auth()->user()->currency ?? 'GBP',
+            'currency' => $attributes['currency'] ?? $this->currency ?? 'GBP',
             'name' => $attributes['name'] ?? null,
             'variant_id' => $attributes['variant_id'],
             'limit_id' => $attributes['limit_id'],

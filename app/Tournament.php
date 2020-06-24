@@ -35,7 +35,6 @@ class Tournament extends Game
         return $this->buyIn()->create([
             'amount' => $amount,
             'currency' => $currency,
-            'locale_amount' => $amount
         ]);
     }
 
@@ -55,7 +54,6 @@ class Tournament extends Game
         return $this->rebuys()->create([
             'amount' => $amount,
             'currency' => $currency,
-            'locale_amount' => $amount
         ]);
     }
 
@@ -75,7 +73,6 @@ class Tournament extends Game
         return $this->addOns()->create([
             'amount' => $amount,
             'currency' => $currency,
-            'locale_amount' => $amount
         ]);
     }
 

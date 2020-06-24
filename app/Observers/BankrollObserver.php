@@ -14,7 +14,7 @@ class BankrollObserver
      */
     public function created(Bankroll $bankrollTransaction)
     {
-        $bankrollTransaction->user->updateBankroll($bankrollTransaction->amount);
+        $bankrollTransaction->user->updateBankroll($bankrollTransaction->locale_amount);
     }
 
     /**
@@ -42,7 +42,7 @@ class BankrollObserver
         // We update the User's bankroll by the opposite amount (multiply by -1)
         // So if we originally added 10000, we decrement by -10000 and vice versa
         
-        $bankrollTransaction->user->updateBankroll($bankrollTransaction->amount * -1);
+        $bankrollTransaction->user->updateBankroll($bankrollTransaction->locale_amount * -1);
     }
 
     /**

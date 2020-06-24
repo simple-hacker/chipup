@@ -18,7 +18,6 @@ class CreateBankrollTransactionsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->date('date');
             $table->string('currency', 6)->nullable();
-            $table->bigInteger('locale_amount')->default(0);
             $table->bigInteger('amount')->default(0);
             $table->text('comments')->nullable();
             $table->timestamps();

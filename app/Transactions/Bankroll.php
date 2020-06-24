@@ -34,9 +34,6 @@ class Bankroll extends Model
 
     /**
     * Mutate amount in to currency
-    *
-    * @param Float $amount
-    * @return void
     */
     public function getAmountAttribute($amount)
     {
@@ -52,6 +49,17 @@ class Bankroll extends Model
     public function setAmountAttribute($amount)
     {
         $this->attributes['amount'] = $amount * 100;
+    }
+
+    /**
+    * Mutate locale_amount in to currency
+    *
+    * @return void
+    */
+    public function getLocaleAmountAttribute()
+    {
+        // Will do all converting here.
+        return $this->amount;
     }
 
     /**

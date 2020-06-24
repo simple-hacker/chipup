@@ -13,11 +13,12 @@ class BankrollTest extends TestCase
     public function testAUserCanAddToTheirBankroll()
     {
         $user = factory('App\User')->create([
+            'currency' => 'GBP',
             'bankroll' => 100,
         ]);
 
         // Add £5 to user's bankroll.
-        $t = $user->createBankrollTransaction(['amount' => 5]);
+        $user->createBankrollTransaction(['currency' => 'GBP', 'amount' => 5]);
 
         // A user should have one Bankroll
         $this->assertCount(1, $user->bankrollTransactions);
@@ -29,13 +30,14 @@ class BankrollTest extends TestCase
     public function testAUserCanWithdrawFromTheirBankroll()
     {
         $user = factory('App\User')->create([
+            'currency' => 'GBP',
             'bankroll' => 100,
         ]);
 
-        // Withdraw £5 to user's bankroll.
-        $user->createBankrollTransaction(['amount' => -5]);
+        // Withdraw £5 from user's bankroll.
+        $user->createBankrollTransaction(['currency' => 'GBP', 'amount' => -5]);
         
-        // A user should have one Bankroll
+        // A user should have one Bankroll Transaction
         $this->assertCount(1, $user->bankrollTransactions);
 
         // User's bankroll is updated through Bankroll model observer
@@ -46,11 +48,12 @@ class BankrollTest extends TestCase
     {
         // Default to 10000 bankroll.
         $user = factory('App\User')->create([
+            'currency' => 'GBP',
             'bankroll' => 100,
         ]);
 
-        // Add 500 (£5) to user's bankroll.
-        $user->createBankrollTransaction(['amount' => 5]);
+        // Add £5 to user's bankroll.
+        $user->createBankrollTransaction(['currency' => 'GBP', 'amount' => 5]);
         // Assert bankroll is incremented with this addition.
         $this->assertEquals($user->fresh()->bankroll, 105);
 
@@ -80,9 +83,21 @@ class BankrollTest extends TestCase
     {       
         $user = factory('App\User')->create();
         // Create a bankroll transaction without a date.
-        $bankrollTransaction = $user->createBankrollTransaction(['amount' => 500]);
+        $bankrollTransaction = $user->createBankrollTransaction(['currency' => 'GBP', 'amount' => 500]);
+        $this->assertEquals($bankrollTransaction->date, Carbon::today());
+    }
 
-        // Assert you can retrieve transaction's date and it's set to now.
-        $this->assertEquals($bankrollTransaction->fresh()->date, Carbon::today());
+    public function testBankrollTransactionDefaultsToUsersCurrencyIfNoCurrencyProvided()
+    {
+        $user = factory('App\User')->create(['currency' => 'USD']);
+        $bankrollTransaction = $user->createBankrollTransaction(['amount' => 500]);
+        $this->assertEquals($bankrollTransaction->currency, $user->currency);
+    }
+
+    public function testLocaleAmountIsSameAsAmountIfSameCurrencyAsUserDefault()
+    {
+        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $bankrollTransaction = $user->createBankrollTransaction(['amount' => 500]);
+        $this->assertEquals($bankrollTransaction->locale_amount, $bankrollTransaction->amount);
     }
 }
