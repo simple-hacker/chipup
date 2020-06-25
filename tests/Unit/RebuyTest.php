@@ -48,4 +48,70 @@ class RebuyTest extends TestCase
         // Tournament Profit should equal 0 instead of -500
         $this->assertEquals(0, $tournament->fresh()->profit);
     }
+
+    public function testRebuyDefaultsToSessionCurrency()
+    {
+        // Create a user with GBP currency default
+        $user = factory('App\User')->create(['currency' => 'GBP']);
+
+        // Create a Cash Game which has USD currency
+        $tournament = $user->startTournament(['currency' => 'USD']);
+        $rebuy = $tournament->addRebuy(500);
+
+        $this->assertEquals('USD', $rebuy->currency);
+    }
+
+    public function testRebuyDefaultsToUserCurrencyIfNoSessionCurrencyIsAvailable()
+    {
+        // Create a user with GBP currency default
+        $user = factory('App\User')->create(['currency' => 'PLN']);
+
+        // Create a Cash Game which has default user currency
+        $tournament = $user->startTournament();
+        $rebuy = $tournament->addRebuy(500);
+
+        $this->assertEquals('PLN', $rebuy->currency);
+    }
+
+    public function testRebuyCanBeInADifferentCurrency()
+    {
+        // Create a user with GBP currency default
+        $user = factory('App\User')->create(['currency' => 'GBP']);
+
+        // Assert Cash Game currency is user default of GBP
+        $tournament = $this->startLiveTournament($user);
+        $this->assertEquals('GBP', $tournament->currency);
+        $this->assertEquals(0, $tournament->profit);
+        
+        // Cash out $300
+        $cash_out = $tournament->addRebuy(300, 'USD');
+        $this->assertEquals('USD', $cash_out->currency);
+
+        // 1 GBP = 1.25 USD
+        // Cash Game profit $300 USD = £240 GBP
+        $this->assertEquals(-240, $tournament->fresh()->profit);
+    }
+
+    public function testRebuyHasAUserLocaleAndSessionLocaleAmounts()
+    {
+        // Create a user with GBP currency default
+        $user = factory('App\User')->create(['currency' => 'GBP']);
+
+        // Create a Cash Game which has USD currency
+        $tournament = $user->tournaments()->create(['currency' => 'USD']);
+
+        // Add a 1000 PLN cash out.
+        $rebuy = $tournament->addRebuy('1000', 'PLN');
+
+        $this->assertEquals('PLN', $rebuy->currency);
+        $this->assertEquals(1000, $rebuy->amount);
+
+        // Session is in USD
+        // 4.9 PLN = 1 GBP = 1.25 USD
+        // 1000 PLN = £204.08 GBP = $255.10 USD
+        $this->assertEquals(255.10, $rebuy->sessionLocaleAmount);
+
+        // Locale Amount is in GBP because that's user default.
+        $this->assertEquals(204.08, $rebuy->localeAmount);
+    }
 }

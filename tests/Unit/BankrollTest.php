@@ -203,7 +203,7 @@ class BankrollTest extends TestCase
         $this->assertEquals(-102.04, $user->fresh()->bankroll);
     }
 
-    public function testUpdatingBothCurrencyAndAmountOfbankrollTransactionUpdatedUsersBankrollWithCorrectConvertedAmount()
+    public function testUpdatingBothCurrencyAndAmountOfBankrollTransactionUpdatedUsersBankrollWithCorrectConvertedAmount()
     {
         // Set User Default Currency to GBP
         $user = factory('App\User')->create(['currency' => 'GBP']);

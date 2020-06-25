@@ -16,7 +16,7 @@ class UpdateGameTransactionRequest extends FormRequest
     {
         return [
             'amount' => 'sometimes|numeric|min:0|not_in:0',
-            'currency' => ['sometimes', 'string', new CurrencyRule],
+            'currency' => ['bail', 'sometimes', 'string', new CurrencyRule],
             'comments' => 'sometimes|nullable|string'
         ];
     }

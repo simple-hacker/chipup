@@ -295,7 +295,7 @@
 					</div>
 					<div
 						v-if="editing"
-						@click="addTransaction('buyin', { amount: 0 })"
+						@click="addBuyIn({ amount: 0 })"
 						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
 						<i class="fas fa-plus-circle mr-2"></i>
@@ -313,7 +313,7 @@
 					<transaction-summary v-if="liveSession.buy_in" :transaction="liveSession.buy_in" :transaction-type="'buyin'" :game-id="liveSession.id"></transaction-summary>
 					<div
 						v-if="!liveSession.buy_in"
-						@click="addTransaction('buyin', { amount: 0 })"
+						@click="addBuyIn({ amount: 0 })"
 						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
 						<i class="fas fa-plus-circle mr-2"></i>
@@ -335,7 +335,7 @@
 						<transaction-summary :transaction="expense" :transaction-type="'expense'" :game-id="liveSession.id"></transaction-summary>
 					</div>
 					<div
-						@click="addTransaction('expense', { amount: 0, comments: '' })"
+						@click="addExpense({ amount: 0, comments: '' })"
 						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
 						<i class="fas fa-plus-circle mr-2"></i>
@@ -358,7 +358,7 @@
 						<transaction-summary :transaction="rebuy" :transaction-type="'rebuy'" :game-id="liveSession.id"></transaction-summary>
 					</div>
 					<div
-						@click="addTransaction('rebuy', { amount: 0 })"
+						@click="addRebuy({ amount: 0 })"
 						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
 						<i class="fas fa-plus-circle mr-2"></i>
@@ -381,7 +381,7 @@
 						<transaction-summary :transaction="add_on" :transaction-type="'addon'" :game-id="liveSession.id"></transaction-summary>
 					</div>
 					<div
-						@click="addTransaction('addon', { amount: 0 })"
+						@click="addAddOn({ amount: 0 })"
 						class="w-full rounded text-white border border-muted-dark hover:border-muted-light text-sm p-2 md:p-3 cursor-pointer text-center"
 					>
 						<i class="fas fa-plus-circle mr-2"></i>

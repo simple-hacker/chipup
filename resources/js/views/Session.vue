@@ -484,7 +484,7 @@
 				<transaction-summary :transaction="buy_in" :transaction-type="'buyin'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addTransaction('buyin', { amount: 0, currency: sessionCurrency })"
+				@click="addBuyIn({ amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -502,7 +502,7 @@
 			<transaction-summary v-if="session.buy_in" :transaction="session.buy_in" :transaction-type="'buyin'" :game-id="session.id"></transaction-summary>
 			<div
 				v-if="!session.buy_in"
-				@click="addTransaction('buyin', { amount: 0, currency: sessionCurrency })"
+				@click="addBuyIn({ amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -519,7 +519,7 @@
 			<transaction-summary v-if="session.cash_out" :transaction="session.cash_out" :transaction-type="'cashout'" :game-id="session.id"></transaction-summary>
 			<div
 				v-if="!session.cash_out"
-				@click="addTransaction('cashout', { amount: 0, currency: sessionCurrency })"
+				@click="addCashOut({ amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-green-500 hover:border-green-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -541,7 +541,7 @@
 				<transaction-summary :transaction="expense" :transaction-type="'expense'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addTransaction('expense', { amount: 0, currency: sessionCurrency, comments: '' })"
+				@click="addExpense({ amount: 0, currency: sessionCurrency, comments: '' })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -564,7 +564,7 @@
 				<transaction-summary :transaction="rebuy" :transaction-type="'rebuy'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addTransaction('rebuy', { amount: 0, currency: sessionCurrency })"
+				@click="addRebuy({ amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -587,7 +587,7 @@
 				<transaction-summary :transaction="add_on" :transaction-type="'addon'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addTransaction('addon', { amount: 0, currency: sessionCurrency })"
+				@click="addAddOn({ amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>

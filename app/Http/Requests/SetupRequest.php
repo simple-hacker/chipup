@@ -18,7 +18,7 @@ class SetupRequest extends FormRequest
         return [
             'bankroll' => 'sometimes|numeric|min:0',
             'locale' => ['sometimes', 'string', new LocaleRule],
-            'currency' => ['sometimes', 'string', new CurrencyRule],
+            'currency' => ['bail', 'sometimes', 'string', new CurrencyRule],
             'default_stake_id' => 'sometimes|nullable|integer|exists:stakes,id',
             'default_limit_id' => 'sometimes|nullable|integer|exists:limits,id',
             'default_variant_id' => 'sometimes|nullable|integer|exists:variants,id',

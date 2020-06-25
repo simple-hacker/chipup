@@ -32,10 +32,7 @@ class BankrollTest extends TestCase
     
     public function testAUserCanAddToTheirBankroll()
     {
-        $user = factory('App\User')->create();
-        $user->completeSetup();
-
-        $this->actingAs($user);
+        $user = $this->signIn();
 
         $this->postJson(route('bankroll.create'), [
                 'amount' => 30000
@@ -53,10 +50,7 @@ class BankrollTest extends TestCase
 
     public function testAUserCanWithdrawFromTheirBankroll()
     {
-        $user = factory('App\User')->create();
-        $user->completeSetup();
-
-        $this->actingAs($user);
+        $user = $this->signIn();
 
         // Supply negative number for withdrawals
         $this->postJson(route('bankroll.create'), [
@@ -73,37 +67,60 @@ class BankrollTest extends TestCase
         $this->assertCount(1, $user->bankrollTransactions);
     }
 
+    public function testCurrencyDefaultsToUsersCurrencyIfNotSupplied()
+    {
+        $user = $this->signIn();
+
+        $this->postJson(route('bankroll.create'), ['amount' => 1000]);
+
+        $user->refresh();
+
+        $this->assertEquals($user->currency, $user->bankrolLTransactions->first()->currency);
+    }
+
+    public function testBankrollTransactionCurrencyCanBeSupplied()
+    {
+        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $this->signIn($user);
+
+        $this->postJson(route('bankroll.create'), ['amount' => 1000, 'currency' => 'PLN']);
+        $this->assertEquals('PLN', $user->bankrollTransactions->first()->currency);
+    }
+
+    public function testBankrollTransactionCurrencyMustBeValid()
+    {
+        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $this->signIn($user);
+
+        // Not a string
+        $this->postJson(route('bankroll.create'), ['amount' => 1000, 'currency' => 999])->assertStatus(422);
+        // Not a valid ISO 4217
+        $this->postJson(route('bankroll.create'), ['amount' => 1000, 'currency' => 'AAA'])->assertStatus(422);
+    }
+
     public function testAUserCanUpdateTheirBankrollTransaction()
     {
-        $user = factory('App\User')->create();
-        $user->completeSetup();
+        $user = $this->signIn();
 
-        $this->actingAs($user);
-
-        $this->postJson(route('bankroll.create'), [
-            'amount' => 30000
-        ]);
+        $this->postJson(route('bankroll.create'), ['currency' => 'GBP', 'amount' => 30000]);
 
         $bankrollTransaction = $user->bankrollTransactions->first();
+        $this->assertEquals('GBP', $bankrollTransaction->currency);
+        $this->assertEquals(30000, $bankrollTransaction->amount);
 
-        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
-            'amount' => 20000
-        ]);
+        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), ['currency' => 'USD', 'amount' => 20000]);
 
-        $this->assertEquals(20000, $user->fresh()->bankroll);
+        $bankrollTransaction->refresh();
+        $this->assertEquals('USD', $bankrollTransaction->currency);
+        $this->assertEquals(20000, $bankrollTransaction->amount);
     }
 
     public function testAUserCanDeleteTheirBankrollTransaction()
     {
-        $user = factory('App\User')->create();
-        $user->completeSetup();
-
-        $this->actingAs($user);
+        $user = $this->signIn();
 
         // Withdraw 10000
-        $this->postJson(route('bankroll.create'), [
-            'amount' => -10000
-        ]);
+        $this->postJson(route('bankroll.create'), ['amount' => -10000]);
 
         $user->refresh();
         $this->assertEquals(-10000, $user->bankroll); // 50000 - 10000 = 40000
@@ -134,55 +151,50 @@ class BankrollTest extends TestCase
         // Now acting as user2, should be Forbidden to update user1's transaction.
         $user2 = $this->signIn();
 
-        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [
-                    'amount' => 20000
-                ])
-                ->assertForbidden();
+        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), ['amount' => 20000])->assertForbidden();
         
         // Should be Forbidden to delete user1's transaction too.
-        $this->deleteJson(route('bankroll.delete', ['bankrollTransaction' => $bankrollTransaction]))
-                ->assertForbidden();
+        $this->deleteJson(route('bankroll.delete', ['bankrollTransaction' => $bankrollTransaction]))->assertForbidden();
     }
 
-    public function testAUserCannotGiveAnInvalidAdditionOrWithdrawalAmount()
+    public function testAmountMustBeValidForBankrollTransactions()
     {
-        // When creating a Bankroll Transaction for addition, withdrawal, or update
-        // the amount given must be a positive integer.
-        // NOTE: Update 17/04/20  You can now supply a negative integer for withdrawing
-        // Instead of having separate additional, withdrawing functions, refactor to a single add transaction function that accepts postive amounts for adding, and negative amounts for withdrawals.
-        // NOTE: 2020-04-29 Float numbers are now valid.
-
-        $this->withoutExceptionHandling();
+        // All numbers are valid.
 
         $user = factory('App\User')->create();
         $user->completeSetup();
         $this->actingAs($user);
 
         // Check negative numbers for withdrawals - valid.
-        // $this->postJson(route('bankroll.create'), ['amount' => -1000])->assertOk();
-        // // Check float numbers - valid.
+        $this->postJson(route('bankroll.create'), ['amount' => -1000])->assertOk();
+        // Check float numbers - valid.
         $this->postJson(route('bankroll.create'), ['amount' => 50.82])->assertOk();
 
+        $bankrollTransaction = $user->bankrollTransactions->first();
 
-        // // Create a BankrollTransaction and get it from user.
-        // $this->postJson(route('bankroll.create'), ['amount' => 500]);
+        // Check negative numbers for updates, will result in a 200
+        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), ['amount' => -1000])->assertOk();
+        $this->assertEquals(-1000, $bankrollTransaction->fresh()->amount);
         
-        // $bankrollTransaction = $user->bankrollTransactions->first();
+        // Check float numbers for updates
+        $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), ['amount' => 50.82])->assertOk();
+        $this->assertEquals(50.82, $bankrollTransaction->fresh()->amount);
+    }
 
-        // // Check negative numbers for updates, will result in a 200
-        // $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), ['amount' => -1000])->assertOk();
+    public function testAmountCannotBeInvalidForBankrollTransactions()
+    {
+        $user = factory('App\User')->create();
+        $user->completeSetup();
+        $this->actingAs($user);
 
-        // // Check float numbers for updates
-        // $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), ['amount' => 50.82])->assertOk();
+        $this->postJson(route('bankroll.create'), ['amount' => 'Not a number'])->assertStatus(422);
     }
 
     public function testDateIsSetToNowWhenCreatingBankrollTransaction()
     {
         // We don't provide a date when creating a bankroll transaction, so it defaults to now()
         $user = $this->signIn();
-        $this->postJson(route('bankroll.create'), [
-            'amount' => 30000
-        ]);
+        $this->postJson(route('bankroll.create'), ['amount' => 30000]);
 
         $bankrollTransaction = $user->bankrollTransactions->first();
 

@@ -24,17 +24,13 @@ class Tournament extends Game
     */
     public function addBuyIn(float $amount, string $currency = null)
     {
-        if (! $currency) {
-            $currency = $this->currency ?? auth()->user()->currency;
-        }
-        
         if ($this->buyIn()->count() > 0) {
             throw new MultipleBuyInsNotAllowedException();
         }
 
         return $this->buyIn()->create([
             'amount' => $amount,
-            'currency' => $currency,
+            'currency' => $currency ?? $this->currency ?? auth()->user()->currency ?? 'GBP',
         ]);
     }
 
@@ -47,13 +43,9 @@ class Tournament extends Game
     */
     public function addRebuy(float $amount, string $currency = null)
     {
-        if (! $currency) {
-            $currency = $this->currency ?? auth()->user()->currency;
-        }
-
         return $this->rebuys()->create([
             'amount' => $amount,
-            'currency' => $currency,
+            'currency' => $currency ?? $this->currency ?? auth()->user()->currency ?? 'GBP',
         ]);
     }
 
@@ -66,13 +58,9 @@ class Tournament extends Game
     */
     public function addAddOn(float $amount, string $currency = null)
     {
-        if (! $currency) {
-            $currency = $this->currency ?? auth()->user()->currency;
-        }
-
         return $this->addOns()->create([
             'amount' => $amount,
-            'currency' => $currency,
+            'currency' => $currency ?? $this->currency ?? auth()->user()->currency ?? 'GBP',
         ]);
     }
 
@@ -123,7 +111,7 @@ class Tournament extends Game
     */
     public function buyInAmount()
     {
-        return $this->buyIn->session_locale_amount ?? 0;
+        return $this->buyIn->sessionLocaleAmount ?? 0;
     }
 
     /**
@@ -134,7 +122,7 @@ class Tournament extends Game
     public function totalRebuysAmount()
     {
         $total = $this->rebuys->reduce(function ($total, $rebuy) {
-            return $total + $rebuy->session_locale_amount;
+            return $total + $rebuy->sessionLocaleAmount;
         }, 0);
 
         return $total;
@@ -148,7 +136,7 @@ class Tournament extends Game
     public function totalAddOnsAmount()
     {
         $total = $this->addOns->reduce(function ($total, $addOn) {
-            return $total + $addOn->session_locale_amount;
+            return $total + $addOn->sessionLocaleAmount;
         }, 0);
 
         return $total;

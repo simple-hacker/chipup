@@ -16,7 +16,7 @@ class StartCashGameRequest extends FormRequest
     {
         return [
             'location' => 'required|string',
-            'currency' => ['sometimes', 'string', new CurrencyRule],
+            'currency' => ['bail', 'sometimes', 'string', new CurrencyRule],
             'amount' => 'required|numeric|min:0|not_in:0',
             'stake_id' => 'required|integer|exists:stakes,id',
             'limit_id' => 'required|integer|exists:limits,id',

@@ -49,4 +49,70 @@ class AddOnTest extends TestCase
         // Tournament Profit should equal 0 instead of -500
         $this->assertEquals(0, $tournament->fresh()->profit);
     }
+
+    public function testAddOnDefaultsToSessionCurrency()
+    {
+        // Create a user with GBP currency default
+        $user = factory('App\User')->create(['currency' => 'GBP']);
+
+        // Create a Cash Game which has USD currency
+        $tournament = $user->startTournament(['currency' => 'USD']);
+        $addOn = $tournament->addAddOn(500);
+
+        $this->assertEquals('USD', $addOn->currency);
+    }
+
+    public function testAddOnDefaultsToUserCurrencyIfNoSessionCurrencyIsAvailable()
+    {
+        // Create a user with GBP currency default
+        $user = factory('App\User')->create(['currency' => 'PLN']);
+
+        // Create a Cash Game which has default user currency
+        $tournament = $user->startTournament();
+        $addOn = $tournament->addAddOn(500);
+
+        $this->assertEquals('PLN', $addOn->currency);
+    }
+
+    public function testAddOnCanBeInADifferentCurrency()
+    {
+        // Create a user with GBP currency default
+        $user = factory('App\User')->create(['currency' => 'GBP']);
+
+        // Assert Cash Game currency is user default of GBP
+        $tournament = $this->startLiveTournament($user);
+        $this->assertEquals('GBP', $tournament->currency);
+        $this->assertEquals(0, $tournament->profit);
+        
+        // Cash out $300
+        $cash_out = $tournament->addAddOn(300, 'USD');
+        $this->assertEquals('USD', $cash_out->currency);
+
+        // 1 GBP = 1.25 USD
+        // Cash Game profit $300 USD = £240 GBP
+        $this->assertEquals(-240, $tournament->fresh()->profit);
+    }
+
+    public function testAddOnHasAUserLocaleAndSessionLocaleAmounts()
+    {
+        // Create a user with GBP currency default
+        $user = factory('App\User')->create(['currency' => 'GBP']);
+
+        // Create a Cash Game which has USD currency
+        $tournament = $user->tournaments()->create(['currency' => 'USD']);
+
+        // Add a 1000 PLN cash out.
+        $addOn = $tournament->addAddOn('1000', 'PLN');
+
+        $this->assertEquals('PLN', $addOn->currency);
+        $this->assertEquals(1000, $addOn->amount);
+
+        // Session is in USD
+        // 4.9 PLN = 1 GBP = 1.25 USD
+        // 1000 PLN = £204.08 GBP = $255.10 USD
+        $this->assertEquals(255.10, $addOn->sessionLocaleAmount);
+
+        // Locale Amount is in GBP because that's user default.
+        $this->assertEquals(204.08, $addOn->localeAmount);
+    }
 }

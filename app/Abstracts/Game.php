@@ -97,10 +97,6 @@ abstract class Game extends Model
     */
     public function addTransaction(string $transaction_type, float $amount, string $currency = null, string $comments = null)
     {
-        if (! $currency) {
-            $currency = $this->currency ?? auth()->user()->currency;
-        }
-
         switch($transaction_type) {
             case 'buyIn':
                 return $this->addBuyIn($amount, $currency);
@@ -124,13 +120,9 @@ abstract class Game extends Model
     */
     public function addBuyIn(float $amount, string $currency = null)
     {
-        if (! $currency) {
-            $currency = $this->currency ?? auth()->user()->currency;
-        }
-
         return $this->buyIns()->create([
             'amount' => $amount,
-            'currency' => $currency,
+            'currency' => $currency ?? $this->currency ?? auth()->user()->currency ?? 'GBP',
         ]);
     }
 
@@ -143,13 +135,9 @@ abstract class Game extends Model
     */
     public function addExpense(float $amount, string $currency = null, string $comments = null)
     {
-        if (! $currency) {
-            $currency = $this->currency ?? auth()->user()->currency;
-        }
-
         return $this->expenses()->create([
             'amount' => $amount,
-            'currency' => $currency,
+            'currency' => $currency ?? $this->currency ?? auth()->user()->currency ?? 'GBP',
             'comments' => $comments
         ]);
     }
@@ -167,13 +155,9 @@ abstract class Game extends Model
         //     throw new MultipleCashOutException();
         // }
 
-        if (! $currency) {
-            $currency = $this->currency ?? auth()->user()->currency;
-        }
-
         return $this->cashOut()->create([
             'amount' => $amount,
-            'currency' => $currency,
+            'currency' => $currency ?? $this->currency ?? auth()->user()->currency ?? 'GBP',
         ]);
     }
 
@@ -239,7 +223,7 @@ abstract class Game extends Model
     public function totalBuyInsAmount()
     {
         $total = $this->buyIns->reduce(function ($total, $buyIn) {
-            return $total + $buyIn->session_locale_amount;
+            return $total + $buyIn->sessionLocaleAmount;
         }, 0);
 
         return $total;
@@ -253,7 +237,7 @@ abstract class Game extends Model
     public function totalExpensesAmount()
     {
         $total = $this->expenses->reduce(function ($total, $expense) {
-            return $total + $expense->session_locale_amount;
+            return $total + $expense->sessionLocaleAmount;
         }, 0);
 
         return $total;
@@ -266,7 +250,7 @@ abstract class Game extends Model
     */
     public function cashOutAmount()
     {
-        return $this->cashOut->session_locale_amount ?? 0;
+        return $this->cashOut->sessionLocaleAmount ?? 0;
     }
 
     /**

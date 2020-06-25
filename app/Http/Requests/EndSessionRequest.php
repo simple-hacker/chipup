@@ -16,7 +16,7 @@ class EndSessionRequest extends FormRequest
     {
         return [
             'end_time' => 'sometimes|date|before_or_equal:now',
-            'currency' => ['sometimes', 'string', new CurrencyRule],
+            'currency' => ['bail', 'sometimes', 'string', new CurrencyRule],
             'amount' => 'sometimes|numeric|min:0',
             'position' => 'sometimes|nullable|integer|min:0|not_in:0',
             'entries' => 'sometimes|nullable|integer|min:0|not_in:0'

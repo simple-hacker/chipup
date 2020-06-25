@@ -71,6 +71,10 @@ abstract class GameTransaction extends Model
     */
     public function getSessionLocaleAmountAttribute()
     {
+        if ($this->currency === $this->game->currency) {
+            return $this->amount;
+        }
+
         // TODO: Will need to do historial converting as well.
         // $rates will be closest to $this->date
         $rates = ExchangeRates::first();
@@ -98,6 +102,10 @@ abstract class GameTransaction extends Model
     */
     public function getLocaleAmountAttribute()
     {
+        if ($this->currency === $this->game->user->currency) {
+            return $this->amount;
+        }
+
         // TODO: Will need to do historial converting as well.
         // $rates will be closest to $this->date
         $rates = ExchangeRates::first();
@@ -113,7 +121,7 @@ abstract class GameTransaction extends Model
         $transactionAmount = new Money($this->attributes['amount'], new Currency($this->currency));
 
         // Convert Transaction amount to currency of the the user.
-        $localeAmount = $converter->convert($transactionAmount, new Currency($this->user->currency));
+        $localeAmount = $converter->convert($transactionAmount, new Currency($this->game->user->currency));
         return $localeAmount->getAmount() / 100;
     }
 }
