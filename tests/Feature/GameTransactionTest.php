@@ -14,11 +14,11 @@ class GameTransactionTest extends TestCase
     {
         // Just going to test BuyIn on CashGame for the AddGameTransactionRequest required fields
 
-        $cash_game = $this->signIn()->startCashGame();
+        $cashGame = $this->signIn()->startCashGame();
 
         // Id is required
         $this->postJson(route('buyin.create'), [
-                    'game_type' => $cash_game->game_type,
+                    'game_type' => $cashGame->game_type,
                     'amount' => 500
                 ])
                 ->assertStatus(422);
@@ -26,21 +26,21 @@ class GameTransactionTest extends TestCase
         // Id must be an integer
         $this->postJson(route('buyin.create'), [
                     'id' => 'not an integer',
-                    'game_type' => $cash_game->game_type,
+                    'game_type' => $cashGame->game_type,
                     'amount' => 500
                 ])
                 ->assertStatus(422);
 
         // GameType is required
         $this->postJson(route('buyin.create'), [
-                    'id' => $cash_game->id,
+                    'id' => $cashGame->id,
                     'amount' => 500
                 ])
                 ->assertStatus(422);
 
         // GameType must be a string
         $this->postJson(route('buyin.create'), [
-                    'id' => $cash_game->id,
+                    'id' => $cashGame->id,
                     'game_type' => 111,
                     'amount' => 500
                 ])
@@ -51,7 +51,7 @@ class GameTransactionTest extends TestCase
         // This is validated in the switch statement in the add method of the GameTransactionController
         // Because we need to load the correct model depending on the string
         $this->postJson(route('buyin.create'), [
-                    'id' => $cash_game->id,
+                    'id' => $cashGame->id,
                     'game_type' => 'invalid_game_type',
                     'amount' => 500
                 ])

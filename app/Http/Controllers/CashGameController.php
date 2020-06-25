@@ -25,16 +25,16 @@ class CashGameController extends GameController
     /**
     * GET method to retrieve specific cash game
     *
-    * @param CashGame $cash_game
+    * @param CashGame $cashGame
     * @return json
     */
-    public function view(CashGame $cash_game)
+    public function view(CashGame $cashGame)
     {
-        $this->authorize('manage', $cash_game);
+        $this->authorize('manage', $cashGame);
 
         return response()->json([
             'success' => true,
-            'cash_game' => $cash_game
+            'cash_game' => $cashGame
         ]);
     }
 
@@ -52,20 +52,20 @@ class CashGameController extends GameController
 
             // Create the Cash Game with details (without transaction) from the request
             $cashGameAttributes = $this->removeTransactionsFromRequest($request->validated());
-            $cash_game = auth()->user()->cashGames()->create($cashGameAttributes);
+            $cashGame = auth()->user()->cashGames()->create($cashGameAttributes);
             
             // Add the BuyIns.
             // Amount is required in request, but using null coalescing to zero just in case
             foreach ($request->buy_ins as $buy_in) {
-                $cash_game->addBuyIn($buy_in['amount'] ?? 0, $buy_in['currency'] ?? auth()->user()->currency);
+                $cashGame->addBuyIn($buy_in['amount'] ?? 0, $buy_in['currency'] ?? auth()->user()->currency);
             }
 
-            $this->createExpensesFromRequest($cash_game);
-            $this->createCashOutFromRequest($cash_game);
+            $this->createExpensesFromRequest($cashGame);
+            $this->createCashOutFromRequest($cashGame);
 
             return [
                 'success' => true,
-                'cash_game' => $cash_game->fresh()
+                'cash_game' => $cashGame->fresh()
             ];
         } catch(\Exception $e) {
             return response()->json([
@@ -78,24 +78,24 @@ class CashGameController extends GameController
     /**
     * PATCH method to update cash game.
     * 
-    * @param CashGame $cash_game
+    * @param CashGame $cashGame
     * @param UpdateCashGameRequest $request
     * @return json
     */
-    public function update(CashGame $cash_game, UpdateCashGameRequest $request)
+    public function update(CashGame $cashGame, UpdateCashGameRequest $request)
     {
-        $this->authorize('manage', $cash_game);
+        $this->authorize('manage', $cashGame);
 
         try {
-            $this->checkIfUpdateRequestTimesAreValidAgainstSavedTimes($cash_game);
-            $this->checkIfRequestTimesClashWithAnotherCashGame($cash_game->id);
+            $this->checkIfUpdateRequestTimesAreValidAgainstSavedTimes($cashGame);
+            $this->checkIfRequestTimesClashWithAnotherCashGame($cashGame->id);
     
             // Update the cash game with the validated request
-            $cash_game->update($request->validated());
+            $cashGame->update($request->validated());
     
             return response()->json([
                 'success' => true,
-                'cash_game' => $cash_game->fresh()
+                'cash_game' => $cashGame->fresh()
             ]);
 
         } catch(\Exception $e) {
@@ -109,14 +109,14 @@ class CashGameController extends GameController
     /**
     * DELETE method to delete specific cash game
     *
-    * @param CashGame $cash_game
+    * @param CashGame $cashGame
     * @return json
     */
-    public function destroy(CashGame $cash_game)
+    public function destroy(CashGame $cashGame)
     {
-        $this->authorize('manage', $cash_game);
+        $this->authorize('manage', $cashGame);
 
-        $cash_game->delete();
+        $cashGame->delete();
         
         return response()->json([
             'success' => true,

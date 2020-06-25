@@ -26,14 +26,14 @@ class LiveCashGameController extends LiveGameController
     public function start(StartCashGameRequest $request)
     {
         try {
-            $cash_game = auth()->user()->startCashGame($request->validated());
+            $cashGame = auth()->user()->startCashGame($request->validated());
 
             // Amount is required in request, but using null coalescing to zero just in case
-            $cash_game->addBuyIn($request->amount ?? 0, $request->currency ?? auth()->user()->currency);
+            $cashGame->addBuyIn($request->amount ?? 0, $request->currency ?? auth()->user()->currency);
 
             return [
                 'success' => true,
-                'game' => $cash_game->fresh()
+                'game' => $cashGame->fresh()
             ];
         } catch(\Exception $e) {
             return response()->json([
@@ -46,26 +46,26 @@ class LiveCashGameController extends LiveGameController
     /**
     * PATCH method to update specific cash game
     *
-    * @param CashGame $cash_game
+    * @param CashGame $cashGame
     * @param UpdateLiveCashGameRequest $request
     * @return json
     */
     public function update(UpdateLiveCashGameRequest $request)
     {
         try {
-            $cash_game = auth()->user()->liveCashGame();
+            $cashGame = auth()->user()->liveCashGame();
 
-            if (!$cash_game) {
+            if (!$cashGame) {
                 $this->throwLiveSessionNotStartedException();
             }
 
-            $this->checkIfRequestTimesClashWithAnotherCashGame($cash_game->id);
+            $this->checkIfRequestTimesClashWithAnotherCashGame($cashGame->id);
             
-            $cash_game->update($request->validated());
+            $cashGame->update($request->validated());
 
             return response()->json([
                 'success' => true,
-                'game' => $cash_game->fresh()
+                'game' => $cashGame->fresh()
             ]);
             
         } catch(\Exception $e) {

@@ -13,11 +13,11 @@ class CashOutTest extends TestCase
     public function testOnlyAuthenticatedUsersCanAddCashOut()
     {
         $user = factory('App\User')->create();
-        $cash_game = $user->startCashGame();
+        $cashGame = $user->startCashGame();
 
         $this->postJson(route('cashout.create'), [
-                    'game_id' => $cash_game->id,
-                    'game_type' => $cash_game->game_type,
+                    'game_id' => $cashGame->id,
+                    'game_type' => $cashGame->game_type,
                     'amount' => 500
                 ])
                 ->assertUnauthorized();
@@ -25,18 +25,18 @@ class CashOutTest extends TestCase
 
     public function testACashOutCanBeAddedToACashGame()
     {       
-        $cash_game = $this->signIn()->startCashGame();
+        $cashGame = $this->signIn()->startCashGame();
 
         $this->postJson(route('cashout.create'), [
-                    'game_id' => $cash_game->id,
-                    'game_type' => $cash_game->game_type,
+                    'game_id' => $cashGame->id,
+                    'game_type' => $cashGame->game_type,
                     'amount' => 500
                 ])
                 ->assertOk()
                 ->assertJsonStructure(['success', 'transaction']);;
 
-        $this->assertInstanceOf(CashOut::class, $cash_game->cashOut);
-        $this->assertEquals(500, $cash_game->cashOut()->first()->amount);
+        $this->assertInstanceOf(CashOut::class, $cashGame->cashOut);
+        $this->assertEquals(500, $cashGame->cashOut()->first()->amount);
     }
 
     public function testACashOutCannotBeAddedToACashGameThatDoesNotExist()
@@ -58,39 +58,39 @@ class CashOutTest extends TestCase
     {
         $this->withoutExceptionHandling();
         
-        $cash_game = $this->signIn()->startCashGame();
+        $cashGame = $this->signIn()->startCashGame();
 
         // Cash Out should be Ok
         $this->postJson(route('cashout.create'), [
-                    'game_id' => $cash_game->id,
-                    'game_type' => $cash_game->game_type,
+                    'game_id' => $cashGame->id,
+                    'game_type' => $cashGame->game_type,
                     'amount' => 500
                 ])->assertOk();
 
         // Assert 422 to CashOut a second time.
         $this->postJson(route('cashout.create'), [
-                    'game_id' => $cash_game->id,
-                    'game_type' => $cash_game->game_type,
+                    'game_id' => $cashGame->id,
+                    'game_type' => $cashGame->game_type,
                     'amount' => 1000
                 ])->assertStatus(422);
 
         // There should only be one instance of CashOut, and the CashGame profit will only be the first CashOut
-        $this->assertInstanceOf(CashOut::class, $cash_game->cashOut);
+        $this->assertInstanceOf(CashOut::class, $cashGame->cashOut);
         $this->assertCount(1, CashOut::all());
-        $this->assertEquals(500, $cash_game->fresh()->profit);
+        $this->assertEquals(500, $cashGame->fresh()->profit);
     }
 
     public function testViewingCashOutReturnsJsonOfCashOutTransaction()
     {
-        $cash_game = $this->signIn()->startCashGame();
+        $cashGame = $this->signIn()->startCashGame();
 
         $this->postJson(route('cashout.create'), [
-            'game_id' => $cash_game->id,
-            'game_type' => $cash_game->game_type,
+            'game_id' => $cashGame->id,
+            'game_type' => $cashGame->game_type,
             'amount' => 500
         ]);
 
-        $cash_out = $cash_game->cashOut;
+        $cash_out = $cashGame->cashOut;
         
         $this->getJson(route('cashout.view', [
                     'cash_out' => $cash_out
@@ -101,15 +101,15 @@ class CashOutTest extends TestCase
 
     public function testAUserCanUpdateTheCashOut()
     {
-        $cash_game = $this->signIn()->startCashGame();
+        $cashGame = $this->signIn()->startCashGame();
 
         $this->postJson(route('cashout.create'), [
-            'game_id' => $cash_game->id,
-            'game_type' => $cash_game->game_type,
+            'game_id' => $cashGame->id,
+            'game_type' => $cashGame->game_type,
             'amount' => 500
         ]);
 
-        $cash_out = $cash_game->cashOut;
+        $cash_out = $cashGame->cashOut;
         
         // Change amount from 500 to 1000
         $response = $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), [
@@ -124,15 +124,15 @@ class CashOutTest extends TestCase
 
     public function testAUserCanDeleteTheCashOut()
     {
-        $cash_game = $this->signIn()->startCashGame();
+        $cashGame = $this->signIn()->startCashGame();
 
         $this->postJson(route('cashout.create'), [
-            'game_id' => $cash_game->id,
-            'game_type' => $cash_game->game_type,
+            'game_id' => $cashGame->id,
+            'game_type' => $cashGame->game_type,
             'amount' => 500
         ]);
 
-        $cash_out = $cash_game->cashOut()->first();
+        $cash_out = $cashGame->cashOut()->first();
         
         // Change amount from 500 to 1000
         $this->deleteJson(route('cashout.update', ['cash_out' => $cash_out]))
@@ -143,54 +143,54 @@ class CashOutTest extends TestCase
                 ]);
 
         $this->assertCount(0, CashOut::all());
-        $this->assertEmpty($cash_game->fresh()->cashOut);
+        $this->assertEmpty($cashGame->fresh()->cashOut);
     }
 
     public function testCashOutAmountIsValidForAdd()
     {
-        $cash_game = $this->signIn()->startCashGame();
+        $cashGame = $this->signIn()->startCashGame();
 
         // Test not sending amount
         $this->postJson(route('cashout.create'), [
-                    'game_id' => $cash_game->id,
-                    'game_type' => $cash_game->game_type,
+                    'game_id' => $cashGame->id,
+                    'game_type' => $cashGame->game_type,
                 ])
                 ->assertStatus(422);
 
         // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
         $this->postJson(route('cashout.create'), [
-                    'game_id' => $cash_game->id,
-                    'game_type' => $cash_game->game_type,
+                    'game_id' => $cashGame->id,
+                    'game_type' => $cashGame->game_type,
                     'amount' => 55.52
                 ])
                 ->assertOk();
                 
         // Test negative numbers
         $this->postJson(route('cashout.create'), [
-                    'game_id' => $cash_game->id,
-                    'game_type' => $cash_game->game_type,
+                    'game_id' => $cashGame->id,
+                    'game_type' => $cashGame->game_type,
                     'amount' => -10
                 ])
                 ->assertStatus(422);
 
         // Test string
         $this->postJson(route('cashout.create'), [
-                    'game_id' => $cash_game->id,
-                    'game_type' => $cash_game->game_type,
+                    'game_id' => $cashGame->id,
+                    'game_type' => $cashGame->game_type,
                     'amount' => 'Invalid'
                 ])
                 ->assertStatus(422);
 
         // Need to delete the cashOut for the test because we can only have one which was made in
         // the earlier okay assertion above.
-        $cash_game->cashOut->delete();
+        $cashGame->cashOut->delete();
 
         // Zero should be okay
         // NOTE: 2020-06-01 Zero is no invalid on front end, though valid backend.
         $this->postJson(route('cashout.create'), [
-                    'game_id' => $cash_game->id,
-                    'game_type' => $cash_game->game_type,
+                    'game_id' => $cashGame->id,
+                    'game_type' => $cashGame->game_type,
                     'amount' => 0
                 ])
                 ->assertStatus(422);
@@ -198,14 +198,14 @@ class CashOutTest extends TestCase
 
     public function testCashOutAmountIsValidForUpdate()
     {
-        $cash_game = $this->signIn()->startCashGame();
+        $cashGame = $this->signIn()->startCashGame();
 
         $this->postJson(route('cashout.create'), [
-            'game_id' => $cash_game->id,
-            'game_type' => $cash_game->game_type,
+            'game_id' => $cashGame->id,
+            'game_type' => $cashGame->game_type,
             'amount' => 500
         ]);
-        $cash_out = $cash_game->cashOut()->first();
+        $cash_out = $cashGame->cashOut()->first();
 
         // Empty POST data is OK because it doesn't change anything.
         $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), [])->assertOk();
@@ -229,21 +229,21 @@ class CashOutTest extends TestCase
     {
         // User1 creates a CashGame and adds a CashOut
         $user1 = $this->signIn();
-        $cash_game = $user1->startCashGame();
+        $cashGame = $user1->startCashGame();
         $this->postJson(route('cashout.create'), [
-                    'game_id' => $cash_game->id,
-                    'game_type' => $cash_game->game_type,    
+                    'game_id' => $cashGame->id,
+                    'game_type' => $cashGame->game_type,    
                     'amount' => 500
                 ]);
-        $cash_out = $cash_game->cashOut()->first();
+        $cash_out = $cashGame->cashOut()->first();
 
         // Create and sign in the second user
         $user2 = $this->signIn();
 
         // User2 tries to Add CashOut to User1's CashGame
         $this->postJson(route('cashout.create'), [
-                    'game_id' => $cash_game->id,
-                    'game_type' => $cash_game->game_type,
+                    'game_id' => $cashGame->id,
+                    'game_type' => $cashGame->game_type,
                     'amount' => 1000
                 ])
                 ->assertForbidden();

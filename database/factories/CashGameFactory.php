@@ -32,23 +32,23 @@ $factory->define(CashGame::class, function (Faker $faker) {
     ];
 });
 
-$factory->afterCreating(CashGame::class, function ($cash_game, $faker) {
+$factory->afterCreating(CashGame::class, function ($cashGame, $faker) {
 
     $currencies = ['GBP', 'USD', 'EUR', 'PLN', 'CAD', 'AUD'];
 
     // Add at 1, 2 or 3 Buy Ins
     $num_buy_ins = rand(1,3);
     for ($i = 1; $i <= $num_buy_ins; $i++) {
-        $currency = ($i == 1) ? $cash_game->currency : $faker->randomElement($currencies);
-        $cash_game->addBuyIn($faker->numberBetween(20, 200), $currency);
+        $currency = ($i == 1) ? $cashGame->currency : $faker->randomElement($currencies);
+        $cashGame->addBuyIn($faker->numberBetween(20, 200), $currency);
     }
 
     // Add 0, 1 or 2 Expenses
     $num_expenses = rand(0,2);
     for ($i = 1; $i <= $num_expenses; $i++) {
-        $cash_game->addExpense($faker->numberBetween(1, 10), $faker->randomElement($currencies), $faker->sentence(2, true));
+        $cashGame->addExpense($faker->numberBetween(1, 10), $faker->randomElement($currencies), $faker->sentence(2, true));
     }
 
     // Cash Out Between £0 and £1000
-    $cash_game->addCashOut($faker->numberBetween(0, 1000), $faker->randomElement($currencies));
+    $cashGame->addCashOut($faker->numberBetween(0, 1000), $faker->randomElement($currencies));
 });

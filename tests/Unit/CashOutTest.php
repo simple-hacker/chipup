@@ -11,10 +11,10 @@ class CashOutTest extends TestCase
     
     public function testCashingOutUpdatesTheCashGameProfit()
     {
-        $cash_game = $this->startLiveCashGame();
-        $cash_game->addBuyIn(10000);
-        $cash_game->addCashOut(30000);
-        $this->assertEquals(20000, $cash_game->fresh()->profit);
+        $cashGame = $this->startLiveCashGame();
+        $cashGame->addBuyIn(10000);
+        $cashGame->addCashOut(30000);
+        $this->assertEquals(20000, $cashGame->fresh()->profit);
     }
 
     public function testCashingOutUpdatesTheTournamentProfit()
@@ -28,35 +28,35 @@ class CashOutTest extends TestCase
     public function testUpdatingACashOutUpdatesTheGameTypesProfit()
     {
         // Only testing CashGame which is a type of Game
-        $cash_game = $this->startLiveCashGame();
+        $cashGame = $this->startLiveCashGame();
 
-        $cash_game->addBuyIn(10000);
-        $cash_out = $cash_game->addCashOut(30000);
+        $cashGame->addBuyIn(10000);
+        $cash_out = $cashGame->addCashOut(30000);
         // -10,000 + 30,000 = 20,000
-        $this->assertEquals(20000, $cash_game->fresh()->profit);
+        $this->assertEquals(20000, $cashGame->fresh()->profit);
 
         $cash_out->update([
             'amount' => 50000
         ]);
 
         // CashGame Profit should equal 40,000 (-10,000 + 50,000) instead of 20,000
-        $this->assertEquals(40000, $cash_game->fresh()->profit);
+        $this->assertEquals(40000, $cashGame->fresh()->profit);
     }
 
     public function testDeletingACashOutUpdatesTheGameTypesProfit()
     {
         // Only testing CashGame which is a type of Game
-        $cash_game = $this->startLiveCashGame();
+        $cashGame = $this->startLiveCashGame();
         
-        $cash_game->addBuyIn(10000);
-        $cash_out = $cash_game->addCashOut(30000);
+        $cashGame->addBuyIn(10000);
+        $cash_out = $cashGame->addCashOut(30000);
         // -10,000 + 30,000 = 20,000
-        $this->assertEquals(20000, $cash_game->fresh()->profit);
+        $this->assertEquals(20000, $cashGame->fresh()->profit);
 
         $cash_out->delete();
 
         // CashGame Profit should equal -10,000 (buyIn) instead of 20,000
-        $this->assertEquals(-10000, $cash_game->fresh()->profit);
+        $this->assertEquals(-10000, $cashGame->fresh()->profit);
     }
 
     public function testCashOutDefaultsToSessionCurrency()
@@ -89,17 +89,17 @@ class CashOutTest extends TestCase
         $user = factory('App\User')->create(['currency' => 'GBP']);
 
         // Assert Cash Game currency is user default of GBP
-        $cash_game = $this->startLiveCashGame($user);
-        $this->assertEquals('GBP', $cash_game->currency);
-        $this->assertEquals(0, $cash_game->profit);
+        $cashGame = $this->startLiveCashGame($user);
+        $this->assertEquals('GBP', $cashGame->currency);
+        $this->assertEquals(0, $cashGame->profit);
         
         // Cash out $300
-        $cash_out = $cash_game->addCashOut(300, 'USD');
+        $cash_out = $cashGame->addCashOut(300, 'USD');
         $this->assertEquals('USD', $cash_out->currency);
 
         // 1 GBP = 1.25 USD
         // Cash Game profit $300 USD = £240 GBP
-        $this->assertEquals(240, $cash_game->fresh()->profit);
+        $this->assertEquals(240, $cashGame->fresh()->profit);
     }
 
     public function testCashOutHasAUserLocaleAndSessionLocaleAmounts()

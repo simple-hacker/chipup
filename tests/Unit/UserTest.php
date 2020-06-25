@@ -22,12 +22,12 @@ class UserTest extends TestCase
         $user = factory('App\User')->create();
 
         // Start a Cash Game session.
-        $cash_game = $user->startCashGame();
+        $cashGame = $user->startCashGame();
 
-        $this->assertEquals($user->liveCashGame()->id, $cash_game->id);
+        $this->assertEquals($user->liveCashGame()->id, $cashGame->id);
         
         // End the Cash Game session.
-        $cash_game->end();
+        $cashGame->end();
         
         // liveCashGame should now be an empty Collection.
         $this->assertEmpty($user->liveCashGame());

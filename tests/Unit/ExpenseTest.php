@@ -11,14 +11,14 @@ class ExpenseTest extends TestCase
     
     public function testAddingExpensesUpdatesCashGameProfit()
     {
-        $cash_game = $this->startLiveCashGame();
+        $cashGame = $this->startLiveCashGame();
 
-        $this->assertEquals(0, $cash_game->profit);
-        $cash_game->addExpense(50);
-        $this->assertEquals(-50, $cash_game->fresh()->profit);
+        $this->assertEquals(0, $cashGame->profit);
+        $cashGame->addExpense(50);
+        $this->assertEquals(-50, $cashGame->fresh()->profit);
         // Add another expense of 100.  Profit should now equal -150
-        $cash_game->addExpense(100);
-        $this->assertEquals(-150, $cash_game->fresh()->profit);
+        $cashGame->addExpense(100);
+        $this->assertEquals(-150, $cashGame->fresh()->profit);
     }
 
     public function testAddingExpensesUpdatesTournamentProfit()
@@ -36,31 +36,31 @@ class ExpenseTest extends TestCase
     public function testUpdatingAExpenseUpdatesTheGameTypesProfit()
     {
         // Only testing CashGame which is a type of Game
-        $cash_game = $this->startLiveCashGame();
+        $cashGame = $this->startLiveCashGame();
 
-        $expense = $cash_game->addExpense(500);
-        $this->assertEquals(-500, $cash_game->fresh()->profit);
+        $expense = $cashGame->addExpense(500);
+        $this->assertEquals(-500, $cashGame->fresh()->profit);
 
         $expense->update([
             'amount' => 1000
         ]);
 
         // CashGame Profit should equal -1000 instead of -500
-        $this->assertEquals(-1000, $cash_game->fresh()->profit);
+        $this->assertEquals(-1000, $cashGame->fresh()->profit);
     }
 
     public function testDeletingAExpenseUpdatesTheGameTypesProfit()
     {
         // Only testing CashGame which is a type of Game
-        $cash_game = $this->startLiveCashGame();
+        $cashGame = $this->startLiveCashGame();
         
-        $expense = $cash_game->addExpense(500);
-        $this->assertEquals(-500, $cash_game->fresh()->profit);
+        $expense = $cashGame->addExpense(500);
+        $this->assertEquals(-500, $cashGame->fresh()->profit);
 
         $expense->delete();
 
         // CashGame Profit should equal 0 instead of -500
-        $this->assertEquals(0, $cash_game->fresh()->profit);
+        $this->assertEquals(0, $cashGame->fresh()->profit);
     }
 
     public function testExpenseDefaultsToSessionCurrency()
@@ -93,17 +93,17 @@ class ExpenseTest extends TestCase
         $user = factory('App\User')->create(['currency' => 'GBP']);
 
         // Assert Cash Game currency is user default of GBP
-        $cash_game = $this->startLiveCashGame($user);
-        $this->assertEquals('GBP', $cash_game->currency);
-        $this->assertEquals(0, $cash_game->profit);
+        $cashGame = $this->startLiveCashGame($user);
+        $this->assertEquals('GBP', $cashGame->currency);
+        $this->assertEquals(0, $cashGame->profit);
         
         // Cash out $300
-        $cash_out = $cash_game->addExpense(300, 'USD');
+        $cash_out = $cashGame->addExpense(300, 'USD');
         $this->assertEquals('USD', $cash_out->currency);
 
         // 1 GBP = 1.25 USD
         // Cash Game profit $300 USD = £240 GBP
-        $this->assertEquals(-240, $cash_game->fresh()->profit);
+        $this->assertEquals(-240, $cashGame->fresh()->profit);
     }
 
     public function testExpenseHasAUserLocaleAndSessionLocaleAmounts()
