@@ -22,7 +22,7 @@ class BankrollObserver
      */
     public function created(Bankroll $bankrollTransaction)
     {
-        $bankrollTransaction->user->updateBankroll($bankrollTransaction->locale_amount);
+        // $bankrollTransaction->user->updateBankroll($bankrollTransaction->locale_amount);
     }
 
     /**
@@ -33,24 +33,26 @@ class BankrollObserver
      */
     public function updated(Bankroll $bankrollTransaction)
     {
-        // Find the difference needed for bankroll to be accurate.
-        $rates = ExchangeRates::first();
-        $exchange = new ReversedCurrenciesExchange(new FixedExchange([
-            'GBP' => $rates->rates
-        ]));
-        $indirectExchange = new IndirectExchange($exchange, new ISOCurrencies);
-        $converter = new Converter(new ISOCurrencies(), $indirectExchange);
+        // TODO:  NEED TO CHECK IN CASE USER SWITCHES CURRENCY
+
+        // // Find the difference needed for bankroll to be accurate.
+        // $rates = ExchangeRates::first();
+        // $exchange = new ReversedCurrenciesExchange(new FixedExchange([
+        //     'GBP' => $rates->rates
+        // ]));
+        // $indirectExchange = new IndirectExchange($exchange, new ISOCurrencies);
+        // $converter = new Converter(new ISOCurrencies(), $indirectExchange);
 
 
-        $originalLocaleAmount = new Money($bankrollTransaction->getOriginal('amount'), new Currency($bankrollTransaction->getOriginal('currency')));
-        $originalLocaleAmount = $converter->convert($originalLocaleAmount, new Currency($bankrollTransaction->user->currency));
+        // $originalLocaleAmount = new Money($bankrollTransaction->getOriginal('amount'), new Currency($bankrollTransaction->getOriginal('currency')));
+        // $originalLocaleAmount = $converter->convert($originalLocaleAmount, new Currency($bankrollTransaction->user->currency));
 
-        $newLocaleAmount = new Money(($bankrollTransaction->amount * 100), new Currency($bankrollTransaction->currency));
-        $newLocaleAmount = $converter->convert($newLocaleAmount, new Currency($bankrollTransaction->user->currency));
+        // $newLocaleAmount = new Money(($bankrollTransaction->amount * 100), new Currency($bankrollTransaction->currency));
+        // $newLocaleAmount = $converter->convert($newLocaleAmount, new Currency($bankrollTransaction->user->currency));
 
-        $amount = ($newLocaleAmount->getAmount() - $originalLocaleAmount->getAmount()) / 100;
+        // $amount = ($newLocaleAmount->getAmount() - $originalLocaleAmount->getAmount()) / 100;
 
-        $bankrollTransaction->user->updateBankroll($amount);
+        // $bankrollTransaction->user->updateBankroll($amount);
     }
 
     /**
@@ -64,7 +66,7 @@ class BankrollObserver
         // We update the User's bankroll by the opposite amount (multiply by -1)
         // So if we originally added 10000, we decrement by -10000 and vice versa
         
-        $bankrollTransaction->user->updateBankroll($bankrollTransaction->locale_amount * -1);
+        // $bankrollTransaction->user->updateBankroll($bankrollTransaction->locale_amount * -1);
     }
 
     /**

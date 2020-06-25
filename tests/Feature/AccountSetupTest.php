@@ -43,10 +43,7 @@ class AccountSetupTest extends TestCase
 
     public function testAUserCanCompleteTheirSetup()
     {
-        $this->withoutExceptionHandling();
-
         $attributes = [
-            'bankroll' => 0,
             'default_stake_id' => null,
             'default_limit_id' => null,
             'default_variant_id' => null,
@@ -55,8 +52,8 @@ class AccountSetupTest extends TestCase
         ];
 
         $new_attributes = [
-            'locale' => 'en-GB',
-            'currency' => 'GBP',
+            'locale' => 'en-US',
+            'currency' => 'USD',
             'bankroll' => 1000,
             'default_stake_id' => 1,
             'default_limit_id' => 1,
@@ -65,11 +62,8 @@ class AccountSetupTest extends TestCase
             'default_location' => 'Casino MK'
         ];
 
-        // NOTE: 2020-04-29
-        // There's a mutator on bankroll which multiplies by 100 when inserting in to the database.
-        // So it was failing to find the attributes exactly.
-        $find_attributes = $new_attributes;
-        $find_attributes['bankroll'] *= 100;
+        $find_new_attributes = $new_attributes;
+        unset($find_new_attributes['bankroll']);
 
         // Create a new user with empty default attributes
         // Send in blank $attributes because UserFactory generates a user which has already chosen them.
@@ -79,7 +73,7 @@ class AccountSetupTest extends TestCase
 
         // Assert original attributes are in table and new_attributes have not been saved yet.
         $this->assertDatabaseHas('users', $attributes);
-        $this->assertDatabaseMissing('users', $find_attributes);
+        $this->assertDatabaseMissing('users', $find_new_attributes);
 
         // Make POST request to complete user's setup with new default values.
         $this->postJson(route('setup.complete'), $new_attributes)
@@ -92,9 +86,11 @@ class AccountSetupTest extends TestCase
 
         // Assert original attributes are missing from table and have been replaced by new attributes
         $this->assertDatabaseMissing('users', $attributes);
-        $this->assertDatabaseHas('users', $find_attributes);
+        $this->assertDatabaseHas('users', $find_new_attributes);
         
         $user->refresh();
+        $this->assertEquals('en-US', $user->locale);
+        $this->assertEquals('USD', $user->currency);
         $this->assertEquals(1000, $user->bankroll);
         $this->assertTrue($user->setup_complete);
     }
@@ -212,7 +208,6 @@ class AccountSetupTest extends TestCase
         // Need to complete setup with values, then try again with new values and assert database wasn't updated with new values
 
         $old_attributes = [
-            'bankroll' => 1000,
             'default_stake_id' => 1,
             'default_limit_id' => 1,
             'default_variant_id' => 1,
@@ -221,7 +216,6 @@ class AccountSetupTest extends TestCase
         ];
 
         $new_attributes = [
-            'bankroll' => 9999,
             'default_stake_id' => 2,
             'default_limit_id' => 2,
             'default_variant_id' => 2,
@@ -229,16 +223,9 @@ class AccountSetupTest extends TestCase
             'default_location' => 'Las Vegas'
         ];
 
-        // NOTE: 2020-04-29
-        // There's a mutator on bankroll which multiplies by 100 when inserting in to the database.
-        // So it was failing to find the attributes exactly.
-        $find_old_attributes = $old_attributes;
-        $find_old_attributes['bankroll'] *= 100;
-        $find_new_attributes = $new_attributes;
-        $find_new_attributes['bankroll'] *= 100;
 
         // Create user and send old_attributes when completing setup.
-        $user = factory('App\User')->create(['bankroll' => 0]);
+        $user = factory('App\User')->create();
         $this->actingAs($user);
         $this->postJson(route('setup.complete'), $old_attributes)
                 ->assertOk()
@@ -249,8 +236,8 @@ class AccountSetupTest extends TestCase
                 ]);
 
         // Assert old_attributes are in table and new_attributes have not been saved yet.
-        $this->assertDatabaseHas('users', $find_old_attributes);
-        $this->assertDatabaseMissing('users', $find_new_attributes);
+        $this->assertDatabaseHas('users', $old_attributes);
+        $this->assertDatabaseMissing('users', $new_attributes);
 
         // Make POST request to complete user's setup with new_attributes
         // and assertRedirect to dashboard (which should be because of the middleware and not the controller)
@@ -258,8 +245,8 @@ class AccountSetupTest extends TestCase
 
         // If middleware worked correctly then database should not have been changed
         // and so old_attributes will still be in the database, and assert new_attributes are not and weren't saved
-        $this->assertDatabaseHas('users', $find_old_attributes);
-        $this->assertDatabaseMissing('users', $find_new_attributes);
+        $this->assertDatabaseHas('users', $old_attributes);
+        $this->assertDatabaseMissing('users', $new_attributes);
     }
 
     public function testAUserIsRedirectedToCompleteSetupWhenVisitingDashboardIfNotCompleted()
@@ -305,7 +292,7 @@ class AccountSetupTest extends TestCase
         ];
 
         // Create user and send attributes when completing setup.
-        $user = factory('App\User')->create(['bankroll' => 0]);
+        $user = factory('App\User')->create();
         $this->actingAs($user);
         $this->postJson(route('setup.complete'), $attributes)->assertOk();
 

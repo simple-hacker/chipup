@@ -31,4 +31,14 @@ class CashGame extends Game
     {
         return $this->belongsTo('App\Attributes\TableSize');
     }
+
+    /**
+    * Mutate profit
+    *
+    * @return Integer
+    */
+    public function getProfitAttribute()
+    {
+        return 0 - $this->totalBuyInsAmount() - $this->totalExpensesAmount() + $this->cashOutAmount();
+    }
 }

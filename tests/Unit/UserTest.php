@@ -12,11 +12,9 @@ class UserTest extends TestCase
     
     public function testUserHasABankroll()
     {
-        $user = factory('App\User')->create([
-            'bankroll' => 10000
-        ]);
+        $user = factory('App\User')->create();
 
-        $this->assertEquals($user->bankroll, 10000);
+        $this->assertEquals($user->bankroll, 0);
     }
 
     public function testGetTheLiveCashGameForAUser()
@@ -59,24 +57,4 @@ class UserTest extends TestCase
 
         $this->assertTrue($user->fresh()->setup_complete);
     }
-
-    // public function testDefaultLocaleIsenGB()
-    // {
-    //     $userAttributes = factory('App\User')->raw();
-    //     unset($userAttributes['locale']);
-
-    //     $user = User::create($userAttributes);
-
-    //     $this->assertEquals('en-GB', $user->locale);
-    // }
-
-    // public function testDefaultCurrencyIsGBP()
-    // {
-    //     $userAttributes = factory('App\User')->raw();
-    //     unset($userAttributes['currency']);
-
-    //     $user = factory('App\User')->create($userAttributes);
-
-    //     $this->assertEquals('GBP', $user->currency);
-    // }
 }

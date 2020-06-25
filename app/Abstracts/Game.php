@@ -23,7 +23,6 @@ abstract class Game extends Model
 
     protected $casts = [
         'user_id' => 'integer',
-        'profit' => 'float',
         'prize_pool' => 'integer',
         'position' => 'integer',
         'entries' => 'integer',
@@ -99,7 +98,7 @@ abstract class Game extends Model
     public function addTransaction(string $transaction_type, float $amount, string $currency = null, string $comments = null)
     {
         if (! $currency) {
-            $currency = auth()->user()->currency;
+            $currency = $this->currency ?? auth()->user()->currency;
         }
 
         switch($transaction_type) {
@@ -126,7 +125,7 @@ abstract class Game extends Model
     public function addBuyIn(float $amount, string $currency = null)
     {
         if (! $currency) {
-            $currency = auth()->user()->currency;
+            $currency = $this->currency ?? auth()->user()->currency;
         }
 
         return $this->buyIns()->create([
@@ -145,7 +144,7 @@ abstract class Game extends Model
     public function addExpense(float $amount, string $currency = null, string $comments = null)
     {
         if (! $currency) {
-            $currency = auth()->user()->currency;
+            $currency = $this->currency ?? auth()->user()->currency;
         }
 
         return $this->expenses()->create([
@@ -169,7 +168,7 @@ abstract class Game extends Model
         // }
 
         if (! $currency) {
-            $currency = auth()->user()->currency;
+            $currency = $this->currency ?? auth()->user()->currency;
         }
 
         return $this->cashOut()->create([
@@ -233,25 +232,41 @@ abstract class Game extends Model
     }
 
     /**
-    * Mutate profit in to currency
-    *
-    * @param Float $profit
-    * @return void
+    * Return total buy ins amount converted in to session currency
+    * 
+    * @return Integer
     */
-    public function getProfitAttribute($profit)
+    public function totalBuyInsAmount()
     {
-        return $profit / 100;
+        $total = $this->buyIns->reduce(function ($total, $buyIn) {
+            return $total + $buyIn->session_locale_amount;
+        }, 0);
+
+        return $total;
     }
 
     /**
-    * Mutate profit in to lowest denomination
-    *
-    * @param Float $profit
-    * @return void
+    * Return total expenses amount converted in to session currency
+    * 
+    * @return Integer
     */
-    public function setProfitAttribute($profit)
+    public function totalExpensesAmount()
     {
-        $this->attributes['profit'] = $profit * 100;
+        $total = $this->expenses->reduce(function ($total, $expense) {
+            return $total + $expense->session_locale_amount;
+        }, 0);
+
+        return $total;
+    }
+
+    /**
+    * Return cash out amount in session currency
+    * 
+    * @return Integer
+    */
+    public function cashOutAmount()
+    {
+        return $this->cashOut->session_locale_amount ?? 0;
     }
 
     /**
@@ -273,11 +288,13 @@ abstract class Game extends Model
         
         $converter = new Converter(new ISOCurrencies(), $indirectExchange);
 
-        // attributes['profit'] is the raw profit from database before being divided by 100, as Money needs an integer
-        $transactionProfit = new Money($this->attributes['profit'], new Currency($this->currency));
+        // Profit is real world currency, need to multiply by 100 to convert to lowest denomination integer
+        $transactionProfit = new Money($this->profit * 100, new Currency($this->currency));
 
-        $localeprofit = $converter->convert($transactionProfit, new Currency($this->user->currency));
-        return $localeprofit->getAmount() / 100;
+        $localeProfit = $converter->convert($transactionProfit, new Currency($this->user->currency));
+        
+        // Divide by 100 to convert back to real world currency
+        return $localeProfit->getAmount() / 100;
     }
 
 

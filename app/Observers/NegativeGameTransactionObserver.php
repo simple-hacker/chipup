@@ -14,8 +14,8 @@ class NegativeGameTransactionObserver
      */
     public function created(NegativeGameTransaction $negativeGameTransaction)
     {
-        $negativeGameTransaction->game->profit -= $negativeGameTransaction->amount;
-        $negativeGameTransaction->game->save();
+        // $negativeGameTransaction->game->profit -= $negativeGameTransaction->amount;
+        // $negativeGameTransaction->game->save();
     }
 
     /**
@@ -26,11 +26,13 @@ class NegativeGameTransactionObserver
      */
     public function updated(NegativeGameTransaction $negativeGameTransaction)
     {
-        // Find the difference needed for profit to be accurate.
-        $amount = $negativeGameTransaction->amount - ($negativeGameTransaction->getOriginal('amount') / 100);
+        // TODO:  NEED TO CHECK IF USER SWITCHES CURRENCY
 
-        $negativeGameTransaction->game->profit -= $amount;
-        $negativeGameTransaction->game->save();
+        // // Find the difference needed for profit to be accurate.
+        // $amount = $negativeGameTransaction->amount - ($negativeGameTransaction->getOriginal('amount') / 100);
+
+        // $negativeGameTransaction->game->profit -= $amount;
+        // $negativeGameTransaction->game->save();
     }
 
     /**
@@ -41,10 +43,10 @@ class NegativeGameTransactionObserver
      */
     public function deleted(NegativeGameTransaction $negativeGameTransaction)
     {
-        // This is increment because a negativeGameTransaction is a decrement normally, so when it's 
-        // deleted we add the amount back on.
-        $negativeGameTransaction->game->profit += $negativeGameTransaction->amount;
-        $negativeGameTransaction->game->save();
+        // // This is increment because a negativeGameTransaction is a decrement normally, so when it's 
+        // // deleted we add the amount back on.
+        // $negativeGameTransaction->game->profit += $negativeGameTransaction->amount;
+        // $negativeGameTransaction->game->save();
     }
 
     /**

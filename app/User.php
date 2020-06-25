@@ -40,7 +40,6 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'setup_complete' => 'boolean',
-        'bankroll' => 'integer',
         'default_stake_id' => 'integer',
         'default_limit_id' => 'integer',
         'default_variant_id' => 'integer',
@@ -64,20 +63,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sendEmailVerificationNotification() {
         $this->notify(new PokerVerifyEmail);
-    }
-
-    /**
-    * Updates the user's bankroll.
-    * 
-    * @param integer amount
-    */
-    public function updateBankroll($amount)
-    {   
-        if ($amount > 0) {
-            $this->increment('bankroll', $amount * 100);
-        } else {
-            $this->decrement('bankroll', $amount * -100);
-        }
     }
 
     /**
@@ -321,7 +306,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
     * Boolean if user has completed the account setup.
     * 
-    * @return 
+    * @return App\User
     */
     public function completeSetup(): User
     {
@@ -335,22 +320,52 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
     * Mutate bankroll in to currency
     *
-    * @param Integer $bankroll
-    * @return void
+    * @return Integer
     */
-    public function getBankrollAttribute($bankroll)
+    public function getBankrollAttribute()
     {
-        return $bankroll / 100;
+        return $this->totalBankrollTransactionAmounts() + $this->totalCashGameProfit() + $this->totalTournamentProfit();
     }
 
     /**
-    * Mutate bankroll in to lowest denomination
-    *
-    * @param Float $bankroll
-    * @return void
+    * Returns the sum of all bankroll transactions
+    * 
+    * @return Integer
     */
-    public function setBankrollAttribute($bankroll)
+    public function totalBankrollTransactionAmounts()
     {
-        $this->attributes['bankroll'] = $bankroll * 100;
+        $total = $this->bankrollTransactions->reduce(function ($total, $bankrollTransaction) {
+            return $total + $bankrollTransaction->localeAmount;
+        }, 0);
+
+        return $total;
+    }
+
+    /**
+    * Returns the sum of all cash game profits in locale currency
+    * 
+    * @return Integer
+    */
+    public function totalCashGameProfit()
+    {
+        $total = $this->cashGames->reduce(function ($total, $cashGame) {
+            return $total + $cashGame->localeProfit;
+        }, 0);
+
+        return $total;
+    }
+
+    /**
+    * Returns the sum of all tournament profits
+    * 
+    * @return Integer
+    */
+    public function totalTournamentProfit()
+    {
+        $total = $this->tournaments->reduce(function ($total, $tournament) {
+            return $total + $tournament->localeProfit;
+        }, 0);
+
+        return $total;
     }
 }

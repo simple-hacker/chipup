@@ -25,7 +25,7 @@ class Tournament extends Game
     public function addBuyIn(float $amount, string $currency = null)
     {
         if (! $currency) {
-            $currency = auth()->user()->currency;
+            $currency = $this->currency ?? auth()->user()->currency;
         }
         
         if ($this->buyIn()->count() > 0) {
@@ -48,7 +48,7 @@ class Tournament extends Game
     public function addRebuy(float $amount, string $currency = null)
     {
         if (! $currency) {
-            $currency = auth()->user()->currency;
+            $currency = $this->currency ?? auth()->user()->currency;
         }
 
         return $this->rebuys()->create([
@@ -67,7 +67,7 @@ class Tournament extends Game
     public function addAddOn(float $amount, string $currency = null)
     {
         if (! $currency) {
-            $currency = auth()->user()->currency;
+            $currency = $this->currency ?? auth()->user()->currency;
         }
 
         return $this->addOns()->create([
@@ -104,6 +104,54 @@ class Tournament extends Game
     public function addOns()
     {
         return $this->morphMany('App\Transactions\AddOn', 'game');
+    }
+
+    /**
+    * Mutate profit
+    *
+    * @return Integer
+    */
+    public function getProfitAttribute()
+    {
+        return 0 -$this->buyInAmount() - $this->totalRebuysAmount() - $this->totalAddOnsAmount() - $this->totalExpensesAmount() + $this->cashOutAmount();
+    }
+
+    /**
+    * Return cash out amount in session currency
+    * 
+    * @return Integer
+    */
+    public function buyInAmount()
+    {
+        return $this->buyIn->session_locale_amount ?? 0;
+    }
+
+    /**
+    * Return total rebuys amount converted in to session currency
+    * 
+    * @return Integer
+    */
+    public function totalRebuysAmount()
+    {
+        $total = $this->rebuys->reduce(function ($total, $rebuy) {
+            return $total + $rebuy->session_locale_amount;
+        }, 0);
+
+        return $total;
+    }
+
+    /**
+    * Return total rebuys amount converted in to session currency
+    * 
+    * @return Integer
+    */
+    public function totalAddOnsAmount()
+    {
+        $total = $this->addOns->reduce(function ($total, $addOn) {
+            return $total + $addOn->session_locale_amount;
+        }, 0);
+
+        return $total;
     }
 
     /**

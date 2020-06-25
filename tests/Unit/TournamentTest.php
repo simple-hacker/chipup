@@ -291,46 +291,46 @@ class TournamentTest extends TestCase
         // Only testing the BuyIn of the GameTransactions as they all work the same because of Positive/NegativeGameTransactionObserver
         // which updates the Tournament's profit.
 
-        $user = factory('App\User')->create([
-            'bankroll' => 5000
-        ]);
+        $user = factory('App\User')->create();
         $this->signIn($user);
 
         $tournament = $user->startTournament($this->getLiveTournamentAttributes());
         $tournament->addBuyIn(1000);
 
-        // Original bankroll is 5000, but we take off 1000 as we buy in.
-        // User's bankroll should be 4000
-        $this->assertEquals(4000, $user->fresh()->bankroll);
+        // Original bankroll is 0, but we take off 1000 as we buy in.
+        $this->assertEquals(-1000, $user->fresh()->bankroll);
 
         // This should also work if we update the BuyIn.
         $buy_in = $tournament->buyIns()->first();
         $buy_in->update([
             'amount' => 500
         ]);
-        // Bankroll should be 4500 (original 5000 and updated -500)
-        $this->assertEquals(4500, $user->fresh()->bankroll);
+        // Bankroll should be -500 (original 0 and updated -500)
+        $this->assertEquals(-500, $user->fresh()->bankroll);
 
         // This should also work if we update the BuyIn.
         $buy_in->delete();
-        // Bankroll should be 5000 (original 5000)
-        $this->assertEquals(5000, $user->fresh()->bankroll);
+        // Bankroll should revert back to 0
+        $this->assertEquals(0, $user->fresh()->bankroll);
         
         
         // Testing Positive transaction as well.
-        $tournament->addCashOut(2000);
-        // We're back to the original 5000, but we cashed out for 2000.  Bankroll = 7000
-        $this->assertEquals(7000, $user->fresh()->bankroll);
+        $cashOut = $tournament->addCashOut(2000);
+        $this->assertEquals(2000, $user->fresh()->bankroll);
+
+        // Delete the Cash Out and user's bankroll should revert back to 0
+        $cashOut->delete();
+        $this->assertEquals(0, $user->fresh()->bankroll);
         
     }
 
     public function testTheUsersBankrollIsUpdatedWhenATournamentIsDeleted()
     {
-        $user = factory('App\User')->create([
-            'bankroll' => 10000
-        ]);
+        // Start with zero bankroll
+        $user = factory('App\User')->create();
         $this->signIn($user);
 
+        // Create a tournament with various buy ins and cash out.
         $tournament = $user->startTournament($this->getLiveTournamentAttributes());
         $tournament->addBuyIn(1000);
         $tournament->addExpense(50);
@@ -338,26 +338,26 @@ class TournamentTest extends TestCase
         $tournament->addRebuy(1000);
         $tournament->addAddOn(500);
         $tournament->addCashOut(1000);
+        // Total Buy Ins = 1000 + 50 + 200 + 1000 + 500 = 2750
+        // Total Cash Out = 1000
+        // Tournament Profit  = -2750 + 1000 = -1750
 
-        // Check that users bankroll is 7750 (10000-1000-50--1000-500+1000)
-        $this->assertEquals(8250, $user->fresh()->bankroll);
-        // Tournament profit is -1750 (-1000-50-1000-500+1000)
         $this->assertEquals(-1750, $tournament->fresh()->profit);
+        $this->assertEquals(-1750, $user->fresh()->bankroll);
 
-        // Now if we delete the tournament the user's bankroll should revert back to the orignal
-        // 10000, calculated by the user's current bankroll (9750) minus the tournaments profit (-250)
-        // If the tournament profit is negative, it adds back on, if positive it should subtract it.
+        // Now if we delete the tournament the user's bankroll should revert back to the orignal bankroll of 0
         $tournament->fresh()->delete();
-        $this->assertEquals(10000, $user->fresh()->bankroll);
+        $this->assertEquals(0, $user->fresh()->bankroll);
         
         // Test again with positive profit
         $tournament2 = $user->startTournament($this->getLiveTournamentAttributes());
         $tournament2->addCashOut(10000);
-        // Orignal bankroll 10000 + cashOut 10000 = 20000
-        $this->assertEquals(20000, $user->fresh()->bankroll);
-
-        $tournament2->fresh()->delete();
+        // Orignal bankroll 0 + cashOut 10000
         $this->assertEquals(10000, $user->fresh()->bankroll);
+
+        // Deleting the Cash Out will revert user's bank roll to original amount, which is 0
+        $tournament2->fresh()->delete();
+        $this->assertEquals(0, $user->fresh()->bankroll);
     }
 
     public function testWhenATournamentIsDeletedItDeletesAllOfItsGameTransactions()
@@ -381,7 +381,7 @@ class TournamentTest extends TestCase
         $this->assertCount(2, $tournament->rebuys);
         $this->assertCount(2, $tournament->addOns);
         $this->assertEquals(-3250, $tournament->profit);
-        $this->assertEquals(6750, $user->fresh()->bankroll);
+        $this->assertEquals(-3250, $user->fresh()->bankroll);
         $this->assertCount(1, $user->tournaments);
         
         // When deleting a Tournament it shoudl delete all it's GameTransactions
@@ -392,7 +392,7 @@ class TournamentTest extends TestCase
         $user->refresh();
         
         $this->assertCount(0, $user->tournaments);
-        $this->assertEquals(10000, $user->bankroll);
+        $this->assertEquals(0, $user->bankroll);
         $this->assertCount(0, BuyIn::all());
         $this->assertCount(0, Expense::all());
         $this->assertCount(0, CashOut::all());
@@ -416,14 +416,14 @@ class TournamentTest extends TestCase
         // Create a User with default USD currency
         $user = factory('App\User')->create(['currency' => 'USD']);
 
-        // Create a Cash Game with profit of 1,000 PLN
-        $tournament = $user->tournaments()->create([
-            'currency' => 'PLN',
-            'profit' => 1000,
-        ]);
+        // Create a Cash Game with currency of PLN
+        $tournament = $user->tournaments()->create(['currency' => 'PLN']);
+        // Add a 1000 PLN Buy In
+        $tournament->addBuyIn(1000);
 
+        
         // 4.9 PLN / 1 GBP / 1.25 USD
         // 1000 PLN = £204.08 GBP = $255.10 USD
-        $this->assertEquals(255.10, $tournament->locale_profit);
+        $this->assertEquals(-255.10, $tournament->locale_profit);
     }
 }

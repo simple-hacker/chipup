@@ -14,8 +14,8 @@ class PositiveGameTransactionObserver
      */
     public function created(PositiveGameTransaction $positiveGameTransaction)
     {
-        $positiveGameTransaction->game->profit += $positiveGameTransaction->amount;
-        $positiveGameTransaction->game->save();
+        // $positiveGameTransaction->game->profit += $positiveGameTransaction->amount;
+        // $positiveGameTransaction->game->save();
     }
 
     /**
@@ -26,11 +26,14 @@ class PositiveGameTransactionObserver
      */
     public function updated(PositiveGameTransaction $positiveGameTransaction)
     {
-        // Find the difference needed for profit to be accurate.
-        $amount = $positiveGameTransaction->amount - ($positiveGameTransaction->getOriginal('amount') / 100);
+        // TODO:  NEED TO CHECK IF USER SWITCHES CURRENCY
 
-        $positiveGameTransaction->game->profit += $amount;
-        $positiveGameTransaction->game->save();
+        
+        // // Find the difference needed for profit to be accurate.
+        // $amount = $positiveGameTransaction->amount - ($positiveGameTransaction->getOriginal('amount') / 100);
+
+        // $positiveGameTransaction->game->profit += $amount;
+        // $positiveGameTransaction->game->save();
     }
 
     /**
@@ -41,10 +44,10 @@ class PositiveGameTransactionObserver
      */
     public function deleted(PositiveGameTransaction $positiveGameTransaction)
     {
-        // This is decrement because a PositiveGameTransaction is a increment normally, so when it's 
-        // deleted we subtract the amount we put on.
-        $positiveGameTransaction->game->profit -= $positiveGameTransaction->amount;
-        $positiveGameTransaction->game->save();
+        // // This is decrement because a PositiveGameTransaction is a increment normally, so when it's 
+        // // deleted we subtract the amount we put on.
+        // $positiveGameTransaction->game->profit -= $positiveGameTransaction->amount;
+        // $positiveGameTransaction->game->save();
     }
 
     /**

@@ -46,7 +46,7 @@ abstract class TestCase extends BaseTestCase
     protected function getLiveCashGameAttributes($amount = 1000, $start_time = null) {
 
         $attributes = [
-            'currency' => 'GBP',
+            'currency' => auth()->user()->currency ?? 'GBP',
             'amount' => $amount,
             'stake_id' => Stake::inRandomOrder()->first()->id,
             'variant_id' => Variant::inRandomOrder()->first()->id,
@@ -102,7 +102,7 @@ abstract class TestCase extends BaseTestCase
     protected function getLiveTournamentAttributes($amount = 1000, $start_time = null)
     {
         $attributes = [
-            'currency' => 'GBP',
+            'currency' => auth()->user()->currency ?? 'GBP',
             'amount' => $amount,
             'name' => 'FU Flip',
             'variant_id' => Variant::inRandomOrder()->first()->id,

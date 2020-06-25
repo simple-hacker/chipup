@@ -15,10 +15,7 @@ class BankrollTest extends TestCase
     {
         $user = factory('App\User')->create();
 
-        $this->postJson(route('bankroll.create'), [
-                'amount' => 30000
-            ])
-            ->assertUnauthorized();
+        $this->postJson(route('bankroll.create'), ['amount' => 30000])->assertUnauthorized();
 
         // Create a BankrollTransaction to update
         $bankrollTransaction = Bankroll::create([
@@ -28,20 +25,14 @@ class BankrollTest extends TestCase
             'amount' => 1000,
         ]);
         
-        $this->patchJson(route('bankroll.update', ['bankrollTransaction', $bankrollTransaction]), [
-                'amount' => 30000
-            ])
-            ->assertUnauthorized();
+        $this->patchJson(route('bankroll.update', ['bankrollTransaction', $bankrollTransaction]), ['amount' => 30000])->assertUnauthorized();
 
-        $this->deleteJson(route('bankroll.delete', ['bankrollTransaction', $bankrollTransaction]))
-            ->assertUnauthorized();
+        $this->deleteJson(route('bankroll.delete', ['bankrollTransaction', $bankrollTransaction]))->assertUnauthorized();
     }
     
     public function testAUserCanAddToTheirBankroll()
     {
-        $user = factory('App\User')->create([
-            'bankroll' => 0,
-        ]);
+        $user = factory('App\User')->create();
         $user->completeSetup();
 
         $this->actingAs($user);
@@ -62,16 +53,14 @@ class BankrollTest extends TestCase
 
     public function testAUserCanWithdrawFromTheirBankroll()
     {
-        $user = factory('App\User')->create([
-            'bankroll' => 50000,
-        ]);
+        $user = factory('App\User')->create();
         $user->completeSetup();
 
         $this->actingAs($user);
 
         // Supply negative number for withdrawals
         $this->postJson(route('bankroll.create'), [
-                'amount' => -10000
+                'amount' => -1000
             ])
             ->assertStatus(200)
             ->assertJson([
@@ -80,15 +69,13 @@ class BankrollTest extends TestCase
 
         $user->refresh();
 
-        $this->assertEquals(40000, $user->bankroll);
+        $this->assertEquals(-1000, $user->bankroll);
         $this->assertCount(1, $user->bankrollTransactions);
     }
 
     public function testAUserCanUpdateTheirBankrollTransaction()
     {
-        $user = factory('App\User')->create([
-            'bankroll' => 0,
-        ]);
+        $user = factory('App\User')->create();
         $user->completeSetup();
 
         $this->actingAs($user);
@@ -108,9 +95,7 @@ class BankrollTest extends TestCase
 
     public function testAUserCanDeleteTheirBankrollTransaction()
     {
-        $user = factory('App\User')->create([
-            'bankroll' => 50000,
-        ]);
+        $user = factory('App\User')->create();
         $user->completeSetup();
 
         $this->actingAs($user);
@@ -121,17 +106,17 @@ class BankrollTest extends TestCase
         ]);
 
         $user->refresh();
-        $this->assertEquals(40000, $user->bankroll); // 50000 - 10000 = 40000
+        $this->assertEquals(-10000, $user->bankroll); // 50000 - 10000 = 40000
         $this->assertCount(1, $user->bankrollTransactions);
         
         // Get the user's Withdraw Transaction and delete it.
         $bankrollTransaction = $user->bankrollTransactions->first();
         $this->deleteJson(route('bankroll.delete', ['bankrollTransaction' => $bankrollTransaction]));
 
-        // The user shouldn't have any Transactions and their bankroll should be the original 50000
+        // The user shouldn't have any Transactions and their bankroll should be the original 0
         $user->refresh();
         $this->assertCount(0, $user->bankrollTransactions);
-        $this->assertEquals(50000, $user->bankroll);
+        $this->assertEquals(0, $user->bankroll);
     }
 
     public function testOnlyTheOwnerCanManageTheirBankrollTransactions()
@@ -169,9 +154,7 @@ class BankrollTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $user = factory('App\User')->create([
-            'bankroll' => 10000  //This doesn't create a BankrollTransaction
-        ]);
+        $user = factory('App\User')->create();
         $user->completeSetup();
         $this->actingAs($user);
 
@@ -195,8 +178,6 @@ class BankrollTest extends TestCase
 
     public function testDateIsSetToNowWhenCreatingBankrollTransaction()
     {
-        $this->withoutExceptionHandling();
-
         // We don't provide a date when creating a bankroll transaction, so it defaults to now()
         $user = $this->signIn();
         $this->postJson(route('bankroll.create'), [
@@ -211,9 +192,7 @@ class BankrollTest extends TestCase
     public function testBankrollTransactionDateCanBeUpdated()
     {
         $user = $this->signIn();
-        $this->postJson(route('bankroll.create'), [
-            'amount' => 30000
-        ]);
+        $this->postJson(route('bankroll.create'), ['amount' => 30000]);
 
         $bankrollTransaction = $user->bankrollTransactions->first();
  
@@ -230,9 +209,7 @@ class BankrollTest extends TestCase
     public function testUpdatedDateCannotBeInTheFuture()
     {
         $user = $this->signIn();
-        $this->postJson(route('bankroll.create'), [
-            'amount' => 30000
-        ]);
+        $this->postJson(route('bankroll.create'), ['amount' => 30000]);
 
         $bankrollTransaction = $user->bankrollTransactions->first();
 

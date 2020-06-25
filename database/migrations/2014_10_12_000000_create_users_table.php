@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
             $table->boolean('setup_complete')->default(false);
             $table->string('locale', 30)->default('en-GB');
             $table->string('currency', 6)->default('GBP');
-            $table->bigInteger('bankroll')->default(0);
             $table->unsignedBigInteger('default_stake_id')->nullable();
             $table->unsignedBigInteger('default_limit_id')->nullable();
             $table->unsignedBigInteger('default_variant_id')->nullable();

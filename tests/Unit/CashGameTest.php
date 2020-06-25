@@ -231,44 +231,42 @@ class CashGameTest extends TestCase
         // Only testing the BuyIn of the GameTransactions as they all work the same because of Positive/NegativeGameTransactionObserver
         // which updates the CashGame's profit.
 
-        $user = factory('App\User')->create([
-            'bankroll' => 5000
-        ]);
+        $user = factory('App\User')->create();
         $this->signIn($user);
 
         $cash_game = $user->startCashGame();
         $cash_game->addBuyIn(1000);
 
-        // Original bankroll is 5000, but we take off 1000 as we buy in.
-        // User's bankroll should be 4000
-        $this->assertEquals(4000, $user->fresh()->bankroll);
+        // Original bankroll is 0, but we take off 1000 as we buy in.
+        // User's bankroll should be -1000
+        $this->assertEquals(-1000, $user->fresh()->bankroll);
 
         // This should also work if we update the BuyIn.
         $buy_in = $cash_game->buyIns()->first();
         $buy_in->update([
             'amount' => 500
         ]);
-        // Bankroll should be 4500 (original 5000 and updated -500)
-        $this->assertEquals(4500, $user->fresh()->bankroll);
+        // Bankroll should be -500 (original -1000 and updated -500)
+        $this->assertEquals(-500, $user->fresh()->bankroll);
 
         // This should also work if we update the BuyIn.
         $buy_in->delete();
         // Bankroll should be 5000 (original 5000)
-        $this->assertEquals(5000, $user->fresh()->bankroll);
+        $this->assertEquals(0, $user->fresh()->bankroll);
         
         
         // Testing Positive transaction as well.
-        $cash_game->addCashOut(2000);
-        // We're back to the original 5000, but we cashed out for 2000.  Bankroll = 7000
-        $this->assertEquals(7000, $user->fresh()->bankroll);
-        
+        $cashOut = $cash_game->addCashOut(2000);
+        $this->assertEquals(2000, $user->fresh()->bankroll);
+
+        // Delete the Cash Out and user's bankroll should revert back to 0
+        $cashOut->delete();
+        $this->assertEquals(0, $user->fresh()->bankroll);
     }
 
     public function testTheUsersBankrollIsUpdatedWhenACashGameIsDeleted()
     {
-        $user = factory('App\User')->create([
-            'bankroll' => 10000
-        ]);
+        $user = factory('App\User')->create();
         $this->signIn($user);
 
         $cash_game = $user->startCashGame();
@@ -279,7 +277,7 @@ class CashGameTest extends TestCase
         $cash_game->addCashOut(1000);
 
         // Check that users bankroll is 7750 (10000-1000-50-200-2000+1000)
-        $this->assertEquals(7750, $user->fresh()->bankroll);
+        $this->assertEquals(-2250, $user->fresh()->bankroll);
         // CashGame profit is -2250 (-1000-50-200-2000+1000)
         $this->assertEquals(-2250, $cash_game->fresh()->profit);
 
@@ -287,16 +285,16 @@ class CashGameTest extends TestCase
         // 10000, calculated by the user's current bankroll (7750) minus the cash_games profit (-2250)
         // If the cash_game profit is negative, it adds back on, if positive it should subtract it.
         $cash_game->fresh()->delete();
-        $this->assertEquals(10000, $user->fresh()->bankroll);
+        $this->assertEquals(0, $user->fresh()->bankroll);
         
         // Test again with positive profit
         $cash_game2 = $user->startCashGame();
         $cash_game2->addCashOut(10000);
-        // Orignal bankroll 10000 + cashOut 10000 = 20000
-        $this->assertEquals(20000, $user->fresh()->bankroll);
+        // Orignal bankroll 0 + cashOut 10000 = 10000
+        $this->assertEquals(10000, $user->fresh()->bankroll);
 
         $cash_game2->fresh()->delete();
-        $this->assertEquals(10000, $user->fresh()->bankroll);
+        $this->assertEquals(0, $user->fresh()->bankroll);
     }
 
     public function testWhenACashGameIsDeletedItDeletesAllOfItsGameTransactions()
@@ -316,7 +314,7 @@ class CashGameTest extends TestCase
         $this->assertCount(2, $cash_game->expenses);
         $this->assertCount(1, $cash_game->cashOut()->get());
         $this->assertEquals(-2250, $cash_game->profit);
-        $this->assertEquals(7750, $user->fresh()->bankroll);
+        $this->assertEquals(-2250, $user->fresh()->bankroll);
         $this->assertCount(1, $user->cashGames);
         
         // When deleting a CashGame it should delete all it's GameTransactions
@@ -327,7 +325,7 @@ class CashGameTest extends TestCase
         $user->refresh();
         
         $this->assertCount(0, $user->cashGames);
-        $this->assertEquals(10000, $user->bankroll);
+        $this->assertEquals(0, $user->bankroll);
         $this->assertCount(0, BuyIn::all());
         $this->assertCount(0, Expense::all());
         $this->assertCount(0, CashOut::all());
@@ -350,12 +348,11 @@ class CashGameTest extends TestCase
         $user = factory('App\User')->create(['currency' => 'USD']);
 
         // Create a Cash Game with profit of £1,000 GBP
-        $cash_game = $user->cashGames()->create([
-            'currency' => 'GBP',
-            'profit' => 1000,
-        ]);
+        $cash_game = $user->cashGames()->create(['currency' => 'GBP']);
+        // Add a £1000 GBP Buy In
+        $cash_game->addBuyIn(1000);
 
-        // 1 GBP / 1.25 USD.  So locale_profit should equal $1250 USD
-        $this->assertEquals(1250, $cash_game->locale_profit);
+        // 1 GBP / 1.25 USD.  So locale_profit should equal -$1250 USD
+        $this->assertEquals(-1250, $cash_game->locale_profit);
     }
 }

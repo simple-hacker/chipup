@@ -2,7 +2,15 @@
 
 namespace App\Abstracts;
 
+use Money\Money;
+use Money\Currency;
+use Money\Converter;
+use App\ExchangeRates;
+use Money\Exchange\FixedExchange;
+use Money\Currencies\ISOCurrencies;
+use Money\Exchange\IndirectExchange;
 use Illuminate\Database\Eloquent\Model;
+use Money\Exchange\ReversedCurrenciesExchange;
 
 abstract class GameTransaction extends Model
 {
@@ -53,5 +61,59 @@ abstract class GameTransaction extends Model
     public function setAmountAttribute($amount)
     {
         $this->attributes['amount'] = $amount * 100;
+    }
+
+    /**
+    * Mutate amount in to session currency
+    *
+    * @param Float $amount
+    * @return void
+    */
+    public function getSessionLocaleAmountAttribute()
+    {
+        // TODO: Will need to do historial converting as well.
+        // $rates will be closest to $this->date
+        $rates = ExchangeRates::first();
+
+        $exchange = new ReversedCurrenciesExchange(new FixedExchange([
+            'GBP' => $rates->rates
+        ]));
+
+        $indirectExchange = new IndirectExchange($exchange, new ISOCurrencies);
+        
+        $converter = new Converter(new ISOCurrencies(), $indirectExchange);
+
+        $transactionAmount = new Money($this->attributes['amount'], new Currency($this->currency));
+
+        // Convert Transaction amount to currency of the session.
+        $sessionLocaleAmount = $converter->convert($transactionAmount, new Currency($this->game->currency));
+        return $sessionLocaleAmount->getAmount() / 100;
+    }
+
+    /**
+    * Mutate amount in to user currency
+    *
+    * @param Float $amount
+    * @return void
+    */
+    public function getLocaleAmountAttribute()
+    {
+        // TODO: Will need to do historial converting as well.
+        // $rates will be closest to $this->date
+        $rates = ExchangeRates::first();
+
+        $exchange = new ReversedCurrenciesExchange(new FixedExchange([
+            'GBP' => $rates->rates
+        ]));
+
+        $indirectExchange = new IndirectExchange($exchange, new ISOCurrencies);
+        
+        $converter = new Converter(new ISOCurrencies(), $indirectExchange);
+
+        $transactionAmount = new Money($this->attributes['amount'], new Currency($this->currency));
+
+        // Convert Transaction amount to currency of the the user.
+        $localeAmount = $converter->convert($transactionAmount, new Currency($this->user->currency));
+        return $localeAmount->getAmount() / 100;
     }
 }

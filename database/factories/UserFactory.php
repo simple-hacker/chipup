@@ -35,7 +35,6 @@ $factory->define(User::class, function (Faker $faker) {
         'setup_complete' => false,
         'locale' => $faker->randomElement($locales),
         'currency' => $faker->randomElement($currencies),
-        'bankroll' => 10000,
         'default_stake_id' => Stake::inRandomOrder()->first(),
         'default_limit_id' => Limit::inRandomOrder()->first(),
         'default_variant_id' => Variant::inRandomOrder()->first(),

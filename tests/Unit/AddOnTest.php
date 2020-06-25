@@ -15,6 +15,7 @@ class AddOnTest extends TestCase
         
         $this->assertEquals(0, $tournament->profit);
         $tournament->addAddOn(50);
+
         $this->assertEquals(-50, $tournament->fresh()->profit);
         // Add another AddOn of 100.  Profit should now equal -150
         $tournament->addAddOn(100);
