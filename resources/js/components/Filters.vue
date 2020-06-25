@@ -1,6 +1,6 @@
 <template>
     <div class="flex-col">
-        <div class="flex justify-between items-center p-2 md:p-3 rounded-t text-base md:text-lg font-medium font-bold bg-green-500">
+        <div class="flex justify-between items-center p-2 md:p-3 rounded-t text-base md:text-lg font-bold bg-green-500">
 			<div class="flex items-center">
 				<h1 class="uppercase text-white font-extrabold tracking-wider mr-4">Filters</h1>
 				<i class="fas fa-filter"></i>

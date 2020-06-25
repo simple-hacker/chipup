@@ -269,7 +269,7 @@
 									auto
 									placeholder="Start Date and Time"
 									title="Start Date and Time"
-									class="w-full bg-muted-light border border-muted-dark rounded border theme-green"
+									class="w-full bg-muted-light border border-muted-dark rounded theme-green"
 									:input-class="{'error-input' : errors.start_time, 'p-1' : true}"
 									@input="delete errors.start_time"
 								></datetime>

@@ -28,7 +28,7 @@
 				-->
 				<div class="mb-4">
 					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">Game</h2>
-					<div class="flex grid grid-cols-4 gap-2">
+					<div class="grid grid-cols-4 gap-2">
 						<div
 							v-if="liveSession.stake"
 							class="col-span-4 sm:col-span-2"
