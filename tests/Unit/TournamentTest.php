@@ -133,6 +133,20 @@ class TournamentTest extends TestCase
         $this->assertEquals($user->liveTournament()->id, $tournament_2->id);
     }
 
+    public function testTournamentVariablesDefaultToUserDefaults()
+    {
+        $user = factory('App\User')->create([
+            'default_limit_id' => 2,
+            'default_variant_id' => 3,
+        ]);
+        
+        // Start Tournament with empty attributes
+        $tournament = $user->startTournament([]);
+
+        $this->assertEquals(2, $tournament->limit_id);
+        $this->assertEquals(3, $tournament->variant_id);
+    }
+
     public function testTournamentCanHaveABuyIn()
     {
         $tournament = $this->startLiveTournament();
@@ -384,5 +398,32 @@ class TournamentTest extends TestCase
         $this->assertCount(0, CashOut::all());
         $this->assertCount(0, Rebuy::all());
         $this->assertCount(0, AddOn::all());
+    }
+
+    public function testTournamentCurrencyDefaultsToUsersCurrency()
+    {
+        $user = factory('App\User')->create(['currency' => 'AUD']);
+        $this->signIn($user);
+        
+        // Start Tournament with empty attributes
+        $tournament = $user->startTournament([]);
+
+        $this->assertEquals('AUD', $tournament->currency);
+    }
+
+    public function testTournamentLocaleProfitIsConvertedToUserCurrency()
+    {
+        // Create a User with default USD currency
+        $user = factory('App\User')->create(['currency' => 'USD']);
+
+        // Create a Cash Game with profit of 1,000 PLN
+        $tournament = $user->tournaments()->create([
+            'currency' => 'PLN',
+            'profit' => 1000,
+        ]);
+
+        // 4.9 PLN / 1 GBP / 1.25 USD
+        // 1000 PLN = £204.08 GBP = $255.10 USD
+        $this->assertEquals(255.10, $tournament->locale_profit);
     }
 }

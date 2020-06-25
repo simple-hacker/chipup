@@ -32,7 +32,7 @@ export default {
             return tournament ?? state.defaultTournament
         },
         tournamentProfit: state => {
-            return state.tournaments.reduce((total, session) => total + session.profit, 0)
+            return state.tournaments.reduce((total, session) => total + session.locale_profit, 0)
         },
         tournamentsProfitSeries: (state) => {
             return [...state.tournaments]
@@ -45,7 +45,7 @@ export default {
                         // and y is the runningTotal adding on the current session's profit.
                         series.push({
                             x: moment.utc(session.start_time).format(),
-                            y: runningTotal + session.profit
+                            y: runningTotal + session.locale_profit
                         })
                         return series
                     }, [])

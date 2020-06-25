@@ -18,6 +18,7 @@ export default {
         },
         bankroll: (state, getters, rootState, rootGetters) => {
             // Bankroll is the total number of despoits, subtract total withdrawals, add totalProfit in sessions.js
+            // Withdrawals are persisted as negative values in database.  So withdrawalsTotal is sum of all negative which is negative
             return getters.depositsTotal + getters.withdrawalsTotal + rootGetters['sessions/totalProfit']
         }
     },

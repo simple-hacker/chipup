@@ -25,7 +25,7 @@ export default {
             return getters.sessions.length
         },
         totalProfit: (state, getters) => {
-            return getters.sessions.reduce((total, session) => total + session.profit, 0)
+            return getters.sessions.reduce((total, session) => total + session.locale_profit, 0)
         },
         totalDuration: (state, getters) => {
             return getters.sessions.reduce((total, session) => {
@@ -39,16 +39,16 @@ export default {
         },
         totalBuyIns: (state, getters) => {
             return getters.sessions.reduce((total, session) => {
-                let buyInTotal = session?.buy_in?.amount ?? 0
-				let buyInsTotal = (session.buy_ins) ? session.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) : 0
-				let addOnTotal = (session.add_ons) ? session.add_ons.reduce((total, add_ons) => total + add_ons.amount, 0) : 0
-				let rebuyTotal = (session.rebuys) ? session.rebuys.reduce((total, rebuys) => total + rebuys.amount, 0) : 0
-				let expenseTotal = (session.expenses) ? session.expenses.reduce((total, expenses) => total + expenses.amount, 0) : 0
+                let buyInTotal = session?.buy_in?.locale_amount ?? 0
+				let buyInsTotal = (session.buy_ins) ? session.buy_ins.reduce((total, buy_in) => total + buy_in.locale_amount, 0) : 0
+				let addOnTotal = (session.add_ons) ? session.add_ons.reduce((total, add_ons) => total + add_ons.locale_amount, 0) : 0
+				let rebuyTotal = (session.rebuys) ? session.rebuys.reduce((total, rebuys) => total + rebuys.locale_amount, 0) : 0
+				let expenseTotal = (session.expenses) ? session.expenses.reduce((total, expenses) => total + expenses.locale_amount, 0) : 0
 				return total + buyInTotal + buyInsTotal + addOnTotal + rebuyTotal + expenseTotal
             }, 0)
         },
         totalCashes: (state, getters) => {
-            return getters.sessions.reduce((total, session) => total + (session.cash_out?.amount ?? 0), 0)
+            return getters.sessions.reduce((total, session) => total + (session.cash_out?.locale_amount ?? 0), 0)
         },
         roi: (state, getters) => {
             return (getters.totalProfit / getters.totalBuyIns) * 100
@@ -70,7 +70,7 @@ export default {
                     // and y is the runningTotal adding on the current session's profit.
                     series.push({
                         x: moment.utc(session.start_time).format(),
-                        y: runningTotal + session.profit
+                        y: runningTotal + session.locale_profit
                     })
                     return series
                 }, [])

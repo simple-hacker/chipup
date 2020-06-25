@@ -108,6 +108,24 @@ class CashGameTest extends TestCase
         $this->assertEquals($user->liveCashGame()->id, $cash_game_2->id);
     }
 
+    public function testCashGameVariablesDefaultToUserDefaults()
+    {
+        $user = factory('App\User')->create([
+            'default_stake_id' => 3,
+            'default_limit_id' => 2,
+            'default_variant_id' => 1,
+            'default_table_size_id' => 2,
+        ]);
+        
+        // Start CashGame with empty attributes
+        $cash_game = $user->startCashGame([]);
+
+        $this->assertEquals(3, $cash_game->stake_id);
+        $this->assertEquals(2, $cash_game->limit_id);
+        $this->assertEquals(1, $cash_game->variant_id);
+        $this->assertEquals(2, $cash_game->table_size_id);
+    }
+
     public function testCashGameCanHaveABuyIn()
     {
         $cash_game = $this->startLiveCashGame();
@@ -301,7 +319,7 @@ class CashGameTest extends TestCase
         $this->assertEquals(7750, $user->fresh()->bankroll);
         $this->assertCount(1, $user->cashGames);
         
-        // When deleting a CashGame it shoudl delete all it's GameTransactions
+        // When deleting a CashGame it should delete all it's GameTransactions
         // This is handled in Game model Observer delete method.
         // Can't use cascade down migrations because of polymorphic relationship
         $cash_game->delete();
@@ -313,5 +331,31 @@ class CashGameTest extends TestCase
         $this->assertCount(0, BuyIn::all());
         $this->assertCount(0, Expense::all());
         $this->assertCount(0, CashOut::all());
+    }
+
+    public function testCashGameCurrencyDefaultsToUsersCurrency()
+    {
+        $user = factory('App\User')->create(['currency' => 'USD']);
+        $this->signIn($user);
+        
+        // Start CashGame with empty attributes
+        $cash_game = $user->startCashGame([]);
+
+        $this->assertEquals('USD', $cash_game->currency);
+    }
+
+    public function testCashGameLocaleProfitIsConvertedToUserCurrency()
+    {
+        // Create a User with default USD currency
+        $user = factory('App\User')->create(['currency' => 'USD']);
+
+        // Create a Cash Game with profit of £1,000 GBP
+        $cash_game = $user->cashGames()->create([
+            'currency' => 'GBP',
+            'profit' => 1000,
+        ]);
+
+        // 1 GBP / 1.25 USD.  So locale_profit should equal $1250 USD
+        $this->assertEquals(1250, $cash_game->locale_profit);
     }
 }

@@ -31,7 +31,7 @@ export default {
             return cash_game ?? state.defaultCashGame
         },
         cashGameProfit: state => {
-            return state.cash_games.reduce((total, session) => total + session.profit, 0)
+            return state.cash_games.reduce((total, session) => total + session.locale_profit, 0)
         },
         cashGamesProfitSeries: (state) => {
             return [...state.cash_games]
@@ -44,7 +44,7 @@ export default {
                         // and y is the runningTotal adding on the current session's profit.
                         series.push({
                             x: moment.utc(session.start_time).format(),
-                            y: runningTotal + session.profit
+                            y: runningTotal + session.locale_profit
                         })
                         return series
                     }, [])

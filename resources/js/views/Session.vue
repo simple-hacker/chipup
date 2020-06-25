@@ -305,7 +305,7 @@
 									:class="{'error-input' : errors.prize_pool}"
 									:currency="editSession.currency"
 									placeholder="Prize Pool"
-									:locale="locale"
+									:locale="user.locale"
 									:distraction-free="false"
 									:allow-negative="false"
 									@input="delete errors.prize_pool"
@@ -334,7 +334,7 @@
 									:currency="null"
 									:precision="0"
 									placeholder="Position"
-									:locale="locale"
+									:locale="user.locale"
 									:distraction-free="false"
 									:allow-negative="false"
 									@input="delete errors.position"
@@ -363,7 +363,7 @@
 									:currency="null"
 									:precision="0"
 									placeholder="Entries"
-									:locale="locale"
+									:locale="user.locale"
 									:distraction-free="false"
 									:allow-negative="false"
 									@input="delete errors.entries"
@@ -652,13 +652,10 @@ export default {
 		}
 	},
 	computed: {
-		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
+		...mapState(['stakes', 'limits', 'variants', 'table_sizes', 'user']),
 		...mapState('sessions', ['loadSessionState']),
 		...mapGetters('cash_games', ['getCashGameById']),
 		...mapGetters('tournaments', ['getTournamentById']),
-		locale() {
-            return this.$store.state.user.locale
-        },
 		session() {
 			if (this.loadSession.game_type === 'cash_game') {
 				return this.getCashGameById(this.loadSession.id)

@@ -300,7 +300,7 @@
 						:class="{'error-input' : errors.prize_pool}"
 						:currency="editLiveSession.currency"
 						placeholder="Prize Pool"
-						:locale="locale"
+						:locale="user.locale"
 						:distraction-free="false"
 						:allow-negative="false"
 						@input="updatePrizePool"
@@ -343,7 +343,7 @@
 						:currency="null"
 						:precision="0"
 						placeholder="Position"
-						:locale="locale"
+						:locale="user.locale"
 						:distraction-free="false"
 						:allow-negative="false"
 						@input="delete errors.position"
@@ -365,7 +365,7 @@
 						:currency="null"
 						:precision="0"
 						placeholder="Entries"
-						:locale="locale"
+						:locale="user.locale"
 						:distraction-free="false"
 						:allow-negative="false"
 						@input="delete errors.entries"
@@ -441,12 +441,9 @@ export default {
 		this.$refs.currentSession.activateAll()
 	},
 	computed: {
-		...mapState(['stakes', 'limits', 'variants', 'table_sizes']),
+		...mapState(['stakes', 'limits', 'variants', 'table_sizes', 'user']),
 		...mapState('live', ['liveSession']),
 		...mapGetters('live', ['runTime', 'runTimeHours']),
-		locale() {
-            return this.$store.state.user.locale
-        },
 		buyInsTotal() {
 			let buyInTotal = this.liveSession?.buy_in?.amount ?? 0
 			let buyInsTotal = (this.liveSession.buy_ins) ? this.liveSession.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) : 0
@@ -582,7 +579,7 @@ export default {
                 this.$emit('close')
                 this.$router.push('sessions')               
 
-                if ((this.cashOut.amount - this.buyInTotal) > 0) {
+                if ((this.cashOut.amount - this.buyInsTotal) > 0) {
                     this.$snotify.success(`Nice win!`)
                 } else {
                     this.$snotify.warning(`Better luck next time.`)

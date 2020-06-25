@@ -2,11 +2,19 @@
 
 namespace App\Abstracts;
 
+use Money\Money;
+use Money\Currency;
+use Money\Converter;
+use App\ExchangeRates;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
+use Money\Exchange\FixedExchange;
+use Money\Currencies\ISOCurrencies;
+use Money\Exchange\IndirectExchange;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\InvalidDateException;
 use App\Exceptions\MultipleCashOutException;
+use Money\Exchange\ReversedCurrenciesExchange;
 use ShiftOneLabs\LaravelCascadeDeletes\CascadesDeletes;
 
 abstract class Game extends Model
@@ -245,6 +253,33 @@ abstract class Game extends Model
     {
         $this->attributes['profit'] = $profit * 100;
     }
+
+    /**
+    * Mutate profit in to locale currency
+    *
+    * @return void
+    */
+    public function getLocaleProfitAttribute()
+    {
+        // TODO: Will need to do historial converting as well.
+        // $rates will be closest to $this->date
+        $rates = ExchangeRates::first();
+
+        $exchange = new ReversedCurrenciesExchange(new FixedExchange([
+            'GBP' => $rates->rates
+        ]));
+
+        $indirectExchange = new IndirectExchange($exchange, new ISOCurrencies);
+        
+        $converter = new Converter(new ISOCurrencies(), $indirectExchange);
+
+        // attributes['profit'] is the raw profit from database before being divided by 100, as Money needs an integer
+        $transactionProfit = new Money($this->attributes['profit'], new Currency($this->currency));
+
+        $localeprofit = $converter->convert($transactionProfit, new Currency($this->user->currency));
+        return $localeprofit->getAmount() / 100;
+    }
+
 
     /**
     * Mutate start_time to be a Carbon instance to UTC

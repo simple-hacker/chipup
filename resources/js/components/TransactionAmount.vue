@@ -31,7 +31,7 @@
                 class="w-full text-2xl border-r-4"
                 :class="border"
                 :currency="transactionCurrency"
-                :locale="locale"
+                :locale="user.locale"
                 :distraction-free="false"
                 :allow-negative="allowNegative"
                 @input="$emit('clear-error')"
@@ -48,6 +48,8 @@ import 'vue-select/dist/vue-select.css'
 import 'currency-flags/dist/currency-flags.css'
 
 import { CurrencyInput } from 'vue-currency-input'
+
+import { mapState } from 'vuex'
 
 export default {
     name: 'TransactionAmount',
@@ -79,9 +81,7 @@ export default {
         }
     },
     computed: {
-        locale() {
-            return this.$store.state.user.locale
-        },
+        ...mapState(['user']),
         hasError: {
             get: function () {
                 return this.error
