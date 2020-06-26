@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
         $this->call(VariantSeeder::class);
         $this->call(LimitSeeder::class);
         $this->call(TableSizeSeeder::class);
+        $this->call(ExchangeRatesSeeder::class);
     }
 }

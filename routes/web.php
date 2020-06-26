@@ -10,8 +10,18 @@
 |
 */
 
+use App\ExchangeRates;
+use Illuminate\Support\Carbon;
+
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/test/{date?}', function() {
+    $date = request()->date ?? Carbon::today()->toDateString();
+    $rates = ExchangeRates::whereDate('date', '=', $date)->orderByDesc('date')->first();
+
+    dd($rates->rates ?? null);
 });
 
 Route::get('login/{provider}', 'Auth\SocialLoginController@redirectToProvider');

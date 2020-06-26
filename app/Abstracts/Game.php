@@ -2,19 +2,11 @@
 
 namespace App\Abstracts;
 
-use Money\Money;
-use Money\Currency;
-use Money\Converter;
-use App\ExchangeRates;
+use App\CurrencyConverter;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
-use Money\Exchange\FixedExchange;
-use Money\Currencies\ISOCurrencies;
-use Money\Exchange\IndirectExchange;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\InvalidDateException;
-use App\Exceptions\MultipleCashOutException;
-use Money\Exchange\ReversedCurrenciesExchange;
 use ShiftOneLabs\LaravelCascadeDeletes\CascadesDeletes;
 
 abstract class Game extends Model
@@ -260,25 +252,17 @@ abstract class Game extends Model
     */
     public function getLocaleProfitAttribute()
     {
-        // TODO: Will need to do historial converting as well.
-        // $rates will be closest to $this->date
-        $rates = ExchangeRates::first();
+        if ($this->currency === $this->user->currency) {
+            return $this->profit;
+        }
 
-        $exchange = new ReversedCurrenciesExchange(new FixedExchange([
-            'GBP' => $rates->rates
-        ]));
+        $currencyConverter = new CurrencyConverter();
 
-        $indirectExchange = new IndirectExchange($exchange, new ISOCurrencies);
-        
-        $converter = new Converter(new ISOCurrencies(), $indirectExchange);
-
-        // Profit is real world currency, need to multiply by 100 to convert to lowest denomination integer
-        $transactionProfit = new Money($this->profit * 100, new Currency($this->currency));
-
-        $localeProfit = $converter->convert($transactionProfit, new Currency($this->user->currency));
-        
-        // Divide by 100 to convert back to real world currency
-        return $localeProfit->getAmount() / 100;
+        return $currencyConverter
+                ->convertFrom($this->currency)
+                ->convertTo($this->user->currency)
+                ->convertAt($this->start_time)
+                ->convert($this->profit);
     }
 
 

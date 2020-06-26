@@ -2,13 +2,14 @@
 
 namespace Tests;
 
+use App\ExchangeRates;
 use App\Attributes\Limit;
 use App\Attributes\Stake;
 use App\Attributes\Variant;
+use TestExchangeRatesSeeder;
 use App\Attributes\TableSize;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use TestExchangeRatesSeeder;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -19,7 +20,6 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         $this->seed();
-        $this->seed(TestExchangeRatesSeeder::class);
     }
 
     protected function signIn($user = null)
@@ -151,5 +151,20 @@ abstract class TestCase extends BaseTestCase
         ];
         
         return $attributes;
+    }
+
+    protected function converterTest($amount = 0, $baseCurrency = 'GBP', $targetCurrency = 'GBP')
+    {
+        // NOTE: Not using CurrencyConverter class because we are testing its functionality
+        $closestExchangeRates = ExchangeRates::whereDate('date', '<=', Carbon::today())->orderByDesc('date')->first()->rates;
+
+        // If requested date is less than 2018-01-01 then use rates for 2018-01-01
+        if (! $closestExchangeRates) {
+            $closestExchangeRates = ExchangeRates::orderBy('date')->first()->rates;
+        }
+
+        $value = ($amount / $closestExchangeRates[$baseCurrency]) * $closestExchangeRates[$targetCurrency];
+
+        return round($value, 2, PHP_ROUND_HALF_UP);
     }
 }

@@ -98,8 +98,8 @@ class CashOutTest extends TestCase
         $this->assertEquals('USD', $cash_out->currency);
 
         // 1 GBP = 1.25 USD
-        // Cash Game profit $300 USD = £240 GBP
-        $this->assertEquals(240, $cashGame->fresh()->profit);
+        // Cash Game profit $300 USD = ~£240 GBP
+        $this->assertEquals($this->converterTest(300, 'USD', 'GBP'), $cashGame->fresh()->profit);
     }
 
     public function testCashOutHasAUserLocaleAndSessionLocaleAmounts()
@@ -119,9 +119,9 @@ class CashOutTest extends TestCase
         // Session is in USD
         // 4.9 PLN = 1 GBP = 1.25 USD
         // 1000 PLN = £204.08 GBP = $255.10 USD
-        $this->assertEquals(255.10, $cashOut->sessionLocaleAmount);
+        $this->assertEquals($this->converterTest(1000, 'PLN', 'USD'), $cashOut->sessionLocaleAmount);
 
         // Locale Amount is in GBP because that's user default.
-        $this->assertEquals(204.08, $cashOut->localeAmount);
+        $this->assertEquals($this->converterTest(1000, 'PLN', 'GBP'), $cashOut->localeAmount);
     }
 }

@@ -89,7 +89,7 @@ class RebuyTest extends TestCase
 
         // 1 GBP = 1.25 USD
         // Cash Game profit $300 USD = £240 GBP
-        $this->assertEquals(-240, $tournament->fresh()->profit);
+        $this->assertEquals($this->converterTest(-300, 'USD', 'GBP'), $tournament->fresh()->profit);
     }
 
     public function testRebuyHasAUserLocaleAndSessionLocaleAmounts()
@@ -109,9 +109,9 @@ class RebuyTest extends TestCase
         // Session is in USD
         // 4.9 PLN = 1 GBP = 1.25 USD
         // 1000 PLN = £204.08 GBP = $255.10 USD
-        $this->assertEquals(255.10, $rebuy->sessionLocaleAmount);
+        $this->assertEquals($this->converterTest(1000, 'PLN', 'USD'), $rebuy->sessionLocaleAmount);
 
         // Locale Amount is in GBP because that's user default.
-        $this->assertEquals(204.08, $rebuy->localeAmount);
+        $this->assertEquals($this->converterTest(1000, 'PLN', 'GBP'), $rebuy->localeAmount);
     }
 }

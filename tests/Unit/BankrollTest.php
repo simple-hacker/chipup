@@ -89,6 +89,15 @@ class BankrollTest extends TestCase
         $this->assertEquals($bankrollTransaction->locale_amount, $bankrollTransaction->amount);
     }
 
+    // Exchange Rates for 2020-06-20
+
+    // "CAD" => 1.6804596431
+    // "GBP" => 1
+    // "EUR" => 1.1049113309
+    // "USD" => 1.2386056019
+    // "AUD" => 1.7966963151
+    // "PLN" => 4.9186232805
+
     public function testDifferentCurrencyIsConvertedToUserCurrencyForLocaleAmount()
     {
         // Set User Default Currency to GBP and Start with a Bankroll of 1000
@@ -96,12 +105,12 @@ class BankrollTest extends TestCase
 
         $bankrollTransaction = $user->createBankrollTransaction(['currency' => 'USD', 'amount' => 5]);
 
-        // $1 GBP = $1.25 USD in TestExchangeRates
-        // $5 USD is £4 GBP.
-        // Assert BankrollTransaction has currency USD and amount 5, but locale_amount is 4.
+        // £1 GBP = $1.2386056019 USD in TestExchangeRates
+        // $5 USD is £4.04 GBP.
+        // Assert BankrollTransaction has currency USD and amount 5, but locale_amount is 4.04.
         $this->assertEquals('USD', $bankrollTransaction->currency);
         $this->assertEquals(5, $bankrollTransaction->amount);
-        $this->assertEquals(4, $bankrollTransaction->locale_amount);
+        $this->assertEquals($this->converterTest(5, 'USD', 'GBP'), $bankrollTransaction->locale_amount);
     }
 
     public function testDifferentCurrencyIsConvertedToUserCurrencyForBankrollDeposits()
@@ -109,11 +118,11 @@ class BankrollTest extends TestCase
         // Set User Default Currency to GBP
         $user = factory('App\User')->create(['currency' => 'GBP']);
 
-        // 1 GBP / 4.9 PLN
-        // Deposit a bankroll transaction of 50 PLN = £10.2040
+        // 1 GBP / 4.9186232805 PLN
+        // Deposit a bankroll transaction of 50 PLN = £10.17
         $user->createBankrollTransaction(['currency' => 'PLN', 'amount' => 50]);
 
-        $this->assertEquals(10.20, $user->fresh()->bankroll);
+        $this->assertEquals($this->converterTest(50, 'PLN', 'GBP'), $user->fresh()->bankroll);
     }
 
     public function testDifferentCurrencyIsConvertedToUserCurrencyForBankrollWithdrawals()
@@ -121,11 +130,11 @@ class BankrollTest extends TestCase
         // Set User Default Currency to GBP
         $user = factory('App\User')->create(['currency' => 'GBP']);
 
-        // 1 GBP / 1.69 CAD
-        // Withdraw a bankroll transaction of $100 CAD = £59.5238 GBP
+        // 1 GBP / 1.6804596431 CAD
+        // Withdraw a bankroll transaction of $100 CAD = £59.51 GBP
         $user->createBankrollTransaction(['currency' => 'CAD', 'amount' => -100]);
 
-        $this->assertEquals(-59.52, $user->fresh()->bankroll);
+        $this->assertEquals($this->converterTest(-100, 'CAD', 'GBP'), $user->fresh()->bankroll);
     }
 
     public function testConvertedAmountIsUsedWhenDeletingABankrollTransactionInADifferentCurrency()
@@ -133,10 +142,10 @@ class BankrollTest extends TestCase
         // Set User Default Currency to GBP
         $user = factory('App\User')->create(['currency' => 'GBP']);
 
-        // 1 GBP / 1.25 USD
+        // 1 GBP / 1.2386056019 USD
         // Withdraw a bankroll transaction of $100 USD = £80 GBP
         $bankrollTransaction = $user->createBankrollTransaction(['currency' => 'USD', 'amount' => -100]);
-        $this->assertEquals(-80, $user->fresh()->bankroll);
+        $this->assertEquals($this->converterTest(-100, 'USD', 'GBP'), $user->fresh()->bankroll);
 
         // Delete the USD Transaction, make sure £80 is added back on the bankroll and not £100
         $bankrollTransaction->delete();
@@ -148,18 +157,18 @@ class BankrollTest extends TestCase
         // Set User Default Currency to GBP
         $user = factory('App\User')->create(['currency' => 'GBP']);
 
-        // 1 GBP / 1.25 USD
+        // 1 GBP / 1.2386056019 USD
         // Deposit a bankroll transaction of $100 USD = £80 GBP
         $bankrollTransaction = $user->createBankrollTransaction(['currency' => 'USD', 'amount' => 100]);
 
         //Bankroll is now £1,080
-        $this->assertEquals(80, $user->fresh()->bankroll);
+        $this->assertEquals($this->converterTest(100, 'USD', 'GBP'), $user->fresh()->bankroll);
 
         // Change bankroll transaction from $100 USD to $500 (Same currency)
         $bankrollTransaction->update(['amount' => 500]);
         
         // $500 USD = £400 GBP.  Assert user's bankroll is now £400 and not 500
-        $this->assertEquals(400, $user->fresh()->bankroll);
+        $this->assertEquals($this->converterTest(500, 'USD', 'GBP'), $user->fresh()->bankroll);
     }
 
     public function testUpdatingTheCurrencyOfTheBankrollTransactionUpdatesUsersBankrollWithTheCorrectAmount()
@@ -167,19 +176,20 @@ class BankrollTest extends TestCase
         // Set User Default Currency to GBP
         $user = factory('App\User')->create(['currency' => 'GBP']);
 
-        // 1 GBP / 1.25 USD
-        // Deposit a bankroll transaction of $500 USD = £400 GBP
+        // 1 GBP / 1.2386056019 USD
+        // Deposit a bankroll transaction of $500 USD = ~£400 GBP
         $bankrollTransaction = $user->createBankrollTransaction(['currency' => 'USD', 'amount' => 500]);
+        $this->assertEquals($this->converterTest(500, 'USD', 'GBP'), $user->fresh()->bankroll);
 
-        // Bankroll is now £400 ($500)
+        // Bankroll is now ~£400 ($500)
 
         // Change from USD to PLN
-        // $500 USD = £400 GBP
-        // 500 PLN = £102.04 GBP
-        // Therefore bankroll should now be £102.04 instead of £400
+        // $500 USD = ~£400 GBP
+        // 500 PLN = ~£102.04 GBP
+        // Therefore bankroll should now be ~£102.04 instead of ~£400
 
         $bankrollTransaction->update(['currency' => 'PLN']);
-        $this->assertEquals(102.04, $user->fresh()->bankroll);
+        $this->assertEquals($this->converterTest(500, 'PLN', 'GBP'), $user->fresh()->bankroll);
     }
 
     public function testUpdatingTheCurrencyOfTheBankrollTransactionUpdatesUsersBankrollWithTheCorrectAmountForWithdrawalsToo()
@@ -187,12 +197,12 @@ class BankrollTest extends TestCase
         // Set User Default Currency to GBP
         $user = factory('App\User')->create(['currency' => 'GBP']);
 
-        // 1 GBP / 1.25 USD
+        // 1 GBP / 1.2386056019 USD
         // Withdraw a bankroll transaction of $500 USD = £400 GBP
         $bankrollTransaction = $user->createBankrollTransaction(['currency' => 'USD', 'amount' => -500]);
 
         // Bankroll is now £-400
-        $this->assertEquals(-400, $user->fresh()->bankroll);
+        $this->assertEquals($this->converterTest(-500, 'USD', 'GBP'), $user->fresh()->bankroll);
 
         // Change from USD to PLN
         // $500 USD = £400 GBP
@@ -200,7 +210,7 @@ class BankrollTest extends TestCase
         $bankrollTransaction->update(['currency' => 'PLN']);
 
         // Therefore bankroll should now be -£102.04
-        $this->assertEquals(-102.04, $user->fresh()->bankroll);
+        $this->assertEquals($this->converterTest(-500, 'PLN', 'GBP'), $user->fresh()->bankroll);
     }
 
     public function testUpdatingBothCurrencyAndAmountOfBankrollTransactionUpdatedUsersBankrollWithCorrectConvertedAmount()
@@ -208,9 +218,10 @@ class BankrollTest extends TestCase
         // Set User Default Currency to GBP
         $user = factory('App\User')->create(['currency' => 'GBP']);
 
-        // 1 GBP / 1.25 USD
+        // 1 GBP / 1.2386056019 USD
         // Deposit a bankroll transaction of $500 USD = £400 GBP
         $bankrollTransaction = $user->createBankrollTransaction(['currency' => 'USD', 'amount' => 500]);
+        $this->assertEquals($this->converterTest(500, 'USD', 'GBP'), $user->fresh()->bankroll);
 
         // Bankroll is now £400
 
@@ -220,6 +231,6 @@ class BankrollTest extends TestCase
         $bankrollTransaction->update(['currency' => 'PLN', 'amount' => 350]);
 
         // Therefore bankroll should now be £71.4285 = £71.43
-        $this->assertEquals(71.43, $user->fresh()->bankroll);
+        $this->assertEquals($this->converterTest(350, 'PLN', 'GBP'), $user->fresh()->bankroll);
     }
 }

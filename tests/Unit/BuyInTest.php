@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\ExchangeRates;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -100,7 +101,7 @@ class BuyInTest extends TestCase
 
         // 1 GBP = 1.25 USD
         // Cash Game profit $300 USD = £240 GBP
-        $this->assertEquals(-240, $cashGame->fresh()->profit);
+        $this->assertEquals($this->converterTest(-300, 'USD', 'GBP'), $cashGame->fresh()->profit);
     }
 
     public function testBuyInHasAUserLocaleAndSessionLocaleAmounts()
@@ -120,9 +121,9 @@ class BuyInTest extends TestCase
         // Session is in USD
         // 4.9 PLN = 1 GBP = 1.25 USD
         // 1000 PLN = £204.08 GBP = $255.10 USD
-        $this->assertEquals(255.10, $buyIn->sessionLocaleAmount);
+        $this->assertEquals($this->converterTest(1000, 'PLN', 'USD'), $buyIn->sessionLocaleAmount);
 
         // Locale Amount is in GBP because that's user default.
-        $this->assertEquals(204.08, $buyIn->localeAmount);
+        $this->assertEquals($this->converterTest(1000, 'PLN', 'GBP'), $buyIn->localeAmount);
     }
 }

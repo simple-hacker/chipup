@@ -65,6 +65,7 @@ class ExpenseTest extends TestCase
 
     public function testExpenseDefaultsToSessionCurrency()
     {
+
         // Create a user with GBP currency default
         $user = factory('App\User')->create(['currency' => 'GBP']);
 
@@ -103,7 +104,7 @@ class ExpenseTest extends TestCase
 
         // 1 GBP = 1.25 USD
         // Cash Game profit $300 USD = £240 GBP
-        $this->assertEquals(-240, $cashGame->fresh()->profit);
+        $this->assertEquals($this->converterTest(-300, 'USD', 'GBP'), $cashGame->fresh()->profit);
     }
 
     public function testExpenseHasAUserLocaleAndSessionLocaleAmounts()
@@ -123,9 +124,9 @@ class ExpenseTest extends TestCase
         // Session is in USD
         // 4.9 PLN = 1 GBP = 1.25 USD
         // 1000 PLN = £204.08 GBP = $255.10 USD
-        $this->assertEquals(255.10, $expense->sessionLocaleAmount);
+        $this->assertEquals($this->converterTest(1000, 'PLN', 'USD'), $expense->sessionLocaleAmount);
 
         // Locale Amount is in GBP because that's user default.
-        $this->assertEquals(204.08, $expense->localeAmount);
+        $this->assertEquals($this->converterTest(1000, 'PLN', 'GBP'), $expense->localeAmount);
     }
 }

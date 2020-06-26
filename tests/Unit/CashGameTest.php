@@ -352,8 +352,10 @@ class CashGameTest extends TestCase
         // Add a £1000 GBP Buy In
         $cashGame->addBuyIn(1000);
 
-        // 1 GBP / 1.25 USD.  So localeProfit should equal -$1250 USD
-        $this->assertEquals(-1250, $cashGame->localeProfit);
+        $cashGame->refresh();
+
+        // 1 GBP / ~1.25 USD.  So localeProfit should equal ~-$1250 USD
+        $this->assertEquals($this->converterTest(-1000, 'GBP', 'USD'), $cashGame->localeProfit);
 
         // Cash Game profit is -1000 and currency is GBP
         $this->assertEquals(-1000, $cashGame->profit);
@@ -363,9 +365,7 @@ class CashGameTest extends TestCase
     public function testCashGameProfit()
     {
         // Big test cover lots of transactions and different currencies.
-        // NOTE: Getting small rounding errors because TestExchangeRates are only 2dp so amounts are easier to calculate for test comments
-
-        // 1 GBP = 1.68 CAD = 1.10 EUR = 1.25 USD = 1.79 AUD = 4.9 PLN
+        // 1 GBP = ~1.68 CAD = ~1.10 EUR = ~1.25 USD = ~1.79 AUD = ~4.9 PLN
 
         // Create a User with default USD currency
         $user = factory('App\User')->create(['currency' => 'USD']);
@@ -373,24 +373,28 @@ class CashGameTest extends TestCase
         // Create a Cash Game with currency of PLN
         $cashGame = $user->cashGames()->create(['currency' => 'PLN']);
         // Add a 1000 PLN Buy In
-        $cashGame->addBuyIn(1000, 'PLN'); // 1000 PLN = 204.08 GBP = 999.99 PLN = 255.10  USD
+        $cashGame->addBuyIn(1000, 'PLN'); // 1000 PLN = ~204.08 GBP = ~255.10  USD
         // Add 30 CAD expense
-        $cashGame->addExpense(30, 'CAD'); // 30 CAD = 17.86 GBP = 87.51 PLN = 22.32 USD
+        $cashGame->addExpense(30, 'CAD'); // 30 CAD = ~17.86 GBP = ~87.51 PLN = ~22.32 USD
         // Cash out for 1000 GBP
-        $cashGame->addCashOut(1000, 'GBP'); // 1000 GBP = 4900 PLN = 1250 USD
+        $cashGame->addCashOut(1000, 'GBP'); // 1000 GBP = ~4900 PLN = ~1250 USD
 
+        $cashGame->refresh();
+        
         // cashGame currency is PLN
         $this->assertEquals('PLN', $cashGame->currency);
 
         // cashGame Profit is in PLN
-        // -999.99 - 87.51 + 4900 = 3812.5 PLN
-        $this->assertEquals(3812.5, $cashGame->profit);
+        // -1000 - 87.51 + 4900 = 3812.5 PLN
+        $profit = $this->converterTest(-1000, 'PLN', 'PLN') + $this->converterTest(-30, 'CAD', 'PLN') + $this->converterTest(1000, 'GBP', 'PLN');
+        $this->assertEquals($profit, $cashGame->profit);
 
         // cashGame Locale Profit is in USD (User currency)
-        // -255.10 - 22.32 + 1250 = 972.58 USD
-        $this->assertEquals(972.58, $cashGame->localeProfit);
+        // -255.10 - 22.32 + 1250 = ~972.58 USD
+        $localeProfit = $this->converterTest(-1000, 'PLN', 'USD') + $this->converterTest(-30, 'CAD', 'USD') + $this->converterTest(1000, 'GBP', 'USD');
+        $this->assertEquals($localeProfit, $cashGame->localeProfit);
 
         // User Bankroll is in USD
-        $this->assertEquals(972.58, $user->bankroll);
+        $this->assertEquals($localeProfit, $user->bankroll);
     }
 }

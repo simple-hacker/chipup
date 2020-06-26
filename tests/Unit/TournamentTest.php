@@ -421,17 +421,17 @@ class TournamentTest extends TestCase
         // Add a 1000 PLN Buy In
         $tournament->addBuyIn(1000);
 
+        $tournament->refresh();
+
         // 4.9 PLN / 1 GBP / 1.25 USD
-        // 1000 PLN = £204.08 GBP = $255.10 USD
-        $this->assertEquals(-255.10, $tournament->localeProfit);
+        // 1000 PLN = ~£204.08 GBP = ~$255.10 USD
+        $this->assertEquals($this->converterTest(-1000, 'PLN', 'USD'), $tournament->localeProfit);
     }
 
     public function testTournamentProfit()
     {
         // Big test cover lots of transactions and different currencies.
-        // NOTE: Getting small rounding errors because TestExchangeRates are only 2dp so amounts are easier to calculate for test comments
-
-        // 1 GBP = 1.68 CAD = 1.10 EUR = 1.25 USD = 1.79 AUD = 4.9 PLN
+        // 1 GBP = ~1.68 CAD = ~1.10 EUR = ~1.25 USD = ~1.79 AUD = ~4.9 PLN
 
         // Create a User with default USD currency
         $user = factory('App\User')->create(['currency' => 'USD']);
@@ -439,28 +439,32 @@ class TournamentTest extends TestCase
         // Create a Cash Game with currency of PLN
         $tournament = $user->tournaments()->create(['currency' => 'PLN']);
         // Add a 1000 PLN Buy In
-        $tournament->addBuyIn(1000, 'PLN'); // 1000 PLN = 204.08 GBP = 999.99 PLN = 255.10  USD
+        $tournament->addBuyIn(1000, 'PLN'); // 1000 PLN = ~204.08 GBP = ~1000 PLN = ~255.10  USD
         // Add 30 CAD expense
-        $tournament->addExpense(30, 'CAD'); // 30 CAD = 17.86 GBP = 87.51 PLN = 22.33 USD
+        $tournament->addExpense(30, 'CAD'); // 30 CAD = ~17.86 GBP = ~87.51 PLN = ~22.33 USD
         // Add 100 USD Rebuy
-        $tournament->addRebuy(100, 'USD'); // 100 USD = 80 GBP = 392 PLN = 100 USD
+        $tournament->addRebuy(100, 'USD'); // 100 USD = ~80 GBP = ~392 PLN = ~100 USD
         // Add 250 AUD add on
-        $tournament->addAddOn(250, 'AUD'); // 250 AUD = 139.67 GBP = 684.36 PLN = 174.58 USD
+        $tournament->addAddOn(250, 'AUD'); // 250 AUD = ~139.67 GBP = ~684.36 PLN = ~174.58 USD
         // Cash out for 1000 GBP
-        $tournament->addCashOut(1000, 'GBP'); // 1000 GBP = 4900 PLN = 1250 USD
+        $tournament->addCashOut(1000, 'GBP'); // 1000 GBP = ~4900 PLN = ~1250 USD
+
+        $tournament->refresh();
 
         // Tournament currency is PLN
         $this->assertEquals('PLN', $tournament->currency);
 
         // Tournament Profit is in PLN
-        // -999.99 - 87.51 - 392 - 684.36 + 4900 = 2736.14 PLN
-        $this->assertEquals(2736.14, $tournament->profit);
+        // -1000 - 87.51 - 392 - 684.36 + 4900 = 2736.14 PLN
+        $profit = $this->converterTest(-1000, 'PLN', 'PLN') + $this->converterTest(-30, 'CAD', 'PLN') + $this->converterTest(-100, 'USD', 'PLN') + $this->converterTest(-250, 'AUD', 'PLN') + $this->converterTest(1000, 'GBP', 'PLN');
+        $this->assertEquals($profit, $tournament->profit);
 
         // Tournament Locale Profit is in USD (User currency)
         // -255.10 - 22.33 - 100 - 174.59 + 1250 = 697.99 USD
-        $this->assertEquals(697.99, $tournament->localeProfit);
+        $localeProfit = $this->converterTest(-1000, 'PLN', 'USD') + $this->converterTest(-30, 'CAD', 'USD') + $this->converterTest(-100, 'USD', 'USD') + $this->converterTest(-250, 'AUD', 'USD') + $this->converterTest(1000, 'GBP', 'USD');
+        $this->assertEquals($localeProfit, $tournament->localeProfit);
 
         // User Bankroll is in USD
-        $this->assertEquals(697.99, $user->bankroll);
+        $this->assertEquals($localeProfit, $user->bankroll);
     }
 }
