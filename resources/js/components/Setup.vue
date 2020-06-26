@@ -165,7 +165,6 @@ export default {
         changeLocale(locale) {
             this.setup.locale = locale.code
             this.setup.currency = locale.currency.currency
-            console.log('changed')
         },
         completeSetup: function(){
             axios.post('/setup', this.setup)
