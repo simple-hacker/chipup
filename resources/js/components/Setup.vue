@@ -19,8 +19,8 @@
                                 v-model="setup.bankroll"
                                 class="w-full md:w-3/4 p-3"
                                 :class="{ 'error-input' : errors.bankroll }"
-                                :currency="currency"
-                                :locale="locale"
+                                :currency="setup.currency"
+                                :locale="setup.locale"
                                 :distraction-free="false"
                                 :allow-negative="false"
                             />
@@ -165,6 +165,7 @@ export default {
         changeLocale(locale) {
             this.setup.locale = locale.code
             this.setup.currency = locale.currency.currency
+            console.log('changed')
         },
         completeSetup: function(){
             axios.post('/setup', this.setup)
