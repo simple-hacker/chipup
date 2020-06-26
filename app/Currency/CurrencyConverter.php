@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Currency;
 
 use Money\Money;
 use Money\Currency;
 use Money\Converter;
-use App\ExchangeRates;
+use App\Currency\ExchangeRates;
 use Illuminate\Support\Carbon;
 use Money\Exchange\FixedExchange;
 use Money\Currencies\ISOCurrencies;

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\ExchangeRates;
+use App\Currency\ExchangeRates;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

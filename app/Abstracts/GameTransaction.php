@@ -2,7 +2,7 @@
 
 namespace App\Abstracts;
 
-use App\CurrencyConverter;
+use App\Currency\CurrencyConverter;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class GameTransaction extends Model

@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use App\ExchangeRates;
+use App\Currency\ExchangeRates;
 use App\Attributes\Limit;
 use App\Attributes\Stake;
 use App\Attributes\Variant;

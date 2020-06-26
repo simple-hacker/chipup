@@ -10,8 +10,15 @@
 |
 */
 
+use App\Currency\RetrieveLatestExchangeRates;
+
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/test', function () {
+
+    $test = new RetrieveLatestExchangeRates;
 });
 
 Route::get('login/{provider}', 'Auth\SocialLoginController@redirectToProvider');

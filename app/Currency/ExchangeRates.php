@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Currency;
 
 use Illuminate\Database\Eloquent\Model;
 
