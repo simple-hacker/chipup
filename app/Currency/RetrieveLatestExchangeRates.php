@@ -2,12 +2,15 @@
 
 namespace App\Currency;
 
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+
 class RetrieveLatestExchangeRates {
 
     /**
     * Get the latest rates in base GBP
-    * Rates are updated every day at 14:00 CET I think
-    * Run schedule at 15:00 every day.
+    * Rates are updated every day at 16:00 CET I think
+    * Run schedule at 16:00 server zulu time every day.
     *
     * @return void
     */
@@ -23,10 +26,6 @@ class RetrieveLatestExchangeRates {
             ['date' => $response->date, 'rates' => $response->rates]
         );
 
-        \Log::info('Daily exchange rates imported for ' . $response->date);
-
-        Mail::raw('Daily exchange rates imported for ' . $response->date, function ($message) {
-            $message->to('michael.perks@live.co.uk');
-        });
+        Log::info('Daily exchange rates imported for ' . $response->date);
     }
 }

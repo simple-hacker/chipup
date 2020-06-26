@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(new RetrieveLatestExchangeRates)->everyFiveMinutes();
+        $schedule->call(new RetrieveLatestExchangeRates)->dailyAt('16:00');
     }
 
     /**
