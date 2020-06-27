@@ -37,11 +37,11 @@ class CurrencyConverterTest extends TestCase
 
         // Assert Game Transaction Session Amount is converted to GBP
         // 1000 CAD = 598.92 GBP
-        $this->assertEquals(598.92, $buyIn->sessionLocaleAmount);
+        $this->assertEquals(598.92, $buyIn->session_locale_amount);
 
         // User Currency is USD.
         // 1000 CAD = 598.92 GBP = 759.57 USD
-        $this->assertEquals(759.57, $buyIn->localeAmount);
+        $this->assertEquals(759.57, $buyIn->locale_amount);
     }
 
     public function testIfDateIsEarlierThan2018ThenUsesRatesFromFirstJanuary2019()
@@ -80,11 +80,11 @@ class CurrencyConverterTest extends TestCase
 
         // Assert Game Transaction Session Amount is converted to GBP
         // 1000 CAD / 1.7006733893 = 588.00 GBP
-        $this->assertEquals(588, $buyIn->sessionLocaleAmount);
+        $this->assertEquals(588, $buyIn->session_locale_amount);
 
         // User Currency is USD.
         // 1000 CAD = 588.00 * 1.3563342439 = 797.53 USD
-        $this->assertEquals(797.53, $buyIn->localeAmount);
+        $this->assertEquals(797.53, $buyIn->locale_amount);
     }
 
     public function testCurrencyConverterUsesClosestRatesToDateIfNoRatesForSpecificDate()
@@ -124,11 +124,11 @@ class CurrencyConverterTest extends TestCase
 
         // Assert Game Transaction Session Amount is converted to GBP
         // 1000 CAD / 1.6804596431 = 595.08 GBP
-        $this->assertEquals(595.08, $buyIn->sessionLocaleAmount);
+        $this->assertEquals(595.08, $buyIn->session_locale_amount);
 
         // User Currency is USD.
         // 1000 CAD = 595.075284375 * 1.2386056019 = 737.06 USD
-        $this->assertEquals(737.06, $buyIn->localeAmount);
+        $this->assertEquals(737.06, $buyIn->locale_amount);
     }
 
     public function testIfDateIsGreaterThanLatestRatesThenUseLatestRates()
@@ -162,11 +162,11 @@ class CurrencyConverterTest extends TestCase
 
         // Assert Game Transaction Session Amount is converted to GBP
         $sessionLocaleAmount = round(1000 / $latestCAD, 2, PHP_ROUND_HALF_UP);
-        $this->assertEquals($sessionLocaleAmount, $buyIn->sessionLocaleAmount);
+        $this->assertEquals($sessionLocaleAmount, $buyIn->session_locale_amount);
 
         // User Currency is USD.
         $localeAmount = round((1000 / $latestCAD) * $latestUSD, 2, PHP_ROUND_HALF_UP);
-        $this->assertEquals($localeAmount, $buyIn->localeAmount);
+        $this->assertEquals($localeAmount, $buyIn->locale_amount);
     }
 
     public function testRatesAreCached()
@@ -190,7 +190,7 @@ class CurrencyConverterTest extends TestCase
 
         $buyIn = $cashGame->addBuyIn(1000, 'CAD');
         // Rates are cached when calling getAttribute sessionLocaleAmount
-        $this->assertEquals(595.08, $buyIn->sessionLocaleAmount);
+        $this->assertEquals(595.08, $buyIn->session_locale_amount);
     }
 
     public function testRatesAreStoredInCachedAreCorrect()
@@ -207,7 +207,7 @@ class CurrencyConverterTest extends TestCase
 
         $buyIn = $cashGame->addBuyIn(1000, 'CAD');
         // Refresh so sessionLocaleAmount, localeAmount is "saved"
-        $this->assertEquals(595.08, $buyIn->sessionLocaleAmount);
+        $this->assertEquals(595.08, $buyIn->session_locale_amount);
 
         $this->assertNotNull(Cache::get('exchange_rates_2020-06-19'));
         $this->assertEquals(Cache::get('exchange_rates_2020-06-19'), ExchangeRates::whereDate('date', '=', '2020-06-19')->first()->rates);

@@ -18,6 +18,8 @@ class CreateExpensesTable extends Migration
             $table->morphs('game');
             $table->string('currency', 6);
             $table->bigInteger('amount')->default(0);
+            $table->bigInteger('locale_amount')->default(0);
+            $table->bigInteger('session_locale_amount')->default(0);
             $table->text('comments')->nullable();
             $table->timestamps();
         });

@@ -37,7 +37,7 @@ abstract class GameTransaction extends Model
     /**
     * Mutate amount in to currency
     *
-    * @param Float $amount
+    * @param Integer $amount
     * @return void
     */
     public function getAmountAttribute($amount)
@@ -53,48 +53,95 @@ abstract class GameTransaction extends Model
     */
     public function setAmountAttribute($amount)
     {
+        // Round up to 2dp incase a value like 33.33333 is submitted.
+        $amount = round($amount, 2, PHP_ROUND_HALF_UP);
+
         $this->attributes['amount'] = $amount * 100;
     }
 
     /**
-    * Mutate amount in to session currency
+    * Mutate locale_amount in to currency
     *
-    * @param Float $amount
+    * @param Integer $locale_amount
     * @return void
     */
-    public function getSessionLocaleAmountAttribute()
+    public function getLocaleAmountAttribute($locale_amount)
     {
-        if ($this->currency === $this->game->currency) {
-            return $this->amount;
-        }
-
-        $currencyConverter = new CurrencyConverter();
-
-        return $currencyConverter
-                ->convertFrom($this->currency)
-                ->convertTo($this->game->currency)
-                ->convertAt($this->game->start_time)
-                ->convert($this->amount);
+        return $locale_amount / 100;
     }
 
     /**
-    * Mutate amount in to user currency
+    * Mutate locale_amount in to lowest denomination
     *
-    * @param Float $amount
+    * @param Float $locale_amount
     * @return void
     */
-    public function getLocaleAmountAttribute()
+    public function setLocaleAmountAttribute($locale_amount)
     {
-        if ($this->currency === $this->game->user->currency) {
-            return $this->amount;
-        }
-
-        $currencyConverter = new CurrencyConverter();
-
-        return $currencyConverter
-                ->convertFrom($this->currency)
-                ->convertTo($this->game->user->currency)
-                ->convertAt($this->game->start_time)
-                ->convert($this->amount);
+        $this->attributes['locale_amount'] = $locale_amount * 100;
     }
+
+    /**
+    * Mutate session_locale_amount in to currency
+    *
+    * @param Integer $session_locale_amount
+    * @return void
+    */
+    public function getSessionLocaleAmountAttribute($session_locale_amount)
+    {
+        return $session_locale_amount / 100;
+    }
+
+    /**
+    * Mutate session_locale_amount in to lowest denomination
+    *
+    * @param Float $session_locale_amount
+    * @return void
+    */
+    public function setSessionLocaleAmountAttribute($session_locale_amount)
+    {
+        $this->attributes['session_locale_amount'] = $session_locale_amount * 100;
+    }
+
+    // /**
+    // * Mutate amount in to session currency
+    // *
+    // * @param Float $amount
+    // * @return void
+    // */
+    // public function getSessionLocaleAmountAttribute()
+    // {
+    //     if ($this->currency === $this->game->currency) {
+    //         return $this->amount;
+    //     }
+
+    //     $currencyConverter = new CurrencyConverter();
+
+    //     return $currencyConverter
+    //             ->convertFrom($this->currency)
+    //             ->convertTo($this->game->currency)
+    //             ->convertAt($this->game->start_time)
+    //             ->convert($this->amount);
+    // }
+
+    // /**
+    // * Mutate amount in to user currency
+    // *
+    // * @param Float $amount
+    // * @return void
+    // */
+    // public function getLocaleAmountAttribute()
+    // {
+    //     if ($this->currency === $this->game->user->currency) {
+    //         return $this->amount;
+    //     }
+
+    //     $currencyConverter = new CurrencyConverter();
+
+    //     return $currencyConverter
+    //             ->convertFrom($this->currency)
+    //             ->convertTo($this->game->user->currency)
+    //             ->convertAt($this->game->start_time)
+    //             ->convert($this->amount);
+    // }
 }

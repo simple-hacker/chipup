@@ -4,8 +4,7 @@ namespace App\Providers;
 
 use App\Observers\GameObserver;
 use App\Observers\BankrollTransactionObserver;
-use App\Observers\NegativeGameTransactionObserver;
-use App\Observers\PositiveGameTransactionObserver;
+use App\Observers\GameTransactionObserver;
 use Illuminate\Support\ServiceProvider;
 
 class ObserverServiceProvider extends ServiceProvider
@@ -30,10 +29,10 @@ class ObserverServiceProvider extends ServiceProvider
         \App\CashGame::observe(GameObserver::class);
         \App\Tournament::observe(GameObserver::class);
         \App\Transactions\Bankroll::observe(BankrollTransactionObserver::class);
-        \App\Transactions\BuyIn::observe(NegativeGameTransactionObserver::class);
-        \App\Transactions\Expense::observe(NegativeGameTransactionObserver::class);
-        \App\Transactions\Rebuy::observe(NegativeGameTransactionObserver::class);
-        \App\Transactions\AddOn::observe(NegativeGameTransactionObserver::class);
-        \App\Transactions\CashOut::observe(PositiveGameTransactionObserver::class);
+        \App\Transactions\BuyIn::observe(GameTransactionObserver::class);
+        \App\Transactions\Expense::observe(GameTransactionObserver::class);
+        \App\Transactions\Rebuy::observe(GameTransactionObserver::class);
+        \App\Transactions\AddOn::observe(GameTransactionObserver::class);
+        \App\Transactions\CashOut::observe(GameTransactionObserver::class);
     }
 }

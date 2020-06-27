@@ -111,7 +111,7 @@ class Tournament extends Game
     */
     public function buyInAmount()
     {
-        return $this->buyIn->sessionLocaleAmount ?? 0;
+        return $this->buyIn->session_locale_amount ?? 0;
     }
 
     /**
@@ -122,7 +122,7 @@ class Tournament extends Game
     public function totalRebuysAmount()
     {
         $total = $this->rebuys->reduce(function ($total, $rebuy) {
-            return $total + $rebuy->sessionLocaleAmount;
+            return $total + $rebuy->session_locale_amount;
         }, 0);
 
         return $total;
@@ -136,7 +136,7 @@ class Tournament extends Game
     public function totalAddOnsAmount()
     {
         $total = $this->addOns->reduce(function ($total, $addOn) {
-            return $total + $addOn->sessionLocaleAmount;
+            return $total + $addOn->session_locale_amount;
         }, 0);
 
         return $total;

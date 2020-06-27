@@ -215,7 +215,7 @@ abstract class Game extends Model
     public function totalBuyInsAmount()
     {
         $total = $this->buyIns->reduce(function ($total, $buyIn) {
-            return $total + $buyIn->sessionLocaleAmount;
+            return $total + $buyIn->session_locale_amount;
         }, 0);
 
         return $total;
@@ -229,7 +229,7 @@ abstract class Game extends Model
     public function totalExpensesAmount()
     {
         $total = $this->expenses->reduce(function ($total, $expense) {
-            return $total + $expense->sessionLocaleAmount;
+            return $total + $expense->session_locale_amount;
         }, 0);
 
         return $total;
@@ -242,7 +242,7 @@ abstract class Game extends Model
     */
     public function cashOutAmount()
     {
-        return $this->cashOut->sessionLocaleAmount ?? 0;
+        return $this->cashOut->session_locale_amount ?? 0;
     }
 
     /**

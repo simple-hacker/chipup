@@ -121,9 +121,9 @@ class BuyInTest extends TestCase
         // Session is in USD
         // 4.9 PLN = 1 GBP = 1.25 USD
         // 1000 PLN = £204.08 GBP = $255.10 USD
-        $this->assertEquals($this->converterTest(1000, 'PLN', 'USD'), $buyIn->sessionLocaleAmount);
+        $this->assertEquals($this->converterTest(1000, 'PLN', 'USD'), $buyIn->session_locale_amount);
 
         // Locale Amount is in GBP because that's user default.
-        $this->assertEquals($this->converterTest(1000, 'PLN', 'GBP'), $buyIn->localeAmount);
+        $this->assertEquals($this->converterTest(1000, 'PLN', 'GBP'), $buyIn->locale_amount);
     }
 }

@@ -6,7 +6,6 @@ use App\Currency\ExchangeRates;
 use App\Attributes\Limit;
 use App\Attributes\Stake;
 use App\Attributes\Variant;
-use TestExchangeRatesSeeder;
 use App\Attributes\TableSize;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;

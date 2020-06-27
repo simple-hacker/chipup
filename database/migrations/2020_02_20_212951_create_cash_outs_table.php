@@ -18,6 +18,8 @@ class CreateCashOutsTable extends Migration
             $table->morphs('game');
             $table->string('currency', 6);
             $table->bigInteger('amount')->default(0);
+            $table->bigInteger('locale_amount')->default(0);
+            $table->bigInteger('session_locale_amount')->default(0);
             $table->timestamps();
 
             $table->unique(['game_id', 'game_type']);

@@ -34,6 +34,9 @@ class Bankroll extends Model
 
     /**
     * Mutate amount in to currency
+    *
+    * @param Integer $amount
+    * @return void
     */
     public function getAmountAttribute($amount)
     {
@@ -48,11 +51,17 @@ class Bankroll extends Model
     */
     public function setAmountAttribute($amount)
     {
+        // Round up to 2dp incase a value like 33.33333 is submitted.
+        $amount = round($amount, 2, PHP_ROUND_HALF_UP);
+        
         $this->attributes['amount'] = $amount * 100;
     }
 
     /**
-    * Mutate amount in to currency
+    * Mutate locale_amount in to currency
+    *
+    * @param Integer $amount
+    * @return void
     */
     public function getLocaleAmountAttribute($locale_amount)
     {
@@ -60,7 +69,7 @@ class Bankroll extends Model
     }
 
     /**
-    * Mutate amount in to lowest denomination
+    * Mutate locale_amount in to lowest denomination
     *
     * @param Float $locale_amount
     * @return void
@@ -69,26 +78,6 @@ class Bankroll extends Model
     {
         $this->attributes['locale_amount'] = $locale_amount * 100;
     }
-
-    // /**
-    // * Mutate amount in to locale currency
-    // *
-    // * @return void
-    // */
-    // public function getLocaleAmountAttribute()
-    // {
-    //     if ($this->currency === $this->user->currency) {
-    //         return $this->amount;
-    //     }
-
-    //     $currencyConverter = new CurrencyConverter();
-
-    //     return $currencyConverter
-    //             ->convertFrom($this->currency)
-    //             ->convertTo($this->user->currency)
-    //             ->convertAt($this->date)
-    //             ->convert($this->amount);
-    // }
 
     /**
     * Mutate date to be a Carbon instance to UTC

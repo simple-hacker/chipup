@@ -530,9 +530,7 @@ class LiveCashGameTest extends TestCase
     // User can end a live cash.
     // If no end_time is provided then it defaults to now().
     public function testUserCanEndACashGame()
-    {
-        $this->withoutExceptionHandling();
-        
+    {       
         $user = $this->signIn();
 
         $start_time = Carbon::create('-1 hour')->toDateTimeString();

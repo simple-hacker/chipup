@@ -20,6 +20,7 @@ class CurrencyConverter{
     private $baseCurrency;
     private $targetCurrency;
     private $date;
+    private $rates;
 
     /**
     * Construct the CurrencyConvert class
@@ -66,7 +67,10 @@ class CurrencyConverter{
     */
     public function convertAt(Carbon $date)
     {
+        // Whenever the date changes, grab the closest exchange rates
+        // If convertAt is not called, it falls back to Carbon::today which is set in the constructor
         $this->date = $date;
+        $this->rates = $this->getRates();
         return $this;
     }
 
@@ -83,8 +87,12 @@ class CurrencyConverter{
             return $amount;
         }
 
+        // Use rates which have been set using convertAt date.
+        // If null then user did not chain convertAt, so need to get the rates using
+        // $this->date which is set to Carbon::today in the constructor,
+        // So it gets the latest rates if convertAt was not called on a new instance of CurrencyConverter
         $exchange = new ReversedCurrenciesExchange(new FixedExchange([
-            'GBP' =>  $this->getRates()
+            'GBP' =>  $this->rates ?? $this->getRates(),
         ]));
 
         $indirectExchange = new IndirectExchange($exchange, new ISOCurrencies);

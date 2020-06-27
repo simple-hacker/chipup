@@ -51,7 +51,7 @@ class LiveGameController extends GameController
                 $this->throwLiveSessionNotStartedException();
             }
 
-            $game->endAndCashOut($request->end_time, $request->amount ?? 0, $request->currency ?? auth()->user()->id);
+            $game->endAndCashOut($request->end_time, $request->amount ?? 0, $request->currency ?? auth()->user()->currency);
 
             if ($game->game_type === 'tournament') {
                 $game->update([
