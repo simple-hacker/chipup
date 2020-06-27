@@ -52,24 +52,43 @@ class Bankroll extends Model
     }
 
     /**
-    * Mutate amount in to locale currency
+    * Mutate amount in to currency
+    */
+    public function getLocaleAmountAttribute($locale_amount)
+    {
+        return $locale_amount / 100;
+    }
+
+    /**
+    * Mutate amount in to lowest denomination
     *
+    * @param Float $locale_amount
     * @return void
     */
-    public function getLocaleAmountAttribute()
+    public function setLocaleAmountAttribute($locale_amount)
     {
-        if ($this->currency === $this->user->currency) {
-            return $this->amount;
-        }
-
-        $currencyConverter = new CurrencyConverter();
-
-        return $currencyConverter
-                ->convertFrom($this->currency)
-                ->convertTo($this->user->currency)
-                ->convertAt($this->date)
-                ->convert($this->amount);
+        $this->attributes['locale_amount'] = $locale_amount * 100;
     }
+
+    // /**
+    // * Mutate amount in to locale currency
+    // *
+    // * @return void
+    // */
+    // public function getLocaleAmountAttribute()
+    // {
+    //     if ($this->currency === $this->user->currency) {
+    //         return $this->amount;
+    //     }
+
+    //     $currencyConverter = new CurrencyConverter();
+
+    //     return $currencyConverter
+    //             ->convertFrom($this->currency)
+    //             ->convertTo($this->user->currency)
+    //             ->convertAt($this->date)
+    //             ->convert($this->amount);
+    // }
 
     /**
     * Mutate date to be a Carbon instance to UTC

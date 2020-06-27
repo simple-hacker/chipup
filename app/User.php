@@ -335,7 +335,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function totalBankrollTransactionAmounts()
     {
         $total = $this->bankrollTransactions->reduce(function ($total, $bankrollTransaction) {
-            return $total + $bankrollTransaction->localeAmount;
+            return $total + $bankrollTransaction->locale_amount;
         }, 0);
 
         return $total;
