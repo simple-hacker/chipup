@@ -20,7 +20,7 @@ export default {
             // Else continue applying filters.
             const filtered = rootState.cash_games.cash_games.filter(session => {
                 // Session profit must be equal and between profitRange
-                const validProfitRange = (state.currentFilters.profitRange && session.profit >= state.currentFilters.profitRange[0] && session.profit <= state.currentFilters.profitRange[1])
+                const validProfitRange = (state.currentFilters.profitRange && session.locale_profit >= state.currentFilters.profitRange[0] && session.locale_profit <= state.currentFilters.profitRange[1])
                 // If validFromDate is set, session start_time must be greater than or equal to fromDate, else just return true
                 const validFromDate = state.currentFilters.fromDate ? moment.utc(session.start_time) >= moment(state.currentFilters.fromDate) : true
                 // If validToDate is set, session start_time must be less than or equal to toDate, else just return true
@@ -50,7 +50,7 @@ export default {
             // Else continue applying filters.
             const filtered = rootState.tournaments.tournaments.filter(session => {
                 // Session profit must be equal and between profitRange
-                const validProfitRange = (state.currentFilters.profitRange && session.profit >= state.currentFilters.profitRange[0] && session.profit <= state.currentFilters.profitRange[1])
+                const validProfitRange = (state.currentFilters.profitRange && session.locale_profit >= state.currentFilters.profitRange[0] && session.locale_profit <= state.currentFilters.profitRange[1])
                 // If validFromDate is set, session start_time must be greater than or equal to fromDate, else just return true
                 const validFromDate = state.currentFilters.fromDate ? moment.utc(session.start_time) >= moment(state.currentFilters.fromDate) : true
                 // If validToDate is set, session start_time must be less than or equal to toDate, else just return true
@@ -59,9 +59,9 @@ export default {
                 const validLocation = state.currentFilters?.locations.includes(session.location)
                 // Valid BuyIn Range
                 // Add up the buy in, add ons and rebuys
-                const sessionBuyIn = session?.buy_in?.amount ?? 0
-                const sessionRebuys = session?.rebuys.reduce((total, rebuy) => total + rebuy.amount, 0) ?? 0
-                const sessionAddOns = session?.add_ons.reduce((total, add_on) => total + add_on.amount, 0) ?? 0
+                const sessionBuyIn = session?.buy_in?.locale_amount ?? 0
+                const sessionRebuys = session?.rebuys.reduce((total, rebuy) => total + rebuy.locale_amount, 0) ?? 0
+                const sessionAddOns = session?.add_ons.reduce((total, add_on) => total + add_on.locale_amount, 0) ?? 0
                 const totalBuyIn = sessionBuyIn + sessionRebuys + sessionAddOns
                 const validBuyInRange = (state.currentFilters.tournamentFilters.buyInRange && totalBuyIn >= state.currentFilters.tournamentFilters.buyInRange[0] && totalBuyIn <= state.currentFilters.tournamentFilters.buyInRange[1])
                 // Valid limits
@@ -82,13 +82,13 @@ export default {
             return getters.filteredSessions.length
         },
         cashGameProfit: (state, getters) => {
-            return getters.filteredCashGames.reduce((total, session) => total + session.profit, 0)
+            return getters.filteredCashGames.reduce((total, session) => total + session.locale_profit, 0)
         },
         tournamentProfit: (state, getters) => {
-            return getters.filteredTournaments.reduce((total, session) => total + session.profit, 0)
+            return getters.filteredTournaments.reduce((total, session) => total + session.locale_profit, 0)
         },
         totalProfit: (state, getters) => {
-            return getters.filteredSessions.reduce((total, session) => total + session.profit, 0)
+            return getters.filteredSessions.reduce((total, session) => total + session.locale_profit, 0)
         },
         totalDuration: (state, getters) => {
             return getters.filteredSessions.reduce((total, session) => {
@@ -102,16 +102,16 @@ export default {
         },
         totalBuyIns: (state, getters) => {
             return getters.filteredSessions.reduce((total, session) => {
-                let buyInTotal = session?.buy_in?.amount ?? 0
-				let buyInsTotal = (session.buy_ins) ? session.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) : 0
-				let addOnTotal = (session.add_ons) ? session.add_ons.reduce((total, add_ons) => total + add_ons.amount, 0) : 0
-				let rebuyTotal = (session.rebuys) ? session.rebuys.reduce((total, rebuys) => total + rebuys.amount, 0) : 0
-				let expenseTotal = (session.expenses) ? session.expenses.reduce((total, expenses) => total + expenses.amount, 0) : 0
+                let buyInTotal = session?.buy_in?.locale_amount ?? 0
+				let buyInsTotal = (session.buy_ins) ? session.buy_ins.reduce((total, buy_in) => total + buy_in.locale_amount, 0) : 0
+				let addOnTotal = (session.add_ons) ? session.add_ons.reduce((total, add_ons) => total + add_ons.locale_amount, 0) : 0
+				let rebuyTotal = (session.rebuys) ? session.rebuys.reduce((total, rebuys) => total + rebuys.locale_amount, 0) : 0
+				let expenseTotal = (session.expenses) ? session.expenses.reduce((total, expenses) => total + expenses.locale_amount, 0) : 0
 				return total + buyInTotal + buyInsTotal + addOnTotal + rebuyTotal + expenseTotal
             }, 0)
         },
         totalCashes: (state, getters) => {
-            return getters.filteredSessions.reduce((total, session) => total + (session.cash_out?.amount ?? 0), 0)
+            return getters.filteredSessions.reduce((total, session) => total + (session.cash_out?.locale_amount ?? 0), 0)
         },
         roi: (state, getters) => {
             return (getters.totalProfit / getters.totalBuyIns) * 100
@@ -133,7 +133,7 @@ export default {
                         // and y is the runningTotal adding on the current session's profit.
                         series.push({
                             x: moment.utc(session.start_time).format(),
-                            y: runningTotal + session.profit
+                            y: runningTotal + session.locale_profit
                         })
                         return series
                     }, [])
@@ -149,7 +149,7 @@ export default {
                         // and y is the runningTotal adding on the current session's profit.
                         series.push({
                             x: moment.utc(session.start_time).format(),
-                            y: runningTotal + session.profit
+                            y: runningTotal + session.locale_profit
                         })
                         return series
                     }, [])
@@ -165,7 +165,7 @@ export default {
                         // and y is the runningTotal adding on the current session's profit.
                         series.push({
                             x: moment.utc(session.start_time).format(),
-                            y: runningTotal + session.profit
+                            y: runningTotal + session.locale_profit
                         })
                         return series
                     }, [])
@@ -174,8 +174,8 @@ export default {
             return {
                 game_types: ['Cash Games', 'Tournaments'],
                 profits: [
-                    getters.filteredCashGames.reduce((total, session) => total + session.profit, 0),
-                    getters.filteredTournaments.reduce((total, session) => total + session.profit, 0)
+                    getters.filteredCashGames.reduce((total, session) => total + session.locale_profit, 0),
+                    getters.filteredTournaments.reduce((total, session) => total + session.locale_profit, 0)
                 ],
                 counts: [
                     getters.filteredCashGames.length,
@@ -189,9 +189,9 @@ export default {
                 .sort((a, b) => a.stake.small_blind - b.stake.small_blind || a.stake.big_blind - b.stake.big_blind)
                 .reduce((series, session) => {
                     if (series.profits.hasOwnProperty(session.stake.stake)) {
-                        series.profits[session.stake.stake] += session.profit
+                        series.profits[session.stake.stake] += session.locale_profit
                     } else {
-                        series.profits[session.stake.stake] = session.profit
+                        series.profits[session.stake.stake] = session.locale_profit
                     }
                     if (series.counts.hasOwnProperty(session.stake.stake)) {
                         series.counts[session.stake.stake] += 1
@@ -207,9 +207,9 @@ export default {
                 .sort((a, b) => a.variant.id - b.variant.id || a.limit.id - b.limit.id)
                 .reduce((series, session) => {
                     if (series.profits.hasOwnProperty(`${session.limit.limit} ${session.variant.variant}`)) {
-                        series.profits[`${session.limit.limit} ${session.variant.variant}`] += session.profit
+                        series.profits[`${session.limit.limit} ${session.variant.variant}`] += session.locale_profit
                     } else {
-                        series.profits[`${session.limit.limit} ${session.variant.variant}`] = session.profit
+                        series.profits[`${session.limit.limit} ${session.variant.variant}`] = session.locale_profit
                     }
                     if (series.counts.hasOwnProperty(`${session.limit.limit} ${session.variant.variant}`)) {
                         series.counts[`${session.limit.limit} ${session.variant.variant}`] += 1
@@ -222,9 +222,9 @@ export default {
         locationSeries: (state, getters) => {
             return getters.filteredSessions.reduce((series, session) => {
                 if (series.profits.hasOwnProperty(session.location)) {
-                    series.profits[session.location] += session.profit
+                    series.profits[session.location] += session.locale_profit
                 } else {
-                    series.profits[session.location] = session.profit
+                    series.profits[session.location] = session.locale_profit
                 }
                 if (series.counts.hasOwnProperty(session.location)) {
                     series.counts[session.location] += 1

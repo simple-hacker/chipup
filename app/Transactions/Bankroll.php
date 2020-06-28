@@ -16,11 +16,7 @@ class Bankroll extends Model
         'user_id' => 'integer',
     ];
 
-    protected $dates = [
-        'date'
-    ];
-
-    protected $appends = ['locale_amount'];
+    protected $dates = ['date'];
 
     /**
     * Returns the user the Bankroll belongs to

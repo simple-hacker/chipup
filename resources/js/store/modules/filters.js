@@ -2,10 +2,10 @@ export default {
     namespaced: true,
     state: {
         sortByProfit: (a, b) => {
-            return b.profit - a.profit
+            return b.locale_profit - a.locale_profit
         },
         sortByProfitDesc: (a, b) => {
-            return a.profit - b.profit
+            return a.locale_profit - b.locale_profit
         },
         sortByDate: (a , b) => {
             let startTimeA = new Date(a.start_time)
@@ -47,7 +47,7 @@ export default {
             return [...new Set(gameTypes)]
         },
         profitRange: (state, getters, rootState, rootGetters) => {
-            const profits = rootGetters['sessions/sessions'].map(session => { return session?.profit ?? 0 })
+            const profits = rootGetters['sessions/sessions'].map(session => { return session?.locale_profit ?? 0 })
 
             if (profits.length > 0) {
                 const minProfit = Math.min(...profits) ?? 0
@@ -104,9 +104,9 @@ export default {
         },
         tournamentBuyInRange: (state, getters, rootState) => {
             const buyIns = rootState.tournaments.tournaments.map(session => {
-                const sessionBuyIn = session?.buy_in?.amount ?? 0
-                const sessionRebuys = session?.rebuys.reduce((total, rebuy) => total + rebuy.amount, 0) ?? 0
-                const sessionAddOns = session?.add_ons.reduce((total, add_on) => total + add_on.amount, 0) ?? 0
+                const sessionBuyIn = session?.buy_in?.locale_amount ?? 0
+                const sessionRebuys = session?.rebuys.reduce((total, rebuy) => total + rebuy.locale_amount, 0) ?? 0
+                const sessionAddOns = session?.add_ons.reduce((total, add_on) => total + add_on.locale_amount, 0) ?? 0
                 return sessionBuyIn + sessionRebuys + sessionAddOns
             })
 

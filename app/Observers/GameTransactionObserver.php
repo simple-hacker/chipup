@@ -18,22 +18,15 @@ class GameTransactionObserver
      */
     public function saving(GameTransaction $transaction)
     {
-        $currencyConverter = new CurrencyConverter();
-
-        $locale_amount = $currencyConverter
-                        ->convertFrom($transaction->currency)
-                        ->convertTo($transaction->game->user->currency)
-                        ->convertAt($transaction->game->start_time ?? now())
-                        ->convert($transaction->amount);
-
-        $transaction->locale_amount = $locale_amount;
-
         // Uses the same instance of currencyConverter
         // So convertFrom and convertAt have already been set.
-        $session_locale_amount = $currencyConverter
-                        ->convertTo($transaction->game->currency)
-                        ->convert($transaction->amount);
+        $currencyConverter = new CurrencyConverter();
+        $currencyConverter->convertFrom($transaction->currency)->convertAt($transaction->game->start_time ?? now());
 
-        $transaction->session_locale_amount = $session_locale_amount;
+        // User locale amount
+        $transaction->locale_amount = $currencyConverter->convertTo($transaction->game->user->currency)->convert($transaction->amount);
+
+        // Session locale amount
+        $transaction->session_locale_amount = $currencyConverter->convertTo($transaction->game->currency)->convert($transaction->amount);
     }
 }

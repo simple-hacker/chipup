@@ -79,9 +79,7 @@ export default {
             .catch(error => { throw error })
         },
         addCashGame({ commit, dispatch, rootGetters }, cash_game) {
-            return axios.post('/api/cash', {
-                ...cash_game,
-            })
+            return axios.post('/api/cash', cash_game)
             .then(response => {
                 let resetFilters = ! rootGetters['filtered_sessions/filtersApplied']
                 
@@ -93,9 +91,7 @@ export default {
             .catch(error => { throw error })
         },
         updateCashGame({ commit, dispatch, rootGetters }, cash_game) {
-            return axios.patch('/api/cash/'+cash_game.id, {
-                ...cash_game,
-            })
+            return axios.patch('/api/cash/'+cash_game.id, cash_game)
             .then(response => {
                 let resetFilters = ! rootGetters['filtered_sessions/filtersApplied']
 

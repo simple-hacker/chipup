@@ -484,7 +484,7 @@
 				<transaction-summary :transaction="buy_in" :transaction-type="'buyin'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addBuyIn({ amount: 0, currency: sessionCurrency })"
+				@click="addTransaction({ amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -502,7 +502,7 @@
 			<transaction-summary v-if="session.buy_in" :transaction="session.buy_in" :transaction-type="'buyin'" :game-id="session.id"></transaction-summary>
 			<div
 				v-if="!session.buy_in"
-				@click="addBuyIn({ amount: 0, currency: sessionCurrency })"
+				@click="addTransaction({ amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -519,7 +519,7 @@
 			<transaction-summary v-if="session.cash_out" :transaction="session.cash_out" :transaction-type="'cashout'" :game-id="session.id"></transaction-summary>
 			<div
 				v-if="!session.cash_out"
-				@click="addCashOut({ amount: 0, currency: sessionCurrency })"
+				@click="addTransaction({ amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-green-500 hover:border-green-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -541,7 +541,7 @@
 				<transaction-summary :transaction="expense" :transaction-type="'expense'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addExpense({ amount: 0, currency: sessionCurrency, comments: '' })"
+				@click="addTransaction({ amount: 0, currency: sessionCurrency, comments: '' })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -564,7 +564,7 @@
 				<transaction-summary :transaction="rebuy" :transaction-type="'rebuy'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addRebuy({ amount: 0, currency: sessionCurrency })"
+				@click="addTransaction({ amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -587,7 +587,7 @@
 				<transaction-summary :transaction="add_on" :transaction-type="'addon'" :game-id="session.id"></transaction-summary>
 			</div>
 			<div
-				@click="addAddOn({ amount: 0, currency: sessionCurrency })"
+				@click="addTransaction({ amount: 0, currency: sessionCurrency })"
 				class="w-full rounded bg-gray-500 hover:bg-gray-450 border-b-4 border-red-500 hover:border-red-400 shadow p-3 md:p-4 cursor-pointer text-white text-center"
 			>
 				<i class="fas fa-plus-circle mr-2"></i>
@@ -682,18 +682,18 @@ export default {
 		},
 		buyInsTotal() {
 			if (this.session) {
-				let buyInTotal = this.session?.buy_in?.amount ?? 0
-				let buyInsTotal = (this.session.buy_ins) ? this.session.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) : 0
-				let addOnTotal = (this.session.add_ons) ? this.session.add_ons.reduce((total, add_ons) => total + add_ons.amount, 0) : 0
-				let rebuyTotal = (this.session.rebuys) ? this.session.rebuys.reduce((total, rebuys) => total + rebuys.amount, 0) : 0
-				let expenseTotal = (this.session.expenses) ? this.session.expenses.reduce((total, expenses) => total + expenses.amount, 0) : 0
+				let buyInTotal = this.session?.buy_in?.session_locale_amount ?? 0
+				let buyInsTotal = (this.session.buy_ins) ? this.session.buy_ins.reduce((total, buy_in) => total + buy_in.session_locale_amount, 0) : 0
+				let addOnTotal = (this.session.add_ons) ? this.session.add_ons.reduce((total, add_ons) => total + add_ons.session_locale_amount, 0) : 0
+				let rebuyTotal = (this.session.rebuys) ? this.session.rebuys.reduce((total, rebuys) => total + rebuys.session_locale_amount, 0) : 0
+				let expenseTotal = (this.session.expenses) ? this.session.expenses.reduce((total, expenses) => total + expenses.session_locale_amount, 0) : 0
 				return buyInTotal + buyInsTotal + addOnTotal + rebuyTotal + expenseTotal
 			} else {
 				return 0
 			}
 		},
 		cashOutTotal() {
-			return this.session?.cash_out?.amount ?? 0
+			return this.session?.cash_out?.session_locale_amount ?? 0
 		},
 		duration() {
 			const end_time = moment.utc(this.session.end_time)

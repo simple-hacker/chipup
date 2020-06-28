@@ -24,9 +24,7 @@ abstract class Game extends Model
         'start_time', 'end_time'
     ];
 
-    protected $appends = [
-        'game_type'
-    ];
+    protected $appends = ['game_type', 'profit', 'locale_profit'];
 
     /**
     * A Game belongs to a user 

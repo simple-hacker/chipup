@@ -102,46 +102,4 @@ abstract class GameTransaction extends Model
     {
         $this->attributes['session_locale_amount'] = $session_locale_amount * 100;
     }
-
-    // /**
-    // * Mutate amount in to session currency
-    // *
-    // * @param Float $amount
-    // * @return void
-    // */
-    // public function getSessionLocaleAmountAttribute()
-    // {
-    //     if ($this->currency === $this->game->currency) {
-    //         return $this->amount;
-    //     }
-
-    //     $currencyConverter = new CurrencyConverter();
-
-    //     return $currencyConverter
-    //             ->convertFrom($this->currency)
-    //             ->convertTo($this->game->currency)
-    //             ->convertAt($this->game->start_time)
-    //             ->convert($this->amount);
-    // }
-
-    // /**
-    // * Mutate amount in to user currency
-    // *
-    // * @param Float $amount
-    // * @return void
-    // */
-    // public function getLocaleAmountAttribute()
-    // {
-    //     if ($this->currency === $this->game->user->currency) {
-    //         return $this->amount;
-    //     }
-
-    //     $currencyConverter = new CurrencyConverter();
-
-    //     return $currencyConverter
-    //             ->convertFrom($this->currency)
-    //             ->convertTo($this->game->user->currency)
-    //             ->convertAt($this->game->start_time)
-    //             ->convert($this->amount);
-    // }
 }
