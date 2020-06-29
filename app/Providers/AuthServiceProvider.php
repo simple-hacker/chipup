@@ -16,6 +16,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Transactions\Bankroll' => 'App\Policies\BankrollPolicy',
         'App\Abstracts\Game' => 'App\Policies\GamePolicy',
         'App\Abstracts\GameTransaction' => 'App\Policies\GameTransactionPolicy',
+        'App\Attributes\Stake' => 'App\Policies\StakePolicy',
     ];
 
     /**

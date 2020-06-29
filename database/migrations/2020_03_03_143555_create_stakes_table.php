@@ -15,9 +15,12 @@ class CreateStakesTable extends Migration
     {
         Schema::create('stakes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('stake');
-            $table->integer('small_blind');
-            $table->integer('big_blind');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->float('small_blind', 8, 2);
+            $table->float('big_blind', 8, 2);
+            $table->float('straddle_1', 8, 2)->nullable();
+            $table->float('straddle_2', 8, 2)->nullable();
+            $table->float('straddle_3', 8, 2)->nullable();
         });
     }
 

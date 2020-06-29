@@ -108,4 +108,12 @@ Route::middleware(['auth:sanctum', 'setup.complete'])->group(function () {
         Route::patch('{add_on}', 'AddOnController@update')->name('update');
         Route::delete('{add_on}', 'AddOnController@destroy')->name('delete');
     });
+
+    // Stake Routes
+    Route::prefix('stake')->name('stake.')->group(function () {
+        Route::post('', 'StakeController@create')->name('create');
+        Route::get('{stake}', 'StakeController@view')->name('view');
+        Route::patch('{stake}', 'StakeController@update')->name('update');
+        Route::delete('{stake}', 'StakeController@destroy')->name('delete');
+    });
 });

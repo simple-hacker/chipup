@@ -2,14 +2,15 @@
 
 namespace App;
 
+use App\Attributes\Stake;
 use Illuminate\Support\Carbon;
-use App\Exceptions\SessionInProgressException;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Collection;
 use App\Notifications\PokerVerifyEmail;
 use Illuminate\Notifications\Notifiable;
+use App\Exceptions\SessionInProgressException;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Collection;
-use Laravel\Sanctum\HasApiTokens;
 
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -367,5 +368,19 @@ class User extends Authenticatable implements MustVerifyEmail
         }, 0);
 
         return $total;
+    }
+
+    /**
+    * Returns the default stakes and any custom user stakes
+    * 
+    * @return Collection
+    */
+    public function getStakesAttribute()
+    {
+        return Stake::where('user_id', $this->id)
+                        ->orWhere('user_id', null)
+                        ->orderBy('small_blind')
+                        ->orderBy('big_blind')
+                        ->get();
     }
 }
