@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Attributes\Limit;
-use App\Attributes\Stake;
 use App\Attributes\Variant;
-use Illuminate\Http\Request;
 use App\Attributes\TableSize;
 
 class SpaController extends Controller
@@ -14,7 +12,7 @@ class SpaController extends Controller
     {
         $data = [
             'user' => auth()->user(),
-            'stakes' => Stake::all(),
+            'stakes' => auth()->user()->stakes,
             'limits' => Limit::all(),
             'variants' => Variant::all(),
             'table_sizes' => TableSize::all(),

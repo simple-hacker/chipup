@@ -30,6 +30,12 @@ module.exports = {
       '12': '12px',
       '16': '16px',
     },
+    minHeight: {
+      '56': '14rem',
+      '0': '0',
+      'full': '100%',
+      'screen': '100vh',
+    },
     extend: {
       spacing: {
         '72': '18rem',

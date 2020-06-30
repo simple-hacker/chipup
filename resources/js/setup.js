@@ -13,6 +13,10 @@ if (window.location.hash === "#_=_"){
 
 window.Vue = require('vue')
 
+// vue i18n
+import VueI18n from 'vue-i18n'
+Vue.use(VueI18n)
+
 // vue-snotify
 import Snotify from 'vue-snotify'
 Vue.use(Snotify)
@@ -22,7 +26,17 @@ import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 Vue.use(VueFormWizard)
 
+import { locales as numberFormats, currencies } from '@/currencies'
+
+const i18n = new VueI18n({
+    locale: 'en-GB',
+    numberFormats,
+})
+
+import store from '@store/store'
+
 import Setup from '@/components/Setup'
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -33,4 +47,6 @@ import Setup from '@/components/Setup'
 const app = new Vue({
     el: '#app',
     components: { Setup },
+    store,
+    i18n,
 });

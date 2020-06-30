@@ -19,7 +19,7 @@ $factory->define(Tournament::class, function (Faker $faker) {
     $currencies = ['GBP', 'USD', 'EUR', 'PLN', 'CAD', 'AUD'];
 
     return [
-        'user_id' => factory('App\User')->create(),
+        'user_id' => factory(User::class),
         'limit_id' => Limit::all()->random()->id,
         'variant_id' => Variant::all()->random()->id,
         'name' => $faker->sentence(3, true),

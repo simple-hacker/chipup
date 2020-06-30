@@ -62,32 +62,6 @@
 					</div>
 				</div>
 				<!--
-					STAKES
-				-->
-				<div
-					v-if="game_type === 'cash_game'"
-					class="mb-3"
-				>
-					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">What stakes were you playing?</h2>
-					<div class="flex flex-col py-2">
-						<select
-							v-model="cash_game.stake_id"
-							class="text-lg"
-							:class="{'error-input' : errors.stake_id}"
-							@input="delete errors.stake_id"
-						>
-							<option
-								v-for="stake in stakes"
-								:key="stake.id"
-								:value="stake.id"
-								v-text="stake.stake"
-							>
-							</option>
-						</select>
-						<span v-if="errors.stake_id" class="error-message">{{ errors.stake_id[0] }}</span>
-					</div>
-				</div>
-				<!--
 					LIMIT AND VARIANT
 				-->
 				<div
@@ -226,6 +200,19 @@
             </tab-content>
             <tab-content :beforeChange="buyInsValidation" title="Buy Ins" icon="fas fa-wallet">
 				<!--
+					STAKES
+				-->
+				<div
+					v-if="game_type === 'cash_game'"
+					class="mb-3"
+				>
+					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">What stakes were you playing?</h2>
+					<div class="flex flex-col py-2">
+						<stake-select @stake-changed="changeStake" :stake_id="cash_game.stake_id" :currency="sessionCurrency" :locale="$store.state.user.locale"/>
+						<span v-if="errors.stake_id" class="error-message">{{ errors.stake_id[0] }}</span>
+					</div>
+				</div>
+				<!--
 					CASH BUY INS
 				-->
 				<div
@@ -233,7 +220,7 @@
 					class="mb-3"
 				>
 					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">How much did you buy in for?</h2>
-					<div class="flex flex-col justify-around py-4">
+					<div class="flex flex-col justify-around py-2">
 						<div
 							v-for="(buy_in, index) in cash_game.buy_ins"
 							:key="index"
@@ -497,7 +484,7 @@
 						<textarea
 							v-model="session.comments"
 							name="comments" cols="30" rows="5"
-							class="p-1 text-base bg-gray-500"
+							class="p-1 text-base"
 							:class="{'error-input' : errors.comments}"
 							@input="delete errors.comments"
 						></textarea>
@@ -518,11 +505,12 @@ import { mapState, mapActions } from 'vuex'
 import { FormWizard, TabContent } from 'vue-form-wizard'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
+import StakeSelect from '@components/StakeSelect'
 import TransactionAmount from '@components/TransactionAmount'
 
 export default {
 	name: 'CreateSession',
-	components: { FormWizard, TabContent, TransactionAmount },
+	components: { StakeSelect, FormWizard, TabContent, TransactionAmount },
 	data() {
 		return {
 			game_type: 'cash_game',
@@ -610,6 +598,9 @@ export default {
 		switchGameType(game_type) {
 			this.game_type = game_type
 		},
+		changeStake(stake) {
+            this.cash_game.stake_id = stake.id
+        },
 		scrollToTop() {
 			// Scroll to top of main content div, needed for mobiles so each step of the form scrolls to top.
 			this.$parent.$refs.scroll.scrollTop = 0

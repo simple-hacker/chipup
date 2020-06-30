@@ -2,7 +2,7 @@
     <div class="flex flex-col w-full xxl:w-3/5 xxl:mx-auto card text-white border-b-8 border-green-500 mt-3 p-0">
         <form-wizard ref="setupWizard" @on-complete="completeSetup" title="" subtitle="" finishButtonText="Complete Setup" color="#00AD71" errorColor="#F45757" class="text-white">
             <tab-content title="Bankroll" icon="fas fa-dollar-sign" :beforeChange="bankrollMustBePositive">
-                <div class="flex flex-col h-56">
+                <div class="flex flex-col min-h-56">
                     <div class="mb-3">
                         <p class="tracking-wide text-lg md:text-xl mb-2">Which currency would you like to use?</p>
                         <div class="flex flex-col items-center">
@@ -17,7 +17,7 @@
                         <div class="flex flex-col items-center">
                             <currency-input
                                 v-model="setup.bankroll"
-                                class="w-full md:w-3/4 p-3"
+                                class="w-full md:w-3/4 p-3 text-lg"
                                 :class="{ 'error-input' : errors.bankroll }"
                                 :currency="setup.currency"
                                 :locale="setup.locale"
@@ -30,29 +30,19 @@
                 </div>
             </tab-content>
             <tab-content title="Stake" icon="fas fa-coins">
-                <div class="flex flex-col h-56">
-                    <p class="tracking-wide text-lg md:text-xl mb-5">What stakes do you usually play?</p>
+                <div class="flex flex-col min-h-56">
+                    <p class="tracking-wide text-lg md:text-xl mb-2">What stakes do you usually play?</p>
                     <div class="flex flex-col items-center">
-                        <select
-                            v-model="setup.default_stake_id"
-                            class="w-full md:w-3/4 p-3 mb-2"
-                            :class="{ 'error-input' : errors.default_stake_id }"
-                        >
-                            <option
-                                v-for="stake in stakes"
-                                :key="stake.id"
-                                :value="stake.id"
-                                v-text="stake.stake"
-                            >
-                            </option>
-                        </select>
-                        <span v-if="errors.default_stake_id" class="error-message">{{ errors.default_stake_id[0] }}</span>
+                        <div class="w-full md:w-3/4 mb-2">
+                            <stake-select @stake-changed="changeStake" :currency="setup.currency" :locale="setup.locale"/>
+                            <span v-if="errors.default_stake_id" class="error-message">{{ errors.default_stake_id[0] }}</span>
+                        </div>
                     </div>
                 </div>
             </tab-content>
             <tab-content title="Game Type" icon="fas fa-star">
-                <div class="flex flex-col h-56">
-                    <p class="tracking-wide text-lg md:text-xl mb-5">What game type do you usually play?</p>
+                <div class="flex flex-col min-h-56">
+                    <p class="tracking-wide text-lg md:text-xl mb-2">What game type do you usually play?</p>
                     <div class="flex flex-col items-center">
                         <select
                             v-model="setup.default_limit_id"
@@ -104,8 +94,8 @@
                 </div>
             </tab-content>
             <tab-content title="Location" icon="fas fa-map-marker-alt">
-                <div class="flex flex-col h-56">
-                    <p class="tracking-wide text-lg md:text-xl mb-5">Where do you usually play?</p>
+                <div class="flex flex-col min-h-56">
+                    <p class="tracking-wide text-lg md:text-xl mb-2">Where do you usually play?</p>
                     <div class="flex flex-col items-center">
                         <input
                             v-model="setup.default_location"
@@ -127,11 +117,13 @@
 
 <script>
 import LocaleSelect from '@components/LocaleSelect'
+import StakeSelect from '@components/StakeSelect'
+
 import { CurrencyInput } from 'vue-currency-input'
 
 export default {
     name: 'PokerSetup',
-    components: { LocaleSelect, CurrencyInput },
+    components: { LocaleSelect, StakeSelect, CurrencyInput },
     props: {
         stakes: Array,
         limits: Array,
@@ -153,6 +145,19 @@ export default {
             errors: {},
         }
     },
+    computed: {
+        variables() {
+            return {
+                stakes: this.stakes,
+                limits: this.limits,
+                variants: this.variants,
+                table_sizes: this.table_sizes,
+            }
+        }
+    },
+    created() {
+        this.$store.dispatch('populateState', { user: this.user, variables: this.variables })
+    },
     methods: {
         bankrollMustBePositive() {
             if (this.bankroll < 0) {
@@ -163,8 +168,12 @@ export default {
             return true
         },
         changeLocale(locale) {
+            this.$i18n.locale = locale.code
             this.setup.locale = locale.code
             this.setup.currency = locale.currency.currency
+        },
+        changeStake(stake) {
+            this.setup.default_stake_id = stake.id
         },
         completeSetup: function(){
             axios.post('/setup', this.setup)

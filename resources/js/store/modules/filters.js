@@ -1,3 +1,5 @@
+import stakeMixin from '@/mixins/stake'
+
 export default {
     namespaced: true,
     state: {
@@ -63,9 +65,12 @@ export default {
                             .map(session => {
                                 return session?.stake
                             })
-                            .sort((a, b) => a.id - b.id)
+                            .sort((a, b) => {
+                                // If small blinds are the same, sort by big blind, else sort by small blind
+                                return (a.small_blind === b.small_blind) ? a.big_blind - b.big_blind : a.small_blind - b.small_blind
+                            })
                             .filter(stake => stake) // Remove undefined
-                            .map(stake => stake.stake)
+                            .map(stake => stakeMixin.methods.stakeLabel(stake))
 
             return [...new Set(stakes)]
         },

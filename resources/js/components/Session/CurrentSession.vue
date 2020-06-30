@@ -34,20 +34,7 @@
 							class="col-span-4 sm:col-span-2"
 							:class="{ 'md:col-span-1' : (liveSession.game_type === 'cash_game') }"
 						>
-							<select
-								v-model="editLiveSession.stake_id"
-								class="text-lg"
-								:class="{'error-input' : errors.stake_id}"
-								@input="delete errors.stake_id"
-							>
-								<option
-									v-for="stake in stakes"
-									:key="stake.id"
-									:value="stake.id"
-									v-text="stake.stake"
-								>
-								</option>
-							</select>
+							<stake-select @stake-changed="changeStake" :stake_id="editLiveSession.stake_id" :currency="editLiveSession.currency" :locale="$store.state.user.locale"/>
 							<span v-if="errors.stake_id" class="error-message">{{ errors.stake_id[0] }}</span>
 						</div>
 						<div
@@ -56,7 +43,7 @@
 						>
 							<select
 								v-model="editLiveSession.limit_id"
-								class="text-lg"
+								class="text-lg p-3"
 								:class="{'error-input' : errors.limit_id}"
 								@input="delete errors.limit_id"
 							>
@@ -76,7 +63,7 @@
 						>
 							<select
 								v-model="editLiveSession.variant_id"
-								class="text-lg"
+								class="text-lg p-3"
 								:class="{'error-input' : errors.variant_id}"
 								@input="delete errors.variant_id"
 							>
@@ -97,7 +84,7 @@
 						>
 							<select
 								v-model="editLiveSession.table_size_id"
-								class="text-lg"
+								class="text-lg p-3"
 								:class="{'error-input' : errors.table_size_id}"
 								@input="delete errors.table_size_id"
 							>
@@ -279,7 +266,7 @@
 						<textarea
 							v-model="editLiveSession.comments"
 							name="comments" cols="30" rows="5"
-							class="p-1 text-base bg-gray-500"
+							class="p-1 text-base"
 							:class="{'error-input' : errors.comments}"
 							@input="updateComments"
 						></textarea>
@@ -409,13 +396,14 @@ import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
 import { CurrencyInput } from 'vue-currency-input'
 
+import StakeSelect from '@components/StakeSelect'
 import TransactionSummary from '@components/Transaction/TransactionSummary'
 import TransactionDetails from '@components/Transaction/TransactionDetails'
 import TransactionAmount from '@components/TransactionAmount'
 
 export default {
 	name: 'CurrentSession',
-	components: { FormWizard, TabContent, TransactionSummary, TransactionDetails, TransactionAmount, CurrencyInput },
+	components: { FormWizard, TabContent, StakeSelect, TransactionSummary, TransactionDetails, TransactionAmount, CurrencyInput },
 	data() {
 		return {
 			editLiveSession: {},
@@ -462,6 +450,9 @@ export default {
 			// Scroll to top of main content div, needed for mobiles so each step of the form scrolls to top.
 			this.$parent.$parent.$refs.scroll.scrollTop = 0
 		},
+		changeStake(stake) {
+            this.editLiveSession.stake_id = stake.id
+        },
 		detailsValidation() {
 			// Front end validation
 			let validationErrors = {}

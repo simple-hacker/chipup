@@ -128,23 +128,9 @@
 							<i class="fas fa-coins"></i>
 						</div>
 						<div class="w-full">
-							<span v-if="!editing" v-text="session.stake.stake"></span>
+							<span v-if="!editing" v-text="stakeLabel(session.stake, session.currency, $store.state.user.locale)"></span>
 							<div v-if="editing" class="flex flex-col">
-								<select
-									v-model="editSession.stake_id"
-									class="p-1 md:p-2 bg-gray-450 text-lg"
-									:class="{'error-input' : errors.stake_id}"
-									@input="delete errors.stake_id"
-								>
-									<option
-										v-for="stake in stakes"
-										:key="stake.id"
-										:value="stake.id"
-										v-text="stake.stake"
-									>
-									</option>
-								</select>
-								<span v-if="errors.stake_id" class="error-message">{{ errors.stake_id[0] }}</span>
+								<stake-select @stake-changed="changeStake" :stake="session.stake" :currency="session.currency"/>
 							</div>
 						</div>
 					</div>
@@ -606,12 +592,16 @@ import { mapState, mapActions, mapGetters } from 'vuex'
 
 import { CurrencyInput } from 'vue-currency-input'
 
+import StakeSelect from '@components/StakeSelect'
 import TransactionSummary from '@components/Transaction/TransactionSummary'
 import TransactionDetails from '@components/Transaction/TransactionDetails'
 
+import stakeMixin from '@/mixins/stake'
+
 export default {
 	name: 'Session',
-	components: { TransactionSummary, TransactionDetails, CurrencyInput },
+	components: { StakeSelect, TransactionSummary, TransactionDetails, CurrencyInput },
+	mixins: [stakeMixin],
 	props: {
 		viewSession: Object,
 	},
@@ -739,6 +729,9 @@ export default {
 				end_time: moment.utc(session.end_time).format(),
 			}
 		},
+		changeStake(stake) {
+            this.editSession.stake_id = stake.id
+        },
 		cancelChanges() {
 			this.editing = false
 			this.editSession = this.getEditSession()

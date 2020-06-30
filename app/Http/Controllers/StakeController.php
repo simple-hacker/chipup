@@ -17,11 +17,12 @@ class StakeController extends Controller
     {
         $attributes = array_merge(['user_id' => auth()->user()->id], $request->validated());
 
-        Stake::create($attributes);
+        $stake = Stake::create($attributes);
 
         return response()->json([
             'success' => true,
             'stakes' => auth()->user()->stakes,
+            'stake' => $stake,
         ]);
     }
 
@@ -52,11 +53,12 @@ class StakeController extends Controller
     {
         $this->authorize('manage', $stake);
         
-        $stake->update($request->validated());
+        $stake = $stake->update($request->validated());
 
         return response()->json([
             'success' => true,
             'stakes' => auth()->user()->stakes,
+            'stake' => $stake,
         ]);
     }
 

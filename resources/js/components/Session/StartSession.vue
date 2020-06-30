@@ -62,32 +62,6 @@
 					</div>
 				</div>
 				<!--
-					STAKES
-				-->
-				<div
-					v-if="game_type === 'cash_game'"
-					class="mb-3"
-				>
-					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">What stakes are you playing?</h2>
-					<div class="flex flex-col">
-						<select
-							v-model="cash_game.stake_id"
-							class="text-lg"
-							:class="{'error-input' : errors.stake_id}"
-							@input="delete errors.stake_id"
-						>
-							<option
-								v-for="stake in stakes"
-								:key="stake.id"
-								:value="stake.id"
-								v-text="stake.stake"
-							>
-							</option>
-						</select>
-						<span v-if="errors.stake_id" class="error-message">{{ errors.stake_id[0] }}</span>
-					</div>
-				</div>
-				<!--
 					LIMIT AND VARIANT
 				-->
 				<div
@@ -183,6 +157,19 @@
 					</div>
 				</div>
 				<!--
+					STAKES
+				-->
+				<div
+					v-if="game_type === 'cash_game'"
+					class="mb-3"
+				>
+					<h2 class="uppercase text-gray-100 text-base md:text-xl font-extrabold tracking-wider mb-1">What stakes are you playing?</h2>
+					<div class="flex flex-col">
+						<stake-select @stake-changed="changeStake" :stake_id="cash_game.stake_id" :currency="sessionCurrency" :locale="$store.state.user.locale"/>
+						<span v-if="errors.stake_id" class="error-message">{{ errors.stake_id[0] }}</span>
+					</div>
+				</div>
+				<!--
 					START TIME
 				-->
 				<div
@@ -213,7 +200,6 @@
 </template>
 
 <script>
-import TransactionAmount from '@components/TransactionAmount'
 
 import moment from 'moment'
 import { mapState, mapActions } from 'vuex'
@@ -221,9 +207,12 @@ import { mapState, mapActions } from 'vuex'
 import { FormWizard, TabContent } from 'vue-form-wizard'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
+import StakeSelect from '@components/StakeSelect'
+import TransactionAmount from '@components/TransactionAmount'
+
 export default {
 	name: 'StartSession',
-	components: { FormWizard, TabContent, TransactionAmount },
+	components: { FormWizard, TabContent, StakeSelect, TransactionAmount },
     data() {
 		return {
 			errors: {},
@@ -258,12 +247,21 @@ export default {
 				return {}
 			}
 		},
+		defaultCurrency() {
+			return this.$store.state.user?.currency ?? 'GBP'
+		},
+		sessionCurrency() {
+			return this.session?.currency ?? this.defaultCurrency
+		}
 	},
     methods: {
 		...mapActions('live', ['startLiveSession']),
 		switchGameType(game_type) {
 			this.game_type = game_type
 		},
+		changeStake(stake) {
+            this.cash_game.stake_id = stake.id
+        },
 		scrollToTop() {
 			// Scroll to top of main content div, needed for mobiles so each step of the form scrolls to top.
 			this.$parent.$parent.$refs.scroll.scrollTop = 0

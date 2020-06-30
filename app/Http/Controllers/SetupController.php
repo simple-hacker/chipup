@@ -17,12 +17,13 @@ class SetupController extends Controller
     */
     public function index()
     {
-        $stakes = Stake::all();
+        $user = auth()->user();
+        $stakes = auth()->user()->stakes;
         $limits = Limit::all();
         $variants = Variant::all();
         $table_sizes = TableSize::all();
         
-        return view('setup', compact('stakes', 'limits', 'variants', 'table_sizes'));
+        return view('setup', compact('user', 'stakes', 'limits', 'variants', 'table_sizes'));
     }
 
     /**

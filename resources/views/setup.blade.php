@@ -29,6 +29,7 @@
 
         <setup
             class="w-full"
+            v-bind="{{ $user }}"
             v-bind:stakes="{{ $stakes }}"
             v-bind:limits="{{ $limits }}"
             v-bind:variants="{{ $variants }}"

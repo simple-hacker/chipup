@@ -46,6 +46,11 @@ const store = new Vuex.Store({
         variants: [],
         table_sizes: [],
     },
+    getters: {
+        getStake: state => id => {
+            return state.stakes.filter(stake => stake.id === id) ?? state.stakes[0]
+        }
+    },
     mutations: {
         SET_USER(state, user) {
             state.user = user
@@ -63,6 +68,9 @@ const store = new Vuex.Store({
             state.limits = variables.limits
             state.variants = variables.variants
             state.table_sizes = variables.table_sizes
+        },
+        SET_STAKES(state, stakes) {
+            state.stakes = stakes
         }
     },
     actions: {
@@ -91,6 +99,9 @@ const store = new Vuex.Store({
                 }
             })
             .catch(error => { throw error })
+        },
+        repopulateStakes({ commit }, stakes) {
+            commit('SET_STAKES', stakes)
         }
     }
 })

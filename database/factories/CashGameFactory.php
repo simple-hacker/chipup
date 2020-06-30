@@ -19,7 +19,7 @@ $factory->define(CashGame::class, function (Faker $faker) {
     $currencies = ['GBP', 'USD', 'EUR', 'PLN', 'CAD', 'AUD'];
 
     return [
-        'user_id' => factory('App\User')->create(),
+        'user_id' => factory(User::class),
         'stake_id' => Stake::all()->random()->id,
         'limit_id' => Limit::all()->random()->id,
         'variant_id' => Variant::all()->random()->id,

@@ -23,7 +23,7 @@ export default {
                 yaxis: {
                     labels: {
                         formatter: (val, opts) => {
-                            return this.$n(val, 'currencyNoFraction')
+                            return this.$n(val, 'currencyNoDecimal')
                         },
                     },
                     title: {

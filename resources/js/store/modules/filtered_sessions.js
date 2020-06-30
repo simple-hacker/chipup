@@ -1,5 +1,7 @@
 import moment from 'moment'
 
+import stakeMixin from '@/mixins/stake'
+
 export default {
     namespaced: true,
     state: {
@@ -28,7 +30,7 @@ export default {
                 // Valid location
                 const validLocation = state.currentFilters?.locations.includes(session.location)
                 // Valid stakes
-                const validStake = state.currentFilters?.cashGameFilters?.stakes.includes(session.stake.stake)
+                const validStake = state.currentFilters?.cashGameFilters?.stakes.includes(stakeMixin.methods.stakeLabel(session.stake))
                 // Valid limits
                 const validLimit = state.currentFilters?.cashGameFilters?.limits.includes(session.limit.limit)
                 // Valid variants

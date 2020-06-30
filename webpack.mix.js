@@ -8,6 +8,7 @@ mix.webpackConfig({
          '@store': __dirname + '/resources/js/store',
          '@components': __dirname + '/resources/js/components',
          '@views': __dirname + '/resources/js/views',
+         '@mixins': __dirname + '/resources/js/mixins',
          '@' : __dirname + '/resources/js',
       },
    },
