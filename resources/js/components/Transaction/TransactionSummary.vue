@@ -3,7 +3,7 @@
         @click="showTransactionDetails(transaction)"
         @mouseover="showEdit = true"
         @mouseleave="showEdit = false"
-        class="relative flex justify-center items-center p-3 md:p-4 bg-gray-500 hover:bg-gray-450 rounded border-r-4 shadow hover:shadow-2xl cursor-pointer text-white text-lg"
+        class="relative flex justify-center items-center p-3 md:p-4 bg-gray-450 hover:bg-gray-400 rounded border-r-4 shadow hover:shadow-2xl cursor-pointer text-white text-lg"
         :class="this.transactionType === 'cashout' ? 'border-green-500 hover:border-green-400' : 'border-red-500 hover:border-red-400'"
     >
         <div
