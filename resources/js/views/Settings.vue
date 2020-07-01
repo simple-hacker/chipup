@@ -11,7 +11,7 @@
                                 v-model="email"
                                 type="text"
                                 placeholder="Enter email"
-                                class="p-2 bg-gray-500 text-lg"
+                                class="p-2 text-lg"
                                 :class="{'error-input' : errors.email}"
                                 @input="delete errors.email"
                             />
@@ -37,7 +37,7 @@
                                 v-model="password.current_password"
                                 type="password"
                                 placeholder="Current password"
-                                class="p-2 bg-gray-500 text-lg"
+                                class="p-2 text-lg"
                                 :class="{'error-input' : errors.current_password}"
                                 @input="delete errors.current_password"
                             />
@@ -51,7 +51,7 @@
                                 v-model="password.new_password"
                                 type="password"
                                 placeholder="New password"
-                                class="p-2 bg-gray-500 text-lg"
+                                class="p-2 text-lg"
                                 :class="{'error-input' : errors.new_password}"
                                 @input="delete errors.new_password"
                             />
@@ -65,7 +65,7 @@
                                 v-model="password.new_password_confirmation"
                                 type="password"
                                 placeholder="Confirm new password"
-                                class="p-2 bg-gray-500 text-lg"
+                                class="p-2 text-lg"
                                 :class="{'error-input' : errors.new_password_confirmation}"
                                 @input="delete errors.new_password_confirmation"
                             />
@@ -90,22 +90,8 @@
                     <div class="flex justify-between items-center mb-2">
                         <h3 class="hidden md:block uppercase text-white text-base font-medium">Default Stake</h3>
                         <div class="flex flex-col w-full md:w-1/2">
-                            <select
-                                v-model="default_values.default_stake_id"
-                                class="p-2 bg-gray-500 text-lg"
-                                :class="{ 'error-input' : errors.default_stake_id }"
-                            >
-                                <option
-                                    v-for="stake in stakes"
-                                    :key="stake.id"
-                                    :value="stake.id"
-                                    :selected="stake.id == user.default_stake_id"
-                                    @input="delete errors.default_stake_id"
-                                >
-                                    {{ stake.stake }}
-                                </option>
-                            </select>
-                        <span v-if="errors.default_stake_id" class="error-message">{{ errors.default_stake_id[0] }}</span>
+                            <stake-select @stake-changed="changeStake" :stake_id="user.default_stake_id" :currency="user.currency" :locale="user.locale"/>
+                            <span v-if="errors.default_stake_id" class="error-message">{{ errors.default_stake_id[0] }}</span>
                         </div>
                     </div>
                     <div class="flex justify-between items-center mb-2">
@@ -113,7 +99,7 @@
                         <div class="flex flex-col w-full md:w-1/2">
                             <select
                                 v-model="default_values.default_limit_id"
-                                class="p-2 bg-gray-500 text-lg"
+                                class="p-2 text-lg"
                                 :class="{ 'error-input' : errors.default_limit_id }"
                             >
                                 <option
@@ -134,7 +120,7 @@
                         <div class="flex flex-col w-full md:w-1/2">
                             <select
                                 v-model="default_values.default_variant_id"
-                                class="p-2 bg-gray-500 text-lg"
+                                class="p-2 text-lg"
                                 :class="{ 'error-input' : errors.default_variant_id }"
                             >
                                 <option
@@ -155,7 +141,7 @@
                         <div class="flex flex-col w-full md:w-1/2">
                             <select
                                 v-model="default_values.default_table_size_id"
-                                class="p-2 bg-gray-500 text-lg"
+                                class="p-2 text-lg"
                                 :class="{ 'error-input' : errors.default_table_size_id }"
                             >
                                 <option
@@ -178,7 +164,7 @@
                                 v-model="default_values.default_location"
                                 type="text"
                                 placeholder="Location"
-                                class="p-2 bg-gray-500 text-lg"
+                                class="p-2 text-lg"
                                 :class="{'error-input' : errors.default_location}"
                                 @input="delete errors.default_location"
                             />
@@ -217,12 +203,14 @@
 
 <script>
 import { mapState } from 'vuex'
+
+import StakeSelect from '@components/StakeSelect'
 import BankrollTransaction from '@components/Bankroll/BankrollTransaction'
 import BankrollTransactionSummary from '@components/Bankroll/BankrollTransactionSummary'
 
 export default {
     name: 'Settings',
-    components: { BankrollTransaction, BankrollTransactionSummary },
+    components: { StakeSelect, BankrollTransaction, BankrollTransactionSummary },
     data() {
         return {
             email: '',
@@ -276,6 +264,9 @@ export default {
                 this.errors = error.response.data.errors
                 this.updatingPassword = false
             })
+        },
+        changeStake(stake) {
+            this.default_values.default_stake_id = stake.id
         },
         updateDefaultValues() {
             this.updatingDefaultValues = true

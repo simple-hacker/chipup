@@ -17,7 +17,7 @@
 					v-model="comments"
 					placeholder="Add comments"
 					rows=4
-					class="p-2 bg-gray-500"
+					class="p-2"
 					:class="{ 'error-input' : errors.comments }"
 					@input="delete errors.comments"
 				></textarea>
