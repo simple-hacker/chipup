@@ -43,6 +43,14 @@ module.exports = {
         '96': '24rem',
         '128': '36rem',
       },
+      height: {
+        '5vh': '5vh',
+        '10vh': '10vh',
+        '20vh': '20vh',
+        '80vh': '80vh',
+        '90vh': '90vh',
+        '95vh': '95vh',
+      },
       colors: {
         gray: {
           '0': 'hsl(225, 7%, 95%)',

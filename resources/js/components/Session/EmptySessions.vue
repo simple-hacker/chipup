@@ -7,7 +7,7 @@
             class="w-5/6 md:w-3/4"
         >
             <div class="flex p-4 justify-center items-center w-full bg-gray-500 hover:bg-gray-450 rounded border-b-8 border-green-500 hover:border-green-400 shadow hover:shadow-2xl cursor-pointer text-white">
-                <i class="fas fa-plus-circle fa-lgx mr-3"></i>
+                <i class="fas fa-plus-circle fa-lg mr-3"></i>
                 <div class="text-white text-lg uppercase">Start New Live Session</div>
             </div>
         </router-link>
