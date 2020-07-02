@@ -8,7 +8,7 @@
                     class="flex items-center p-1"
                 >
                     <img src="/images/logo.svg" alt="Poker Logo" width="60px" class="mr-3" />
-                    <span>Poker</span>
+                    <span v-text="appName"></span>
                 </router-link>
             </h1>
             <router-link
@@ -90,6 +90,7 @@ export default {
     data() {
         return {
             sessionsScrollTo: 0,
+            appName: process.env.MIX_APP_NAME
         }
     },
     computed: {
@@ -102,7 +103,7 @@ export default {
                 variants: this.variants,
                 table_sizes: this.table_sizes,
             }
-        }
+        },
     },
     watch: {
         sessionInProgress: function(running) {
