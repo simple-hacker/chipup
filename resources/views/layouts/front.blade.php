@@ -37,7 +37,7 @@
                 @endguest
             </div>
         </div>
-        <div class="h-5vh py-6 bg-gray-600 flex flex-col justify-center items-center text-gray-450">
+        <div class="h-5vh py-6 bg-gray-600 flex flex-col justify-center items-center text-gray-100">
             <i class="fas fa-chevron-up fa-2x"></i>
         </div>
         <div class="py-6 bg-gray-500 flex flex-col justify-center items-center">
@@ -45,44 +45,45 @@
                 <img src="{{ asset('images/suits.svg') }}" alt="Suits" width="256px">
             </div>
         </div>
-        <main class="flex flex-col py-8 justify-center w-5/6 mx-auto text-gray-100 text-lg">
-            <div class="text-2xl text-white self-center mb-6">
-                Manage your poker bankroll.  Anywhere.
+        <main class="flex flex-col py-8 justify-center w-full md:w-5/6 px-1 md:px-3 mx-auto text-gray-100 text-base md:text-lg">
+            <div class="flex flex-col items-center self-center mb-6">
+                <img src="{{ asset('images/logo.svg') }}" width="75px" alt="Poker Logo">
+                <span class="mt-2 text-xl md:text-2xl text-gray-100 text-center">Manage your poker bankroll.  Anywhere.</span>
             </div>
-            <div data-aos="fade-right" class="card self-start w-2/3 shadow flex mb-5 py-3 px-6 items-center">
-                <i class="fas fa-mobile fa-3x mr-4 text-green-500"></i>
+            <div data-aos="fade-right" class="card self-start w-full md:w-2/3 shadow flex mb-5 md:mb-10 py-6 px-3 md:px-6 items-center">
+                <i class="fas fa-mobile-alt fa-2x md:fa-3x mr-4 text-green-500"></i>
                 <div class="w-full">
-                    <h2 class="text-base uppercase font-extrabold tracking-wider text-white">Manage your poker bankroll</h2>
+                    <h2 class="text-sm md:text-base uppercase font-extrabold tracking-wider text-white">Manage your poker bankroll</h2>
                     <p>Use anywhere on anything, not tied to a single platform such as iOS or Android.</p>
                     <p>Beautiful responsive design, looks great whether you're viewing on mobile, tablet or desktop.</p>
                 </div>
             </div>
-            <div data-aos="fade-left" class="card self-end w-2/3 shadow flex mb-5 py-3 px-6 items-center">
-                <i class="fas fa-filter fa-3x mr-4 text-green-500"></i>
+            <div data-aos="fade-left" class="card self-end w-full md:w-2/3 shadow flex mb-5 md:mb-10 py-6 px-3 md:px-6 items-center">
+                <i class="fas fa-filter fa-2x md:fa-3x mr-4 text-green-500"></i>
                 <div class="w-full">    
-                    <h2 class="text-base uppercase font-extrabold tracking-wider text-white">Advanced custom filtering</h2>
+                    <h2 class="text-sm md:text-base uppercase font-extrabold tracking-wider text-white">Advanced custom filtering</h2>
                     <p>Really find out where you're excelling to maximise your profits even further.</p>
                     <p>Filter by a wide range of variables such as cash games or tournaments, stakes, locations, profit range, buy in range etc.</p>
                 </div>
             </div>
-            <div data-aos="fade-left" class="card self-start w-2/3 shadow flex mb-5 py-3 px-6 items-center">
-                <i class="fas fa-chart-line fa-3x mr-4 text-green-500"></i>
+            <div data-aos="fade-left" class="card self-start w-full md:w-2/3 shadow flex mb-5 md:mb-10 py-6 px-3 md:px-6 items-center">
+                <i class="fas fa-chart-line fa-2x md:fa-3x mr-4 text-green-500"></i>
                 <div class="w-full">
-                    <h2 class="text-base uppercase font-extrabold tracking-wider text-white">Detailed Statistics</h2>
+                    <h2 class="text-sm md:text-base uppercase font-extrabold tracking-wider text-white">Detailed Statistics</h2>
                     <p>Incredible dashboard with a wide range or charts and statistics to get to the nitty gritty of your play, all of which can be filtered of course.</p>
                 </div>
             </div>
-            <div data-aos="fade-right" class="card self-end w-2/3 shadow flex mb-5 py-3 px-6 items-center">
-                <i class="fas fa-server fa-3x mr-4 text-green-500"></i>
+            <div data-aos="fade-right" class="card self-end w-full md:w-2/3 shadow flex mb-5 md:mb-10 py-6 px-3 md:px-6 items-center">
+                <i class="fas fa-server fa-2x md:fa-3x mr-4 text-green-500"></i>
                 <div class="w-full">  
-                    <h2 class="text-base uppercase font-extrabold tracking-wider text-white">Backed up by our database</h2>
+                    <h2 class="text-sm md:text-base uppercase font-extrabold tracking-wider text-white">Backed up by our database</h2>
                     <p>Need to panic if you've changed or wiped your phone and lost your data, we've got it all for you.</p>
                 </div>
             </div>
-            <div data-aos="fade-left" class="card self-start w-2/3 shadow flex mb-5 py-3 px-6 items-center">
-                <i class="fas fa-money-bill-wave fa-3x mr-4 text-green-500"></i>
+            <div data-aos="fade-left" class="card self-start w-full md:w-2/3 shadow flex mb-5 md:mb-10 py-6 px-3 md:px-6 items-center">
+                <i class="fas fa-money-bill-wave fa-2x md:fa-3x mr-4 text-green-500"></i>
                 <div class="w-full">
-                    <h2 class="text-base uppercase font-extrabold tracking-wider text-white">Multiple currency support</h2>
+                    <h2 class="text-sm md:text-base uppercase font-extrabold tracking-wider text-white">Multiple currency support</h2>
                     <p>Playing abroad?  We support multiple currencies which are automatically converted using the latest exchange rates.</p>
                     <div class="flex mt-2">
                         <div class="currency-flag currency-flag-lg currency-flag-gbp mr-3"></div>
@@ -94,14 +95,14 @@
                     </div>
                 </div>
             </div>
-            <div data-aos="fade-right" class="card self-end w-2/3 shadow flex mb-5 py-3 px-6 items-center">
-                <i class="fas fa-globe-europe fa-3x mr-4 text-green-500"></i>
+            <div data-aos="fade-right" class="card self-end w-full md:w-2/3 shadow flex mb-5 md:mb-10 py-6 px-3 md:px-6 items-center">
+                <i class="fas fa-globe-europe fa-2x md:fa-3x mr-4 text-green-500"></i>
                 <div class="w-full">  
-                    <h2 class="text-base uppercase font-extrabold tracking-wider text-white">Multiple language support</h2>
+                    <h2 class="text-sm md:text-base uppercase font-extrabold tracking-wider text-white">Multiple language support</h2>
                     <p>Coming soon!</p>
                 </div>
             </div>
-            <a href="{{ route('login') }}" class="w-2/3 self-center p-4 bg-gray-500 hover:bg-gray-450 rounded border-b-8 border-green-500 hover:border-green-400 shadow hover:shadow-2xl cursor-pointer text-white text-lg text-base uppercase text-center">
+            <a data-aos="fade-up" href="{{ route('login') }}" class="w-full md:w-2/3 self-center mt-3 p-4 bg-gray-500 hover:bg-gray-450 rounded border-b-8 border-green-500 hover:border-green-400 shadow hover:shadow-2xl cursor-pointer text-white text-sm md:text-base font-medium uppercase text-center">
                 Create a free account now
             </a>
         </main>
