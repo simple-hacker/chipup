@@ -30,7 +30,7 @@
     "apexcharts": "^3.19.2",
     "chart.js": "^2.9.3",
     "currency-flags": "^2.1.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "luxon": "^1.24.1",
     "moment": "^2.26.0",
     "moment-duration-format": "^2.3.2",
