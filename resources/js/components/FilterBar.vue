@@ -41,6 +41,7 @@ export default {
                 classes: 'modal modal-green',
                 height: 'auto',
 				width: '95%',
+				adaptive: true,
 				scrollable: true,
 			})
 		},

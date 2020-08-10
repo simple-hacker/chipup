@@ -45,13 +45,8 @@ const routes = [
         component: LiveSession,
     },
     {
-        path: '/whoops',
-        name: 'NotFound',
-        component: NotFound
-    },
-    {
         path: '*',
-        redirect: '/whoops'
+        component: NotFound
     },
 ]
 
