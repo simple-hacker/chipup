@@ -11,6 +11,7 @@ class Stake extends Model
     public $timestamps = false;
 
     protected $casts = [
+        'user_id' => 'integer',
         'small_blind' => 'float',
         'big_blind' => 'float',
         'straddle_1' => 'float',
