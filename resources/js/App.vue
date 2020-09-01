@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
     name: 'App',
@@ -94,6 +94,7 @@ export default {
         }
     },
     computed: {
+        ...mapState('filtered_sessions', ['currentFilters']),
         ...mapGetters('live', ['sessionInProgress', 'runTime']),
         ...mapGetters('filters', ['unfilteredFilters']),
         variables() {
@@ -127,13 +128,6 @@ export default {
             this.$store.dispatch('live/startRunTime')
         }
 
-        // By default currentFilters is set to an empty object.
-        // If reloading the page and currentFilters is an empty object, then populate with the default unfilteredFilters
-        // Else currentFilters will be the persisted currentFilters state, so filters are saved on page reloads.
-        if (Object.keys(this.$store.state.filtered_sessions.currentFilters).length === 0) {
-            this.$store.dispatch('filtered_sessions/resetFilters')
-        }
-
         // Set the i18n locale to user preferred locale
         // Used for displaying numbers, currencies and in the future language translations
         this.$i18n.locale = this.user.locale
@@ -163,6 +157,21 @@ export default {
             });
         });
     },
+    mounted() {
+        console.log('current filters', this.currentFilters)
+        console.log('unfiltered filters', this.unfilteredFilters)
+
+        // By default currentFilters is set to an empty object.
+        // If reloading the page and currentFilters is an empty object, then populate with the default unfilteredFilters
+        // Else currentFilters will be the persisted currentFilters state, so filters are saved on page reloads.
+        if (Object.keys(this.$store.state.filtered_sessions.currentFilters).length === 0) {
+            console.log('resetting filters because currentFilters was empty.')
+            this.$store.dispatch('filtered_sessions/resetFilters')
+        }
+
+        console.log('current filters', this.currentFilters)
+        console.log('unfiltered filters', this.unfilteredFilters)
+    }
 }
 </script>
 

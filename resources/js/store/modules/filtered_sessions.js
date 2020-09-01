@@ -73,8 +73,6 @@ export default {
 
                 return validProfitRange && validFromDate && validToDate && validLocation && validLimit && validVariant && validBuyInRange
             })
-
-            // Else continue applying filters.
             return filtered
         },
         filteredSessions: (state, getters, rootState) => {
@@ -241,16 +239,13 @@ export default {
         APPLY_FILTERS(state, filters) {
             state.currentFilters = filters
         },
-        RESET_FILTERS(state, unfilteredFilters) {
-            state.currentFilters = unfilteredFilters
-        }
     },
     actions: {
         applyFilters({ commit }, filters) {
             commit('APPLY_FILTERS', filters)
         },
         resetFilters({ commit, rootGetters }) {
-            commit('RESET_FILTERS', rootGetters['filters/unfilteredFilters'])
+            commit('APPLY_FILTERS', rootGetters['filters/unfilteredFilters'])
         }
     }
 }
