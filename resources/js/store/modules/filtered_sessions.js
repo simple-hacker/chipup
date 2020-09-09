@@ -184,19 +184,21 @@ export default {
             }
         },
         stakeSeries: (state, getters) => {
+
+            console.log('filtered', getters.filteredCashGames)
             return getters.filteredCashGames
                 // Sort by small blind values first, and then by big blind value if small blind is the same
                 .sort((a, b) => a.stake.small_blind - b.stake.small_blind || a.stake.big_blind - b.stake.big_blind)
                 .reduce((series, session) => {
-                    if (series.profits.hasOwnProperty(session.stake.stake)) {
-                        series.profits[session.stake.stake] += session.locale_profit
+                    if (series.profits.hasOwnProperty(session.stake.full_stake)) {
+                        series.profits[session.stake.full_stake] += session.locale_profit
                     } else {
-                        series.profits[session.stake.stake] = session.locale_profit
+                        series.profits[session.stake.full_stake] = session.locale_profit
                     }
-                    if (series.counts.hasOwnProperty(session.stake.stake)) {
-                        series.counts[session.stake.stake] += 1
+                    if (series.counts.hasOwnProperty(session.stake.full_stake)) {
+                        series.counts[session.stake.full_stake] += 1
                     } else {
-                        series.counts[session.stake.stake] = 1
+                        series.counts[session.stake.full_stake] = 1
                     }
                     return series
                 }, { profits: {}, counts: {} })

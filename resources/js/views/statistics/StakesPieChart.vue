@@ -5,11 +5,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
     name: 'StakesPieChart',
     computed: {
+        ...mapState(['user']),
         ...mapGetters('filtered_sessions', ['stakeSeries']),
         options() {
             return {
@@ -20,7 +21,7 @@ export default {
                         show: false
                     }
                 },
-                labels: Object.keys(this.stakeSeries.counts) ?? [],
+                labels: this.labels,
                 legend: {
                     show: true,
                     position: 'bottom',
@@ -40,6 +41,17 @@ export default {
         },
         series() {
             return Object.values(this.stakeSeries.counts) ?? []
+        },
+        labels() {
+            let formatter = new Intl.NumberFormat(this.user.locale, { style: 'currency', currency: this.user.currency, minimumFractionDigits: 0, maximumFractionDigits: 2 });
+
+            return Object.keys(this.stakeSeries.profits).map(stake => {
+                // For each stake 1/1, split against /
+                // For each blinds and join together with /
+                return stake.split('/').map(blind => {
+                    return formatter.format(blind)
+                }).join('/')
+            }) ?? []
         }
     },
 }

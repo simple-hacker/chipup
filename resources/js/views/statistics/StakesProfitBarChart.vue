@@ -5,16 +5,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
     name: 'StakesProfitBarChart',
-    data() {
-        return {
-            
-        }
-    },
     computed: {
+        ...mapState(['user']),
         ...mapGetters('filtered_sessions', ['stakeSeries']),
         options() {
             return {
@@ -36,7 +32,7 @@ export default {
                         text: 'Profit'
                     }
                 },
-                labels: Object.keys(this.stakeSeries.profits) ?? [],
+                labels: this.labels,
                 grid: {
 					borderColor: '#38393D'
                 },
@@ -73,6 +69,17 @@ export default {
                     data: Object.values(this.stakeSeries.profits) ?? []
                 }
             ]
+        },
+        labels() {
+            let formatter = new Intl.NumberFormat(this.user.locale, { style: 'currency', currency: this.user.currency, minimumFractionDigits: 0, maximumFractionDigits: 2 });
+
+            return Object.keys(this.stakeSeries.profits).map(stake => {
+                // For each stake 1/1, split against /
+                // For each blinds and join together with /
+                return stake.split('/').map(blind => {
+                    return formatter.format(blind)
+                }).join('/')
+            }) ?? []
         }
     },
 }

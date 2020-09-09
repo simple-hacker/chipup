@@ -18,4 +18,17 @@ class Stake extends Model
         'straddle_2' => 'float',
         'straddle_3' => 'float',
     ];
+
+    protected $appends = ['full_stake'];
+
+    /**
+    * Get the stake full text using small and big blind
+    * e.g. 1/2
+    * 
+    * @return string
+    */
+    public function getFullStakeAttribute() : String
+    {
+        return $this->small_blind . '/' . $this->big_blind;
+    }
 }
