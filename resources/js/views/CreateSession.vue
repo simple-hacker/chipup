@@ -555,7 +555,23 @@ export default {
 		},
 		sessionCurrency() {
 			return this.session?.currency ?? this.defaultCurrency
-		}
+		},
+		buyInsTotal() {
+			let expenseTotal = (this.session.expenses) ? this.session.expenses.reduce((total, expenses) => total + expenses.amount, 0) : 0
+
+			if (this.game_type === 'cash_game') {
+				let buyInsTotal = (this.cash_game.buy_ins) ? this.cash_game.buy_ins.reduce((total, buy_in) => total + buy_in.amount, 0) : 0
+				return buyInsTotal + expenseTotal
+			}
+			else if (this.game_type === 'tournament') {
+				let buyInTotal = this.tournament?.buy_in?.amount ?? 0
+				let addOnTotal = (this.tournament.add_ons) ? this.tournament.add_ons.reduce((total, add_ons) => total + add_ons.amount, 0) : 0
+				let rebuyTotal = (this.tournament.rebuys) ? this.tournament.rebuys.reduce((total, rebuys) => total + rebuys.amount, 0) : 0
+				return buyInTotal + addOnTotal + rebuyTotal + expenseTotal
+			}
+
+			return 0
+		},
 	},
 	created() {
 		this.session.location = this.user.default_location ?? ''
@@ -699,7 +715,13 @@ export default {
 					...this.cash_game
 				})
 				.then(response => {
-					this.$snotify.success(`Successfully created cash game.`)
+				
+					if ((this.session.cash_out.amount - this.buyInsTotal) > 0) {
+						this.$snotify.success(`Nice win!`)
+					} else {
+						this.$snotify.warning(`Better luck next time.`)
+					}
+
 					this.$router.push({ name: 'sessions' })
 				})
 				.catch(error => {
@@ -719,7 +741,12 @@ export default {
 					...this.tournament
 				})
 				.then(response => {
-					this.$snotify.success(`Successfully created tournament.`)
+					if ((this.session.cash_out.amount - this.buyInsTotal) > 0) {
+						this.$snotify.success(`Nice win!`)
+					} else {
+						this.$snotify.warning(`Better luck next time.`)
+					}
+
 					this.$router.push({ name: 'sessions' })
 				})
 				.catch(error => {

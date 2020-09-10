@@ -565,12 +565,16 @@ export default {
 		},
 		endSessionAndCashOut() {
 			let cashOutData = (this.liveSession.game_type === 'tournament') ? {...this.cashOut, ...this.tournamentCashOut} : this.cashOut
+
+			// Need a copy of buyIns total because liveSession resets to {} (therefore buyInsTotal to 0)
+			let buyInsTotal = this.buyInsTotal
+
 			this.endLiveSession(cashOutData)
 			.then(response => {
                 this.$emit('close')
-                this.$router.push('sessions')               
+				this.$router.push('sessions')
 
-                if ((this.cashOut.amount - this.buyInsTotal) > 0) {
+                if ((this.cashOut.amount - buyInsTotal) > 0) {
                     this.$snotify.success(`Nice win!`)
                 } else {
                     this.$snotify.warning(`Better luck next time.`)
