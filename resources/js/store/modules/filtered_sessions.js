@@ -184,8 +184,6 @@ export default {
             }
         },
         stakeSeries: (state, getters) => {
-
-            console.log('filtered', getters.filteredCashGames)
             return getters.filteredCashGames
                 // Sort by small blind values first, and then by big blind value if small blind is the same
                 .sort((a, b) => a.stake.small_blind - b.stake.small_blind || a.stake.big_blind - b.stake.big_blind)
