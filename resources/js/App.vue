@@ -119,11 +119,27 @@ export default {
         }
     },
     created() {
-        this.$store.dispatch('populateState', { user: this.user, variables: this.variables })
-        this.$store.dispatch('bankroll/getBankrollTransactions')
-        this.$store.dispatch('cash_games/getCashGames')
-        this.$store.dispatch('tournaments/getTournaments')
-        this.$store.dispatch('live/currentLiveSession')
+        // ****
+        // Filter bug Fix 2020-09-10
+        // All of these dispatches which get the session data is asynchronous.
+        // So checking for currentFilters was firing before data had been retrieved, and those the unfilteredFilters was completely blank
+        // Only perform the filter check when we have all the data.
+        // ***
+
+        Promise.all([
+            this.$store.dispatch('populateState', { user: this.user, variables: this.variables }),
+            this.$store.dispatch('bankroll/getBankrollTransactions'),
+            this.$store.dispatch('cash_games/getCashGames'),
+            this.$store.dispatch('tournaments/getTournaments'),
+            this.$store.dispatch('live/currentLiveSession'),
+        ]).then(() => {
+            // By default currentFilters is set to an empty object.
+            // If reloading the page and currentFilters is an empty object, then populate with the default unfilteredFilters
+            // Else currentFilters will be the persisted currentFilters state, so filters are saved on page reloads.
+            if (Object.keys(this.$store.state.filtered_sessions.currentFilters).length === 0) {
+                this.$store.dispatch('filtered_sessions/resetFilters')
+            }
+        })
 
         if (this.sessionInProgress) {
             this.$store.dispatch('live/startRunTime')
@@ -158,25 +174,6 @@ export default {
             });
         });
     },
-    updated() {
-        // ****
-        // Bug Fix 2020-09-10
-        // This used to be in the mounted hook, but because we were performing a async fetch for 
-        // the cashGames and tournaments in the created() hook, the mounted() was being fired before the fetch completed
-        // resulting in the all sessions data not being ready for the unfilteredFilters to use.
-        // Changed to beforeUpdate so this is fired once the state has had a chance to populate.
-        // Also have to wrap it in nextTick for production site as the API call takes longer.
-        // ***
-
-         this.$nextTick(() => {
-            // By default currentFilters is set to an empty object.
-            // If reloading the page and currentFilters is an empty object, then populate with the default unfilteredFilters
-            // Else currentFilters will be the persisted currentFilters state, so filters are saved on page reloads.
-            if (Object.keys(this.$store.state.filtered_sessions.currentFilters).length === 0) {
-                this.$store.dispatch('filtered_sessions/resetFilters')
-            }
-        })
-    }
 }
 </script>
 
