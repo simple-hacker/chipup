@@ -62,7 +62,7 @@
                 <i class="fas fa-filter fa-2x md:fa-3x mr-4 text-green-500"></i>
                 <div class="w-full">    
                     <h2 class="text-sm md:text-base uppercase font-extrabold tracking-wider text-white">Advanced custom filtering</h2>
-                    <p>Really find out where you're excelling to maximise your profits even further.</p>
+                    <p>Find out where you're really excelling to maximise your profits even further.</p>
                     <p>Filter by a wide range of variables such as cash games or tournaments, stakes, locations, profit range, buy in range etc.</p>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                 <i class="fas fa-server fa-2x md:fa-3x mr-4 text-green-500"></i>
                 <div class="w-full">  
                     <h2 class="text-sm md:text-base uppercase font-extrabold tracking-wider text-white">Backed up by our database</h2>
-                    <p>Need to panic if you've changed or wiped your phone and lost your data, we've got it all for you.</p>
+                    <p>No need to panic if you've changed or wiped your phone and lost your data, we've got it all for you.</p>
                 </div>
             </div>
             <div data-aos="fade-left" class="card self-start w-full md:w-2/3 shadow flex mb-5 md:mb-10 py-6 px-3 md:px-6 items-center">
