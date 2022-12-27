@@ -53,7 +53,7 @@ class AddOnTest extends TestCase
     public function testAddOnDefaultsToSessionCurrency()
     {
         // Create a user with GBP currency default
-        $user = \App\User::factory()->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
 
         // Create a Cash Game which has USD currency
         $tournament = $user->startTournament(['currency' => 'USD']);
@@ -65,7 +65,7 @@ class AddOnTest extends TestCase
     public function testAddOnDefaultsToUserCurrencyIfNoSessionCurrencyIsAvailable()
     {
         // Create a user with GBP currency default
-        $user = \App\User::factory()->create(['currency' => 'PLN']);
+        $user = \App\Models\User::factory()->create(['currency' => 'PLN']);
 
         // Create a Cash Game which has default user currency
         $tournament = $user->startTournament();
@@ -77,7 +77,7 @@ class AddOnTest extends TestCase
     public function testAddOnCanBeInADifferentCurrency()
     {
         // Create a user with GBP currency default
-        $user = \App\User::factory()->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
 
         // Assert Cash Game currency is user default of GBP
         $tournament = $this->startLiveTournament($user);
@@ -96,7 +96,7 @@ class AddOnTest extends TestCase
     public function testAddOnHasAUserLocaleAndSessionLocaleAmounts()
     {
         // Create a user with GBP currency default
-        $user = \App\User::factory()->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
 
         // Create a Cash Game which has USD currency
         $tournament = $user->tournaments()->create(['currency' => 'USD']);

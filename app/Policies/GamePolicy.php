@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Abstracts\Game;
-use App\User;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class GamePolicy
@@ -13,7 +13,7 @@ class GamePolicy
     /**
      * Determine whether the user can manage the game.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @param  \App\Game  $game
      * @return mixed
      */

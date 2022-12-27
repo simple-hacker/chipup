@@ -12,7 +12,7 @@ class BuyInTest extends TestCase
 
     public function testOnlyAuthenticatedUsersCanAddBuyIn()
     {
-        $user = \App\User::factory()->create();
+        $user = \App\Models\User::factory()->create();
         $cashGame = $user->startCashGame();
 
         $this->postJson(route('buyin.create'), [

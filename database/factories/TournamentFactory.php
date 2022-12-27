@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\User;
-use App\Tournament;
+use App\Models\User;
+use App\Models\Tournament;
 use App\Attributes\Limit;
 use App\Attributes\Variant;
 use Illuminate\Support\Carbon;

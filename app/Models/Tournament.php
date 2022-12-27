@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Abstracts\Game;
 use App\Exceptions\MultipleBuyInsNotAllowedException;
@@ -18,7 +18,7 @@ class Tournament extends Game
     * This updates the Tournament's profit by subtracting the BuyIn amount.
     * This overwrites the abstract Game->addBuyIn() function because a tournament should only have
     * one buyIn, where as Cash can have multiple
-    * 
+    *
     * @param float amount
     * @return BuyIn
     */
@@ -66,7 +66,7 @@ class Tournament extends Game
 
     /**
     * Returns the Tournament's BuyIn
-    * 
+    *
     * @return morphMany
     */
     public function buyIn()
@@ -76,7 +76,7 @@ class Tournament extends Game
 
     /**
     * Returns the Tournament's Rebuys
-    * 
+    *
     * @return morphMany
     */
     public function rebuys()
@@ -86,7 +86,7 @@ class Tournament extends Game
 
     /**
     * Returns the Tournament's Rebuys
-    * 
+    *
     * @return morphMany
     */
     public function addOns()
@@ -97,7 +97,7 @@ class Tournament extends Game
     /**
     * Mutate profit
     *
-    * @return Integer
+    * @return int
     */
     public function getProfitAttribute()
     {
@@ -106,8 +106,8 @@ class Tournament extends Game
 
     /**
     * Return cash out amount in session currency
-    * 
-    * @return Integer
+    *
+    * @return int
     */
     public function buyInAmount()
     {
@@ -116,8 +116,8 @@ class Tournament extends Game
 
     /**
     * Return total rebuys amount converted in to session currency
-    * 
-    * @return Integer
+    *
+    * @return int
     */
     public function totalRebuysAmount()
     {
@@ -130,8 +130,8 @@ class Tournament extends Game
 
     /**
     * Return total rebuys amount converted in to session currency
-    * 
-    * @return Integer
+    *
+    * @return int
     */
     public function totalAddOnsAmount()
     {
@@ -145,7 +145,7 @@ class Tournament extends Game
     /**
     * Mutate prize_pool in to currency
     *
-    * @param Float $prize_pool
+    * @param float $prize_pool
     * @return void
     */
     public function getPrizePoolAttribute($prize_pool)
@@ -156,7 +156,7 @@ class Tournament extends Game
     /**
     * Mutate prize_pool in to lowest denomination
     *
-    * @param Float $prize_pool
+    * @param float $prize_pool
     * @return void
     */
     public function setPrizePoolAttribute($prize_pool)

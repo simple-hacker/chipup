@@ -36,7 +36,7 @@ abstract class Game extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\User');
     }
 
     /**
@@ -210,7 +210,7 @@ abstract class Game extends Model
     /**
     * Return total buy ins amount converted in to session currency
     *
-    * @return Integer
+    * @return int
     */
     public function totalBuyInsAmount()
     {
@@ -224,7 +224,7 @@ abstract class Game extends Model
     /**
     * Return total expenses amount converted in to session currency
     *
-    * @return Integer
+    * @return int
     */
     public function totalExpensesAmount()
     {
@@ -238,7 +238,7 @@ abstract class Game extends Model
     /**
     * Return cash out amount in session currency
     *
-    * @return Integer
+    * @return int
     */
     public function cashOutAmount()
     {

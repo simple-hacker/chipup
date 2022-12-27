@@ -12,7 +12,7 @@ class AddOnTest extends TestCase
 
     public function testOnlyAuthenticatedUsersCanAddAddOn()
     {
-        $user = \App\User::factory()->create();
+        $user = \App\Models\User::factory()->create();
         $tournament = $user->startTournament($this->getTournamentAttributes());
 
         $this->postJson(route('addon.create'), [

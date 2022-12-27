@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\User;
+use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -12,14 +12,14 @@ class UserTest extends TestCase
 
     public function testUserHasABankroll()
     {
-        $user = \App\User::factory()->create();
+        $user = \App\Models\User::factory()->create();
 
         $this->assertEquals($user->bankroll, 0);
     }
 
     public function testGetTheLiveCashGameForAUser()
     {
-        $user = \App\User::factory()->create();
+        $user = \App\Models\User::factory()->create();
 
         // Start a Cash Game session.
         $cashGame = $user->startCashGame();
@@ -35,7 +35,7 @@ class UserTest extends TestCase
 
     public function testGetTheLiveTournamentForAUser()
     {
-        $user = \App\User::factory()->create();
+        $user = \App\Models\User::factory()->create();
 
         // Start a Cash Game session.
         $tournament = $user->startTournament($this->getTournamentAttributes());
@@ -51,7 +51,7 @@ class UserTest extends TestCase
 
     public function testAUserCanCompleteTheSetup()
     {
-        $user = \App\User::factory()->create();
+        $user = \App\Models\User::factory()->create();
 
         $user->completeSetup();
 

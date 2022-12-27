@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Tournament;
+use App\Models\Tournament;
 use Tests\TestCase;
 use App\Transactions\BuyIn;
 use App\Transactions\CashOut;
@@ -262,7 +262,7 @@ class LiveTournamentTest extends TestCase
         $dateTime = Carbon::create(2020, 05, 01, 12, 0, 0);
 
         // Add Tournament to database with times 1st May 2020 12:30 - 14:30
-        \App\Tournament::factory()->create([
+        \App\Models\Tournament::factory()->create([
             'user_id' => $user->id,
             'start_time' => $dateTime->toDateTimeString(),
             'end_time' => $dateTime->copy()->addHours(2)->toDateTimeString()
@@ -562,7 +562,7 @@ class LiveTournamentTest extends TestCase
         $dateTime = Carbon::create(2020, 06, 01, 12, 0, 0);
 
         // Add Tournament to database with times 1st June 2020 12:30 - 14:30
-        \App\Tournament::factory()->create([
+        \App\Models\Tournament::factory()->create([
             'user_id' => $user->id,
             'start_time' => $dateTime->toDateTimeString(),
             'end_time' => $dateTime->copy()->addHours(2)->toDateTimeString()

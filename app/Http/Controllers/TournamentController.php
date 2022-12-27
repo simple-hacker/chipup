@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Tournament;
+use App\Models\Tournament;
 use Illuminate\Support\Carbon;
 use App\Http\Requests\CreateTournamentRequest;
 use App\Http\Requests\UpdateTournamentRequest;
@@ -24,7 +24,7 @@ class TournamentController extends GameController
 
     /**
     * POST method to create a completed tournament with all required attributes.
-    * 
+    *
     * @param CreateTournamentRequest $request
     * @return json
     */
@@ -39,7 +39,7 @@ class TournamentController extends GameController
 
             // Add the BuyIn if provided, else create one with 0 for Freeroll
             $tournament->addBuyIn($request->buy_in['amount'] ?? 0, $request->buy_in['currency'] ?? auth()->user()->currency);
-            
+
             $this->createExpensesFromRequest($tournament);
             $this->createRebuysFromRequest($tournament);
             $this->createAddOnsFromRequest($tournament);
@@ -87,10 +87,10 @@ class TournamentController extends GameController
         try {
             $this->checkIfUpdateRequestTimesAreValidAgainstSavedTimes($tournament);
             $this->checkIfRequestTimesClashWithAnotherTournament($tournament->id);
-    
+
             // Update the tournament with the validated request
             $tournament->update($request->validated());
-        
+
             return response()->json([
                 'success' => true,
                 'tournament' => $tournament->fresh()
@@ -115,7 +115,7 @@ class TournamentController extends GameController
         $this->authorize('manage', $tournament);
 
         $tournament->delete();
-        
+
         return response()->json([
             'success' => true,
         ]);

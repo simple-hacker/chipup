@@ -24,7 +24,7 @@ abstract class TestCase extends BaseTestCase
     protected function signIn($user = null)
     {
         if (! $user) {
-            $user = \App\User::factory()->create();
+            $user = \App\Models\User::factory()->create();
         }
 
         $user->completeSetup();

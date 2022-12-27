@@ -12,7 +12,7 @@ class RebuyTest extends TestCase
 
     public function testOnlyAuthenticatedUsersCanAddRebuy()
     {
-        $user = \App\User::factory()->create();
+        $user = \App\Models\User::factory()->create();
         $tournament = $user->startTournament($this->getTournamentAttributes());
 
         $this->postJson(route('rebuy.create'), [

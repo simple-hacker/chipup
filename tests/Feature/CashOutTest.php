@@ -12,7 +12,7 @@ class CashOutTest extends TestCase
 
     public function testOnlyAuthenticatedUsersCanAddCashOut()
     {
-        $user = \App\User::factory()->create();
+        $user = \App\Models\User::factory()->create();
         $cashGame = $user->startCashGame();
 
         $this->postJson(route('cashout.create'), [

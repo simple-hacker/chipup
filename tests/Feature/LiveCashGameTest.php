@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\CashGame;
+use App\Models\CashGame;
 use Tests\TestCase;
 use App\Transactions\CashOut;
 use Illuminate\Support\Carbon;
@@ -232,7 +232,7 @@ class LiveCashGameTest extends TestCase
         $dateTime = Carbon::create(2020, 05, 01, 12, 0, 0);
 
         // Add CashGame to database with times 1st May 2020 12:30 - 14:30
-        \App\CashGame::factory()->create([
+        \App\Models\CashGame::factory()->create([
             'user_id' => $user->id,
             'start_time' => $dateTime->toDateTimeString(),
             'end_time' => $dateTime->copy()->addHours(2)->toDateTimeString()
@@ -478,7 +478,7 @@ class LiveCashGameTest extends TestCase
         $dateTime = Carbon::create(2020, 06, 01, 12, 0, 0);
 
         // Add CashGame to database with times 1st June 2020 12:30 - 14:30
-        \App\CashGame::factory()->create([
+        \App\Models\CashGame::factory()->create([
             'user_id' => $user->id,
             'start_time' => $dateTime->toDateTimeString(),
             'end_time' => $dateTime->copy()->addHours(2)->toDateTimeString()

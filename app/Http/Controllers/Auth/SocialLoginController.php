@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-use App\User;
+use App\Models\User;
 
 use App\SocialLogin;
 use Illuminate\Http\Request;

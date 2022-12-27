@@ -18,7 +18,7 @@ class SettingsTest extends TestCase
 
     public function testUserMustCompleteSetupBeforeAccessingSettings()
     {
-        $user = \App\User::factory()->create();
+        $user = \App\Models\User::factory()->create();
         $this->actingAs($user);
 
         $this->postJson(route('settings.email'), ['email' => 'different@example.com'])->assertRedirect(route('setup.index'));
@@ -27,7 +27,7 @@ class SettingsTest extends TestCase
 
     public function testUserCanChangeTheirEmailAddress()
     {
-        $user = \App\User::factory()->create(['email' => 'test@example.com']);
+        $user = \App\Models\User::factory()->create(['email' => 'test@example.com']);
 
         $this->signIn($user);
 
@@ -38,10 +38,10 @@ class SettingsTest extends TestCase
 
     public function testUserCannotUpdateEmailAddressToAnExistingEmailAddress()
     {
-        $user1 = \App\User::factory()->create(['email' => 'user1@example.com']);
+        $user1 = \App\Models\User::factory()->create(['email' => 'user1@example.com']);
 
         // Create a second user with email user2@example.com and sign in.
-        $user2 = \App\User::factory()->create(['email' => 'user2@example.com']);
+        $user2 = \App\Models\User::factory()->create(['email' => 'user2@example.com']);
         $this->signIn($user2);
 
         // Try to update user2's email address to user1.
@@ -51,7 +51,7 @@ class SettingsTest extends TestCase
     public function testUserCanUpdateEmailAddressToTheSameEmailAddress()
     {
         // In case user clicks 'Change Email' without updating value, then request is still valid.
-        $user = \App\User::factory()->create(['email' => 'user@example.com']);
+        $user = \App\Models\User::factory()->create(['email' => 'user@example.com']);
         $this->signIn($user);
 
         // Try to update user's email address to the same value
@@ -81,7 +81,7 @@ class SettingsTest extends TestCase
             'default_location' => 'CasinoMK'
         ];
 
-        $user = \App\User::factory()->create($defaults);
+        $user = \App\Models\User::factory()->create($defaults);
 
         $this->signIn($user);
 
@@ -150,7 +150,7 @@ class SettingsTest extends TestCase
         $current_password = 'password';
         $new_password = 'secret';
 
-        $user = \App\User::factory()->create([
+        $user = \App\Models\User::factory()->create([
             'password' => Hash::make($current_password)
         ]);
 
@@ -172,7 +172,7 @@ class SettingsTest extends TestCase
         $new_password = 'secret';
 
         // Create and sign in a new user with password "password"
-        $user = \App\User::factory()->create([
+        $user = \App\Models\User::factory()->create([
             'password' => Hash::make($current_password)
         ]);
         $this->signIn($user);

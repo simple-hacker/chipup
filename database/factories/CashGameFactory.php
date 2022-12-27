@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\User;
-use App\CashGame;
+use App\Models\User;
+use App\Models\CashGame;
 use App\Attributes\Limit;
 use App\Attributes\Stake;
 use App\Attributes\Variant;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\CashGame;
+use App\Models\CashGame;
 use Illuminate\Support\Carbon;
 use App\Http\Requests\CreateCashGameRequest;
 use App\Http\Requests\UpdateCashGameRequest;
@@ -40,7 +40,7 @@ class CashGameController extends GameController
 
     /**
     * POST method to create a completed cash game with all required attributes.
-    * 
+    *
     * @param CreateCashGameRequest $request
     * @return json
     */
@@ -53,7 +53,7 @@ class CashGameController extends GameController
             // Create the Cash Game with details (without transaction) from the request
             $cashGameAttributes = $this->removeTransactionsFromRequest($request->validated());
             $cashGame = auth()->user()->cashGames()->create($cashGameAttributes);
-            
+
             // Add the BuyIns.
             // Amount is required in request, but using null coalescing to zero just in case
             foreach ($request->buy_ins as $buy_in) {
@@ -77,7 +77,7 @@ class CashGameController extends GameController
 
     /**
     * PATCH method to update cash game.
-    * 
+    *
     * @param CashGame $cashGame
     * @param UpdateCashGameRequest $request
     * @return json
@@ -89,10 +89,10 @@ class CashGameController extends GameController
         try {
             $this->checkIfUpdateRequestTimesAreValidAgainstSavedTimes($cashGame);
             $this->checkIfRequestTimesClashWithAnotherCashGame($cashGame->id);
-    
+
             // Update the cash game with the validated request
             $cashGame->update($request->validated());
-    
+
             return response()->json([
                 'success' => true,
                 'cash_game' => $cashGame->fresh()
@@ -117,7 +117,7 @@ class CashGameController extends GameController
         $this->authorize('manage', $cashGame);
 
         $cashGame->delete();
-        
+
         return response()->json([
             'success' => true,
         ]);

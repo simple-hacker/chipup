@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Tournament;
+use App\Models\Tournament;
 use Tests\TestCase;
 use App\Transactions\BuyIn;
 use App\Transactions\CashOut;
@@ -86,7 +86,7 @@ class TournamentTest extends TestCase
     // User must be logged in create/view/view all/update/delete tournament
     public function testUserMustBeLoggedInToCreateTournament()
     {
-        $tournament = \App\Tournament::factory()->create();
+        $tournament = \App\Models\Tournament::factory()->create();
         $validAttributes = $this->getTournamentAttributes();
 
         $this->getJson(route('tournament.index'))->assertUnauthorized();
@@ -321,7 +321,7 @@ class TournamentTest extends TestCase
         $start_time = Carbon::create(2020, 05, 01, 12, 0, 0);
         $end_time = Carbon::create(2020, 05, 01, 13, 0, 0);
 
-        \App\Tournament::factory()->create([
+        \App\Models\Tournament::factory()->create([
             'user_id' => $user->id,
             'start_time' => $start_time->toDateTimeString(),
             'end_time' => $end_time->toDateTimeString(),
@@ -703,7 +703,7 @@ class TournamentTest extends TestCase
         $this->assertEmpty($response['tournaments']);
 
         // Create three tournaments
-        \App\Tournament::factory()->count(3)->create(['user_id' => $user->id]);
+        \App\Models\Tournament::factory()->count(3)->create(['user_id' => $user->id]);
 
         // Assert response tournaments returns two tournaments
         $response = $this->getJson(route('tournament.index'))->assertOk()->assertJsonStructure(['success', 'tournaments']);
@@ -714,7 +714,7 @@ class TournamentTest extends TestCase
     public function testUserCanViewAValidTournament()
     {
         $user = $this->signIn();
-        $tournament = \App\Tournament::factory()->create(['user_id' => $user->id]);
+        $tournament = \App\Models\Tournament::factory()->create(['user_id' => $user->id]);
 
         // Assert Not Found if supply incorrect tournament id
         $this->getJson(route('tournament.view', ['tournament' => $tournament->id]))
@@ -739,7 +739,7 @@ class TournamentTest extends TestCase
     public function testUserCannotViewAnotherUsersTournament()
     {
         // Create a Tournament which also creates a user for it
-        $tournament = \App\Tournament::factory()->create();
+        $tournament = \App\Models\Tournament::factory()->create();
 
         // Create a new user and sign in
         $this->signIn();
@@ -752,7 +752,7 @@ class TournamentTest extends TestCase
     public function testUserCanUpdateTournamentDetails()
     {
         $user = $this->signIn();
-        $tournament = \App\Tournament::factory()->create(['user_id' => $user->id]);
+        $tournament = \App\Models\Tournament::factory()->create(['user_id' => $user->id]);
 
         $attributes = [
             'start_time' => Carbon::create('-1 hour')->toDateTimeString(),
@@ -790,7 +790,7 @@ class TournamentTest extends TestCase
     public function testUserCannnotUpdateAnotherUsersTournament()
     {
         // Create Tournament with factory which also creates a new user.
-        $tournament = \App\Tournament::factory()->create();
+        $tournament = \App\Models\Tournament::factory()->create();
 
         // Create a new user and sign in
         $this->signIn();
@@ -804,7 +804,7 @@ class TournamentTest extends TestCase
     public function testDataMustBeValidWhenUpdatingATournament()
     {
         $user = $this->signIn();
-        $tournament = \App\Tournament::factory()->create(['user_id' => $user->id]);
+        $tournament = \App\Models\Tournament::factory()->create(['user_id' => $user->id]);
 
         // limit must exist
         $attributes = ['limit_id' => 999];
@@ -858,7 +858,7 @@ class TournamentTest extends TestCase
     public function testStartTimeCannotBeInTheFutureWhenUpdating()
     {
         $user = $this->signIn();
-        $tournament = \App\Tournament::factory()->create(['user_id' => $user->id]);
+        $tournament = \App\Models\Tournament::factory()->create(['user_id' => $user->id]);
 
         $attributes = ['start_time' => Carbon::create('+1 second')->toDateTimeString()];
         $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), $attributes)->assertStatus(422);
@@ -868,7 +868,7 @@ class TournamentTest extends TestCase
     public function testEndTimeCannotBeInTheFutureWhenUpdating()
     {
         $user = $this->signIn();
-        $tournament = \App\Tournament::factory()->create(['user_id' => $user->id]);
+        $tournament = \App\Models\Tournament::factory()->create(['user_id' => $user->id]);
 
         $attributes = ['end_time' => Carbon::create('+1 second')->toDateTimeString()];
         $this->patchJson(route('tournament.update', ['tournament' => $tournament->id]), $attributes)->assertStatus(422);
@@ -878,7 +878,7 @@ class TournamentTest extends TestCase
     public function testEndTimeCannotBeBeforeStartTimeWhenUpdating()
     {
         $user = $this->signIn();
-        $tournament = \App\Tournament::factory()->create(['user_id' => $user->id]);
+        $tournament = \App\Models\Tournament::factory()->create(['user_id' => $user->id]);
 
         // Try to end time one second before start time
         $time = Carbon::create('-1 hour');
@@ -893,7 +893,7 @@ class TournamentTest extends TestCase
     public function testStartTimeAndEndTimeCanTheSameWhenUpdating()
     {
         $user = $this->signIn();
-        $tournament = \App\Tournament::factory()->create(['user_id' => $user->id]);
+        $tournament = \App\Models\Tournament::factory()->create(['user_id' => $user->id]);
 
         // Updating where start time is same as end time
         $time = Carbon::create('-1 hour');
@@ -909,7 +909,7 @@ class TournamentTest extends TestCase
     public function testStartTimeAndEndTimeCanBeExactlyNowWhenUpdating()
     {
         $user = $this->signIn();
-        $tournament = \App\Tournament::factory()->create(['user_id' => $user->id]);
+        $tournament = \App\Models\Tournament::factory()->create(['user_id' => $user->id]);
 
         // Update where start time is same as end time and both set to now
         $attributes = [
@@ -927,7 +927,7 @@ class TournamentTest extends TestCase
 
         // Create a Tournament which started 2 hours ago and ended 30 mins after.
         $start_time = Carbon::create('-2 hours');
-        $tournament = \App\Tournament::factory()->create([
+        $tournament = \App\Models\Tournament::factory()->create([
             'user_id' => $user->id,
             'start_time' => $start_time->toDateTimeString(),
             'end_time' => $start_time->copy()->addMinutes(30)->toDateTimeString(),
@@ -948,7 +948,7 @@ class TournamentTest extends TestCase
 
         // Create a Tournament which started 2 hours ago and ended 30 mins after.
         $start_time = Carbon::create('-2 hours');
-        $tournament = \App\Tournament::factory()->create([
+        $tournament = \App\Models\Tournament::factory()->create([
             'user_id' => $user->id,
             'start_time' => $start_time->toDateTimeString(),
             'end_time' => $start_time->copy()->addMinutes(30)->toDateTimeString(),
@@ -969,7 +969,7 @@ class TournamentTest extends TestCase
 
         // Create a Tournament which started 10 hours ago and ended 30 mins after.
         $time = Carbon::create('-10 hours');
-        $tournament1 = \App\Tournament::factory()->create([
+        $tournament1 = \App\Models\Tournament::factory()->create([
             'user_id' => $user->id,
             'start_time' => $time->toDateTimeString(),
             'end_time' => $time->copy()->addMinutes(30)->toDateTimeString(),
@@ -977,7 +977,7 @@ class TournamentTest extends TestCase
 
         // Create another Tournament to update, which started an hour ago and ended 30 mins after, so it does not clash with $tournament1
         $updateTime = Carbon::create('-2 hours');
-        $tournamentToUpdate = \App\Tournament::factory()->create([
+        $tournamentToUpdate = \App\Models\Tournament::factory()->create([
             'user_id' => $user->id,
             'start_time' => $updateTime->toDateTimeString(),
             'end_time' => $updateTime->copy()->addMinutes(30)->toDateTimeString(),
@@ -1011,7 +1011,7 @@ class TournamentTest extends TestCase
 
         // Create a Cash Game which which started 1 hour ago and ended 30 minutes after
         $time = Carbon::create('-1 hours');
-        $tournament = \App\Tournament::factory()->create([
+        $tournament = \App\Models\Tournament::factory()->create([
             'user_id' => $user->id,
             'start_time' => $time->toDateTimeString(),
             'end_time' => $time->copy()->addMinutes(30)->toDateTimeString(),
@@ -1030,7 +1030,7 @@ class TournamentTest extends TestCase
     public function testUserCanDeleteTheirTournament()
     {
         $user = $this->signIn();
-        $tournament = \App\Tournament::factory()->create(['user_id' => $user->id]);
+        $tournament = \App\Models\Tournament::factory()->create(['user_id' => $user->id]);
 
         $this->deleteJson(route('tournament.delete', ['tournament' => $tournament->id]))->assertOk();
         $this->assertEmpty($user->tournaments);
@@ -1048,7 +1048,7 @@ class TournamentTest extends TestCase
     public function testUserCannotDeleteAnotherUsersTournament()
     {
         // Create Tournament with factory which also creates a new user.
-        $tournament = \App\Tournament::factory()->create();
+        $tournament = \App\Models\Tournament::factory()->create();
 
         // Create a new user and sign in
         $this->signIn();

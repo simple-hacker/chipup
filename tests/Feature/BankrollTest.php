@@ -13,7 +13,7 @@ class BankrollTest extends TestCase
 
     public function testAUserMustBeLoggedInToUpdateBankroll()
     {
-        $user = \App\User::factory()->create();
+        $user = \App\Models\User::factory()->create();
 
         $this->postJson(route('bankroll.create'), ['amount' => 30000])->assertUnauthorized();
 
@@ -80,7 +80,7 @@ class BankrollTest extends TestCase
 
     public function testBankrollTransactionCurrencyCanBeSupplied()
     {
-        $user = \App\User::factory()->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
         $this->signIn($user);
 
         $this->postJson(route('bankroll.create'), ['amount' => 1000, 'currency' => 'PLN']);
@@ -89,7 +89,7 @@ class BankrollTest extends TestCase
 
     public function testBankrollTransactionCurrencyMustBeValid()
     {
-        $user = \App\User::factory()->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
         $this->signIn($user);
 
         // Not a string
@@ -161,7 +161,7 @@ class BankrollTest extends TestCase
     {
         // All numbers are valid.
 
-        $user = \App\User::factory()->create();
+        $user = \App\Models\User::factory()->create();
         $user->completeSetup();
         $this->actingAs($user);
 
@@ -183,7 +183,7 @@ class BankrollTest extends TestCase
 
     public function testAmountCannotBeInvalidForBankrollTransactions()
     {
-        $user = \App\User::factory()->create();
+        $user = \App\Models\User::factory()->create();
         $user->completeSetup();
         $this->actingAs($user);
 

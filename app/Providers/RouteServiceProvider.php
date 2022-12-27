@@ -30,11 +30,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Map `{cash_game}` route placeholder to the \App\CashGame model
-        $this->app->router->model('cash_game', \App\CashGame::class);
+        // Map `{cash_game}` route placeholder to the \App\Models\CashGame model
+        $this->app->router->model('cash_game', \App\Models\CashGame::class);
 
-        // Map `{tournament}` to the \App\Tournament model
-        $this->app->router->model('tournament', \App\Tournament::class);
+        // Map `{tournament}` to the \App\Models\Tournament model
+        $this->app->router->model('tournament', \App\Models\Tournament::class);
 
         $this->app->router->model('buy_in', \App\Transactions\BuyIn::class);
         $this->app->router->model('expense', \App\Transactions\Expense::class);
