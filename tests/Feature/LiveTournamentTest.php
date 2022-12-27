@@ -76,10 +76,10 @@ class LiveTournamentTest extends TestCase
         $this->getJson(route('tournament.live.update'))->assertUnauthorized();
         $this->getJson(route('live.end'))->assertUnauthorized();
     }
-    
+
     // User can start a live tournament
     public function testUserCanStartALiveTournament()
-    {   
+    {
         $user = $this->signIn();
 
         $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes())->assertOk();
@@ -91,7 +91,7 @@ class LiveTournamentTest extends TestCase
 
     // User cannot start another tournament if there is one already live
     public function testUserCannotStartLiveTournamentIfOneIsInProgress()
-    {   
+    {
         $this->signIn();
 
         $this->postJson(route('tournament.live.start'), $this->getLiveTournamentAttributes())->assertOk();
@@ -189,7 +189,7 @@ class LiveTournamentTest extends TestCase
         $attributes['prize_pool'] = -100;
         $this->postJson(route('tournament.live.start'), $attributes)->assertStatus(422);
     }
-    
+
     // User can start at a specified time
     public function testUserCanStartATournamentAtASpecifiedTime()
     {
@@ -262,7 +262,7 @@ class LiveTournamentTest extends TestCase
         $dateTime = Carbon::create(2020, 05, 01, 12, 0, 0);
 
         // Add Tournament to database with times 1st May 2020 12:30 - 14:30
-        factory('App\Tournament')->create([
+        \App\Tournament::factory()->create([
             'user_id' => $user->id,
             'start_time' => $dateTime->toDateTimeString(),
             'end_time' => $dateTime->copy()->addHours(2)->toDateTimeString()
@@ -387,7 +387,7 @@ class LiveTournamentTest extends TestCase
                     'success' => true,
                     'game' => []
                 ]);
-                            
+
         $this->assertEmpty($user->liveTournament());
     }
 
@@ -439,7 +439,7 @@ class LiveTournamentTest extends TestCase
                     'success' => false,
                     'message' => "You have not started a live session."
                 ]);
-                            
+
         $this->assertEmpty($user->liveTournament());
     }
 
@@ -450,7 +450,7 @@ class LiveTournamentTest extends TestCase
         // TournamentTest covers where trying to update by suppliying another user's tournament id.
         $this->assertTrue(true);
     }
-    
+
     // Required data, if present, must be valid when updating live tournament
     public function testNonNullableMustBeValidWhenUpdatingLiveTournament()
     {
@@ -562,7 +562,7 @@ class LiveTournamentTest extends TestCase
         $dateTime = Carbon::create(2020, 06, 01, 12, 0, 0);
 
         // Add Tournament to database with times 1st June 2020 12:30 - 14:30
-        factory('App\Tournament')->create([
+        \App\Tournament::factory()->create([
             'user_id' => $user->id,
             'start_time' => $dateTime->toDateTimeString(),
             'end_time' => $dateTime->copy()->addHours(2)->toDateTimeString()
@@ -750,7 +750,7 @@ class LiveTournamentTest extends TestCase
         // Check the amount of the BuyIn is zero.
         $this->assertEquals(0, $tournament->cashOut->amount);
     }
-    
+
     // Cash out amount must be valid
     public function testTheCashOutAmountMustBeValidWhenEndingATournament()
     {

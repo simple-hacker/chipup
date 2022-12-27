@@ -1,5 +1,12 @@
 <?php
 
+namespace Database\Seeders;
+
+use Database\Seeders\LimitSeeder;
+use Database\Seeders\VariantSeeder;
+use Database\Seeders\TableSizeSeeder;
+use Database\Seeders\ExchangeRatesSeeder;
+use Database\Seeders\StakeSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder

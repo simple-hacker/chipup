@@ -68,7 +68,7 @@ class AccountSetupTest extends TestCase
         // Create a new user with empty default attributes
         // Send in blank $attributes because UserFactory generates a user which has already chosen them.
         // So now User is as if they've just registered and have not yet completed setup.
-        $user = factory('App\User')->create($attributes);
+        $user = \App\User::factory()->create($attributes);
         $this->actingAs($user);
 
         // Assert original attributes are in table and new_attributes have not been saved yet.
@@ -87,7 +87,7 @@ class AccountSetupTest extends TestCase
         // Assert original attributes are missing from table and have been replaced by new attributes
         $this->assertDatabaseMissing('users', $attributes);
         $this->assertDatabaseHas('users', $find_new_attributes);
-        
+
         $user->refresh();
         $this->assertEquals('en-US', $user->locale);
         $this->assertEquals('USD', $user->currency);
@@ -100,7 +100,7 @@ class AccountSetupTest extends TestCase
         $new_attributes = [
             'locale' => 'de-DE',
         ];
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
         $this->actingAs($user);
 
         // Make POST request to complete user's setup with new default values.
@@ -111,17 +111,17 @@ class AccountSetupTest extends TestCase
                     'success' => true,
                     'redirect' => route('dashboard')
                 ]);
-        
+
         $user->refresh();
         $this->assertEquals('de-DE', $user->locale);
-    } 
+    }
 
     public function testLocaleMustBeAValidLocale()
     {
         $new_attributes = [
             'locale' => 'en-XX',  // Not a valid ISO 639-2
         ];
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
         $this->actingAs($user);
 
         // Make POST request to complete user's setup with new default values.
@@ -133,7 +133,7 @@ class AccountSetupTest extends TestCase
         $new_attributes = [
             'currency' => 'USD',
         ];
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
         $this->actingAs($user);
 
         // Make POST request to complete user's setup with new default values.
@@ -144,7 +144,7 @@ class AccountSetupTest extends TestCase
                     'success' => true,
                     'redirect' => route('dashboard')
                 ]);
-        
+
         $user->refresh();
         $this->assertEquals('USD', $user->currency);
     }
@@ -154,7 +154,7 @@ class AccountSetupTest extends TestCase
         $new_attributes = [
             'currency' => 'ZZZ',  // Not a valid ISO 4217
         ];
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
         $this->actingAs($user);
 
         // Make POST request to complete user's setup with new default values.
@@ -163,7 +163,7 @@ class AccountSetupTest extends TestCase
 
     public function testAssertCompleteSetupDataValid()
     {
-        $user = factory('App\User')->create();  // Default setup_complete is false
+        $user = \App\User::factory()->create();  // Default setup_complete is false
         $this->actingAs($user);
 
         // Bankroll must be postive
@@ -225,7 +225,7 @@ class AccountSetupTest extends TestCase
 
 
         // Create user and send old_attributes when completing setup.
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
         $this->actingAs($user);
         $this->postJson(route('setup.complete'), $old_attributes)
                 ->assertOk()
@@ -252,8 +252,8 @@ class AccountSetupTest extends TestCase
     public function testAUserIsRedirectedToCompleteSetupWhenVisitingDashboardIfNotCompleted()
     {
         // Create a user where setup_complete is set to false
-        $user = factory('App\User')->create(); //setup_complete default is false
-        
+        $user = \App\User::factory()->create(); //setup_complete default is false
+
         $this->actingAs($user);
         $this->get(route('dashboard'))->assertRedirect(route('setup.index'));
     }
@@ -261,17 +261,17 @@ class AccountSetupTest extends TestCase
     public function testAUserCanVisitDashboardIfSetupHasBeenCompleted()
     {
         // Create a user where setup_complete is set to false
-        $user = factory('App\User')->create(); // setup_complete default is false
+        $user = \App\User::factory()->create(); // setup_complete default is false
         // Complete Setup
         $user->completeSetup();
-        
+
         $this->actingAs($user);
         $this->get(route('dashboard'))->assertOk();
     }
 
     public function testAUserCannotHitAnyAPIRouteIfSetupHasNotBeenCompleted()
     {
-        $user = factory('App\User')->create(); // setup_complete default is false
+        $user = \App\User::factory()->create(); // setup_complete default is false
         $this->actingAs($user);
 
         // Test a couple of API routes as all API routes are under the same middleware group.
@@ -292,7 +292,7 @@ class AccountSetupTest extends TestCase
         ];
 
         // Create user and send attributes when completing setup.
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
         $this->actingAs($user);
         $this->postJson(route('setup.complete'), $attributes)->assertOk();
 

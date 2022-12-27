@@ -11,10 +11,10 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CurrencyConverterTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     public function testCurrencyConverterUsesRatesForSessionDate()
     {
-        $user = factory('App\User')->create(['currency' => 'USD']);
+        $user = \App\User::factory()->create(['currency' => 'USD']);
         $start_time = Carbon::create(2019, 06, 20, 9, 0, 0);
 
         // Rates for 2019-06-20
@@ -61,7 +61,7 @@ class CurrencyConverterTest extends TestCase
         // Asssert sessionLocaleAmount and localeAmount use rates for date of the session.
         // Use the same values of Buy Ins and currencies as the test above
         // But final assertion values will be different
-        $user = factory('App\User')->create(['currency' => 'USD']);
+        $user = \App\User::factory()->create(['currency' => 'USD']);
         $start_time = Carbon::create(2018, 01, 01, 9, 0, 0);
 
         $cashGame = $user->cashGames()->create([
@@ -105,7 +105,7 @@ class CurrencyConverterTest extends TestCase
         // Asssert sessionLocaleAmount and localeAmount use rates for date of the session.
         // Use the same values of Buy Ins and currencies as the first test and test above
         // But final assertion values will be different
-        $user = factory('App\User')->create(['currency' => 'USD']);
+        $user = \App\User::factory()->create(['currency' => 'USD']);
         $start_time = Carbon::create(2020, 06, 19, 9, 0, 0);
 
         $cashGame = $user->cashGames()->create([
@@ -143,7 +143,7 @@ class CurrencyConverterTest extends TestCase
         // Create a CashGame where the start time is one day later than the latest rates.
         // Use the same Buy In amounts and currencies as the test aboves
         // But final assertion values will be different
-        $user = factory('App\User')->create(['currency' => 'USD']);
+        $user = \App\User::factory()->create(['currency' => 'USD']);
         $start_time = $latestDate->addDays(1);
 
         $cashGame = $user->cashGames()->create([
@@ -172,13 +172,13 @@ class CurrencyConverterTest extends TestCase
     public function testRatesAreCached()
     {
         $rates = ExchangeRates::whereDate('date', '=', '2020-06-19')->first()->rates;
-        
+
         Cache::shouldReceive('rememberForever')
         ->once()
         ->with('exchange_rates_2020-06-19', \Closure::class)
         ->andReturn($rates);
 
-        $user = factory('App\User')->create(['currency' => 'USD']);
+        $user = \App\User::factory()->create(['currency' => 'USD']);
         $start_time = Carbon::create(2020, 06, 19, 9, 0, 0);
 
         $cashGame = $user->cashGames()->create([
@@ -195,7 +195,7 @@ class CurrencyConverterTest extends TestCase
 
     public function testRatesAreStoredInCachedAreCorrect()
     {
-        $user = factory('App\User')->create(['currency' => 'USD']);
+        $user = \App\User::factory()->create(['currency' => 'USD']);
         $start_time = Carbon::create(2020, 06, 19, 9, 0, 0);
 
         $cashGame = $user->cashGames()->create([

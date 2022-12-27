@@ -12,7 +12,7 @@ class RebuyTest extends TestCase
 
     public function testOnlyAuthenticatedUsersCanAddRebuy()
     {
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
         $tournament = $user->startTournament($this->getTournamentAttributes());
 
         $this->postJson(route('rebuy.create'), [
@@ -84,7 +84,7 @@ class RebuyTest extends TestCase
         ]);
 
         $rebuy = $tournament->rebuys()->first();
-        
+
         $this->getJson(route('rebuy.view', [
                     'rebuy' => $rebuy
                 ]))
@@ -103,7 +103,7 @@ class RebuyTest extends TestCase
         ]);
 
         $rebuy = $tournament->rebuys()->first();
-        
+
         // Change amount from 500 to 1000
         $response = $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), [
                                 'amount' => 1000
@@ -126,7 +126,7 @@ class RebuyTest extends TestCase
         ]);
 
         $rebuy = $tournament->rebuys()->first();
-        
+
         // Change amount from 500 to 1000
         $this->deleteJson(route('rebuy.update', ['rebuy' => $rebuy]))
                 ->assertOk()
@@ -157,7 +157,7 @@ class RebuyTest extends TestCase
                     'amount' => 55.52
                 ])
                 ->assertOk();
-                
+
         // Test negative numbers
         $this->postJson(route('rebuy.create'), [
                     'game_id' => $tournament->id,
@@ -201,7 +201,7 @@ class RebuyTest extends TestCase
         // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
         $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), ['amount' => 55.52])->assertOk();
-                
+
         // Test negative numbers
         $this->patchJson(route('rebuy.update', ['rebuy' => $rebuy]), ['amount' => -10])->assertStatus(422);
 

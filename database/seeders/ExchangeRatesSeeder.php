@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Currency\ExchangeRates;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;

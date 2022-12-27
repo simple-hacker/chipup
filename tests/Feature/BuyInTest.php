@@ -12,7 +12,7 @@ class BuyInTest extends TestCase
 
     public function testOnlyAuthenticatedUsersCanAddBuyIn()
     {
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
         $cashGame = $user->startCashGame();
 
         $this->postJson(route('buyin.create'), [
@@ -84,7 +84,7 @@ class BuyInTest extends TestCase
         ]);
 
         $buy_in = $cashGame->buyIns()->first();
-        
+
         $this->getJson(route('buyin.view', [
                 'buy_in' => $buy_in
             ]))
@@ -103,7 +103,7 @@ class BuyInTest extends TestCase
         ]);
 
         $buy_in = $cashGame->buyIns()->first();
-        
+
         // Change amount from 500 to 1000
         $response = $this->patchJson(route('buyin.update', ['buy_in' => $buy_in]), [
                                 'amount' => 1000
@@ -126,7 +126,7 @@ class BuyInTest extends TestCase
         ]);
 
         $buy_in = $cashGame->buyIns()->first();
-        
+
         // Change amount from 500 to 1000
         $this->deleteJson(route('buyin.update', ['buy_in' => $buy_in]))
             ->assertOk()
@@ -157,7 +157,7 @@ class BuyInTest extends TestCase
                     'amount' => 55.52
                 ])
                 ->assertOk();
-                
+
         // Test negative numbers
         $this->postJson(route('buyin.create'), [
                     'game_id' => $cashGame->id,
@@ -201,7 +201,7 @@ class BuyInTest extends TestCase
         // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
         $this->patchJson(route('buyin.update', ['buy_in' => $buy_in]), ['amount' => 55.52])->assertOk();
-                
+
         // Test negative numbers
         $this->patchJson(route('buyin.update', ['buy_in' => $buy_in]), ['amount' => -10])->assertStatus(422);
 

@@ -39,7 +39,7 @@ class RebuyTest extends TestCase
     public function testDeletingARebuyUpdatesTheTournamentsProfit()
     {
         $tournament = $this->startLiveTournament();
-        
+
         $rebuy = $tournament->addRebuy(500);
         $this->assertEquals(-500, $tournament->fresh()->profit);
 
@@ -52,7 +52,7 @@ class RebuyTest extends TestCase
     public function testRebuyDefaultsToSessionCurrency()
     {
         // Create a user with GBP currency default
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\User::factory()->create(['currency' => 'GBP']);
 
         // Create a Cash Game which has USD currency
         $tournament = $user->startTournament(['currency' => 'USD']);
@@ -64,7 +64,7 @@ class RebuyTest extends TestCase
     public function testRebuyDefaultsToUserCurrencyIfNoSessionCurrencyIsAvailable()
     {
         // Create a user with GBP currency default
-        $user = factory('App\User')->create(['currency' => 'PLN']);
+        $user = \App\User::factory()->create(['currency' => 'PLN']);
 
         // Create a Cash Game which has default user currency
         $tournament = $user->startTournament();
@@ -76,13 +76,13 @@ class RebuyTest extends TestCase
     public function testRebuyCanBeInADifferentCurrency()
     {
         // Create a user with GBP currency default
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\User::factory()->create(['currency' => 'GBP']);
 
         // Assert Cash Game currency is user default of GBP
         $tournament = $this->startLiveTournament($user);
         $this->assertEquals('GBP', $tournament->currency);
         $this->assertEquals(0, $tournament->profit);
-        
+
         // Cash out $300
         $cash_out = $tournament->addRebuy(300, 'USD');
         $this->assertEquals('USD', $cash_out->currency);
@@ -95,7 +95,7 @@ class RebuyTest extends TestCase
     public function testRebuyHasAUserLocaleAndSessionLocaleAmounts()
     {
         // Create a user with GBP currency default
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\User::factory()->create(['currency' => 'GBP']);
 
         // Create a Cash Game which has USD currency
         $tournament = $user->tournaments()->create(['currency' => 'USD']);

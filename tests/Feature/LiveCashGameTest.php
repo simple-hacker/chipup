@@ -72,10 +72,10 @@ class LiveCashGameTest extends TestCase
         $this->getJson(route('cash.live.update'))->assertUnauthorized();
         $this->getJson(route('live.end'))->assertUnauthorized();
     }
-    
+
     // User can start a live cash game
     public function testUserCanStartALiveCashGame()
-    {   
+    {
         $user = $this->signIn();
 
         $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())->assertOk();
@@ -87,7 +87,7 @@ class LiveCashGameTest extends TestCase
 
     // User cannot start another cash game if there is one already live
     public function testUserCannotStartLiveCashGameIfOneIsInProgress()
-    {   
+    {
         $this->signIn();
 
         $this->postJson(route('cash.live.start'), $this->getLiveCashGameAttributes())->assertOk();
@@ -159,7 +159,7 @@ class LiveCashGameTest extends TestCase
         // CashGames do not have any non required attributes
         $this->assertTrue(true);
     }
-    
+
     // User can start at a specified time.
     public function testUserCanStartACashGameAtASpecifiedTime()
     {
@@ -232,7 +232,7 @@ class LiveCashGameTest extends TestCase
         $dateTime = Carbon::create(2020, 05, 01, 12, 0, 0);
 
         // Add CashGame to database with times 1st May 2020 12:30 - 14:30
-        factory('App\CashGame')->create([
+        \App\CashGame::factory()->create([
             'user_id' => $user->id,
             'start_time' => $dateTime->toDateTimeString(),
             'end_time' => $dateTime->copy()->addHours(2)->toDateTimeString()
@@ -350,7 +350,7 @@ class LiveCashGameTest extends TestCase
                     'success' => true,
                     'game' => []
                 ]);
-                            
+
         $this->assertEmpty($user->liveCashGame());
     }
 
@@ -398,7 +398,7 @@ class LiveCashGameTest extends TestCase
                     'success' => false,
                     'message' => "You have not started a live session."
                 ]);
-                            
+
         $this->assertEmpty($user->liveCashGame());
     }
 
@@ -409,7 +409,7 @@ class LiveCashGameTest extends TestCase
         // CashGameTest covers where trying to update by suppliying another user's cash game id.
         $this->assertTrue(true);
     }
-    
+
     // Data must be valid when updating live cash game
     public function testNonNullableMustBeValidWhenUpdatingLiveCashGame()
     {
@@ -478,7 +478,7 @@ class LiveCashGameTest extends TestCase
         $dateTime = Carbon::create(2020, 06, 01, 12, 0, 0);
 
         // Add CashGame to database with times 1st June 2020 12:30 - 14:30
-        factory('App\CashGame')->create([
+        \App\CashGame::factory()->create([
             'user_id' => $user->id,
             'start_time' => $dateTime->toDateTimeString(),
             'end_time' => $dateTime->copy()->addHours(2)->toDateTimeString()
@@ -530,7 +530,7 @@ class LiveCashGameTest extends TestCase
     // User can end a live cash.
     // If no end_time is provided then it defaults to now().
     public function testUserCanEndACashGame()
-    {       
+    {
         $user = $this->signIn();
 
         $start_time = Carbon::create('-1 hour')->toDateTimeString();
@@ -683,7 +683,7 @@ class LiveCashGameTest extends TestCase
         // Check the amount of the BuyIn is zero.
         $this->assertEquals(0, $cashGame->cashOut->amount);
     }
-    
+
     // Cash out amount must be valid
     public function testTheCashOutAmountMustBeValidWhenEndingACashGame()
     {

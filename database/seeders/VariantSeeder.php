@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Attributes\Variant;
 use Illuminate\Database\Seeder;
 

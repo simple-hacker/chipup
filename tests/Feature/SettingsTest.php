@@ -18,7 +18,7 @@ class SettingsTest extends TestCase
 
     public function testUserMustCompleteSetupBeforeAccessingSettings()
     {
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
         $this->actingAs($user);
 
         $this->postJson(route('settings.email'), ['email' => 'different@example.com'])->assertRedirect(route('setup.index'));
@@ -27,7 +27,7 @@ class SettingsTest extends TestCase
 
     public function testUserCanChangeTheirEmailAddress()
     {
-        $user = factory('App\User')->create(['email' => 'test@example.com']);
+        $user = \App\User::factory()->create(['email' => 'test@example.com']);
 
         $this->signIn($user);
 
@@ -38,10 +38,10 @@ class SettingsTest extends TestCase
 
     public function testUserCannotUpdateEmailAddressToAnExistingEmailAddress()
     {
-        $user1 = factory('App\User')->create(['email' => 'user1@example.com']);
+        $user1 = \App\User::factory()->create(['email' => 'user1@example.com']);
 
         // Create a second user with email user2@example.com and sign in.
-        $user2 = factory('App\User')->create(['email' => 'user2@example.com']);
+        $user2 = \App\User::factory()->create(['email' => 'user2@example.com']);
         $this->signIn($user2);
 
         // Try to update user2's email address to user1.
@@ -51,7 +51,7 @@ class SettingsTest extends TestCase
     public function testUserCanUpdateEmailAddressToTheSameEmailAddress()
     {
         // In case user clicks 'Change Email' without updating value, then request is still valid.
-        $user = factory('App\User')->create(['email' => 'user@example.com']);
+        $user = \App\User::factory()->create(['email' => 'user@example.com']);
         $this->signIn($user);
 
         // Try to update user's email address to the same value
@@ -81,7 +81,7 @@ class SettingsTest extends TestCase
             'default_location' => 'CasinoMK'
         ];
 
-        $user = factory('App\User')->create($defaults);
+        $user = \App\User::factory()->create($defaults);
 
         $this->signIn($user);
 
@@ -92,7 +92,7 @@ class SettingsTest extends TestCase
             'default_table_size_id' => 2,
             'default_location' => 'Las Vegas'
         ];
-        
+
         $this->postJson('/settings/defaults', $updatedDefaults)->assertOk();
 
         $this->assertDatabaseHas('users', $updatedDefaults);
@@ -150,7 +150,7 @@ class SettingsTest extends TestCase
         $current_password = 'password';
         $new_password = 'secret';
 
-        $user = factory('App\User')->create([
+        $user = \App\User::factory()->create([
             'password' => Hash::make($current_password)
         ]);
 
@@ -172,7 +172,7 @@ class SettingsTest extends TestCase
         $new_password = 'secret';
 
         // Create and sign in a new user with password "password"
-        $user = factory('App\User')->create([
+        $user = \App\User::factory()->create([
             'password' => Hash::make($current_password)
         ]);
         $this->signIn($user);

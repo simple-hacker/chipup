@@ -24,7 +24,7 @@ abstract class TestCase extends BaseTestCase
     protected function signIn($user = null)
     {
         if (! $user) {
-            $user = factory('App\User')->create();
+            $user = \App\User::factory()->create();
         }
 
         $user->completeSetup();
@@ -58,7 +58,7 @@ abstract class TestCase extends BaseTestCase
         if ($start_time) {
             $attributes['start_time'] = $start_time;
         }
-        
+
         return $attributes;
     }
 
@@ -87,7 +87,7 @@ abstract class TestCase extends BaseTestCase
                 'currency' => 'GBP',
             ]
         ];
-        
+
         return $attributes;
     }
 
@@ -113,7 +113,7 @@ abstract class TestCase extends BaseTestCase
         if ($start_time) {
             $attributes['start_time'] = $start_time;
         }
-        
+
         return $attributes;
     }
 
@@ -148,7 +148,7 @@ abstract class TestCase extends BaseTestCase
                 'currency' => 'GBP',
             ]
         ];
-        
+
         return $attributes;
     }
 

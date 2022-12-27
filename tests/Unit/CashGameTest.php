@@ -17,15 +17,15 @@ class CashGameTest extends TestCase
 
     public function testACashGameBelongsToAUser()
     {
-        $user = factory('App\User')->create();
-        $cashGame = factory('App\CashGame')->create(['user_id' => $user->id]);
-        
+        $user = \App\User::factory()->create();
+        $cashGame = \App\CashGame::factory()->create(['user_id' => $user->id]);
+
         $this->assertInstanceOf(User::class, $cashGame->user);
     }
 
     public function testAUserCanStartACashGameSession()
     {
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
         $user->startCashGame();
 
         $this->assertCount(1, $user->cashGames);
@@ -34,7 +34,7 @@ class CashGameTest extends TestCase
 
     public function testATimeCanBeSuppliedWhenStartingACashGame()
     {
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
 
         $time = Carbon::now()->toDateTimeString();
 
@@ -44,7 +44,7 @@ class CashGameTest extends TestCase
 
         $this->assertEquals($time, $cashGame->fresh()->start_time);
     }
-    
+
     public function testACashGameCanBeEnded()
     {
         $cashGame = $this->startLiveCashGame();
@@ -84,7 +84,7 @@ class CashGameTest extends TestCase
     {
         $this->expectException(\App\Exceptions\SessionInProgressException::class);
 
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
 
         $user->startCashGame();
         // Error should be thrown when starting another
@@ -93,7 +93,7 @@ class CashGameTest extends TestCase
 
     public function testCheckingStartingMultipleCashGamesAsLongAsPreviousOnesHaveFinished()
     {
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
 
         // Start and finish a cash game.
         $cashGame = $user->startCashGame();
@@ -110,13 +110,13 @@ class CashGameTest extends TestCase
 
     public function testCashGameVariablesDefaultToUserDefaults()
     {
-        $user = factory('App\User')->create([
+        $user = \App\User::factory()->create([
             'default_stake_id' => 3,
             'default_limit_id' => 2,
             'default_variant_id' => 1,
             'default_table_size_id' => 2,
         ]);
-        
+
         // Start CashGame with empty attributes
         $cashGame = $user->startCashGame([]);
 
@@ -166,7 +166,7 @@ class CashGameTest extends TestCase
         $this->assertNull($cashGame->fresh()->end_time);
 
         $cashGame->addCashOut(30000);
-        
+
         $this->assertEquals(20000, $cashGame->fresh()->profit);
     }
 
@@ -231,7 +231,7 @@ class CashGameTest extends TestCase
         // Only testing the BuyIn of the GameTransactions as they all work the same because of Positive/NegativeGameTransactionObserver
         // which updates the CashGame's profit.
 
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
         $this->signIn($user);
 
         $cashGame = $user->startCashGame();
@@ -253,8 +253,8 @@ class CashGameTest extends TestCase
         $buy_in->delete();
         // Bankroll should be 5000 (original 5000)
         $this->assertEquals(0, $user->fresh()->bankroll);
-        
-        
+
+
         // Testing Positive transaction as well.
         $cashOut = $cashGame->addCashOut(2000);
         $this->assertEquals(2000, $user->fresh()->bankroll);
@@ -266,7 +266,7 @@ class CashGameTest extends TestCase
 
     public function testTheUsersBankrollIsUpdatedWhenACashGameIsDeleted()
     {
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
         $this->signIn($user);
 
         $cashGame = $user->startCashGame();
@@ -286,7 +286,7 @@ class CashGameTest extends TestCase
         // If the cash_game profit is negative, it adds back on, if positive it should subtract it.
         $cashGame->fresh()->delete();
         $this->assertEquals(0, $user->fresh()->bankroll);
-        
+
         // Test again with positive profit
         $cashGame2 = $user->startCashGame();
         $cashGame2->addCashOut(10000);
@@ -299,9 +299,9 @@ class CashGameTest extends TestCase
 
     public function testWhenACashGameIsDeletedItDeletesAllOfItsGameTransactions()
     {
-        $user = factory('App\User')->create();
+        $user = \App\User::factory()->create();
         $this->signIn($user);
-        
+
         $cashGame = $user->startCashGame();
         $cashGame->addBuyIn(1000);
         $cashGame->addExpense(50);
@@ -316,14 +316,14 @@ class CashGameTest extends TestCase
         $this->assertEquals(-2250, $cashGame->profit);
         $this->assertEquals(-2250, $user->fresh()->bankroll);
         $this->assertCount(1, $user->cashGames);
-        
+
         // When deleting a CashGame it should delete all it's GameTransactions
         // This is handled in Game model Observer delete method.
         // Can't use cascade down migrations because of polymorphic relationship
         $cashGame->delete();
 
         $user->refresh();
-        
+
         $this->assertCount(0, $user->cashGames);
         $this->assertEquals(0, $user->bankroll);
         $this->assertCount(0, BuyIn::all());
@@ -333,9 +333,9 @@ class CashGameTest extends TestCase
 
     public function testCashGameCurrencyDefaultsToUsersCurrency()
     {
-        $user = factory('App\User')->create(['currency' => 'USD']);
+        $user = \App\User::factory()->create(['currency' => 'USD']);
         $this->signIn($user);
-        
+
         // Start CashGame with empty attributes
         $cashGame = $user->startCashGame([]);
 
@@ -345,7 +345,7 @@ class CashGameTest extends TestCase
     public function testCashGameLocaleProfitIsConvertedToUserCurrency()
     {
         // Create a User with default USD currency
-        $user = factory('App\User')->create(['currency' => 'USD']);
+        $user = \App\User::factory()->create(['currency' => 'USD']);
 
         // Create a Cash Game with currency GBP
         $cashGame = $user->cashGames()->create(['currency' => 'GBP']);
@@ -368,7 +368,7 @@ class CashGameTest extends TestCase
         // 1 GBP = ~1.68 CAD = ~1.10 EUR = ~1.25 USD = ~1.79 AUD = ~4.9 PLN
 
         // Create a User with default USD currency
-        $user = factory('App\User')->create(['currency' => 'USD']);
+        $user = \App\User::factory()->create(['currency' => 'USD']);
 
         // Create a Cash Game with currency of PLN
         $cashGame = $user->cashGames()->create(['currency' => 'PLN']);
@@ -380,7 +380,7 @@ class CashGameTest extends TestCase
         $cashGame->addCashOut(1000, 'GBP'); // 1000 GBP = ~4900 PLN = ~1250 USD
 
         $cashGame->refresh();
-        
+
         // cashGame currency is PLN
         $this->assertEquals('PLN', $cashGame->currency);
 

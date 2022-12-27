@@ -76,7 +76,7 @@ class CashGameTest extends TestCase
     // User must be logged in create/view/view all/update/delete cash game
     public function testUserMustBeLoggedInToCreateCashGame()
     {
-        $cashGame = factory('App\CashGame')->create();
+        $cashGame = \App\CashGame::factory()->create();
         $validAttributes = $this->getCashGameAttributes();
 
         $this->getJson(route('cash.index'))->assertUnauthorized();
@@ -238,9 +238,9 @@ class CashGameTest extends TestCase
     public function testStartTimeAndEndTimeCanTheSameWhenCreating()
     {
         $this->withoutExceptionHandling();
-        
+
         $this->signIn();
-        
+
         $attributes = $this->getCashGameAttributes();
 
         // Start time and end time are the same
@@ -254,7 +254,7 @@ class CashGameTest extends TestCase
     public function testStartTimeAndEndTimeCanBeExactlyNowWhenCreating()
     {
         $this->signIn();
-        
+
         $attributes = $this->getCashGameAttributes();
 
         // Start time and end time are the same and both set to now
@@ -273,7 +273,7 @@ class CashGameTest extends TestCase
         $start_time = Carbon::create(2020, 05, 01, 12, 0, 0);
         $end_time = Carbon::create(2020, 05, 01, 13, 0, 0);
 
-        factory('App\CashGame')->create([
+        \App\CashGame::factory()->create([
             'user_id' => $user->id,
             'start_time' => $start_time->toDateTimeString(),
             'end_time' => $end_time->toDateTimeString(),
@@ -360,7 +360,7 @@ class CashGameTest extends TestCase
         $this->signIn();
 
         $attributes = $this->getCashGameAttributes();
-        
+
         $attributes['buy_ins'] = [];
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
 
@@ -523,7 +523,7 @@ class CashGameTest extends TestCase
         $this->signIn();
 
         $attributes = $this->getCashGameAttributes();
-        
+
         // CashOut amount must be a number
         $attributes['cash_out'] = ['amount' => 'Not a number', 'currency' => 'GBP'];
         $this->postJson(route('cash.create'), $attributes)->assertStatus(422);
@@ -539,7 +539,7 @@ class CashGameTest extends TestCase
 
     // User can view all their cash games
     public function testUserCanGetAllTheirCashGamesAsJson()
-    {   
+    {
         $user = $this->signIn();
 
         // Assert response cash games is empty if no cash games exist
@@ -547,8 +547,8 @@ class CashGameTest extends TestCase
         $this->assertEmpty($response['cash_games']);
 
         // Create three cash games
-        factory('App\CashGame', 3)->create(['user_id' => $user->id]);
-        
+        \App\CashGame::factory()->count(3)->create(['user_id' => $user->id]);
+
         // Assert response cash_games returns two cash games
         $response = $this->getJson(route('cash.index'))->assertOk()->assertJsonStructure(['success', 'cash_games']);
         $this->assertCount(3, $response['cash_games']);
@@ -558,7 +558,7 @@ class CashGameTest extends TestCase
     public function testUserCanViewAValidCashGame()
     {
         $user = $this->signIn();
-        $cashGame = factory('App\CashGame')->create(['user_id' => $user->id]);
+        $cashGame = \App\CashGame::factory()->create(['user_id' => $user->id]);
 
         // Assert Not Found if supply incorrect cash_game id
         $this->getJson(route('cash.view', ['cash_game' => $cashGame->id]))
@@ -583,7 +583,7 @@ class CashGameTest extends TestCase
     public function testUserCannotViewAnotherUsersCashGame()
     {
         // Create a CashGame which also creates a user for it
-        $cashGame = factory('App\CashGame')->create();
+        $cashGame = \App\CashGame::factory()->create();
 
         // Create a new user and sign in
         $this->signIn();
@@ -596,7 +596,7 @@ class CashGameTest extends TestCase
     public function testUserCanUpdateCashGameDetails()
     {
         $user = $this->signIn();
-        $cashGame = factory('App\CashGame')->create(['user_id' => $user->id]);
+        $cashGame = \App\CashGame::factory()->create(['user_id' => $user->id]);
 
         $attributes = [
             'start_time' => Carbon::create('-1 hour')->toDateTimeString(),
@@ -630,7 +630,7 @@ class CashGameTest extends TestCase
     public function testUserCannnotUpdateAnotherUsersCashGame()
     {
         // Create CashGame with factory which also creates a new user.
-        $cashGame = factory('App\CashGame')->create();
+        $cashGame = \App\CashGame::factory()->create();
 
         // Create a new user and sign in
         $this->signIn();
@@ -644,7 +644,7 @@ class CashGameTest extends TestCase
     public function testDataMustBeValidWhenUpdatingACashGame()
     {
         $user = $this->signIn();
-        $cashGame = factory('App\CashGame')->create(['user_id' => $user->id]);
+        $cashGame = \App\CashGame::factory()->create(['user_id' => $user->id]);
 
         // stake must exist
         $attributes = ['stake_id' => 999];
@@ -674,7 +674,7 @@ class CashGameTest extends TestCase
     public function testStartTimeCannotBeInTheFutureWhenUpdating()
     {
         $user = $this->signIn();
-        $cashGame = factory('App\CashGame')->create(['user_id' => $user->id]);
+        $cashGame = \App\CashGame::factory()->create(['user_id' => $user->id]);
 
         $attributes = ['start_time' => Carbon::create('+1 second')->toDateTimeString()];
         $this->patchJson(route('cash.update', ['cash_game' => $cashGame->id]), $attributes)->assertStatus(422);
@@ -684,7 +684,7 @@ class CashGameTest extends TestCase
     public function testEndTimeCannotBeInTheFutureWhenUpdating()
     {
         $user = $this->signIn();
-        $cashGame = factory('App\CashGame')->create(['user_id' => $user->id]);
+        $cashGame = \App\CashGame::factory()->create(['user_id' => $user->id]);
 
         $attributes = ['end_time' => Carbon::create('+1 second')->toDateTimeString()];
         $this->patchJson(route('cash.update', ['cash_game' => $cashGame->id]), $attributes)->assertStatus(422);
@@ -694,7 +694,7 @@ class CashGameTest extends TestCase
     public function testEndTimeCannotBeBeforeStartTimeWhenUpdating()
     {
         $user = $this->signIn();
-        $cashGame = factory('App\CashGame')->create(['user_id' => $user->id]);
+        $cashGame = \App\CashGame::factory()->create(['user_id' => $user->id]);
 
         // Try to end time one second before start time
         $time = Carbon::create('-1 hour');
@@ -709,7 +709,7 @@ class CashGameTest extends TestCase
     public function testStartTimeAndEndTimeCanTheSameWhenUpdating()
     {
         $user = $this->signIn();
-        $cashGame = factory('App\CashGame')->create(['user_id' => $user->id]);
+        $cashGame = \App\CashGame::factory()->create(['user_id' => $user->id]);
 
         // Updating where start time is same as end time
         $time = Carbon::create('-1 hour');
@@ -725,7 +725,7 @@ class CashGameTest extends TestCase
     public function testStartTimeAndEndTimeCanBeExactlyNowWhenUpdating()
     {
         $user = $this->signIn();
-        $cashGame = factory('App\CashGame')->create(['user_id' => $user->id]);
+        $cashGame = \App\CashGame::factory()->create(['user_id' => $user->id]);
 
         // Update where start time is same as end time and both set to now
         $attributes = [
@@ -744,7 +744,7 @@ class CashGameTest extends TestCase
 
         // Create a Cash Game which started 2 hours ago and ended 30 mins after.
         $start_time = Carbon::create('-2 hours');
-        $cashGame = factory('App\CashGame')->create([
+        $cashGame = \App\CashGame::factory()->create([
             'user_id' => $user->id,
             'start_time' => $start_time->toDateTimeString(),
             'end_time' => $start_time->copy()->addMinutes(30)->toDateTimeString(),
@@ -765,7 +765,7 @@ class CashGameTest extends TestCase
 
         // Create a Cash Game which started 2 hours ago and ended 30 mins after.
         $start_time = Carbon::create('-2 hours');
-        $cashGame = factory('App\CashGame')->create([
+        $cashGame = \App\CashGame::factory()->create([
             'user_id' => $user->id,
             'start_time' => $start_time->toDateTimeString(),
             'end_time' => $start_time->copy()->addMinutes(30)->toDateTimeString(),
@@ -786,7 +786,7 @@ class CashGameTest extends TestCase
 
         // Create a Cash Game which started 10 hours ago and ended 30 mins after.
         $time = Carbon::create('-10 hours');
-        $cashGame1 = factory('App\CashGame')->create([
+        $cashGame1 = \App\CashGame::factory()->create([
             'user_id' => $user->id,
             'start_time' => $time->toDateTimeString(),
             'end_time' => $time->copy()->addMinutes(30)->toDateTimeString(),
@@ -794,7 +794,7 @@ class CashGameTest extends TestCase
 
         // Create another cash game to update, which started an hour ago and ended 30 mins after, so it does not clash with $cashGame1
         $updateTime = Carbon::create('-2 hours');
-        $cashGameToUpdate = factory('App\CashGame')->create([
+        $cashGameToUpdate = \App\CashGame::factory()->create([
             'user_id' => $user->id,
             'start_time' => $updateTime->toDateTimeString(),
             'end_time' => $updateTime->copy()->addMinutes(30)->toDateTimeString(),
@@ -828,7 +828,7 @@ class CashGameTest extends TestCase
 
         // Create a Cash Game which which started 1 hour ago and ended 30 minutes after
         $time = Carbon::create('-1 hours');
-        $cashGame = factory('App\CashGame')->create([
+        $cashGame = \App\CashGame::factory()->create([
             'user_id' => $user->id,
             'start_time' => $time->toDateTimeString(),
             'end_time' => $time->copy()->addMinutes(30)->toDateTimeString(),
@@ -847,7 +847,7 @@ class CashGameTest extends TestCase
     public function testUserCanDeleteTheirCashGame()
     {
         $user = $this->signIn();
-        $cashGame = factory('App\CashGame')->create(['user_id' => $user->id]);
+        $cashGame = \App\CashGame::factory()->create(['user_id' => $user->id]);
 
         $this->deleteJson(route('cash.delete', ['cash_game' => $cashGame->id]))->assertOk();
         $this->assertEmpty($user->cashGames);
@@ -865,7 +865,7 @@ class CashGameTest extends TestCase
     public function testUserCannotDeleteAnotherUsersCashGame()
     {
         // Create CashGame with factory which also creates a new user.
-        $cashGame = factory('App\CashGame')->create();
+        $cashGame = \App\CashGame::factory()->create();
 
         // Create a new user and sign in
         $this->signIn();

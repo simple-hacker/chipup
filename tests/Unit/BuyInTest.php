@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class BuyInTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     public function testAddingBuyInsUpdatesCashGameProfit()
     {
         $cashGame = $this->startLiveCashGame();
@@ -25,7 +25,7 @@ class BuyInTest extends TestCase
     public function testAddingBuyInUpdatesTournamentProfit()
     {
         $tournament = $this->startLiveTournament();
-        
+
         $this->assertEquals(0, $tournament->profit);
         $tournament->addBuyIn(500);
         $this->assertEquals(-500, $tournament->fresh()->profit);
@@ -64,7 +64,7 @@ class BuyInTest extends TestCase
     public function testBuyInDefaultsToSessionCurrency()
     {
         // Create a user with GBP currency default
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\User::factory()->create(['currency' => 'GBP']);
 
         // Create a Cash Game which has USD currency
         $cashGame = $user->startCashGame(['currency' => 'USD']);
@@ -76,7 +76,7 @@ class BuyInTest extends TestCase
     public function testCashOutDefaultsToUserCurrencyIfNoSessionCurrencyIsAvailable()
     {
         // Create a user with GBP currency default
-        $user = factory('App\User')->create(['currency' => 'PLN']);
+        $user = \App\User::factory()->create(['currency' => 'PLN']);
 
         // Create a Cash Game which has default user currency
         $cashGame = $user->startCashGame();
@@ -88,13 +88,13 @@ class BuyInTest extends TestCase
     public function testBuyInCanBeInADifferentCurrency()
     {
         // Create a user with GBP currency default
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\User::factory()->create(['currency' => 'GBP']);
 
         // Assert Cash Game currency is user default of GBP
         $cashGame = $this->startLiveCashGame($user);
         $this->assertEquals('GBP', $cashGame->currency);
         $this->assertEquals(0, $cashGame->profit);
-        
+
         // Cash out $300
         $cash_out = $cashGame->addBuyIn(300, 'USD');
         $this->assertEquals('USD', $cash_out->currency);
@@ -107,7 +107,7 @@ class BuyInTest extends TestCase
     public function testBuyInHasAUserLocaleAndSessionLocaleAmounts()
     {
         // Create a user with GBP currency default
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\User::factory()->create(['currency' => 'GBP']);
 
         // Create a Cash Game which has USD currency
         $cashGame = $user->cashGames()->create(['currency' => 'USD']);
