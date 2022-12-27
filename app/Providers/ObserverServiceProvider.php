@@ -26,8 +26,8 @@ class ObserverServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \App\CashGame::observe(GameObserver::class);
-        \App\Tournament::observe(GameObserver::class);
+        \App\Models\CashGame::observe(GameObserver::class);
+        \App\Models\Tournament::observe(GameObserver::class);
         \App\Transactions\Bankroll::observe(BankrollTransactionObserver::class);
         \App\Transactions\BuyIn::observe(GameTransactionObserver::class);
         \App\Transactions\Expense::observe(GameTransactionObserver::class);

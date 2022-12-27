@@ -3,20 +3,23 @@
 namespace App\Abstracts;
 
 use App\Currency\CurrencyConverter;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class GameTransaction extends Model
 {
+    use HasFactory;
+
     protected $guarded = [];
 
     protected $casts = [
         'amount' => 'float'
     ];
-    
+
     /**
     * Returns the Transaction's game type model
-    * 
-    * @return morphTo
+    *
+    * @return MorphTo
     */
     public function game()
     {
@@ -25,9 +28,9 @@ abstract class GameTransaction extends Model
 
     /**
     * Return the User from belongsToThrough
-    * 
-    * @param 
-    * @return morphTo
+    *
+    * @param
+    * @return MorphTo
     */
     public function user()
     {
@@ -37,7 +40,7 @@ abstract class GameTransaction extends Model
     /**
     * Mutate amount in to currency
     *
-    * @param Integer $amount
+    * @param int $amount
     * @return void
     */
     public function getAmountAttribute($amount)
@@ -62,7 +65,7 @@ abstract class GameTransaction extends Model
     /**
     * Mutate locale_amount in to currency
     *
-    * @param Integer $locale_amount
+    * @param int $locale_amount
     * @return void
     */
     public function getLocaleAmountAttribute($locale_amount)
@@ -84,7 +87,7 @@ abstract class GameTransaction extends Model
     /**
     * Mutate session_locale_amount in to currency
     *
-    * @param Integer $session_locale_amount
+    * @param int $session_locale_amount
     * @return void
     */
     public function getSessionLocaleAmountAttribute($session_locale_amount)

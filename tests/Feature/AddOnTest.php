@@ -12,7 +12,7 @@ class AddOnTest extends TestCase
 
     public function testOnlyAuthenticatedUsersCanAddAddOn()
     {
-        $user = factory('App\User')->create();
+        $user = \App\Models\User::factory()->create();
         $tournament = $user->startTournament($this->getTournamentAttributes());
 
         $this->postJson(route('addon.create'), [
@@ -84,7 +84,7 @@ class AddOnTest extends TestCase
         ]);
 
         $add_on = $tournament->addOns()->first();
-        
+
         $this->getJson(route('addon.view', [
                     'add_on' => $add_on
                 ]))
@@ -103,7 +103,7 @@ class AddOnTest extends TestCase
         ]);
 
         $add_on = $tournament->addOns()->first();
-        
+
         // Change amount from 500 to 1000
         $response = $this->patchJson(route('addon.update', ['add_on' => $add_on]), [
                                 'amount' => 1000
@@ -126,7 +126,7 @@ class AddOnTest extends TestCase
         ]);
 
         $add_on = $tournament->addOns()->first();
-        
+
         // Change amount from 500 to 1000
         $this->deleteJson(route('addon.update', ['add_on' => $add_on]))
                             ->assertOk()
@@ -157,7 +157,7 @@ class AddOnTest extends TestCase
                     'amount' => 55.52
                 ])
                 ->assertOk();
-                
+
         // Test negative numbers
         $this->postJson(route('addon.create'), [
                     'game_id' => $tournament->id,
@@ -201,7 +201,7 @@ class AddOnTest extends TestCase
         // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
         $this->patchJson(route('addon.update', ['add_on' => $add_on]), ['amount' => 55.52])->assertOk();
-                
+
         // Test negative numbers
         $this->patchJson(route('addon.update', ['add_on' => $add_on]), ['amount' => -10])->assertStatus(422);
 

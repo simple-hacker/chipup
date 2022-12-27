@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Transactions\Bankroll;
-use App\User;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class BankrollPolicy
@@ -13,7 +13,7 @@ class BankrollPolicy
     /**
      * Determine whether the user can update the bankroll.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @param  \App\Bankroll  $bankrollTransaction
      * @return mixed
      */

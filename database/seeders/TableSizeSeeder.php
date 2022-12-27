@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Attributes\TableSize;
 use Illuminate\Database\Seeder;
 

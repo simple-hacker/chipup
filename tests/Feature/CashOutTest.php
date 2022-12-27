@@ -12,7 +12,7 @@ class CashOutTest extends TestCase
 
     public function testOnlyAuthenticatedUsersCanAddCashOut()
     {
-        $user = factory('App\User')->create();
+        $user = \App\Models\User::factory()->create();
         $cashGame = $user->startCashGame();
 
         $this->postJson(route('cashout.create'), [
@@ -24,7 +24,7 @@ class CashOutTest extends TestCase
     }
 
     public function testACashOutCanBeAddedToACashGame()
-    {       
+    {
         $cashGame = $this->signIn()->startCashGame();
 
         $this->postJson(route('cashout.create'), [
@@ -57,7 +57,7 @@ class CashOutTest extends TestCase
     public function testUserCannotAddMultipleCashOutsToCashGame()
     {
         $this->withoutExceptionHandling();
-        
+
         $cashGame = $this->signIn()->startCashGame();
 
         // Cash Out should be Ok
@@ -91,7 +91,7 @@ class CashOutTest extends TestCase
         ]);
 
         $cash_out = $cashGame->cashOut;
-        
+
         $this->getJson(route('cashout.view', [
                     'cash_out' => $cash_out
                 ]))
@@ -110,7 +110,7 @@ class CashOutTest extends TestCase
         ]);
 
         $cash_out = $cashGame->cashOut;
-        
+
         // Change amount from 500 to 1000
         $response = $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), [
                                 'amount' => 1000
@@ -133,7 +133,7 @@ class CashOutTest extends TestCase
         ]);
 
         $cash_out = $cashGame->cashOut()->first();
-        
+
         // Change amount from 500 to 1000
         $this->deleteJson(route('cashout.update', ['cash_out' => $cash_out]))
                 ->assertOk()
@@ -165,7 +165,7 @@ class CashOutTest extends TestCase
                     'amount' => 55.52
                 ])
                 ->assertOk();
-                
+
         // Test negative numbers
         $this->postJson(route('cashout.create'), [
                     'game_id' => $cashGame->id,
@@ -213,7 +213,7 @@ class CashOutTest extends TestCase
         // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
         $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), ['amount' => 55.52])->assertOk();
-                
+
         // Test negative numbers
         $this->patchJson(route('cashout.update', ['cash_out' => $cash_out]), ['amount' => -10])->assertStatus(422);
 
@@ -232,7 +232,7 @@ class CashOutTest extends TestCase
         $cashGame = $user1->startCashGame();
         $this->postJson(route('cashout.create'), [
                     'game_id' => $cashGame->id,
-                    'game_type' => $cashGame->game_type,    
+                    'game_type' => $cashGame->game_type,
                     'amount' => 500
                 ]);
         $cash_out = $cashGame->cashOut()->first();

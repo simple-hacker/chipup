@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\User;
-use App\Tournament;
+use App\Models\User;
+use App\Models\Tournament;
 use Tests\TestCase;
 use App\Transactions\AddOn;
 use App\Transactions\BuyIn;
@@ -19,21 +19,21 @@ class TournamentTest extends TestCase
 
     public function testATournamentBelongsToAUser()
     {
-        $user = factory('App\User')->create();
-        $tournament = factory('App\Tournament')->create(['user_id' => $user->id]);
+        $user = \App\Models\User::factory()->create();
+        $tournament = \App\Models\Tournament::factory()->create(['user_id' => $user->id]);
 
         $this->assertInstanceOf(User::class, $tournament->user);
     }
 
     public function testTournamentFactoryCreatesNewUser()
     {
-        factory('App\Tournament')->create();
+        \App\Models\Tournament::factory()->create();
         $this->assertCount(1, User::all());
     }
 
     public function testTournamentFactoryAndThenSignInCreatesTwoDifferentUsers()
     {
-        factory('App\Tournament')->create();
+        \App\Models\Tournament::factory()->create();
 
         $this->signIn();
 
@@ -42,7 +42,7 @@ class TournamentTest extends TestCase
 
     public function testSignInAfterTournamentFactoryDoesNotOwnTournament()
     {
-        $tournament = factory('App\Tournament')->create();
+        $tournament = \App\Models\Tournament::factory()->create();
 
         $this->signIn();
 
@@ -51,7 +51,7 @@ class TournamentTest extends TestCase
 
     public function testAUserCanStartATournament()
     {
-        $user = factory('App\User')->create();
+        $user = \App\Models\User::factory()->create();
 
         $user->startTournament($this->getLiveTournamentAttributes());
 
@@ -61,7 +61,7 @@ class TournamentTest extends TestCase
 
     public function testATimeCanBeSuppliedWhenStartingATournament()
     {
-        $user = factory('App\User')->create();
+        $user = \App\Models\User::factory()->create();
 
         $time = Carbon::create(2020, 02, 15, 18, 30, 00)->toDateTimeString();
 
@@ -109,7 +109,7 @@ class TournamentTest extends TestCase
     {
         $this->expectException(\App\Exceptions\SessionInProgressException::class);
 
-        $user = factory('App\User')->create();
+        $user = \App\Models\User::factory()->create();
 
         $user->startTournament($this->getLiveTournamentAttributes());
         // Error should be thrown when starting another
@@ -118,7 +118,7 @@ class TournamentTest extends TestCase
 
     public function testCheckingStartingMultipleTournamentsAsLongAsPreviousOnesHaveFinished()
     {
-        $user = factory('App\User')->create();
+        $user = \App\Models\User::factory()->create();
 
         // Start and finish a tournament.
         $tournament = $user->startTournament($this->getLiveTournamentAttributes());
@@ -135,11 +135,11 @@ class TournamentTest extends TestCase
 
     public function testTournamentVariablesDefaultToUserDefaults()
     {
-        $user = factory('App\User')->create([
+        $user = \App\Models\User::factory()->create([
             'default_limit_id' => 2,
             'default_variant_id' => 3,
         ]);
-        
+
         // Start Tournament with empty attributes
         $tournament = $user->startTournament([]);
 
@@ -169,7 +169,7 @@ class TournamentTest extends TestCase
         } finally {
             $this->assertCount(1, $tournament->buyIn()->get());
             $this->assertEquals($tournament->buyIn->id, $buy_in_1->id);
-        }        
+        }
     }
 
     public function testTournamentCanHaveMultipleExpenses()
@@ -237,7 +237,7 @@ class TournamentTest extends TestCase
     public function testTournamentProfitFlow()
     {
         $tournament = $this->startLiveTournament();
-        
+
         $tournament->addBuyIn(1000);
         $tournament->addExpense(50);
         $tournament->addExpense(200);
@@ -279,7 +279,7 @@ class TournamentTest extends TestCase
         $tournament->refresh();
 
         $this->assertCount(1, $tournament->expenses);
-         
+
         //Tournament profit should now be -7250 - (500-50) + 200 - (2000-1000) + 5000 + (4000-1000) = -500
         $this->assertEquals(-500, $tournament->profit);
     }
@@ -291,7 +291,7 @@ class TournamentTest extends TestCase
         // Only testing the BuyIn of the GameTransactions as they all work the same because of Positive/NegativeGameTransactionObserver
         // which updates the Tournament's profit.
 
-        $user = factory('App\User')->create();
+        $user = \App\Models\User::factory()->create();
         $this->signIn($user);
 
         $tournament = $user->startTournament($this->getLiveTournamentAttributes());
@@ -312,8 +312,8 @@ class TournamentTest extends TestCase
         $buy_in->delete();
         // Bankroll should revert back to 0
         $this->assertEquals(0, $user->fresh()->bankroll);
-        
-        
+
+
         // Testing Positive transaction as well.
         $cashOut = $tournament->addCashOut(2000);
         $this->assertEquals(2000, $user->fresh()->bankroll);
@@ -321,13 +321,13 @@ class TournamentTest extends TestCase
         // Delete the Cash Out and user's bankroll should revert back to 0
         $cashOut->delete();
         $this->assertEquals(0, $user->fresh()->bankroll);
-        
+
     }
 
     public function testTheUsersBankrollIsUpdatedWhenATournamentIsDeleted()
     {
         // Start with zero bankroll
-        $user = factory('App\User')->create();
+        $user = \App\Models\User::factory()->create();
         $this->signIn($user);
 
         // Create a tournament with various buy ins and cash out.
@@ -348,7 +348,7 @@ class TournamentTest extends TestCase
         // Now if we delete the tournament the user's bankroll should revert back to the orignal bankroll of 0
         $tournament->fresh()->delete();
         $this->assertEquals(0, $user->fresh()->bankroll);
-        
+
         // Test again with positive profit
         $tournament2 = $user->startTournament($this->getLiveTournamentAttributes());
         $tournament2->addCashOut(10000);
@@ -362,7 +362,7 @@ class TournamentTest extends TestCase
 
     public function testWhenATournamentIsDeletedItDeletesAllOfItsGameTransactions()
     {
-        $user = factory('App\User')->create();
+        $user = \App\Models\User::factory()->create();
         $this->signIn($user);
         $tournament = $user->startTournament($this->getLiveTournamentAttributes());
         $tournament->addBuyIn(1000);
@@ -383,14 +383,14 @@ class TournamentTest extends TestCase
         $this->assertEquals(-3250, $tournament->profit);
         $this->assertEquals(-3250, $user->fresh()->bankroll);
         $this->assertCount(1, $user->tournaments);
-        
+
         // When deleting a Tournament it shoudl delete all it's GameTransactions
         // This is handled in Game model Observer delete method.
         // Can't use cascade down migrations because of polymorphic relationship
         $tournament->delete();
 
         $user->refresh();
-        
+
         $this->assertCount(0, $user->tournaments);
         $this->assertEquals(0, $user->bankroll);
         $this->assertCount(0, BuyIn::all());
@@ -402,9 +402,9 @@ class TournamentTest extends TestCase
 
     public function testTournamentCurrencyDefaultsToUsersCurrency()
     {
-        $user = factory('App\User')->create(['currency' => 'AUD']);
+        $user = \App\Models\User::factory()->create(['currency' => 'AUD']);
         $this->signIn($user);
-        
+
         // Start Tournament with empty attributes
         $tournament = $user->startTournament([]);
 
@@ -414,7 +414,7 @@ class TournamentTest extends TestCase
     public function testTournamentLocaleProfitIsConvertedToUserCurrency()
     {
         // Create a User with default USD currency
-        $user = factory('App\User')->create(['currency' => 'USD']);
+        $user = \App\Models\User::factory()->create(['currency' => 'USD']);
 
         // Create a Cash Game with currency of PLN
         $tournament = $user->tournaments()->create(['currency' => 'PLN']);
@@ -434,7 +434,7 @@ class TournamentTest extends TestCase
         // 1 GBP = ~1.68 CAD = ~1.10 EUR = ~1.25 USD = ~1.79 AUD = ~4.9 PLN
 
         // Create a User with default USD currency
-        $user = factory('App\User')->create(['currency' => 'USD']);
+        $user = \App\Models\User::factory()->create(['currency' => 'USD']);
 
         // Create a Cash Game with currency of PLN
         $tournament = $user->tournaments()->create(['currency' => 'PLN']);

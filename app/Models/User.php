@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Attributes\Stake;
 use Illuminate\Support\Carbon;
@@ -10,12 +10,15 @@ use App\Notifications\PokerVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use App\Exceptions\SessionInProgressException;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, Notifiable;
+    use HasFactory;
+    use HasApiTokens;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -49,7 +52,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
     * Returns a collection of the user's social logins.
-    * 
+    *
     * @return hasMany
     */
     public function socialLogins()
@@ -70,7 +73,7 @@ class User extends Authenticatable implements MustVerifyEmail
     * Add amount to bankroll.
     * This updates the user's bankroll and creates and Bankroll.
     * The bankroll is updated with a Bankroll model observer in the created method.
-    * 
+    *
     * @param integer amount
     * @return void
     */
@@ -96,7 +99,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
     * Return the latest Cash Game or Tournament without an end_time.
-    * 
+    *
     * @return Collection|null
     */
     public function liveSession()
@@ -114,7 +117,7 @@ class User extends Authenticatable implements MustVerifyEmail
     */
     public function cashGames()
     {
-        return $this->hasMany('App\CashGame')->orderByDesc('start_time');
+        return $this->hasMany('App\Models\CashGame')->orderByDesc('start_time');
     }
 
     /**
@@ -122,7 +125,7 @@ class User extends Authenticatable implements MustVerifyEmail
     * This first checks if we have a Session in progress and then checks if the start time would clash with another Cash Game.
     *
     * @param array $attributes
-    * @return \App\CashGame
+    * @return \App\Models\CashGame
     */
     public function startCashGame(Array $attributes = []) : CashGame
     {
@@ -154,8 +157,8 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
     * Return the latest Cash Game without an end_time.
     * This check is performed in startCashGame
-    * 
-    * @return \App\CashGame|null
+    *
+    * @return \App\Models\CashGame|null
     */
     public function liveCashGame() : ?CashGame
     {
@@ -168,14 +171,14 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
     * Returns a collection of Cash Games where provided time is between start_time and end_time
     * This is used to prevent adding a completed cash game between an already existing cash game.
-    * 
-    * @param String $time
+    *
+    * @param string $time
     * @return integer
     */
     public function cashGamesAtTime($time = null, $id = null) : int
     {
         $start_time = $time ? Carbon::create($time) : now();
-        
+
         return $this->cashGames()
                     ->where('id', '<>', $id)
                     ->where('start_time', '<=', $start_time)
@@ -188,12 +191,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
     * Returns a collection of the user's Tournaments
-    * 
+    *
     * @return hasMany
     */
     public function tournaments()
     {
-        return $this->hasMany('App\Tournament')->orderByDesc('start_time');;
+        return $this->hasMany('App\Models\Tournament')->orderByDesc('start_time');;
     }
 
     /**
@@ -201,7 +204,7 @@ class User extends Authenticatable implements MustVerifyEmail
     * This first checks if we have a Session in progress and then checks if the start time would clash with another Tournament.
     *
     * @param Array $attributes
-    * @return \App\Tournament
+    * @return \App\Models\Tournament
     */
     public function startTournament(Array $attributes = []) : Tournament
     {
@@ -232,8 +235,8 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
     * Return the latest Tournament without an end_time.
     * This check is performed in startTournament
-    * 
-    * @return \App\Tournament
+    *
+    * @return \App\Models\Tournament
     */
     public function liveTournament() : ?Tournament
     {
@@ -246,8 +249,8 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
     * Returns a collection of Tournaments where provided time is between start_time and end_time
     * This is used to prevent adding a completed tournament between an already existing tournament.
-    * 
-    * @param String $time
+    *
+    * @param string $time
     * @return int
     */
     public function tournamentsAtTime($time = null, $id = null) : int
@@ -266,7 +269,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
     * Return the user's default stake model
-    * 
+    *
     * @return hasOne
     */
     public function default_stake()
@@ -276,7 +279,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
     * Return the user's default variant model
-    * 
+    *
     * @return hasOne
     */
     public function default_variant()
@@ -286,7 +289,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
     * Return the user's default limit model
-    * 
+    *
     * @return hasOne
     */
     public function default_limit()
@@ -296,7 +299,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
     * Return the user's default table size model
-    * 
+    *
     * @return hasOne
     */
     public function default_table_size()
@@ -306,8 +309,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
     * Boolean if user has completed the account setup.
-    * 
-    * @return App\User
+    *
+    * @return App\Models\User
     */
     public function completeSetup(): User
     {
@@ -321,7 +324,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
     * Mutate bankroll in to currency
     *
-    * @return Integer
+    * @return int
     */
     public function getBankrollAttribute()
     {
@@ -330,8 +333,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
     * Returns the sum of all bankroll transactions
-    * 
-    * @return Integer
+    *
+    * @return int
     */
     public function totalBankrollTransactionAmounts()
     {
@@ -344,8 +347,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
     * Returns the sum of all cash game profits in locale currency
-    * 
-    * @return Integer
+    *
+    * @return int
     */
     public function totalCashGameProfit()
     {
@@ -358,8 +361,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
     * Returns the sum of all tournament profits
-    * 
-    * @return Integer
+    *
+    * @return int
     */
     public function totalTournamentProfit()
     {
@@ -372,7 +375,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
     * Returns the default stakes and any custom user stakes
-    * 
+    *
     * @return Collection
     */
     public function getStakesAttribute()

@@ -12,7 +12,7 @@ class BankrollTest extends TestCase
 
     public function testAUserCanAddToTheirBankroll()
     {
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
 
         // Add £5 to user's bankroll.
         $user->createBankrollTransaction(['currency' => 'GBP', 'amount' => 5]);
@@ -26,11 +26,11 @@ class BankrollTest extends TestCase
 
     public function testAUserCanWithdrawFromTheirBankroll()
     {
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
 
         // Withdraw £5 from user's bankroll.
         $user->createBankrollTransaction(['currency' => 'GBP', 'amount' => -5]);
-        
+
         // A user should have one Bankroll Transaction
         $this->assertCount(1, $user->bankrollTransactions);
 
@@ -40,7 +40,7 @@ class BankrollTest extends TestCase
 
     public function testAUsersBankrollIsCorrectedWhenUpdatingABankroll()
     {
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
 
         // Add £5 to user's bankroll.
         $user->createBankrollTransaction(['currency' => 'GBP', 'amount' => 5]);
@@ -68,8 +68,8 @@ class BankrollTest extends TestCase
     }
 
     public function testBankrollTransactionDefaultDateToNow()
-    {       
-        $user = factory('App\User')->create();
+    {
+        $user = \App\Models\User::factory()->create();
         // Create a bankroll transaction without a date.
         $bankrollTransaction = $user->createBankrollTransaction(['currency' => 'GBP', 'amount' => 500]);
         $this->assertEquals($bankrollTransaction->date, Carbon::today());
@@ -77,14 +77,14 @@ class BankrollTest extends TestCase
 
     public function testBankrollTransactionDefaultsToUsersCurrencyIfNoCurrencyProvided()
     {
-        $user = factory('App\User')->create(['currency' => 'USD']);
+        $user = \App\Models\User::factory()->create(['currency' => 'USD']);
         $bankrollTransaction = $user->createBankrollTransaction(['amount' => 500]);
         $this->assertEquals($bankrollTransaction->currency, $user->currency);
     }
 
     public function testLocaleAmountIsSameAsAmountIfSameCurrencyAsUserDefault()
     {
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
         $bankrollTransaction = $user->createBankrollTransaction(['amount' => 500]);
         $this->assertEquals($bankrollTransaction->locale_amount, $bankrollTransaction->amount);
     }
@@ -101,7 +101,7 @@ class BankrollTest extends TestCase
     public function testDifferentCurrencyIsConvertedToUserCurrencyForLocaleAmount()
     {
         // Set User Default Currency to GBP and Start with a Bankroll of 1000
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
 
         $bankrollTransaction = $user->createBankrollTransaction(['currency' => 'USD', 'amount' => 5]);
 
@@ -116,7 +116,7 @@ class BankrollTest extends TestCase
     public function testDifferentCurrencyIsConvertedToUserCurrencyForBankrollDeposits()
     {
         // Set User Default Currency to GBP
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
 
         // 1 GBP / 4.9186232805 PLN
         // Deposit a bankroll transaction of 50 PLN = £10.17
@@ -128,7 +128,7 @@ class BankrollTest extends TestCase
     public function testDifferentCurrencyIsConvertedToUserCurrencyForBankrollWithdrawals()
     {
         // Set User Default Currency to GBP
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
 
         // 1 GBP / 1.6804596431 CAD
         // Withdraw a bankroll transaction of $100 CAD = £59.51 GBP
@@ -140,7 +140,7 @@ class BankrollTest extends TestCase
     public function testConvertedAmountIsUsedWhenDeletingABankrollTransactionInADifferentCurrency()
     {
         // Set User Default Currency to GBP
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
 
         // 1 GBP / 1.2386056019 USD
         // Withdraw a bankroll transaction of $100 USD = £80 GBP
@@ -155,7 +155,7 @@ class BankrollTest extends TestCase
     public function testCorrectConvertedAmountIsUsedWhenUpdatingABankrollTransactionToTheSameCurrency()
     {
         // Set User Default Currency to GBP
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
 
         // 1 GBP / 1.2386056019 USD
         // Deposit a bankroll transaction of $100 USD = £80 GBP
@@ -166,7 +166,7 @@ class BankrollTest extends TestCase
 
         // Change bankroll transaction from $100 USD to $500 (Same currency)
         $bankrollTransaction->update(['amount' => 500]);
-        
+
         // $500 USD = £400 GBP.  Assert user's bankroll is now £400 and not 500
         $this->assertEquals($this->converterTest(500, 'USD', 'GBP'), $user->fresh()->bankroll);
     }
@@ -174,7 +174,7 @@ class BankrollTest extends TestCase
     public function testUpdatingTheCurrencyOfTheBankrollTransactionUpdatesUsersBankrollWithTheCorrectAmount()
     {
         // Set User Default Currency to GBP
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
 
         // 1 GBP / 1.2386056019 USD
         // Deposit a bankroll transaction of $500 USD = ~£400 GBP
@@ -195,7 +195,7 @@ class BankrollTest extends TestCase
     public function testUpdatingTheCurrencyOfTheBankrollTransactionUpdatesUsersBankrollWithTheCorrectAmountForWithdrawalsToo()
     {
         // Set User Default Currency to GBP
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
 
         // 1 GBP / 1.2386056019 USD
         // Withdraw a bankroll transaction of $500 USD = £400 GBP
@@ -216,7 +216,7 @@ class BankrollTest extends TestCase
     public function testUpdatingBothCurrencyAndAmountOfBankrollTransactionUpdatedUsersBankrollWithCorrectConvertedAmount()
     {
         // Set User Default Currency to GBP
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
 
         // 1 GBP / 1.2386056019 USD
         // Deposit a bankroll transaction of $500 USD = £400 GBP

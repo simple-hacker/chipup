@@ -7,10 +7,12 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\InvalidDateException;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use ShiftOneLabs\LaravelCascadeDeletes\CascadesDeletes;
 
 abstract class Game extends Model
 {
+    use HasFactory;
     use CascadesDeletes;
 
     protected $casts = [
@@ -27,19 +29,19 @@ abstract class Game extends Model
     protected $appends = ['game_type', 'profit', 'locale_profit'];
 
     /**
-    * A Game belongs to a user 
+    * A Game belongs to a user
     *
     * @return belongsTo
     */
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\User');
     }
 
     /**
     * Return the parent's variant model
-    * 
+    *
     * @return belongsTo
     */
     public function variant()
@@ -49,7 +51,7 @@ abstract class Game extends Model
 
     /**
     * Return the parent's limit model
-    * 
+    *
     * @return belongsTo
     */
     public function limit()
@@ -59,7 +61,7 @@ abstract class Game extends Model
 
     /**
     * End the Game by updating the end_time to the current time or given time.
-    * 
+    *
     * @param Carbon end_time
     * @return mixed
     */
@@ -80,7 +82,7 @@ abstract class Game extends Model
 
     /**
     * Method for calling any adding GameTransaction with a valid string
-    * 
+    *
     * @param string $transaction_type
     * @param float amount
     * @return mixed
@@ -104,7 +106,7 @@ abstract class Game extends Model
     /**
     * Add a BuyIn for the game type.
     * This updates the game type's profit by subtracting the BuyIn amount.
-    * 
+    *
     * @param float amount
     * @return BuyIn
     */
@@ -119,7 +121,7 @@ abstract class Game extends Model
     /**
     * Add an Expense for the game type.
     * This updates the game type's profit by subtracting the Expense amount
-    * 
+    *
     * @param float amount
     * @return Expense
     */
@@ -135,7 +137,7 @@ abstract class Game extends Model
     /**
     * Add an Expense for the game type.
     * This updates the game type's profit by subtracting the Expense amount
-    * 
+    *
     * @param float amount
     * @return CashOut
     */
@@ -154,7 +156,7 @@ abstract class Game extends Model
     /**
     * End the Game and Cash Out
     * One method to simplify Controllers.
-    * 
+    *
     * @param float amount
     * @return CashOut
     */
@@ -166,7 +168,7 @@ abstract class Game extends Model
 
     /**
     * Returns the game type's BuyIns
-    * 
+    *
     * @return morphMany
     */
     public function buyIns()
@@ -176,7 +178,7 @@ abstract class Game extends Model
 
     /**
     * Returns the game type's Expenses
-    * 
+    *
     * @return morphMany
     */
     public function expenses()
@@ -186,7 +188,7 @@ abstract class Game extends Model
 
     /**
     * Returns the game type's CashOut model
-    * 
+    *
     * @return morphOne
     */
     public function cashOut()
@@ -207,8 +209,8 @@ abstract class Game extends Model
 
     /**
     * Return total buy ins amount converted in to session currency
-    * 
-    * @return Integer
+    *
+    * @return int
     */
     public function totalBuyInsAmount()
     {
@@ -221,8 +223,8 @@ abstract class Game extends Model
 
     /**
     * Return total expenses amount converted in to session currency
-    * 
-    * @return Integer
+    *
+    * @return int
     */
     public function totalExpensesAmount()
     {
@@ -235,8 +237,8 @@ abstract class Game extends Model
 
     /**
     * Return cash out amount in session currency
-    * 
-    * @return Integer
+    *
+    * @return int
     */
     public function cashOutAmount()
     {

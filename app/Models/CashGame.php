@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Abstracts\Game;
 
@@ -14,7 +14,7 @@ class CashGame extends Game
 
     /**
     * Return the parent's stake model
-    * 
+    *
     * @return belongsTo
     */
     public function stake()
@@ -24,7 +24,7 @@ class CashGame extends Game
 
     /**
     * Return the parent's table size model
-    * 
+    *
     * @return belongsTo
     */
     public function table_size()

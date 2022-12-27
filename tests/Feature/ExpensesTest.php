@@ -12,7 +12,7 @@ class ExpensesTest extends TestCase
 
     public function testOnlyAuthenticatedUsersCanAddExpense()
     {
-        $user = factory('App\User')->create();
+        $user = \App\Models\User::factory()->create();
         $cashGame = $user->startCashGame();
 
         $this->postJson(route('expense.create'), [
@@ -84,7 +84,7 @@ class ExpensesTest extends TestCase
         ]);
 
         $expense = $cashGame->expenses()->first();
-        
+
         $this->getJson(route('expense.view', [
                     'cash_game' => $cashGame,
                     'expense' => $expense
@@ -104,7 +104,7 @@ class ExpensesTest extends TestCase
         ]);
 
         $expense = $cashGame->expenses()->first();
-        
+
         // Change amount from 500 to 1000
         $response = $this->patchJson(route('expense.update', ['expense' => $expense]), [
                                 'amount' => 1000
@@ -127,7 +127,7 @@ class ExpensesTest extends TestCase
         ]);
 
         $expense = $cashGame->expenses()->first();
-        
+
         // Change amount from 500 to 1000
         $this->deleteJson(route('expense.update', ['expense' => $expense]))
                 ->assertOk()
@@ -158,7 +158,7 @@ class ExpensesTest extends TestCase
                     'amount' => 55.52
                 ])
                 ->assertOk();
-                
+
         // Test negative numbers
         $this->postJson(route('expense.create'), [
                     'game_id' => $cashGame->id,
@@ -202,7 +202,7 @@ class ExpensesTest extends TestCase
         // NOTE: 2020-04-29 Float numbers are now valid.
         // Test float numbers
         $this->patchJson(route('expense.update', ['expense' => $expense]), ['amount' => 55.52])->assertOk();
-                
+
         // Test negative numbers
         $this->patchJson(route('expense.update', ['expense' => $expense]), ['amount' => -10])->assertStatus(422);
 

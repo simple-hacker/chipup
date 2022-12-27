@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\CashGame;
-use App\Tournament;
+use App\Models\CashGame;
+use App\Models\Tournament;
 use App\Abstracts\GameTransaction;
 use App\Exceptions\InvalidGameTypeException;
 use App\Http\Requests\CreateGameTransactionRequest;
@@ -15,7 +15,7 @@ abstract class GameTransactionController extends Controller
 
     /**
     * Create a transaction to the CashGame
-    * 
+    *
     * @param CreateGameTransactionRequest $request
     * @return json
     */
@@ -60,7 +60,7 @@ abstract class GameTransactionController extends Controller
     /**
     * Retrieve the Transaction
     * Make sure it belongs to the correct game_type
-    * 
+    *
     * @param GameTransaction $game_transaction
     * @return json
     */
@@ -76,7 +76,7 @@ abstract class GameTransactionController extends Controller
 
     /**
     * Update the GameTransaction with the GameTransactionRequest amount
-    * 
+    *
     * @param GameTransaction $game_transaction
     * @param UpdateGameTransactionRequest $request
     * @return json
@@ -98,14 +98,14 @@ abstract class GameTransactionController extends Controller
 
     /**
     * Destroy the Transaction
-    * 
+    *
     * @param GameTransaction $game_transaction
     * @return json
     */
     public function destroy(GameTransaction $game_transaction)
     {
         $this->authorize('manage', $game_transaction);
-        
+
         $success = $game_transaction->delete();
 
         return response()->json([

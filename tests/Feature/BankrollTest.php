@@ -10,10 +10,10 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class BankrollTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     public function testAUserMustBeLoggedInToUpdateBankroll()
     {
-        $user = factory('App\User')->create();
+        $user = \App\Models\User::factory()->create();
 
         $this->postJson(route('bankroll.create'), ['amount' => 30000])->assertUnauthorized();
 
@@ -24,12 +24,12 @@ class BankrollTest extends TestCase
             'currency' => $user->currency,
             'amount' => 1000,
         ]);
-        
+
         $this->patchJson(route('bankroll.update', ['bankrollTransaction', $bankrollTransaction]), ['amount' => 30000])->assertUnauthorized();
 
         $this->deleteJson(route('bankroll.delete', ['bankrollTransaction', $bankrollTransaction]))->assertUnauthorized();
     }
-    
+
     public function testAUserCanAddToTheirBankroll()
     {
         $user = $this->signIn();
@@ -80,7 +80,7 @@ class BankrollTest extends TestCase
 
     public function testBankrollTransactionCurrencyCanBeSupplied()
     {
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
         $this->signIn($user);
 
         $this->postJson(route('bankroll.create'), ['amount' => 1000, 'currency' => 'PLN']);
@@ -89,7 +89,7 @@ class BankrollTest extends TestCase
 
     public function testBankrollTransactionCurrencyMustBeValid()
     {
-        $user = factory('App\User')->create(['currency' => 'GBP']);
+        $user = \App\Models\User::factory()->create(['currency' => 'GBP']);
         $this->signIn($user);
 
         // Not a string
@@ -125,7 +125,7 @@ class BankrollTest extends TestCase
         $user->refresh();
         $this->assertEquals(-10000, $user->bankroll); // 50000 - 10000 = 40000
         $this->assertCount(1, $user->bankrollTransactions);
-        
+
         // Get the user's Withdraw Transaction and delete it.
         $bankrollTransaction = $user->bankrollTransactions->first();
         $this->deleteJson(route('bankroll.delete', ['bankrollTransaction' => $bankrollTransaction]));
@@ -152,7 +152,7 @@ class BankrollTest extends TestCase
         $user2 = $this->signIn();
 
         $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), ['amount' => 20000])->assertForbidden();
-        
+
         // Should be Forbidden to delete user1's transaction too.
         $this->deleteJson(route('bankroll.delete', ['bankrollTransaction' => $bankrollTransaction]))->assertForbidden();
     }
@@ -161,7 +161,7 @@ class BankrollTest extends TestCase
     {
         // All numbers are valid.
 
-        $user = factory('App\User')->create();
+        $user = \App\Models\User::factory()->create();
         $user->completeSetup();
         $this->actingAs($user);
 
@@ -175,7 +175,7 @@ class BankrollTest extends TestCase
         // Check negative numbers for updates, will result in a 200
         $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), ['amount' => -1000])->assertOk();
         $this->assertEquals(-1000, $bankrollTransaction->fresh()->amount);
-        
+
         // Check float numbers for updates
         $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), ['amount' => 50.82])->assertOk();
         $this->assertEquals(50.82, $bankrollTransaction->fresh()->amount);
@@ -183,7 +183,7 @@ class BankrollTest extends TestCase
 
     public function testAmountCannotBeInvalidForBankrollTransactions()
     {
-        $user = factory('App\User')->create();
+        $user = \App\Models\User::factory()->create();
         $user->completeSetup();
         $this->actingAs($user);
 
@@ -207,7 +207,7 @@ class BankrollTest extends TestCase
         $this->postJson(route('bankroll.create'), ['amount' => 30000]);
 
         $bankrollTransaction = $user->bankrollTransactions->first();
- 
+
         // Amount must be supplied when updating a bankroll transaction
         // because the whole purpose of a transaction is the amount, without it we might as well delete the transaction
         $this->patchJson(route('bankroll.update', ['bankrollTransaction' => $bankrollTransaction]), [

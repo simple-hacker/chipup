@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Attributes\Stake;
 use Illuminate\Database\Seeder;
 

@@ -25,7 +25,7 @@ class Bankroll extends Model
     */
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\User');
     }
 
     /**
@@ -49,7 +49,7 @@ class Bankroll extends Model
     {
         // Round up to 2dp incase a value like 33.33333 is submitted.
         $amount = round($amount, 2, PHP_ROUND_HALF_UP);
-        
+
         $this->attributes['amount'] = $amount * 100;
     }
 

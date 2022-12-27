@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Attributes\Limit;
 use Illuminate\Database\Seeder;
 
