@@ -16,8 +16,9 @@ class RetrieveLatestExchangeRates {
     */
     public function __invoke()
     {
-        // NOTE: Can't use Http Client as it is only available to Laravel 7.x
-        // Currently only on Laravel 6.2
+        // Note: exchangeratesapi have started charging and now need an API key.
+        return;
+
         $response = json_decode(file_get_contents('https://api.exchangeratesapi.io/latest?base=GBP'));
 
         // Update rates with the retrieve date or create new row in database.
